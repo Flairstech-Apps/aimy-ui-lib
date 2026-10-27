@@ -323,6 +323,8 @@ A component is finished when all of these are true. This is the checklist for ev
 
 GitHub Actions runs, in order: TypeScript (strict), lint, the token check, a "doctrine lint" (fails on `transition-all`, on a left border stripe, on text opacity used to show state, on a native `<select>`, on inline `onClick` strings in HTML examples, on any duration, curve, distance, scale or blur that isn't a motion token), unit and accessibility tests, the registry build, a test install of every item into the demo app (section 5a) and its type check, then visual screenshot comparison. Only if all pass does `main` deploy.
 
+**Status on 27 Oct.** The workflows are written (`.github/workflows/ci.yml` and `release.yml`) and every check passes locally with `pnpm check`. GitHub refuses to run them, and refuses package publishing too, because the `Flairstech-AIMY` org (free plan) "has reached its billing limit". Its admins are hadeeremad000, IT-Flaristech and mhsFlairs. Until that's fixed, checks run locally before every commit and deploys go out from this machine.
+
 ## 15. The order of work, with checkpoints
 
 Each phase ends with a review where you look at screenshots and say yes before the next one starts. Time ranges are rough guesses, not commitments.
