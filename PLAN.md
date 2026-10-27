@@ -170,6 +170,13 @@ The local folder is `aimy ui lib` with spaces. Some build tools trip on spaces i
 - **Tailwind mapping.** `theme.css` maps tokens to Tailwind names with `@theme inline`, so classes read in AiMY vocabulary: `bg-body`, `bg-card`, `bg-raised`, `text-ink`, `text-ink-quiet`, `border-hairline`, `text-ok`, `bg-ok-bg`, `rounded-md` (8px), `shadow-md`, `duration-fast`, `ease-out`.
 - **Themes.** Dark is the default (doctrine: default to dark). Light is `data-theme="light"` on `<html>`, using the same `aimy-ds-theme` localStorage key the products use, applied by a tiny pre-paint script so there is no flash. Light is designed, not inverted (126 overridden tokens); the library keeps that.
 
+**As built in Phase 1 (27 Oct), where it differs from the above:**
+- The script is `scripts/extract-tokens.mjs` (plain Node, no build step) and writes `package/tokens/aimy.css`. `--check` fails if the file is stale.
+- The theme lives in the `@flairstech-aimy/tokens` npm package, not in copied files. The shadcn install command can only add simple lines to an app's CSS (its parser breaks on a Tailwind `@theme` block), so the registry's `theme` item installs the package and adds one line: `@import "@flairstech-aimy/tokens/tailwind.css"`. Bonus: tokens update with a version bump instead of a re-copy, and all three doors share one copy.
+- Selectors are `:root, [data-theme="dark"]` and `[data-theme="light"]`, so a theme can be set on any element. Every alias token (`--x: var(--y)`) is re-declared in the light block, because an alias resolves where it is declared and children inherit the answer.
+- Patches applied: brand-hover self-reference, one `--accent` with Sales' values (plus `--accent-text`, `--accent-label`), the inks both products share (`--ink-secondary` d200, `--ink-rule` d600, new `--ink-quiet`, `--ink-faint`, `--ink-action`), product line heights (1.25 / 1.5 / 1.6), motion moved to `motion.css`, sizes in rem. Disagreement 1 (dark ramp) took the design-system values, so `--d600` to `--d400` differ slightly from Knowledge's spliced copy.
+- Tailwind names chosen: the AiMY size names keep their meaning (`text-xs` is 14px, `text-2xs` 12px), weights keep AiMY's ladder (`font-medium` 400), breakpoints are named rungs (`max-rail:`), durations are used as `duration-(--t-fast)`.
+
 ## 7. Phase 1: Foundations (the first thing you see)
 
 Each foundation is a docs page and, where it applies, an installable item. Every page shows the real values in both themes, the rule that governs it, and a do/don't pair taken from the doctrine or your feedback.
@@ -187,7 +194,7 @@ Each foundation is a docs page and, where it applies, an installable item. Every
 11. **Focus.** Always `--brand`, 2px outline, 2px offset, `:focus-visible` only, never the accent.
 12. **Writing.** Your copy rules as a page: plain English, "call" not "ring", "contacts" not "board" or "book", no sales slang, never "Open" or "Learn more" when the action has a name, a verb on every button.
 
-**Installable items from Phase 1:** `@aimy/theme` (tokens, Tailwind mapping, fonts, pre-paint script), `@aimy/aliases`, `@aimy/utils` (`cn`), `@aimy/theme-toggle`, `@aimy/mark`, `@aimy/icon`.
+**Installable items from Phase 1 (shipped 27 Oct):** `@aimy/theme` (tokens, Tailwind mapping, fonts, transitions, base styles), `@aimy/aliases`, `@aimy/utils` (`cn`), `@aimy/use-theme`, `@aimy/theme-script`, `@aimy/theme-toggle`, `@aimy/icon`, `@aimy/aimy-mark`. Also `@flairstech-aimy/tokens` 0.1.0 and `@flairstech-aimy/ui` 0.1.0 on the npm registry.
 
 ## 7a. Motion: transitions.dev
 
@@ -351,6 +358,7 @@ Each phase ends with a review where you look at screenshots and say yes before t
 - Token extraction script, the theme item and `motion.css`. Settle disagreements 1, 7 and 9 (2 and 3 are settled by transitions.dev).
 - The 12 foundation pages. DESIGN.md generated from the shipped tokens.
 - **Checkpoint:** you review the colour, type and motion pages in both themes.
+- *Status 27 Oct: built, deployed and pushed; waiting on your review.*
 
 **Phase 2: core components (about 2 to 3 weeks, four batches).** Checkpoint after each batch. Settle disagreements 4 and 5 before Batch A and Batch D.
 
