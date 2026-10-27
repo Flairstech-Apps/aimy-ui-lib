@@ -1,0 +1,11 @@
+node_modules/
+.next/
+out/
+public/r/
+.env*
+!.env.example
+.wrangler/
+test-results/
+playwright-report/
+*.log
+.DS_Store
