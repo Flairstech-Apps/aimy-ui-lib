@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "aimy-ui-lib",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-10-20",
+  "observability": { "enabled": true },
+  "assets": {
+    "directory": "out",
+    "binding": "ASSETS",
+    // The worker checks the lock before any file is served.
+    "run_worker_first": true,
+    "not_found_handling": "404-page"
+  }
+}

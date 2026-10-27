@@ -1,0 +1,15 @@
+@import "tailwindcss";
+@import "@fontsource/poppins/300.css";
+@import "@fontsource/poppins/400.css";
+@import "@fontsource/poppins/500.css";
+@import "@fontsource/poppins/600.css";
+
+/* Phase 0 placeholder. Phase 1 replaces this with the extracted AiMY theme. */
+@source "../registry";
+
+body {
+  background: #0f1215;
+  color: #dee5ed;
+  font-family: "Poppins", system-ui, sans-serif;
+  font-weight: 300;
+}

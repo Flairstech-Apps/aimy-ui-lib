@@ -1,0 +1,33 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "aimy",
+  "homepage": "https://aimy-ui-lib.nour-ali.workers.dev",
+  "items": [
+    {
+      "name": "utils",
+      "type": "registry:lib",
+      "title": "cn() class helper",
+      "description": "Joins class names and resolves Tailwind conflicts so a className passed to any AiMY component overrides its defaults. Every AiMY component depends on it.",
+      "dependencies": ["clsx", "tailwind-merge"],
+      "files": [
+        {
+          "path": "registry/aimy/lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "install-check",
+      "type": "registry:component",
+      "title": "Install check (Phase 0 skeleton)",
+      "description": "Temporary item that proves the AiMY registry installs end to end. Not for use in products; removed in Phase 1.",
+      "registryDependencies": ["@aimy/utils"],
+      "files": [
+        {
+          "path": "registry/aimy/ui/install-check.tsx",
+          "type": "registry:component"
+        }
+      ]
+    }
+  ]
+}

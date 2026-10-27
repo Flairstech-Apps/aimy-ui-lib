@@ -1,0 +1,36 @@
+{
+  "name": "aimy-ui-lib",
+  "version": "0.0.1",
+  "private": true,
+  "description": "AiMY UI: the React + TypeScript component library for AiMY products (internal to FlairsTech)",
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "next dev",
+    "registry:build": "shadcn build --output public/r",
+    "build": "pnpm registry:build && next build",
+    "typecheck": "tsc --noEmit",
+    "deploy": "pnpm build && wrangler deploy"
+  },
+  "dependencies": {
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@fontsource/poppins": "5.3.0",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "lucide-react": "1.62.0",
+    "next": "16.4.3",
+    "radix-ui": "1.8.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "tailwind-merge": "3.7.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "24.19.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "shadcn": "4.23.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "6.0.3",
+    "wrangler": "4.153.0"
+  }
+}
