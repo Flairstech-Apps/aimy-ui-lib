@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "aimy-ui-lib",
+  "account_id": "6aacec81c127510cf3873e6f98f387f6",
   "main": "worker/index.ts",
   "compatibility_date": "2026-10-20",
   "observability": { "enabled": true },

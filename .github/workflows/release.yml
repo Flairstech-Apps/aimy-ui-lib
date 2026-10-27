@@ -1,0 +1,44 @@
+name: Release packages
+
+# Push a tag like v0.1.0 to publish @flairstech-aimy/ui and
+# @flairstech-aimy/tokens at the versions in their package.json files.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://npm.pkg.github.com
+          scope: "@flairstech-aimy"
+
+      - name: Install root (the package builds from the registry source)
+        run: pnpm install --frozen-lockfile
+
+      - name: Build @flairstech-aimy/ui
+        working-directory: package/ui
+        run: |
+          pnpm install --ignore-workspace --frozen-lockfile
+          pnpm build
+
+      - name: Publish @flairstech-aimy/ui
+        working-directory: package/ui
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm publish
+
+      - name: Publish @flairstech-aimy/tokens
+        working-directory: package/tokens
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm publish

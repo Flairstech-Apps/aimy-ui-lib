@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check, build, test install, deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck, lint, doctrine lint, unit and accessibility tests
+        run: pnpm check
+
+      - name: Build registry and docs
+        run: pnpm build
+
+      - name: Build the npm package
+        working-directory: package/ui
+        run: |
+          pnpm install --ignore-workspace --frozen-lockfile
+          pnpm build
+
+      # Install every item from the registry just built into a copy of the
+      # demo app, the way a product team would, then build the demo. A broken
+      # registry item fails here, before anything deploys.
+      - name: Test install into the demo app
+        run: |
+          npx --yes http-server@14.1.1 public -p 4000 --silent &
+          sleep 2
+          cp -r demo "$RUNNER_TEMP/demo"
+          cd "$RUNNER_TEMP/demo"
+          node -e '
+            const f = "components.json"
+            const c = JSON.parse(require("fs").readFileSync(f, "utf8"))
+            c.registries["@aimy"] = "http://localhost:4000/r/{name}.json"
+            require("fs").writeFileSync(f, JSON.stringify(c, null, 2))
+          '
+          pnpm install --ignore-workspace
+          items=$(node -e 'console.log(require(process.argv[1]).items.map(i => "@aimy/" + i.name).join(" "))' "$GITHUB_WORKSPACE/registry.json")
+          pnpm exec shadcn add $items --overwrite --yes
+          pnpm build
+
+      - name: Deploy to Cloudflare
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::warning::CLOUDFLARE_API_TOKEN is not set in the repo secrets, so this run did not deploy."
+            exit 0
+          fi
+          pnpm exec wrangler deploy
