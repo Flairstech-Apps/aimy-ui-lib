@@ -1,9 +1,11 @@
 {
   "name": "@flairstech-aimy/ui",
   "version": "0.0.1",
-  "description": "AiMY UI as an npm package: import components, add one stylesheet, no Tailwind needed. Internal to FlairsTech.",
+  "description": "AiMY UI as an npm package: import components, add one stylesheet, no Tailwind needed. Internal to FlairsTech; served from the AiMY UI registry.",
   "type": "module",
-  "sideEffects": ["*.css"],
+  "sideEffects": [
+    "*.css"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -13,7 +15,9 @@
     },
     "./styles.css": "./dist/styles.css"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup && tailwindcss -i src/styles.css -o dist/styles.css --minify"
   },
@@ -32,9 +36,6 @@
     "tailwindcss": "4.3.3",
     "tsup": "9.0.0",
     "typescript": "6.0.3"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
   },
   "repository": {
     "type": "git",

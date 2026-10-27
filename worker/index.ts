@@ -1,8 +1,8 @@
 // Serves the static docs and registry from out/, locked to FlairsTech.
 //
-// Two locks, because people and the install command arrive differently:
-// - /r/* (registry JSON, fetched by the shadcn CLI) needs
-//   "Authorization: Bearer <REGISTRY_TOKEN>".
+// Two locks, because people and the install commands arrive differently:
+// - /r/* (registry JSON, fetched by the shadcn CLI) and /npm/* (our npm
+//   registry, fetched by npm and pnpm) need "Authorization: Bearer <REGISTRY_TOKEN>".
 // - Everything else (the docs) needs the same token once, entered on /login,
 //   which sets an HttpOnly cookie. Cloudflare Access can replace this later.
 
@@ -58,20 +58,45 @@ function loginPage(error: boolean, next: string): Response {
   })
 }
 
+// npm asks for package metadata at /npm/@scope%2fname (or /npm/@scope/name)
+// and for tarballs at the URL the metadata names. Both are static files that
+// scripts/npm-registry.mjs writes into public/npm/.
+async function npm(request: Request, url: URL, env: Env): Promise<Response> {
+  if (request.method !== "GET" && request.method !== "HEAD") {
+    return Response.json({ error: "This registry is read-only. Publish with scripts/npm-registry.mjs." }, { status: 405 })
+  }
+  const rest = decodeURIComponent(url.pathname.slice("/npm/".length))
+  const meta = /^(@[a-z0-9-]+\/[a-z0-9._-]+)\/?$/.exec(rest)
+  const tarball = /^@[a-z0-9-]+\/[a-z0-9._-]+\/-\/[a-z0-9._-]+\.tgz$/.test(rest)
+  if (!meta && !tarball) return Response.json({ error: "Not found" }, { status: 404 })
+
+  const asset = meta ? `/npm/${meta[1]}/index.json` : `/npm/${rest}`
+  const res = await env.ASSETS.fetch(new Request(new URL(asset, url.origin), { method: request.method }))
+  if (!res.ok) return Response.json({ error: "Not found" }, { status: 404 })
+  const headers = new Headers(res.headers)
+  headers.set("Content-Type", meta ? "application/json" : "application/octet-stream")
+  headers.set("Cache-Control", meta ? "no-cache" : "private, max-age=31536000, immutable")
+  return new Response(res.body, { status: 200, headers })
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url)
     const token = env.REGISTRY_TOKEN
 
-    if (url.pathname.startsWith("/r/")) {
+    if (url.pathname.startsWith("/r/") || url.pathname.startsWith("/npm/")) {
       const auth = request.headers.get("Authorization") ?? ""
       const given = auth.startsWith("Bearer ") ? auth.slice(7) : ""
       if (!token || !same(given, token)) {
         return Response.json(
-          { error: "Missing or wrong AIMY_REGISTRY_TOKEN. Set it in your environment; components.json sends it." },
+          {
+            error:
+              "Missing or wrong AIMY_REGISTRY_TOKEN. Set it in your environment; components.json and .npmrc send it.",
+          },
           { status: 401 }
         )
       }
+      if (url.pathname.startsWith("/npm/")) return npm(request, url, env)
       return env.ASSETS.fetch(request)
     }
 

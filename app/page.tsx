@@ -9,6 +9,9 @@ const registryConfig = `{
   }
 }`
 
+const npmrc = `@flairstech-aimy:registry=https://aimy-ui-lib.nour-ali.workers.dev/npm/
+//aimy-ui-lib.nour-ali.workers.dev/npm/:_authToken=\${AIMY_REGISTRY_TOKEN}`
+
 export default function Home() {
   return (
     <main className="mx-auto max-w-3xl px-6 py-16">
@@ -25,6 +28,16 @@ export default function Home() {
       <pre className="mt-4 overflow-x-auto rounded-lg bg-[#0d1117] p-4 text-[14px]">{registryConfig}</pre>
       <pre className="mt-4 overflow-x-auto rounded-lg bg-[#0d1117] p-4 text-[14px]">
         npx shadcn@latest add @aimy/install-check
+      </pre>
+
+      <h2 className="mt-12 text-[20px] font-medium">Or install the npm package</h2>
+      <p className="mt-2 text-[16px] text-[#c3ceda]">
+        For React apps without Tailwind, or when you want to import instead of copy. Add these two lines to your
+        project&apos;s <code>.npmrc</code>, then install as usual.
+      </p>
+      <pre className="mt-4 overflow-x-auto rounded-lg bg-[#0d1117] p-4 text-[14px]">{npmrc}</pre>
+      <pre className="mt-4 overflow-x-auto rounded-lg bg-[#0d1117] p-4 text-[14px]">
+        npm install @flairstech-aimy/ui @flairstech-aimy/tokens
       </pre>
 
       <h2 className="mt-12 text-[20px] font-medium">Start a new AiMY product</h2>

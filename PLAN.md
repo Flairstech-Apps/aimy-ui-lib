@@ -89,7 +89,14 @@ You have never shipped a UI library, so here is the whole route. The library is 
 Because the library has to install anywhere, there are three ways in. All three are built from the same source files, so nothing is written twice.
 
 1. **Copy-in (the shadcn way).** Described above. Best for React apps that use Tailwind v4 and want to own and adjust the code. Works in Vite, Next.js (App Router included: interactive components carry `"use client"`) and React Router.
-2. **The npm package.** For React apps that don't use Tailwind or just want to import and go: `npm install @flairstech-aimy/ui`, then `import { Button } from "@flairstech-aimy/ui"` and one stylesheet import. It ships compiled CSS, so the app needs no Tailwind. Being internal, it's published to GitHub Packages under the org's scope (`@flairstech-aimy`, which GitHub requires to match the org name). A developer adds one line with a GitHub token to their `.npmrc`. Updates are versioned (1.0.0, 1.1.0), so teams choose when to upgrade.
+2. **The npm package.** For React apps that don't use Tailwind or just want to import and go: `npm install @flairstech-aimy/ui`, then `import { Button } from "@flairstech-aimy/ui"` and one stylesheet import. It ships compiled CSS, so the app needs no Tailwind. It is served from our own private npm registry at `/npm/` on the same Cloudflare site, behind the same library token (decided 27 Oct, because GitHub Packages is blocked by the org's billing limit). A developer adds two lines to their `.npmrc`:
+
+   ```
+   @flairstech-aimy:registry=https://aimy-ui-lib.nour-ali.workers.dev/npm/
+   //aimy-ui-lib.nour-ali.workers.dev/npm/:_authToken=${AIMY_REGISTRY_TOKEN}
+   ```
+
+   Then `npm install @flairstech-aimy/ui` (or pnpm) works as usual. Updates are versioned (1.0.0, 1.1.0), so teams choose when to upgrade. To publish, bump the version in `package/ui/package.json` and run `pnpm npm:publish ui`: it builds, packs the tarball into `npm-store/` (committed, never overwritten), and the next deploy serves it.
 3. **Tokens only.** `@flairstech-aimy/tokens`: the colour, type, spacing, radius, shadow and motion variables as plain CSS, plus the fonts. Works in anything that renders HTML, React or not, including HTML prototypes like Sales and Knowledge. (We don't touch those products; this is just what the package makes possible.)
 
 The package door has one technical risk: compiled Tailwind CSS from the library meeting an app that also runs Tailwind. The plan is to put the library's styles in their own CSS layer so the app's styles always win cleanly. Phase 0 tests this in both a Tailwind app and a non-Tailwind app before we commit to it. The dev team's app already has a local package called `@aimy/ui`. We don't touch it, and our registry namespace `@aimy` doesn't clash with it, because one is a registry name in `components.json` and the other is a package name inside their repo. Whether that team ever adopts the library is their call, later.
@@ -323,7 +330,7 @@ A component is finished when all of these are true. This is the checklist for ev
 
 GitHub Actions runs, in order: TypeScript (strict), lint, the token check, a "doctrine lint" (fails on `transition-all`, on a left border stripe, on text opacity used to show state, on a native `<select>`, on inline `onClick` strings in HTML examples, on any duration, curve, distance, scale or blur that isn't a motion token), unit and accessibility tests, the registry build, a test install of every item into the demo app (section 5a) and its type check, then visual screenshot comparison. Only if all pass does `main` deploy.
 
-**Status on 27 Oct.** The workflows are written (`.github/workflows/ci.yml` and `release.yml`) and every check passes locally with `pnpm check`. GitHub refuses to run them, and refuses package publishing too, because the `Flairstech-AIMY` org (free plan) "has reached its billing limit". Its admins are hadeeremad000, IT-Flaristech and mhsFlairs. Until that's fixed, checks run locally before every commit and deploys go out from this machine.
+**Status on 27 Oct.** The workflows are written (`.github/workflows/ci.yml` and `release.yml`) and every check passes locally with `pnpm check`. GitHub refuses to run them because the `Flairstech-AIMY` org (free plan) "has reached its billing limit". Its admins are hadeeremad000, IT-Flaristech and mhsFlairs. Until that's fixed, checks run locally before every commit and deploys go out from this machine. Package publishing no longer depends on GitHub: the packages are served from our own registry (section 4), so the GitHub release workflow was removed.
 
 ## 15. The order of work, with checkpoints
 
@@ -335,7 +342,7 @@ Each phase ends with a review where you look at screenshots and say yes before t
 - Write PRODUCT.md with you (who uses this library and why), via `/impeccable init`.
 - Create the repo from shadcn's registry template; set up TypeScript, Tailwind v4, lint, tests, CI.
 - Build a walking skeleton: one throwaway item, deployed to Cloudflare, installed into the new demo app (section 5a) with one command. This proves the whole chain (build, deploy, install) works before any real component exists.
-- Prove the other two doors with the same throwaway item: publish a `0.0.1` of the package to GitHub Packages and import it into a non-Tailwind Vite app and into a Tailwind app (the CSS-layer test), and load the tokens package in a plain HTML page.
+- Prove the other two doors with the same throwaway item: publish a `0.0.1` of the package and import it into a non-Tailwind Vite app and into a Tailwind app (the CSS-layer test), and load the tokens package in a plain HTML page.
 - Create `starter/` with just the theme and the skeleton item, and check that `npx tiged` copies it into a new folder that builds.
 - Check the folder-with-spaces question.
 - **Checkpoint:** you run one install command yourself and see it work, and you see the starter come up as a new app.
@@ -351,7 +358,7 @@ Each phase ends with a review where you look at screenshots and say yes before t
 
 **Phase 4: shell and data display (about 2 weeks).** Settle disagreements 6 and 8.
 
-**Phase 5: adoption.** Finish the starter (Vite and Next.js) so a new AiMY product can start from it, and the demo app as the full reference screen. Publish `1.0.0` of the package. Write the "how to adopt" notes for any React team. Whether the dev team uses the library is their decision; we never change their repo. Decide whether an npm package is wanted. Feed every design-system fix found along the way back into the design-system repo.
+**Phase 5: adoption.** Finish the starter (Vite and Next.js) so a new AiMY product can start from it, and the demo app as the full reference screen. Publish `1.0.0` of the package. Write the "how to adopt" notes for any React team. Whether the dev team uses the library is their decision; we never change their repo. Feed every design-system fix found along the way back into the design-system repo.
 
 ## 16. Risks and how we handle them
 

@@ -7,13 +7,14 @@
   "scripts": {
     "dev": "next dev",
     "registry:build": "shadcn build --output public/r",
-    "build": "pnpm registry:build && next build",
+    "build": "pnpm registry:build && node scripts/npm-registry.mjs build && next build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint:doctrine": "node scripts/doctrine-lint.mjs",
     "test": "vitest run",
     "check": "pnpm typecheck && pnpm lint && pnpm lint:doctrine && pnpm test",
-    "deploy": "pnpm build && wrangler deploy"
+    "deploy": "pnpm build && wrangler deploy",
+    "npm:publish": "node scripts/npm-registry.mjs publish"
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "5.3.0",
