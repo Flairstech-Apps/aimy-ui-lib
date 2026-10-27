@@ -27,6 +27,11 @@ export default function Home() {
         npx shadcn@latest add @aimy/install-check
       </pre>
 
+      <h2 className="mt-12 text-[20px] font-medium">Start a new AiMY product</h2>
+      <pre className="mt-4 overflow-x-auto rounded-lg bg-[#0d1117] p-4 text-[14px]">
+        npx tiged --mode=git https://github.com/Flairstech-AIMY/aimy-ui-lib/starter my-product
+      </pre>
+
       <h2 className="mt-12 text-[20px] font-medium">Preview</h2>
       <div className="mt-4">
         <InstallCheck />
