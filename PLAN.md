@@ -4,7 +4,7 @@ Written 27 Oct 2026. Nothing is built yet. This is the plan to review before any
 
 ## 1. What we are making, in one paragraph
 
-AiMY UI is a React and TypeScript component library that documents the system AiMY Sales and AiMY Knowledge already ship. It works the way shadcn/ui works: a developer runs one command and the component's source code is copied into their app, where they own it. Nothing here is a new design. Every token and component is lifted from what the products render today, checked against them side by side, and written down as a building block with its rules attached. Because AiMY is an AI product, the library ships the AI parts (composer, thinking, streaming, citations, trust, work state, accept/edit/reject, undo, memory) as first-class components, and it ships instructions that AI coding agents can read, so Claude or Copilot can build AiMY screens correctly too.
+AiMY UI is a React and TypeScript component library that documents the system AiMY Sales and AiMY Knowledge already ship. It works the way shadcn/ui works: a developer runs one command and the component's source code is copied into their app, where they own it. Nothing here is a new design. Every token and component is lifted from what the products render today, checked against them side by side, and written down as a building block with its rules attached. It has two jobs (your words, 27 Oct): **it installs anywhere**, into any React app however it was set up, and **it kickstarts any AiMY product**, so a new product starts on day one with the AiMY look, shell, AI parts and rules already in place. Because AiMY is an AI product, the library ships the AI parts (composer, thinking, streaming, citations, trust, work state, accept/edit/reject, undo, memory) as first-class components, and it ships instructions that AI coding agents can read, so Claude or Copilot can build AiMY screens correctly too.
 
 ## 2. What we found in the code (the ground truth)
 
@@ -14,7 +14,7 @@ Three sources hold the system today.
 - **Knowledge** loads its own extracted copy, `Knowledge/assets/aimy-ds.css` (from design-system commit fef41de), in rem units, with an alias layer (`--accent` points at `--qa-accent`, `--hairline` at `--w07`, and so on) and a second ink layer in `knowledge.css` (`--ink-quiet`, `--ink-faint`, `--ink-action`, `--ink-ok` and friends).
 - **Sales** loads an older extract, `Sales/assets/aimy-ds.css` (from commit 6817122), in px units, plus `sales.css` and `bdr.css` on top. Sales builds many of its own versions instead of the shared classes: `.b-menu` instead of `.v2-dropdown`, `.b-conf` instead of `.conf-badge`, `.b-cur` instead of `.agent-steps`, `.s-ans-cite` instead of `.cite`.
 
-There is also a fourth thing that matters a lot: **the dev team's React app**, `knowledge-dev/aimy-knowledge-ui`. It is a pnpm and Turborepo monorepo on React 19, Vite 7, Tailwind v4, Radix, cva, clsx, tailwind-merge and lucide-react. It already has a package called `@aimy/ui`, which is stock shadcn (default/destructive/outline button variants) set in Urbanist, not Poppins. So the developers already work the shadcn way, but with the wrong skin. That is the gap this library closes, and it decides the stack below.
+There is also a fourth thing that matters a lot: **the dev team's React app**, `knowledge-dev/aimy-knowledge-ui`. It is a pnpm and Turborepo monorepo on React 19, Vite 7, Tailwind v4, Radix, cva, clsx, tailwind-merge and lucide-react. It already has a package called `@aimy/ui`, which is stock shadcn (default/destructive/outline button variants) set in Urbanist, not Poppins. So the developers already work the shadcn way, but with the wrong skin. That is the gap this library closes, and it decides the stack below. **We only read that repo, never change it** (your rule, 27 Oct). Everything we build is tested in our own demo app (section 5a).
 
 ### Where Sales and Knowledge disagree (must be settled before building those pieces)
 
@@ -84,7 +84,15 @@ You have never shipped a UI library, so here is the whole route. The library is 
 6. **Updates.** When we change a component, we push to `main` and it's live. Developers see what changed with `npx shadcn@latest diff` and take it with `add --overwrite`. A changelog page lists every change.
 7. **AI agents can install it too.** shadcn's MCP server works with any registry, including a private one with a token, so a developer's Claude or Copilot can search AiMY components and add them by name.
 
-What we are deliberately **not** doing first: publishing an npm package (`npm install @aimy/ui`). Copy-in is how shadcn works, it's what the dev team already does, and it means one thing to maintain instead of two. If a team later wants a versioned package, we can build one from the same source without changing any component. There is one naming clash to sort out: the dev team's monorepo already has a local package called `@aimy/ui`. The plan is for that package's insides to be replaced by components installed from this registry, which needs a conversation with whoever owns that repo (section 12, item 3).
+### Installs anywhere: three doors, one source
+
+Because the library has to install anywhere, there are three ways in. All three are built from the same source files, so nothing is written twice.
+
+1. **Copy-in (the shadcn way).** Described above. Best for React apps that use Tailwind v4 and want to own and adjust the code. Works in Vite, Next.js (App Router included: interactive components carry `"use client"`) and React Router.
+2. **The npm package.** For React apps that don't use Tailwind or just want to import and go: `npm install @flairstech-aimy/ui`, then `import { Button } from "@flairstech-aimy/ui"` and one stylesheet import. It ships compiled CSS, so the app needs no Tailwind. Being internal, it's published to GitHub Packages under the org's scope (`@flairstech-aimy`, which GitHub requires to match the org name). A developer adds one line with a GitHub token to their `.npmrc`. Updates are versioned (1.0.0, 1.1.0), so teams choose when to upgrade.
+3. **Tokens only.** `@flairstech-aimy/tokens`: the colour, type, spacing, radius, shadow and motion variables as plain CSS, plus the fonts. Works in anything that renders HTML, React or not, including HTML prototypes like Sales and Knowledge. (We don't touch those products; this is just what the package makes possible.)
+
+The package door has one technical risk: compiled Tailwind CSS from the library meeting an app that also runs Tailwind. The plan is to put the library's styles in their own CSS layer so the app's styles always win cleanly. Phase 0 tests this in both a Tailwind app and a non-Tailwind app before we commit to it. The dev team's app already has a local package called `@aimy/ui`. We don't touch it, and our registry namespace `@aimy` doesn't clash with it, because one is a registry name in `components.json` and the other is a package name inside their repo. Whether that team ever adopts the library is their call, later.
 
 ## 5. Repo layout
 
@@ -101,6 +109,9 @@ aimy-ui-lib/
     ai/                      composer.tsx, message.tsx, citation.tsx ... (AI)
     shell/                   topnav.tsx, app-shell.tsx, rail.tsx
     examples/                one demo file per variant; the docs render these
+  starter/                   the kickstart app for a new AiMY product (section 5b)
+  demo/                      starter + believable mock screens; where we try everything (section 5a)
+  package/                   builds @flairstech-aimy/ui and @flairstech-aimy/tokens from the same source
   app/                       the documentation site (Next.js, static export)
   content/docs/              MDX pages: foundations, components, patterns
   public/r/                  generated registry JSON (built, not hand-edited)
@@ -116,6 +127,30 @@ aimy-ui-lib/
   PRODUCT.md                 who this is for and why (from /impeccable init)
   DESIGN.md                  generated from the shipped tokens at the end of Phase 1
 ```
+
+Plus the demo app, below.
+
+## 5a. The demo app (where we try everything)
+
+The real React app is off limits, so the library gets its own demo app to prove the components work the way a developer will actually use them.
+
+- **What it is.** A small React + TypeScript + Vite + Tailwind v4 app in `demo/` inside this repo. It is a believable AiMY screen, not a component gallery: the topnav, a briefing list of contacts with work states and AiMY notes, a card that opens the canvas, the composer, a streamed answer with citations, an Accept / Edit / Reject decision, and a toast with undo. It uses mock data that reads like Sales and Knowledge (plain English, real-sounding names, "call" and "contacts").
+- **How it gets its components.** Exactly like a developer would. It has its own `components.json` pointing at our deployed registry with the token, and every component in it was added with `npx shadcn add @aimy/...`. It never imports from the library's source folder. If an install is broken, the demo breaks, which is the point.
+- **What it proves.** That the install command works with the private registry. That components fit together on one screen, not just one at a time on a docs page. That the screen looks like Sales and Knowledge at 1536 in both themes. And that the transitions feel right in real flows.
+- **How it grows.** It starts in Phase 0 with the walking skeleton, one item. Every batch adds its components to the demo screen. Each checkpoint review is done on the demo, next to the product it came from.
+- **Where it lives.** Deployed next to the docs at `/demo`, behind the same company sign-in.
+- **CI.** The demo is reinstalled from the freshly built registry and type-checked on every push, so a broken registry item fails the build before it deploys.
+
+## 5b. Kickstarting a new AiMY product
+
+A team starting a new AiMY product (Talent, QA, Connect, whatever comes next) should get a working AiMY app in minutes, not rebuild the shell from screenshots.
+
+- **The starter.** `starter/` in this repo is a minimal AiMY app: React + TypeScript + Vite + Tailwind v4, the theme and fonts installed, dark by default with the light toggle, the shell (topnav with product tabs, rail that becomes a drawer at 1040, main area), the Briefing to Canvas wiring (a briefing list, the canvas overlay, the composer), toast with undo, an empty state, and the product's own accent as a single variable to change. Every component in it came from the registry, so the team owns and can change all of it.
+- **The rules come with it.** The starter includes `AGENTS.md` and the AiMY skill, so the first time someone asks Claude or Copilot to build a screen, the agent already knows the tokens, the doctrine (entry modes, work state, never apply silently), your copy rules and the no-muted-text rule.
+- **One command to start.** For a new product: `npx tiged Flairstech-AIMY/aimy-ui-lib/starter my-product` copies the starter into a new folder (it works with private repos through the developer's own GitHub login). The GitHub "Use this template" button is the no-terminal option, which needs the starter mirrored to its own template repo. That mirror is optional and would be a second repo, so I'd ask before creating it.
+- **For an existing React app:** one init command (`npx shadcn@latest init` pointed at our `@aimy/init` item) adds the theme, fonts, `cn`, the theme toggle and the agent rules in one go, then components are added one by one.
+- **Next.js too.** A Next.js version of the starter follows once the Vite one is solid, because "anywhere" includes server-rendered apps. Both are reinstalled and built in CI on every push.
+- **The demo app is the starter plus mock screens.** `demo/` begins as a copy of `starter/` and adds the believable Sales-style screens. So the starter is always proven by the demo, and every checkpoint review shows both.
 
 The local folder is `aimy ui lib` with spaces. Some build tools trip on spaces in paths, so Phase 0 checks this on day one. If anything breaks, we move to a folder named `aimy-ui-lib` and update the memory path.
 
@@ -260,14 +295,14 @@ The library itself is used by AI coding agents as much as by people, so it ships
 - AiMY's own names for variants and sizes. shadcn supplies delivery only, never the look (section 3a).
 
 **Still open:**
-1. **The pilot.** Which developer or team lead looks after `knowledge-dev/aimy-knowledge-ui`, and would they let us swap its `packages/ui` for components from this library? See the note under this list.
+1. *(settled: no pilot in the real app; we build our own demo app, section 5a)*
 2. *(settled: Claude created the repo)*
 3. **The nine disagreements in section 2.** I'll bring each one with a side-by-side screenshot; you pick.
 4. *(settled: Sales' accent)*
 5. **Light-weight Poppins.** `--fw-light` is 200 but no 200 file is loaded. Load it, or drop the token.
 6. **Docs site look.** It should look like AiMY (dark by default, Poppins, the product's chrome), not like a generic docs theme. [Yes. It's the library's best demo.]
 
-**What the pilot means.** Your designs ship as HTML prototypes (Sales, Knowledge). Separately, the developers are building the real Knowledge product in React: the GitHub repo `Flairstech-AIMY/aimy-knowledge-ui`, cloned on your machine at `Desktop\AiMY\knowledge-dev\aimy-knowledge-ui` (your copy was last pulled 27 Aug). Its top committers are Mariam Galal, Ahmed Youssef, Sama Magdy, Mahmoud Nasr, Mohammed Shokry and Omar Nawar. Their app has its own small component package, also called `@aimy/ui`. It's stock shadcn in the Urbanist font, so their screens don't look like your designs. The pilot is: once Batch A of the core components is ready, we ask that team to replace a few of their components (button, tag, input) with ours and check that their screens now match your designs without breaking. That's the real test of whether the library works for the people it's for. I need the name of whoever decides things in that repo, so they can be asked. If you'd rather not involve them yet, the pilot waits until Phase 5 and we test installs in a fresh app we build ourselves.
+**About the real React app.** The developers build the real Knowledge product in React in `Flairstech-AIMY/aimy-knowledge-ui` (your local copy is at `Desktop\AiMY\knowledge-dev\aimy-knowledge-ui`). We read it to learn their stack and nothing more. We never edit, branch, open PRs on or install into it. The demo app in section 5a is where everything gets tried.
 
 ## 13. How each component gets done (the definition of done)
 
@@ -280,13 +315,13 @@ A component is finished when all of these are true. This is the checklist for ev
 5. **Motion, reduced motion and both themes** checked. The component uses the transitions.dev snippet named for it in section 7a, and the transitions-polish review has no open findings.
 6. **No raw values.** The token check finds no hex, px font size or arbitrary value outside the theme.
 7. **Docs page written.** What it is, live preview with theme toggle, install command, usage, variants, states, accessibility notes, do and don't, props.
-8. **Registry entry** with a model-readable description and correct dependencies, and it installs cleanly into a fresh test app with one command.
+8. **Registry entry** with a model-readable description and correct dependencies. It installs cleanly into the demo app with one command, and it is exported from the npm package.
 9. **Tests.** Behaviour test, accessibility test, and screenshots in both themes at 1536 and at a phone width.
 10. **Shown to you** with a screenshot next to the product it came from, then committed. One commit per verified component.
 
 ## 14. Quality gates that run on every push
 
-GitHub Actions runs, in order: TypeScript (strict), lint, the token check, a "doctrine lint" (fails on `transition-all`, on a left border stripe, on text opacity used to show state, on a native `<select>`, on inline `onClick` strings in HTML examples, on any duration, curve, distance, scale or blur that isn't a motion token), unit and accessibility tests, the registry build, a test install of every item into a throwaway app, then visual screenshot comparison. Only if all pass does `main` deploy.
+GitHub Actions runs, in order: TypeScript (strict), lint, the token check, a "doctrine lint" (fails on `transition-all`, on a left border stripe, on text opacity used to show state, on a native `<select>`, on inline `onClick` strings in HTML examples, on any duration, curve, distance, scale or blur that isn't a motion token), unit and accessibility tests, the registry build, a test install of every item into the demo app (section 5a) and its type check, then visual screenshot comparison. Only if all pass does `main` deploy.
 
 ## 15. The order of work, with checkpoints
 
@@ -297,9 +332,11 @@ Each phase ends with a review where you look at screenshots and say yes before t
 - Set up the two locks: Cloudflare Access for the docs, a token for the registry.
 - Write PRODUCT.md with you (who uses this library and why), via `/impeccable init`.
 - Create the repo from shadcn's registry template; set up TypeScript, Tailwind v4, lint, tests, CI.
-- Build a walking skeleton: one throwaway item, deployed to Cloudflare, installed into a fresh Vite app with one command. This proves the whole chain (build, deploy, install) works before any real component exists.
+- Build a walking skeleton: one throwaway item, deployed to Cloudflare, installed into the new demo app (section 5a) with one command. This proves the whole chain (build, deploy, install) works before any real component exists.
+- Prove the other two doors with the same throwaway item: publish a `0.0.1` of the package to GitHub Packages and import it into a non-Tailwind Vite app and into a Tailwind app (the CSS-layer test), and load the tokens package in a plain HTML page.
+- Create `starter/` with just the theme and the skeleton item, and check that `npx tiged` copies it into a new folder that builds.
 - Check the folder-with-spaces question.
-- **Checkpoint:** you run one install command yourself and see it work.
+- **Checkpoint:** you run one install command yourself and see it work, and you see the starter come up as a new app.
 
 **Phase 1: foundations (about 1 week).**
 - Token extraction script, the theme item and `motion.css`. Settle disagreements 1, 7 and 9 (2 and 3 are settled by transitions.dev).
@@ -312,7 +349,7 @@ Each phase ends with a review where you look at screenshots and say yes before t
 
 **Phase 4: shell and data display (about 2 weeks).** Settle disagreements 6 and 8.
 
-**Phase 5: adoption.** Pilot in the dev team's app. Write the migration notes. Decide whether an npm package is wanted. Feed every design-system fix found along the way back into the design-system repo.
+**Phase 5: adoption.** Finish the starter (Vite and Next.js) so a new AiMY product can start from it, and the demo app as the full reference screen. Publish `1.0.0` of the package. Write the "how to adopt" notes for any React team. Whether the dev team uses the library is their decision; we never change their repo. Decide whether an npm package is wanted. Feed every design-system fix found along the way back into the design-system repo.
 
 ## 16. Risks and how we handle them
 
