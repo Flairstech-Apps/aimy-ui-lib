@@ -1,16 +1,24 @@
 /*
  * Compiled stylesheet for @flairstech-aimy/ui. The app needs no Tailwind.
+ * Load the tokens first, then this:
+ *
+ *   import "@flairstech-aimy/tokens"        // tokens, fonts, motion, base
+ *   import "@flairstech-aimy/ui/styles.css" // the components' utilities
+ *
+ * This file holds only the utilities the components use, compiled against
+ * the AiMY theme mapping. Token values live in the tokens package, so one
+ * tokens update reaches both.
  *
  * Layering, so the library never fights the app:
  * - No preflight. The library doesn't reset the app's page.
- * - The library's utilities sit in the `components` layer. In an app that
- *   also runs Tailwind, that is above Tailwind's preflight (so a reset can't
- *   strip a component) and below the app's own utilities (so a className
- *   passed to a component still wins). In an app without Tailwind, any
- *   unlayered app CSS wins over it, as layered CSS always loses to unlayered.
+ * - Utilities sit in the `components` layer: above Tailwind's preflight in an
+ *   app that runs Tailwind (a reset can't strip a component), below the
+ *   app's own utilities (a className passed to a component still wins), and
+ *   below any unlayered app CSS.
  */
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
+@import "../../tokens/theme.css";
 @import "tailwindcss/utilities.css" layer(components);
 
 @source "../../../registry/aimy";

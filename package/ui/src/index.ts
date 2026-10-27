@@ -1,2 +1,6 @@
 export { cn } from "../../../registry/aimy/lib/utils"
-export { InstallCheck } from "../../../registry/aimy/ui/install-check"
+export { THEME_KEY, themeScript, useTheme, type Theme } from "../../../registry/aimy/hooks/use-theme"
+export { ThemeScript } from "../../../registry/aimy/ui/theme-script"
+export { ThemeToggle } from "../../../registry/aimy/ui/theme-toggle"
+export { Icon } from "../../../registry/aimy/ui/icon"
+export { AimyMark } from "../../../registry/aimy/brand/aimy-mark"

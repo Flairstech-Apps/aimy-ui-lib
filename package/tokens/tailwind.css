@@ -1,0 +1,26 @@
+/*
+ * @flairstech-aimy/tokens for Tailwind v4 apps. Import it once, after Tailwind:
+ *
+ *   @import "tailwindcss";
+ *   @import "@flairstech-aimy/tokens/tailwind.css";
+ *
+ * It loads every token, then maps them to Tailwind so classes speak AiMY:
+ * bg-card, text-ink, border-hairline, text-meta, rounded-md, shadow-lg.
+ *
+ * Tailwind's own palette, type sizes, weights, radii and shadows are
+ * switched off (`initial`), so bg-blue-500 or text-sm simply do not exist
+ * in an AiMY app. Off-system values fail to build instead of shipping.
+ *
+ * Three names mean something different from stock Tailwind, on purpose:
+ * - font-medium is 400 and font-semibold is 500 (Poppins' ladder sits one
+ *   step lower than most faces);
+ * - text-xs is 14px and text-sm is 16px (AiMY's floor is 12, as text-2xs);
+ * - breakpoints are the shell's rungs, used as max-* (max-rail:, max-column:).
+ *
+ * Some AiMY tokens share a name with Tailwind's (--font-sans, --shadow-md).
+ * The mappings below then read `--x: var(--x)` inside Tailwind's theme layer;
+ * that is safe because the AiMY values are declared outside any layer and
+ * always win the cascade.
+ */
+@import "./index.css";
+@import "./theme.css";

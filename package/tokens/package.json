@@ -1,18 +1,31 @@
 {
   "name": "@flairstech-aimy/tokens",
-  "version": "0.0.1",
-  "description": "AiMY design tokens as plain CSS variables. Works anywhere HTML renders. Internal to FlairsTech; served from the AiMY UI registry.",
-  "style": "./tokens.css",
+  "version": "0.1.0",
+  "description": "AiMY design tokens, motion, fonts and the Tailwind v4 mapping. Works anywhere HTML renders. Internal to FlairsTech; served from the AiMY UI registry.",
+  "style": "./index.css",
   "exports": {
-    ".": "./tokens.css",
-    "./tokens.css": "./tokens.css"
+    ".": "./index.css",
+    "./index.css": "./index.css",
+    "./tailwind.css": "./tailwind.css",
+    "./aimy.css": "./aimy.css",
+    "./motion.css": "./motion.css",
+    "./layers.css": "./layers.css",
+    "./fonts.css": "./fonts.css",
+    "./base.css": "./base.css",
+    "./aliases.css": "./aliases.css",
+    "./transitions.css": "./transitions.css",
+    "./theme.css": "./theme.css"
   },
   "files": [
-    "tokens.css"
+    "*.css"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Flairstech-AIMY/aimy-ui-lib.git",
     "directory": "package/tokens"
+  },
+  "dependencies": {
+    "@fontsource/poppins": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0"
   }
 }

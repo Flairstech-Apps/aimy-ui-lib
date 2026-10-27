@@ -4,30 +4,74 @@
   "homepage": "https://aimy-ui-lib.nour-ali.workers.dev",
   "items": [
     {
+      "name": "theme",
+      "type": "registry:style",
+      "title": "AiMY theme",
+      "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
+      "dependencies": ["@flairstech-aimy/tokens@^0.1.0"],
+      "registryDependencies": ["@aimy/utils"],
+      "css": {
+        "@import \"@flairstech-aimy/tokens/tailwind.css\"": {}
+      }
+    },
+    {
+      "name": "aliases",
+      "type": "registry:style",
+      "title": "Old token names",
+      "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
+      "dependencies": ["@flairstech-aimy/tokens@^0.1.0"],
+      "css": {
+        "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
+      }
+    },
+    {
       "name": "utils",
       "type": "registry:lib",
       "title": "cn() class helper",
       "description": "Joins class names and resolves Tailwind conflicts so a className passed to any AiMY component overrides its defaults. Every AiMY component depends on it.",
       "dependencies": ["clsx", "tailwind-merge"],
-      "files": [
-        {
-          "path": "registry/aimy/lib/utils.ts",
-          "type": "registry:lib"
-        }
-      ]
+      "files": [{ "path": "registry/aimy/lib/utils.ts", "type": "registry:lib" }]
     },
     {
-      "name": "install-check",
+      "name": "use-theme",
+      "type": "registry:hook",
+      "title": "useTheme",
+      "description": "Reads and sets the AiMY theme (dark or light) on <html data-theme>, saved under the localStorage key aimy-ds-theme that every AiMY product uses. Pauses colour transitions for the swap. Also exports themeScript for the pre-paint script.",
+      "files": [{ "path": "registry/aimy/hooks/use-theme.ts", "type": "registry:hook" }]
+    },
+    {
+      "name": "theme-script",
       "type": "registry:component",
-      "title": "Install check (Phase 0 skeleton)",
-      "description": "Temporary item that proves the AiMY registry installs end to end. Not for use in products; removed in Phase 1.",
+      "title": "ThemeScript",
+      "description": "Put inside <head>. Applies the saved theme before first paint so a light-theme user never sees a dark flash.",
+      "registryDependencies": ["@aimy/use-theme"],
+      "files": [{ "path": "registry/aimy/ui/theme-script.tsx", "type": "registry:component" }]
+    },
+    {
+      "name": "theme-toggle",
+      "type": "registry:component",
+      "title": "ThemeToggle",
+      "description": "The one-click light/dark switch from the AiMY topnav. Sun and moon cross-fade with the transitions.dev icon swap. Has an accessible name that says which theme it switches to.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["@aimy/theme", "@aimy/utils", "@aimy/use-theme"],
+      "files": [{ "path": "registry/aimy/ui/theme-toggle.tsx", "type": "registry:component" }]
+    },
+    {
+      "name": "icon",
+      "type": "registry:component",
+      "title": "Icon",
+      "description": "Renders a lucide-react glyph at an AiMY size (xs 12, sm 14, md 16, lg 20, xl 24), stroke 2, hidden from screen readers unless given a label. Use it for every icon; never draw icon paths by hand.",
+      "dependencies": ["lucide-react"],
       "registryDependencies": ["@aimy/utils"],
-      "files": [
-        {
-          "path": "registry/aimy/ui/install-check.tsx",
-          "type": "registry:component"
-        }
-      ]
+      "files": [{ "path": "registry/aimy/ui/icon.tsx", "type": "registry:component" }]
+    },
+    {
+      "name": "aimy-mark",
+      "type": "registry:component",
+      "title": "AimyMark",
+      "description": "The AiMY logo: the mark alone (variant icon) or with the wordmark (variant lockup), path data verbatim from the canonical logo. Set --aimy-mark: currentColor on a brand-filled control to keep the mark legible.",
+      "registryDependencies": ["@aimy/utils"],
+      "files": [{ "path": "registry/aimy/brand/aimy-mark.tsx", "type": "registry:component" }]
     }
   ]
 }

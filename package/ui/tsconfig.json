@@ -9,7 +9,8 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "paths": {
-      "@/lib/utils": ["../../registry/aimy/lib/utils.ts"]
+      "@/lib/utils": ["../../registry/aimy/lib/utils.ts"],
+      "@/hooks/*": ["../../registry/aimy/hooks/*"]
     }
   },
   "include": ["src", "../../registry/aimy"]

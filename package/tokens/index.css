@@ -1,0 +1,12 @@
+/*
+ * @flairstech-aimy/tokens, for any page: React or not, Tailwind or not.
+ *   @import "@flairstech-aimy/tokens";             (bundlers)
+ *   <link rel="stylesheet" href=".../index.css">   (plain HTML; add fonts.css separately)
+ * Tailwind apps import tailwind.css instead, which includes all of this.
+ */
+@import "./fonts.css";
+@import "./aimy.css";
+@import "./motion.css";
+@import "./layers.css";
+@import "./transitions.css";
+@import "./base.css";

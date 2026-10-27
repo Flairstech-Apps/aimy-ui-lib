@@ -14,8 +14,8 @@ const SCAN = ["registry"]
 
 // Files allowed to break one named rule, with the reason.
 const EXEMPT = {
-  "registry/aimy/ui/install-check.tsx": {
-    "raw-colour": "Phase 0 throwaway; deleted in Phase 1 when the theme lands.",
+  "registry/aimy/brand/aimy-mark.tsx": {
+    "raw-colour": "The logo's own gradient stops and wordmark blue are the brand mark, not UI colour.",
   },
 }
 
@@ -46,6 +46,16 @@ const RULES = [
     test: /\btext-[a-z0-9-]+\/\d{1,2}\b|\btext-opacity-/,
   },
   {
+    id: "faint-text",
+    why: "ink-faint and ink-rule are for hairlines and glyphs; words bottom out at ink-quiet (no muted text).",
+    test: /\btext-ink-(?:faint|rule)\b/,
+  },
+  {
+    id: "off-scale-space",
+    why: "Spacing stays on the AiMY 4px scale: 0, px, 0.5, 1-6, 8, 10, 12, 15.",
+    test: /(?<![\w-])-?(?:p|px|py|pt|pr|pb|pl|ps|pe|m|mx|my|mt|mr|mb|ml|ms|me|gap|gap-x|gap-y|space-x|space-y)-(?:7|9|11|1[3-46-9]|[2-9]\d|\d{3,})\b/,
+  },
+  {
     id: "gradient-text",
     why: "No gradient text (doctrine, Never list).",
     test: /\bbg-clip-text\b|background-clip:\s*text/,
@@ -53,7 +63,7 @@ const RULES = [
   {
     id: "raw-motion",
     why: "Every duration and curve is a motion token (PLAN.md section 7a).",
-    test: /\bduration-\[\d|\bease-\[|\bdelay-\[\d|cubic-bezier\(/,
+    test: /\bduration-\[\d|\bduration-\d|\bease-\[|\bdelay-\[\d|\bdelay-\d|cubic-bezier\(/,
   },
   {
     id: "raw-colour",

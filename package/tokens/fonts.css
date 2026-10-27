@@ -1,0 +1,14 @@
+/*
+ * AiMY type: Poppins for every word, JetBrains Mono for code.
+ * Self-hosted from @fontsource (no Google Fonts request). Only the weights
+ * the system uses: 300-700 and 400 italic; mono 400 and 500.
+ * Note: --fw-light (200) has no file; Poppins 200 falls back to 300.
+ */
+@import "@fontsource/poppins/300.css";
+@import "@fontsource/poppins/400.css";
+@import "@fontsource/poppins/400-italic.css";
+@import "@fontsource/poppins/500.css";
+@import "@fontsource/poppins/600.css";
+@import "@fontsource/poppins/700.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";

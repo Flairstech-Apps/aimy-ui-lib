@@ -1,0 +1,48 @@
+/*
+ * Page-level defaults every AiMY product shares (from Knowledge's BASE
+ * section). Kept in a low layer so any app or component rule wins.
+ */
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    font-weight: var(--fw-medium);
+    background: var(--body-bg);
+    color: var(--ink-primary);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Focus is always --brand, 2px, offset 2px, keyboard only. Never the accent. */
+  :focus {
+    outline: none;
+  }
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--brand-dim);
+  }
+
+  ::-webkit-scrollbar {
+    width: 0.3125rem;
+    height: 0.3125rem;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--w08);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--w14);
+  }
+
+  /* Swapping theme should not animate every colour on the page. */
+  :root.theme-swapping *,
+  :root.theme-swapping *::before,
+  :root.theme-swapping *::after {
+    transition: none !important;
+  }
+}

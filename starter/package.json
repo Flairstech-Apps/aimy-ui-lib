@@ -11,7 +11,9 @@
     "aimy:add": "shadcn add"
   },
   "dependencies": {
+    "@flairstech-aimy/tokens": "0.1.0",
     "clsx": "2.1.1",
+    "lucide-react": "1.62.0",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "tailwind-merge": "3.7.0"

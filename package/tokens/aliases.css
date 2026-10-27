@@ -1,0 +1,16 @@
+/*
+ * Optional. Old token names still used inside Sales and Knowledge, pointed at
+ * the library's names, so a product can adopt components without a rename
+ * sweep. Never needed by a new product.
+ */
+:root {
+  --qa-accent: var(--accent);
+  --qa-accent-rgb: var(--accent-rgb);
+  --qa-accent-dim: var(--accent-dim);
+  --qa-accent-glow: var(--accent-glow);
+  --qa-accent-label: var(--accent-label);
+  --teal-label: var(--cyan-label);
+  --ai-text: var(--ai-ink);
+  --hairline: var(--w07);
+  --err-line: var(--err-border);
+}

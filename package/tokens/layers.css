@@ -1,0 +1,26 @@
+/*
+ * Layers (z-index) and the shell's breakpoints, as named tokens.
+ *
+ * NEW in the library: the products use literal numbers for both today. The
+ * z values are the ones Sales and Knowledge already use, now named by job.
+ * The breakpoints are the shell's rungs (Nour, 16 Sep: key every component
+ * to the shell's rungs, not to its own measured limit). Flagged as a gap for
+ * the design-system repo.
+ */
+:root {
+  --z-loading: 5;     /* loading overlay over its own region */
+  --z-float: 10;      /* the composer bar, the canvas overlay */
+  --z-popover: 20;    /* popovers, coach marks */
+  --z-menu: 25;       /* menus */
+  --z-tooltip: 100;   /* tooltips */
+  --z-dropdown: 200;  /* dropdown panels */
+  --z-preview: 300;   /* citation previews */
+  --z-modal: 500;     /* dialogs and their scrim */
+  --z-toast: 9999;    /* toasts, always on top */
+
+  --bp-phone: 32.5rem;  /* 520: phone layouts */
+  --bp-canvas: 45rem;   /* 720: the canvas takes the whole window */
+  --bp-column: 56.25rem; /* 900: the canvas column and product tabs become drawers */
+  --bp-rail: 65rem;     /* 1040: the rail becomes a drawer */
+  --bp-ref: 96rem;      /* 1536: the reference width designs are drawn at */
+}

@@ -1,0 +1,215 @@
+/*
+ * The Tailwind v4 mapping on its own: AiMY tokens as Tailwind theme keys.
+ * Most apps import tailwind.css, which loads the tokens and then this.
+ * The npm package imports only this, to compile its utilities.
+ */
+@theme inline {
+  /* ── Colour ──────────────────────────────────────────── */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* Surfaces */
+  --color-body: var(--body-bg);
+  --color-card: var(--card-bg);
+  --color-raised: var(--card-bg-raised);
+  --color-panel: var(--panel-bg);
+  --color-deep: var(--surface-deep);
+  --color-float: var(--surface-float);
+  --color-sunken: var(--surface-sunken);
+  --color-glass: var(--glass-bg);
+  --color-glass-strong: var(--glass-strong);
+  --color-glass-soft: var(--glass-soft);
+  --color-topbar: var(--topbar-bg);
+  --color-veil: var(--panel-veil);
+  --color-well: var(--well);
+  --color-well-strong: var(--well-strong);
+  --color-scrim: var(--scrim);
+  --color-code: var(--code-bg);
+
+  /* Ink. Text bottoms out at ink-quiet; ink-faint and ink-rule are for
+     hairlines, glyphs and ambience, never for words (no muted text). */
+  --color-ink: var(--ink-primary);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-ink-quiet: var(--ink-quiet);
+  --color-ink-placeholder: var(--ink-placeholder);
+  --color-ink-action: var(--ink-action);
+  --color-ink-faint: var(--ink-faint);
+  --color-ink-rule: var(--ink-rule);
+  --color-link: var(--text-link);
+  --color-on-status: var(--text-on-status);
+
+  /* Edges */
+  --color-hairline: var(--w07);
+  --color-edge: var(--card-border);
+  --color-edge-hover: var(--card-border-hover);
+  --color-edge-focus: var(--card-border-focus);
+  --color-glass-edge: var(--glass-border);
+
+  /* Brand, accent, AI */
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-dim: var(--brand-dim);
+  --color-accent: var(--accent);
+  --color-accent-dim: var(--accent-dim);
+  --color-accent-text: var(--accent-text);
+  --color-accent-label: var(--accent-label);
+  --color-cyan: var(--cyan);
+  --color-cyan-bg: var(--cyan-bg);
+  --color-cyan-border: var(--cyan-border);
+  --color-cyan-text: var(--cyan-text);
+  --color-cyan-label: var(--cyan-label);
+  --color-ai-ink: var(--ai-ink);
+  --color-ai-ink-soft: var(--ai-ink-soft);
+
+  /* Status: the hue marks, -text is for words, -bg is the tinted ground */
+  --color-ok: var(--ok);
+  --color-ok-bg: var(--ok-bg);
+  --color-ok-border: var(--ok-border);
+  --color-ok-text: var(--ok-text);
+  --color-warn: var(--warn);
+  --color-warn-bg: var(--warn-bg);
+  --color-warn-border: var(--warn-border);
+  --color-warn-text: var(--warn-text);
+  --color-err: var(--err);
+  --color-err-strong: var(--err-strong);
+  --color-err-bg: var(--err-bg);
+  --color-err-border: var(--err-border);
+  --color-err-text: var(--err-text);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+  --color-info-border: var(--info-border);
+  --color-info-text: var(--info-text);
+
+  /* Wash ramp: every subtle fill, hairline and hover */
+  --color-w015: var(--w015);
+  --color-w02: var(--w02);
+  --color-w025: var(--w025);
+  --color-w03: var(--w03);
+  --color-w04: var(--w04);
+  --color-w05: var(--w05);
+  --color-w055: var(--w055);
+  --color-w06: var(--w06);
+  --color-w07: var(--w07);
+  --color-w08: var(--w08);
+  --color-w09: var(--w09);
+  --color-w10: var(--w10);
+  --color-w11: var(--w11);
+  --color-w12: var(--w12);
+  --color-w13: var(--w13);
+  --color-w14: var(--w14);
+  --color-w15: var(--w15);
+  --color-w16: var(--w16);
+  --color-w18: var(--w18);
+  --color-w20: var(--w20);
+  --color-w22: var(--w22);
+  --color-w25: var(--w25);
+  --color-w40: var(--w40);
+  --color-w50: var(--w50);
+
+  /* Neutral ramp, for the rare case a role doesn't fit */
+  --color-d50: var(--d50);
+  --color-d100: var(--d100);
+  --color-d200: var(--d200);
+  --color-d300: var(--d300);
+  --color-d400: var(--d400);
+  --color-d500: var(--d500);
+  --color-d600: var(--d600);
+  --color-d700: var(--d700);
+  --color-d750: var(--d750);
+  --color-d800: var(--d800);
+  --color-d850: var(--d850);
+  --color-d900: var(--d900);
+  --color-d950: var(--d950);
+
+  /* ── Type ────────────────────────────────────────────── */
+  --font-*: initial;
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  /* The scale, by AiMY name. Even steps, 12px floor. */
+  --text-*: initial;
+  --text-2xs: var(--fs-2xs);
+  --text-xs: var(--fs-xs);
+  --text-sm: var(--fs-sm);
+  --text-base: var(--fs-base);
+  --text-lg: var(--fs-lg);
+  --text-xl: var(--fs-xl);
+  --text-2xl: var(--fs-2xl);
+  --text-3xl: var(--fs-3xl);
+  --text-4xl: var(--fs-4xl);
+  --text-5xl: var(--fs-5xl);
+  /* The roles Sales and Knowledge share, each with its line height. */
+  --text-micro: var(--fs-2xs);
+  --text-micro--line-height: var(--lh-snug);
+  --text-meta: var(--fs-xs);
+  --text-meta--line-height: var(--lh-base);
+  --text-body: var(--fs-base);
+  --text-body--line-height: var(--lh-base);
+  --text-title: var(--fs-xl);
+  --text-title--line-height: var(--lh-tight);
+
+  --font-weight-*: initial;
+  --font-weight-light: var(--fw-light);
+  --font-weight-regular: var(--fw-regular);
+  --font-weight-medium: var(--fw-medium);
+  --font-weight-semibold: var(--fw-semibold);
+  --font-weight-bold: var(--fw-bold);
+  --font-weight-extrabold: var(--fw-extrabold);
+
+  --leading-*: initial;
+  --leading-none: var(--lh-none);
+  --leading-tight: var(--lh-tight);
+  --leading-snug: var(--lh-snug);
+  --leading-base: var(--lh-base);
+  --leading-relaxed: var(--lh-relaxed);
+
+  --tracking-*: initial;
+  --tracking-tighter: var(--ls-tighter);
+  --tracking-tight: var(--ls-tight);
+  --tracking-normal: var(--ls-normal);
+  --tracking-wide: var(--ls-wide);
+  --tracking-wider: var(--ls-wider);
+
+  /* ── Shape and depth ─────────────────────────────────── */
+  --radius-*: initial;
+  --radius-xs: var(--r-xs);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --radius-xl: var(--r-xl);
+  --radius-2xl: var(--r-2xl);
+  --radius-pill: var(--r-pill);
+
+  --shadow-*: initial;
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+
+  /* Spacing stays Tailwind's 4px multiplier: p-4 is --sp-4 (16px), gap-6 is
+     --sp-6 (24px). The doctrine lint flags steps that are off the AiMY scale. */
+  --spacing: 0.25rem;
+
+  /* ── Motion ──────────────────────────────────────────── */
+  --ease-*: initial;
+  --ease-out: var(--ease-smooth-out);
+  --ease-smooth-out: var(--ease-smooth-out);
+  --ease-in-out: var(--ease-in-out);
+  --ease-linear: var(--ease-linear);
+  --ease-bounce: var(--ease-bounce);
+  --ease-spring: var(--ease-spring);
+
+  --blur-*: initial;
+  --blur-small: var(--blur-small);
+  --blur-medium: var(--blur-medium);
+  --blur-large: var(--blur-large);
+
+  /* ── Breakpoints: the shell's rungs ─────────────────── */
+  --breakpoint-*: initial;
+  --breakpoint-phone: 32.5rem;
+  --breakpoint-canvas: 45rem;
+  --breakpoint-column: 56.25rem;
+  --breakpoint-rail: 65rem;
+  --breakpoint-ref: 96rem;
+}

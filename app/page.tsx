@@ -1,6 +1,10 @@
-import { InstallCheck } from "@/registry/aimy/ui/install-check"
+import Link from "next/link"
+import { Code, CodeBlock, PageHeader, Section } from "@/components/docs/page"
 
-const registryConfig = `{
+const npmrc = `@flairstech-aimy:registry=https://aimy-ui-lib.nour-ali.workers.dev/npm/
+//aimy-ui-lib.nour-ali.workers.dev/npm/:_authToken=\${AIMY_REGISTRY_TOKEN}`
+
+const registries = `{
   "registries": {
     "@aimy": {
       "url": "https://aimy-ui-lib.nour-ali.workers.dev/r/{name}.json",
@@ -9,46 +13,71 @@ const registryConfig = `{
   }
 }`
 
-const npmrc = `@flairstech-aimy:registry=https://aimy-ui-lib.nour-ali.workers.dev/npm/
-//aimy-ui-lib.nour-ali.workers.dev/npm/:_authToken=\${AIMY_REGISTRY_TOKEN}`
-
 export default function Home() {
   return (
-    <main className="mx-auto max-w-3xl px-6 py-16">
-      <h1 className="text-[30px] font-semibold">AiMY UI</h1>
-      <p className="mt-3 text-[16px] text-[#c3ceda]">
-        The component library for AiMY products. Phase 0: proving that the registry builds, deploys and installs.
-      </p>
+    <>
+      <PageHeader
+        title="AiMY UI"
+        lead="The building blocks of AiMY Sales and Knowledge, ready to install in any React app. Nothing here is a new design: every value is lifted from the products and checked against them."
+      />
 
-      <h2 className="mt-12 text-[20px] font-medium">Install</h2>
-      <p className="mt-2 text-[16px] text-[#c3ceda]">
-        Add the AiMY registry to your <code>components.json</code>, set <code>AIMY_REGISTRY_TOKEN</code> in your
-        environment, then add items by name.
-      </p>
-      <pre className="mt-4 overflow-x-auto rounded-lg bg-[#0d1117] p-4 text-[14px]">{registryConfig}</pre>
-      <pre className="mt-4 overflow-x-auto rounded-lg bg-[#0d1117] p-4 text-[14px]">
-        npx shadcn@latest add @aimy/install-check
-      </pre>
+      <Section
+        title="Before anything: the token"
+        lead="The library is internal to FlairsTech. Ask the AiMY UI owner for the library token and set it in your environment as AIMY_REGISTRY_TOKEN. Every install below sends it."
+      >
+        <CodeBlock>{npmrc}</CodeBlock>
+        <p className="mt-3 text-meta text-ink-secondary">
+          Put these two lines in your project&apos;s <Code>.npmrc</Code>. The theme and the npm package come from this
+          private registry.
+        </p>
+      </Section>
 
-      <h2 className="mt-12 text-[20px] font-medium">Or install the npm package</h2>
-      <p className="mt-2 text-[16px] text-[#c3ceda]">
-        For React apps without Tailwind, or when you want to import instead of copy. Add these two lines to your
-        project&apos;s <code>.npmrc</code>, then install as usual.
-      </p>
-      <pre className="mt-4 overflow-x-auto rounded-lg bg-[#0d1117] p-4 text-[14px]">{npmrc}</pre>
-      <pre className="mt-4 overflow-x-auto rounded-lg bg-[#0d1117] p-4 text-[14px]">
-        npm install @flairstech-aimy/ui @flairstech-aimy/tokens
-      </pre>
+      <Section
+        title="Start a new AiMY product"
+        lead="Copies the starter: React, TypeScript, Vite and Tailwind v4 with the theme, fonts and agent rules already installed."
+      >
+        <CodeBlock>npx tiged --mode=git https://github.com/Flairstech-AIMY/aimy-ui-lib/starter my-product</CodeBlock>
+      </Section>
 
-      <h2 className="mt-12 text-[20px] font-medium">Start a new AiMY product</h2>
-      <pre className="mt-4 overflow-x-auto rounded-lg bg-[#0d1117] p-4 text-[14px]">
-        npx tiged --mode=git https://github.com/Flairstech-AIMY/aimy-ui-lib/starter my-product
-      </pre>
+      <Section
+        title="Add AiMY to an existing app (Tailwind v4)"
+        lead="Components are copied into your project, so you own them. Add the registry once, install the theme, then add components by name."
+      >
+        <CodeBlock>{registries}</CodeBlock>
+        <div className="mt-3">
+          <CodeBlock>npx shadcn@latest add @aimy/theme @aimy/theme-toggle @aimy/icon @aimy/aimy-mark</CodeBlock>
+        </div>
+      </Section>
 
-      <h2 className="mt-12 text-[20px] font-medium">Preview</h2>
-      <div className="mt-4">
-        <InstallCheck />
-      </div>
-    </main>
+      <Section
+        title="Or import the npm package"
+        lead="For React apps without Tailwind, or when you'd rather import than copy. Versioned, so you choose when to upgrade."
+      >
+        <CodeBlock>npm install @flairstech-aimy/ui @flairstech-aimy/tokens</CodeBlock>
+      </Section>
+
+      <Section title="Tokens only" lead="Colour, type, spacing and motion as plain CSS variables. Works in any page, React or not.">
+        <CodeBlock>{`@import "@flairstech-aimy/tokens";`}</CodeBlock>
+      </Section>
+
+      <Section title="Foundations" lead="Start with the rules the whole system rests on.">
+        <ul className="grid gap-2 column:grid-cols-3">
+          {[
+            ["Colour", "/foundations/color/"],
+            ["Typography", "/foundations/typography/"],
+            ["Motion", "/foundations/motion/"],
+          ].map(([label, href]) => (
+            <li key={href}>
+              <Link
+                href={href!}
+                className="block rounded-lg border border-edge bg-card p-4 text-body font-semibold text-ink transition-[border-color,background-color] duration-(--t-fast) ease-out hover:border-edge-hover hover:bg-raised"
+              >
+                {label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </Section>
+    </>
   )
 }
