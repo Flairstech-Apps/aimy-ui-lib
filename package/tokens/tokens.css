@@ -1,0 +1,16 @@
+/*
+ * @flairstech-aimy/tokens: AiMY design tokens as plain CSS variables.
+ * Works in any page that renders HTML, React or not.
+ *
+ * Phase 0 placeholder with a handful of real values, to prove the door.
+ * Phase 1 replaces this file with the full set extracted from
+ * design-system/index.html (dark default, light under [data-theme="light"]).
+ */
+:root {
+  --body-bg: #0f1215;
+  --card-bg: #141b24;
+  --d700: #2e3d50;
+  --text-primary: #dee5ed;
+  --r-md: 8px;
+  --font-sans: "Poppins", system-ui, sans-serif;
+}

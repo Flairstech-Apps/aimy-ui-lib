@@ -1,0 +1,19 @@
+{
+  "name": "@flairstech-aimy/tokens",
+  "version": "0.0.1",
+  "description": "AiMY design tokens as plain CSS variables. Works anywhere HTML renders. Internal to FlairsTech.",
+  "style": "./tokens.css",
+  "exports": {
+    ".": "./tokens.css",
+    "./tokens.css": "./tokens.css"
+  },
+  "files": ["tokens.css"],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Flairstech-AIMY/aimy-ui-lib.git",
+    "directory": "package/tokens"
+  }
+}

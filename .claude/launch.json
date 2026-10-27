@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "fixture-plain",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--dir", "package/fixtures/plain", "dev"],
+      "port": 5181
+    },
+    {
+      "name": "fixture-tailwind",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--dir", "package/fixtures/tailwind", "dev"],
+      "port": 5182
+    },
+    {
+      "name": "fixture-html",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["--yes", "http-server@14.1.1", "package", "-p", "5183", "-c-1", "--silent"],
+      "port": 5183
+    },
+    {
+      "name": "demo",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--dir", "demo", "dev", "--port", "5180", "--strictPort"],
+      "port": 5180
+    }
+  ]
+}

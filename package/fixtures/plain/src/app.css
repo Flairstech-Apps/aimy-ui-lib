@@ -1,0 +1,4 @@
+/* Unlayered app CSS, as most non-Tailwind apps write it. */
+body { margin: 0; padding: 24px; background: #fff; font-family: Arial, sans-serif; }
+main { display: grid; gap: 16px; justify-items: start; }
+.app-override { background: rgb(120, 0, 0); }

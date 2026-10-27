@@ -1,0 +1,13 @@
+{
+  "name": "fixture-tailwind",
+  "private": true,
+  "type": "module",
+  "description": "Package door test: a React app that runs its own Tailwind, preflight included.",
+  "scripts": { "dev": "vite --port 5182 --strictPort", "build": "vite build" },
+  "dependencies": {
+    "@flairstech-aimy/ui": "file:../../ui/flairstech-aimy-ui-0.0.1.tgz",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": { "@tailwindcss/vite": "4.3.3", "@vitejs/plugin-react": "6.1.2", "tailwindcss": "4.3.3", "vite": "8.3.5" }
+}
