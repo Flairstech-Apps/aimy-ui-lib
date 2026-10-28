@@ -1,0 +1,431 @@
+/* AiMY charts (Phase 4, batch P4-2). Ported from the products' effective
+   CSS: Sales sales.css then bdr.css; Knowledge settings.css; QA's inline
+   styles in index.html and agent-scorecards.html.
+
+   Every chart is an SVG stretched to its box with strokes that do not scale
+   (vector-effect: non-scaling-stroke), and everything that has to stay round
+   or legible (dots, marks, labels, the readout) is HTML laid over it in
+   percentages. No chart library.
+
+   Deviations from the source, on purpose:
+   - Words in a muted, faint or quiet ink are secondary ink (no muted text).
+   - QA's violet (--qa-accent) is the one accent, and QA's hard-coded
+     Urbanist and hex colours are the library's font and tokens.
+   - Sales' type roles map onto the library's scale: --ty-meta 14px
+     (--fs-xs), --t-figure 24px (--fs-2xl), --t-micro 12px (--fs-2xs).
+   - Breakpoints are on the chart's own width (container queries). */
+
+/* ── KPI widget: Sales' floor widget (.b-wid, bdr.css 6425-6514; the card
+   .s-pan and its state word .s-pan-state, sales.css 9142-9167) ───────────
+   The plot is a fixed height whatever the column width, so widgets in a
+   row line up. Text never wears the series colour. */
+.b-wids-wrap { container-type: inline-size; }
+.b-wids { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@container (max-width: 619.98px) {
+  .b-wids { grid-template-columns: minmax(0, 1fr); }
+}
+.b-wid {
+  display: flex; flex-direction: column; min-width: 0;
+  background: var(--card-bg); border-radius: var(--r-lg); padding: 16px 20px 14px;
+}
+.b-wid-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.b-wid-name { font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--d100); min-width: 0; }
+.s-pan-state {
+  display: block; flex: none; font-size: var(--fs-2xs); font-weight: var(--fw-semibold);
+  color: var(--ink-secondary); text-transform: uppercase; letter-spacing: 0.1em;
+}
+.s-pan-state.tone-ok { color: var(--ok-text); }
+.s-pan-state.tone-warn { color: var(--warn-text); }
+.s-pan-state.tone-err { color: var(--err-text); }
+.b-wid-fig {
+  margin-top: 6px;
+  font-family: var(--font-display, var(--font-sans)); font-size: var(--fs-2xl); font-weight: var(--fw-bold);
+  line-height: 1.1; letter-spacing: var(--ls-tight, -0.02em); color: var(--d50);
+  font-variant-numeric: tabular-nums;
+}
+.b-wid-sub { margin-top: 4px; font-size: var(--fs-xs); line-height: var(--lh-base); color: var(--d200); }
+.b-wid-plot { position: relative; height: 88px; margin-top: 16px; cursor: crosshair; touch-action: pan-y; }
+.b-wid-plot:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; border-radius: 4px; }
+.b-wid-plot svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.b-wid-line, .b-wid-now {
+  fill: none; stroke-width: 2; vector-effect: non-scaling-stroke;
+  stroke-linejoin: round; stroke-linecap: round;
+}
+.b-wid-line { stroke: var(--d300); }
+.b-wid-now { stroke: var(--accent); stroke-width: 2.5; }
+.b-wid-goal { position: absolute; left: 0; right: 0; height: 0; border-top: 1px dashed var(--d200); pointer-events: none; }
+/* Semibold: it names a mark, and the axis under it names a position. */
+.b-wid-goal-tag {
+  position: absolute; left: 0; transform: translateY(calc(-100% - 3px));
+  font-size: var(--fs-2xs); font-weight: var(--fw-semibold); line-height: 1;
+  color: var(--d200); pointer-events: none;
+}
+.b-wid-goal-tag.is-below { transform: translateY(4px); }
+.b-wid-dot, .b-wid-hdot {
+  position: absolute; width: 10px; height: 10px; border-radius: 50%;
+  transform: translate(-50%, -50%); pointer-events: none;
+  box-shadow: 0 0 0 2px var(--card-bg);
+}
+.b-wid-dot { background: var(--accent); }
+.b-wid-hdot { background: var(--d50); }
+.b-wid-cross { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1px solid var(--d300); pointer-events: none; }
+.b-wid-tip {
+  position: absolute; bottom: calc(100% + 6px); transform: translateX(-50%);
+  padding: 4px 8px; border-radius: var(--r-md);
+  background: var(--card-bg-raised); border: 1px solid var(--card-border);
+  font-size: var(--fs-2xs); font-weight: var(--fw-semibold); line-height: 1.3;
+  color: var(--d50); white-space: nowrap; pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+.b-wid-tip.is-start { transform: none; }
+.b-wid-tip.is-end { transform: translateX(-100%); }
+.b-wid-axis {
+  display: flex; justify-content: space-between; gap: 12px; margin: 10px 0 14px;
+  font-size: var(--fs-2xs); color: var(--d200);
+}
+/* The key: a swatch of the stroke it explains, the words in ink. */
+.b-wid-key { display: inline-flex; align-items: center; gap: 6px; text-align: right; }
+.b-wid-key::before { content: ""; flex: none; width: 12px; height: 2.5px; border-radius: 2px; background: var(--accent); }
+/* AiMY's reading sits at the foot, so across a row of widgets the sentences line up. */
+.b-wid-note { margin-top: auto; }
+
+/* ── Progress to target: Sales' attainment bar (.s-att, sales.css
+   8797-8862, bdr.css 938, 981) ─────────────────────────────────────────
+   Two layers: a track that clips its fills to the rounded corners, and the
+   marks over it. The target crosses the bar; today's pace is a tick inside
+   it. The projection is hatched, so it reads as not yet real. */
+.s-att-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+.s-att-lead {
+  font-family: var(--font-sans); font-size: var(--fs-3xl);
+  font-weight: var(--fw-extrabold, 800); letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums; line-height: var(--lh-none); color: var(--d50);
+}
+.s-att-of { font-size: var(--fs-lg); font-weight: var(--fw-medium); color: var(--d200); letter-spacing: 0; white-space: nowrap; margin-left: 4px; }
+.s-att-pc { font-size: var(--fs-lg); font-weight: var(--fw-semibold); color: var(--d200); font-variant-numeric: tabular-nums; }
+.s-att-pc.tone-ok { color: var(--ok-text); }
+.s-att-bar { position: relative; }
+.s-att-track {
+  position: relative; display: flex; height: 20px;
+  border-radius: var(--r-sm); overflow: hidden;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+}
+.s-att-booked, .s-att-fcast { position: relative; z-index: 1; transform-origin: left; }
+.s-att-booked { background: var(--accent); }
+.s-att-fcast { background: repeating-linear-gradient(115deg, rgba(var(--accent-rgb), 0.30) 0 4px, transparent 4px 8px); }
+.s-att-target, .s-att-pace { position: absolute; width: 2px; border-radius: var(--r-pill); transform: translateX(-1px); z-index: 2; }
+.s-att-target { top: -4px; bottom: -4px; background: var(--d50); }
+.s-att-pace { top: 3px; bottom: 3px; background: var(--d300); }
+.s-att-keys { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 16px; font-size: var(--fs-xs); color: var(--d200); }
+.s-att-key { display: inline-flex; align-items: center; gap: 8px; }
+.s-att-key::before { content: ""; width: 10px; height: 10px; border-radius: var(--r-sm); flex-shrink: 0; }
+.s-att-key.is-booked::before { background: var(--accent); }
+.s-att-key.is-fcast::before { background: rgba(var(--accent-rgb), 0.28); }
+.s-att-key.is-target::before { background: var(--d50); width: 2px; height: 14px; border-radius: var(--r-pill); }
+.s-att-key.is-pace::before { background: var(--d300); width: 2px; height: 8px; border-radius: var(--r-pill); }
+.s-att-key svg { color: var(--ai-text); flex-shrink: 0; width: 13px; height: 14px; }
+@media (prefers-reduced-motion: no-preference) {
+  .s-att.is-arriving .s-att-booked, .s-att.is-arriving .s-att-fcast { animation: s-att-wipe var(--t-emphasis) var(--ease-out) backwards; }
+  .s-att.is-arriving .s-att-fcast { animation-delay: 220ms; }
+}
+@keyframes s-att-wipe { from { transform: scaleX(0); } }
+
+/* ── Funnel: Sales' campaign funnel and a step's stages (.b-funnel,
+   bdr.css 768-820, 2382-2392; .b-steps 6520-6528) ────────────────────────
+   Name, bar, count. Bars arrive together, no stagger: the narrowing is a
+   shape, not a sequence. The count column is right-aligned. */
+.b-funnel {
+  display: grid; grid-template-columns: minmax(96px, max-content) minmax(40px, 1fr) auto;
+  gap: 8px 14px; align-items: center;
+}
+.b-fn-row, .b-fn-head { display: contents; }
+.b-fn-name { max-width: 22ch; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--d100); }
+.b-fn-head .b-fn-name, .b-fn-head .b-fn-n {
+  font-size: var(--fs-2xs); font-weight: var(--fw-bold); letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--ink-secondary); padding-bottom: 2px;
+}
+.b-fn-bar {
+  height: 8px; border-radius: var(--r-pill);
+  background: var(--card-bg-raised); border: 1px solid var(--card-border);
+  overflow: hidden;
+}
+.b-fn-fill { display: block; height: 100%; border-radius: var(--r-pill); background: var(--d400); transform-origin: left center; }
+.b-fn-fill.tone-ok { background: var(--ok-text); }
+.b-fn-fill.tone-warn { background: var(--warn-text); }
+.b-fn-fill.tone-err { background: var(--err-text); }
+.b-fn-fill.tone-neutral { background: var(--d300); }
+.b-fn-fill.tone-accent { background: var(--accent); }
+.b-fn-n { font-size: var(--fs-xs); font-weight: var(--fw-bold); color: var(--d50); font-variant-numeric: tabular-nums; text-align: right; }
+.b-funnel.is-steps .b-fn-name { font-weight: var(--fw-regular, 400); }
+@media (prefers-reduced-motion: no-preference) {
+  .b-funnel.is-arriving .b-fn-fill { animation: s-att-wipe var(--t-emphasis) var(--ease-out) backwards; }
+}
+
+/* ── Sparkline: Knowledge's before and after (.agv-spark, settings.css
+   4612-4626, drawn by settings.js 2945-2951) ────────────────────────────
+   The line before the change in the reading ink, after it in the brand,
+   and the change itself a dashed line in the action ink. */
+.agv-chart { position: relative; }
+.agv-spark { width: 100%; height: 3.5rem; display: block; overflow: visible; }
+.agv-spark-before, .agv-spark-after, .agv-spark-at { fill: none; vector-effect: non-scaling-stroke; stroke-linejoin: round; stroke-linecap: round; }
+.agv-spark-before { stroke: var(--ink-secondary); stroke-width: 1.5; }
+.agv-spark-after { stroke: var(--brand); stroke-width: 2; }
+.agv-spark-at { stroke: var(--ink-action); stroke-width: 1; stroke-dasharray: 2 2; }
+.agv-chart-l { display: flex; justify-content: space-between; gap: 0.75rem; font-size: var(--fs-2xs); color: var(--ink-secondary); margin-top: 0.25rem; }
+.agv-chart-l .is-at { color: var(--ink-action); }
+
+
+/* ── QA's medal inks, as tokens (QA hard-codes them as hex). Light values
+   are darkened to read on a light card. ────────────────────────────────── */
+:root {
+  --medal-gold: #f7b409;
+  --medal-silver: #cbd2dc;
+  --medal-bronze: #e08a3c;
+}
+[data-theme="light"] {
+  --medal-gold: #8a6100;
+  --medal-silver: #4a5563;
+  --medal-bronze: #9a4f12;
+}
+
+/* ── Trend chart: QA's quality-score chart (.chart-v2, index.html, the SVG
+   ~8380-8845, applyRangeToChart 10488, hover 10702-10784) ──────────────
+   The lines are an SVG stretched to the plot; the axis words, the goal's
+   pill, the peak, low and current figures and the readout are HTML over it,
+   so they never stretch. QA drew its grid and percentages at fixed heights
+   that did not match its own scale; here a tick sits where its value is. */
+.qa-trend { container-type: inline-size; }
+.qa-trend-top { display: flex; align-items: center; justify-content: space-between; gap: 12px 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.qa-trend-stats { display: flex; align-items: flex-end; gap: 12px 28px; flex-wrap: wrap; margin-bottom: 14px; }
+.qa-trend-stat { display: flex; flex-direction: column; gap: 2px; }
+.qa-trend-stat-l { font-size: var(--fs-2xs); font-weight: var(--fw-semibold); letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-secondary); }
+.qa-trend-stat-v { font-size: var(--fs-xl); font-weight: var(--fw-bold); color: var(--d50); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.qa-trend-stat-v.tone-ok { color: var(--ok-text); }
+.qa-trend-stat-v.tone-err { color: var(--err-text); }
+.qa-trend-legend { display: flex; gap: 8px 16px; flex-wrap: wrap; margin-left: auto; font-size: var(--fs-2xs); font-weight: var(--fw-medium); color: var(--ink-secondary); }
+.qa-trend-key { display: inline-flex; align-items: center; gap: 6px; }
+.qa-trend-key::before { content: ""; width: 18px; height: 0; border-top: 2px solid var(--accent); border-radius: 2px; }
+.qa-trend-key.is-prev::before { border-top: 2px dashed var(--d400); }
+.qa-trend-key.is-goal::before { border-top: 2px dashed var(--warn-text); }
+.qa-trend-body { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); }
+.qa-trend-y { position: relative; height: 12.5rem; }
+.qa-trend-y span {
+  position: absolute; right: 8px; transform: translateY(-50%);
+  font-size: var(--fs-2xs); color: var(--ink-secondary); font-variant-numeric: tabular-nums;
+}
+.qa-trend-plot { position: relative; height: 12.5rem; cursor: crosshair; touch-action: pan-y; }
+.qa-trend-plot:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; border-radius: 4px; }
+.qa-trend-plot svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.qa-trend-grid { stroke: var(--card-border); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.qa-trend-goal { stroke: var(--warn-text); stroke-width: 1; stroke-dasharray: 6 4; opacity: 0.7; vector-effect: non-scaling-stroke; }
+.qa-trend-line, .qa-trend-prev { fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; stroke-linejoin: round; }
+.qa-trend-line { stroke: var(--accent); stroke-width: 2.5; }
+.qa-trend-prev { stroke: var(--d400); stroke-width: 1.5; stroke-dasharray: 5 4; opacity: 0.8; }
+.qa-trend-area { stroke: none; }
+.qa-trend-stop-top { stop-color: var(--accent); stop-opacity: 0.22; }
+.qa-trend-stop-bottom { stop-color: var(--accent); stop-opacity: 0; }
+.qa-trend-pstop-top { stop-color: var(--d400); stop-opacity: 0.12; }
+.qa-trend-pstop-bottom { stop-color: var(--d400); stop-opacity: 0; }
+.qa-trend-band { fill: var(--err); opacity: 0.08; }
+.qa-trend-band-line { stroke: var(--err); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.4; vector-effect: non-scaling-stroke; }
+.qa-trend-hline { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1px dashed var(--accent); opacity: 0.6; pointer-events: none; }
+.qa-trend-dot {
+  position: absolute; width: 9px; height: 9px; border-radius: 50%; transform: translate(-50%, -50%);
+  background: var(--accent); box-shadow: 0 0 0 2px var(--card-bg); pointer-events: none;
+}
+.qa-trend-dot.is-err { background: var(--err); }
+.qa-trend-dot.is-end { width: 11px; height: 11px; box-shadow: 0 0 0 2px var(--card-bg), 0 0 0 7px rgba(var(--accent-rgb), 0.15); }
+/* At the left end, on the side the line is not, so it never sits on the latest point. */
+.qa-trend-goal-tag {
+  position: absolute; left: 4px; transform: translateY(calc(-100% - 3px));
+  padding: 1px 6px; border-radius: 4px; background: var(--warn-bg);
+  font-size: var(--fs-2xs); font-weight: var(--fw-semibold); color: var(--warn-text); pointer-events: none;
+}
+.qa-trend-goal-tag.is-below { transform: translateY(3px); }
+.qa-trend-fig {
+  position: absolute; transform: translate(-50%, calc(-100% - 8px));
+  font-size: var(--fs-2xs); font-weight: var(--fw-bold); font-variant-numeric: tabular-nums; pointer-events: none; white-space: nowrap;
+}
+.qa-trend-fig.is-peak { color: var(--ok-text); }
+.qa-trend-fig.is-low { color: var(--err-text); transform: translate(-50%, 8px); }
+.qa-trend-fig.is-now { color: var(--accent-text); transform: translate(6px, calc(-100% - 6px)); }
+.qa-trend-fig.is-now.is-edge { transform: translate(-100%, calc(-100% - 10px)); }
+.qa-trend-x { position: relative; height: 1.5rem; margin-left: 2.5rem; }
+.qa-trend-x span {
+  position: absolute; top: 6px; transform: translateX(-50%);
+  font-size: var(--fs-2xs); color: var(--ink-secondary); white-space: nowrap;
+}
+.qa-trend-tip {
+  position: absolute; top: 0; z-index: 3; min-width: 9rem;
+  padding: 8px 12px; border-radius: 8px;
+  background: var(--card-bg-raised); border: 1px solid var(--card-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); pointer-events: none;
+}
+.qa-trend-tip-m { font-size: var(--fs-2xs); font-weight: var(--fw-bold); letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-secondary); margin-bottom: 4px; }
+.qa-trend-tip-r { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; font-size: var(--fs-2xs); color: var(--ink-secondary); }
+.qa-trend-tip-r b { font-size: var(--fs-xs); font-weight: var(--fw-bold); color: var(--d50); font-variant-numeric: tabular-nums; }
+.qa-trend-tip-r.is-prev b { color: var(--d200); }
+.qa-trend-tip-note {
+  display: flex; align-items: center; gap: 6px; margin-top: 8px; padding-top: 7px; border-top: 1px solid var(--card-border);
+  font-size: var(--fs-2xs); font-weight: var(--fw-bold); color: var(--ai-text); white-space: nowrap;
+}
+.qa-trend-tip-note svg { width: 12px; height: 12px; flex: none; }
+.qa-trend-empty { display: grid; place-items: center; height: 12.5rem; font-size: var(--fs-xs); color: var(--ink-secondary); border: 1px dashed var(--card-border); border-radius: var(--r-md); }
+@media (prefers-reduced-motion: no-preference) {
+  .qa-trend.is-arriving { animation: s-exec-rise 400ms var(--ease-out) 100ms both; }
+}
+
+/* ── Score tile: QA's quality-score summary (.slv-score, index.html
+   6582-6625; its line, renderQualityMiniTrend 10441) ─────────────────────
+   The score, how far it is from the goal, how it moved, and a small line
+   that is also the button that opens the full trend. */
+.slv-score {
+  display: grid; grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: "cap cap" "value sub" "value trend" "toggle toggle";
+  align-items: center; column-gap: 14px; row-gap: 1px; min-width: 0;
+  padding: 14px 18px 12px; border-radius: 20px;
+  background:
+    linear-gradient(150deg, rgba(var(--accent-rgb), 0.09) 0%, rgba(var(--accent-rgb), 0.03) 50%, transparent 100%),
+    var(--card-bg);
+  border: 1px solid rgba(var(--accent-rgb), 0.14);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+}
+.slv-score-cap { grid-area: cap; margin-bottom: 4px; font-size: var(--fs-2xs); font-weight: var(--fw-extrabold, 800); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-secondary); }
+.slv-score-val { grid-area: value; font-size: 2.375rem; font-weight: var(--fw-extrabold, 800); line-height: 1; letter-spacing: -0.035em; color: var(--d50); font-variant-numeric: tabular-nums; }
+.slv-score-val.tone-ok { color: var(--ok-text); }
+.slv-score-val.tone-warn { color: var(--warn-text); text-shadow: 0 0 22px rgba(247, 201, 92, 0.16); }
+.slv-score-val.tone-err { color: var(--err-text); }
+.slv-score-sub { grid-area: sub; align-self: end; font-size: var(--fs-2xs); color: var(--d200); }
+.slv-score-sub strong { color: var(--d100); font-weight: var(--fw-bold); }
+.slv-score-trend { grid-area: trend; align-self: start; display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-2xs); font-weight: var(--fw-semibold); color: var(--d200); font-variant-numeric: tabular-nums; }
+.slv-score-trend .is-up { color: var(--ok-text); font-weight: var(--fw-bold); display: inline-flex; align-items: center; gap: 2px; }
+.slv-score-trend .is-down { color: var(--err-text); font-weight: var(--fw-bold); display: inline-flex; align-items: center; gap: 2px; }
+.slv-score-trend svg { width: 12px; height: 12px; }
+.slv-score-toggle {
+  grid-area: toggle; width: 100%; min-width: 0; margin-top: 8px;
+  display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "action" "chart" "source"; gap: 4px;
+  background: transparent; border: 0; border-radius: var(--r-lg); padding: 0;
+  font-family: inherit; color: var(--d300); cursor: pointer; text-align: left;
+}
+.slv-score-toggle:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; }
+.slv-score-toggle-action { grid-area: action; justify-self: end; display: inline-flex; align-items: center; gap: 6px; color: var(--accent-text); font-size: var(--fs-2xs); font-weight: var(--fw-bold); white-space: nowrap; transition: color var(--t-fast) var(--ease-out); }
+.slv-score-toggle:hover .slv-score-toggle-action,
+.slv-score-toggle[aria-expanded="true"] .slv-score-toggle-action { color: var(--d50); }
+.slv-score-toggle-action svg { width: 14px; height: 14px; flex-shrink: 0; }
+.slv-score-mini-wrap { grid-area: chart; position: relative; height: 28px; }
+.slv-score-mini { display: block; width: 100%; height: 100%; overflow: visible; }
+.slv-score-mini-target { stroke: var(--card-border); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.slv-score-mini-stop-top { stop-color: var(--accent); stop-opacity: 0.2; }
+.slv-score-mini-stop-bottom { stop-color: var(--accent); stop-opacity: 0; }
+.slv-score-mini-path { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.slv-score-mini-end { position: absolute; width: 6px; height: 6px; border-radius: 50%; transform: translate(-50%, -50%); background: var(--accent); box-shadow: 0 0 0 1.5px var(--body-bg); }
+.slv-score-mini-source { grid-area: source; display: flex; align-items: center; gap: 7px; font-size: var(--fs-2xs); font-weight: var(--fw-semibold); color: var(--d200); }
+.slv-score-mini-source::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 2px var(--ok-bg); flex-shrink: 0; }
+
+/* ── Donut: QA's pass, borderline and fail ring (.donut-*, index.html
+   5047-5130, evalHover 11405) ──────────────────────────────────────────
+   Contiguous arcs from twelve o'clock, clockwise. Pointing at a part (or its
+   row in the key) thickens it with a glow, dims the rest, and says that
+   part in the centre in its own ink. Namespaced: QA has a second .donut. */
+.qa-donut { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+/* QA's ring is 100px with a 9px label; the label is 12px here, the floor, so the ring is 120. */
+.qa-donut-ring { position: relative; flex-shrink: 0; width: 7.5rem; height: 7.5rem; }
+.qa-donut-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+.qa-donut-track { fill: none; stroke: var(--w07); stroke-width: 10; }
+.qa-donut-arc {
+  fill: none; stroke-width: 10; stroke-linecap: butt;
+  transition: stroke-width var(--t-base) var(--ease-out), filter var(--t-base) var(--ease-out), opacity var(--t-base) var(--ease-out);
+}
+.qa-donut-arc.tone-ok { stroke: var(--ok); color: var(--ok); }
+.qa-donut-arc.tone-warn { stroke: var(--warn); color: var(--warn); }
+.qa-donut-arc.tone-err { stroke: var(--err); color: var(--err); }
+.qa-donut-arc.tone-accent { stroke: var(--accent); color: var(--accent); }
+.qa-donut-arc.tone-neutral { stroke: var(--d400); color: var(--d400); }
+.qa-donut-arc.is-on { stroke-width: 13; filter: drop-shadow(0 0 7px color-mix(in srgb, currentColor 70%, transparent)); }
+.qa-donut-arc.is-dim { opacity: 0.25; }
+.qa-donut-hit { fill: none; stroke: transparent; stroke-width: 28; cursor: pointer; }
+.qa-donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+.qa-donut-pct { font-size: var(--fs-xl); font-weight: var(--fw-extrabold, 800); color: var(--d50); letter-spacing: -0.03em; line-height: 1; transition: color var(--t-base) var(--ease-out); }
+.qa-donut-label { font-size: var(--fs-2xs); font-weight: var(--fw-semibold); color: var(--ink-secondary); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
+.qa-donut-pct.tone-ok { color: var(--ok-text); }
+.qa-donut-pct.tone-warn { color: var(--warn-text); }
+.qa-donut-pct.tone-err { color: var(--err-text); }
+.qa-donut-key { display: flex; flex-direction: column; gap: 2px; min-width: 12rem; flex: 1; }
+.qa-donut-row {
+  display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; align-items: center; gap: 10px;
+  padding: 6px 8px; border-radius: 8px; border: 0; background: none; text-align: left;
+  font: inherit; font-size: var(--fs-xs); color: var(--d100); cursor: pointer;
+  transition: background-color var(--t-fast) var(--ease-out);
+}
+.qa-donut-row:hover, .qa-donut-row.is-on { background: var(--w04); }
+.qa-donut-row:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+.qa-donut-row b { font-weight: var(--fw-bold); color: var(--d50); font-variant-numeric: tabular-nums; }
+.qa-donut-sw { width: 10px; height: 10px; border-radius: 3px; }
+.qa-donut-sw.tone-ok { background: var(--ok); }
+.qa-donut-sw.tone-warn { background: var(--warn); }
+.qa-donut-sw.tone-err { background: var(--err); }
+.qa-donut-sw.tone-accent { background: var(--accent); }
+.qa-donut-sw.tone-neutral { background: var(--d400); }
+
+/* ── Heatmap: QA's goal-by-week grid (.heatmap-*, agent-scorecards.html
+   4455-4538) ───────────────────────────────────────────────────────────
+   A row per goal, a column per week, each cell its score in the tone of
+   its band. A dot marks a week with coaching. The key is drawn from the
+   same bands the cells use (QA's hand-drawn key did not match its cells). */
+.qa-hm-body { overflow-x: auto; }
+.qa-hm { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 32.5rem; }
+.qa-hm th { font-size: var(--fs-2xs); font-weight: var(--fw-bold); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-secondary); padding: 0 0 8px; text-align: center; }
+.qa-hm th.is-row { text-align: left; padding-right: 12px; }
+.qa-hm td { padding: 3px; }
+.qa-hm th.is-row-label { font-size: var(--fs-2xs); font-weight: var(--fw-semibold); letter-spacing: 0; text-transform: none; color: var(--d200); padding: 3px 12px 3px 0; white-space: nowrap; text-align: left; }
+.qa-hm-cell {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  min-width: 2rem; height: 1.5rem; border-radius: 4px;
+  font-size: var(--fs-2xs); font-weight: var(--fw-bold); font-variant-numeric: tabular-nums;
+  transition: transform var(--t-fast) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .qa-hm-cell:hover { transform: scale(1.15); z-index: 2; outline: 1px solid var(--card-border-hover); }
+}
+.qa-hm-cell.tone-ok { background: color-mix(in srgb, var(--ok) 40%, transparent); color: var(--ok-text); }
+.qa-hm-cell.tone-warn { background: color-mix(in srgb, var(--warn) 25%, transparent); color: var(--warn-text); }
+.qa-hm-cell.tone-err { background: color-mix(in srgb, var(--err) 25%, transparent); color: var(--err-text); }
+.qa-hm-cell.is-na { background: var(--w04); color: var(--ink-secondary); }
+.qa-hm-cell.is-coached::after { content: ""; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 3px; height: 3px; border-radius: 50%; background: var(--ai-text); }
+.qa-hm-keys { display: flex; align-items: center; gap: 6px 14px; flex-wrap: wrap; margin-top: 12px; font-size: var(--fs-2xs); color: var(--ink-secondary); }
+.qa-hm-key { display: inline-flex; align-items: center; gap: 6px; }
+.qa-hm-key .qa-hm-cell { min-width: 12px; width: 12px; height: 12px; border-radius: 2px; }
+.qa-hm-key.is-coached::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ai-text); flex-shrink: 0; }
+
+/* ── Leaderboard: QA's achievers (.lead-*, index.html 6540-6553) ───────────
+   Ranked, no bars: a rank badge (medal inks for the first three), the name,
+   and each measure with its label above it. A row opens that person. */
+.qa-lead { display: flex; flex-direction: column; padding: 6px 4px 4px; }
+.qa-lead-row {
+  display: grid; grid-template-columns: 30px minmax(0, 1fr) repeat(var(--metrics, 1), auto); align-items: center; gap: 16px;
+  padding: 11px 8px; border-radius: 8px; border: 0; background: none; text-align: left; font: inherit; color: inherit; width: 100%;
+  transition: background-color var(--t-fast) var(--ease-out);
+}
+button.qa-lead-row { cursor: pointer; }
+button.qa-lead-row:hover { background: var(--w04); }
+.qa-lead-row:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
+.qa-lead > li + li { border-top: 1px solid var(--card-border); }
+.qa-lead > li { list-style: none; }
+.qa-lead-rank {
+  width: 26px; height: 26px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-size: var(--fs-2xs); font-weight: var(--fw-extrabold, 800); background: var(--w04); color: var(--d200);
+}
+.qa-lead-rank.r1 { background: color-mix(in srgb, var(--medal-gold) 16%, transparent); color: var(--medal-gold); }
+.qa-lead-rank.r2 { background: color-mix(in srgb, var(--medal-silver) 14%, transparent); color: var(--medal-silver); }
+.qa-lead-rank.r3 { background: color-mix(in srgb, var(--medal-bronze) 16%, transparent); color: var(--medal-bronze); }
+.qa-lead-name { font-size: var(--fs-xs); font-weight: var(--fw-bold); color: var(--d50); min-width: 0; overflow-wrap: anywhere; }
+.qa-lead-metric { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; min-width: 4.125rem; }
+.qa-lead-metric-l { font-size: var(--fs-2xs); font-weight: var(--fw-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-secondary); }
+.qa-lead-metric-v { font-size: var(--fs-xs); font-weight: var(--fw-extrabold, 800); color: var(--d100); font-variant-numeric: tabular-nums; }
+.qa-lead-metric-v.tone-ok { color: var(--ok-text); }
+.qa-lead-metric-v.tone-warn { color: var(--warn-text); }
+.qa-lead-metric-v.tone-err { color: var(--err-text); }
+
+@media (prefers-reduced-motion: reduce) {
+  .qa-donut-arc, .qa-hm-cell, .slv-score-toggle-action { transition: none; }
+  .qa-hm-cell:hover { transform: none; }
+}

@@ -86,6 +86,20 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
+    label: "Charts",
+    items: [
+      { href: "/components/kpi-widget/", label: "KPI widget" },
+      { href: "/components/target-bar/", label: "Progress to target" },
+      { href: "/components/funnel/", label: "Funnel" },
+      { href: "/components/sparkline/", label: "Sparkline" },
+      { href: "/components/score-tile/", label: "Score tile" },
+      { href: "/components/trend-chart/", label: "Trend chart" },
+      { href: "/components/donut/", label: "Donut" },
+      { href: "/components/heatmap/", label: "Heatmap" },
+      { href: "/components/leaderboard/", label: "Leaderboard" },
+    ],
+  },
+  {
     label: "AI: conversation",
     items: [
       { href: "/components/composer/", label: "Composer" },

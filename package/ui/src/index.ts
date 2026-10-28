@@ -160,3 +160,12 @@ export {
   type SortState,
 } from "../../../registry/aimy/ui/data-table"
 export { VirtualList } from "../../../registry/aimy/ui/virtual-list"
+export { KpiWidgets, KpiWidget } from "../../../registry/aimy/ui/kpi-widget"
+export { TargetBar } from "../../../registry/aimy/ui/target-bar"
+export { Funnel, type FunnelRow } from "../../../registry/aimy/ui/funnel"
+export { Sparkline } from "../../../registry/aimy/ui/sparkline"
+export { TrendChart, type TrendRange } from "../../../registry/aimy/ui/trend-chart"
+export { ScoreTile } from "../../../registry/aimy/ui/score-tile"
+export { Donut, type DonutPart } from "../../../registry/aimy/ui/donut"
+export { Heatmap, type HeatmapRow } from "../../../registry/aimy/ui/heatmap"
+export { Leaderboard, type LeaderRow, type LeaderMetric } from "../../../registry/aimy/ui/leaderboard"

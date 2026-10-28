@@ -25,6 +25,7 @@ import { StreamingText } from "@/components/streaming-text"
 import { UsageSummary } from "@/components/usage"
 import { Confidence } from "@/components/confidence"
 import { Activity } from "@/components/activity"
+import { Funnel } from "@/components/funnel"
 import { WorkState } from "@/components/work-state"
 import { VoiceStage } from "@/components/voice-stage"
 import { useVoiceSession } from "@/hooks/use-voice"
@@ -314,7 +315,19 @@ export function App() {
           <TabPanel value="customers">
             <Customers />
           </TabPanel>
-          <TabPanel value="calls">
+          <TabPanel value="calls" className="flex flex-col gap-6">
+            <Funnel
+              arriving
+              label="Where today's 12 calls got to"
+              head={{ name: "Today", n: "Calls" }}
+              total={12}
+              rows={[
+                { name: "Answered", n: 9, tone: "neutral" },
+                { name: "Talked it through", n: 6, tone: "neutral" },
+                { name: "Meeting set", n: 2, tone: "ok" },
+                { name: "No answer", n: 3, tone: "warn" },
+              ]}
+            />
             <Activity
               onOpen={(t) => toast(`Opened ${t.subject}`)}
               items={[

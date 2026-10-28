@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Button } from "@/components/button"
 import { DataTable, TableEmpty, type Column, type SortState } from "@/components/data-table"
 import { StatTile, StatTiles } from "@/components/stat-tile"
+import { TargetBar } from "@/components/target-bar"
 import { Tag } from "@/components/tag"
 import { toast } from "@/components/toast"
 
@@ -72,6 +73,15 @@ export function Customers() {
   const soon = rows.filter((c) => c.month === 11)
   return (
     <div className="flex flex-col gap-6">
+      <TargetBar
+        arriving
+        value={total}
+        target={300000}
+        forecast={total + 64000}
+        elapsed={0.61}
+        format={(n) => `€${Math.round(n / 1000)}k`}
+        labels={{ value: "Renewed" }}
+      />
       <StatTiles>
         <StatTile label="Customers" value={rows.length} sub="28 in the full book" />
         <StatTile label="Worth" value={euro(total)} sub="was €160,000 a year ago" />

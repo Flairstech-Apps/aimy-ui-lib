@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.12.0"
+        "@flairstech-aimy/tokens@^0.13.0"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.12.0"
+        "@flairstech-aimy/tokens@^0.13.0"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -1749,6 +1749,166 @@
       "files": [
         {
           "path": "registry/aimy/ui/virtual-list.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "kpi-widget",
+      "type": "registry:component",
+      "title": "KpiWidget",
+      "description": "Sales' floor widget: one measure over time against what was promised. Name and verdict word, the figure now, where it began and what was promised, then an 88px line (the recent stretch the figure averages in the accent, a dashed goal with its word), a pointer or arrow-key readout snapping to the nearest point with a value, and AiMY's reading at the foot. KpiWidgets lays them two across.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/kpi-widget.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "target-bar",
+      "type": "registry:component",
+      "title": "TargetBar",
+      "description": "Sales' attainment bar: the figure of its target and the share in words, then one bar with what is in (solid accent), what AiMY expects could still come (hatched), the target crossing the bar and today's pace as a tick inside it. Scale is the target plus a fifth. A key names each band in plain words.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/target-bar.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "funnel",
+      "type": "registry:component",
+      "title": "Funnel",
+      "description": "Sales' funnel: a name, a pill bar and a right-aligned count a row. As a funnel every bar is a share of one whole, so the narrowing is the finding; as steps each row carries its own whole. Bars arrive together, never staggered.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/funnel.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "sparkline",
+      "type": "registry:component",
+      "title": "Sparkline",
+      "description": "Knowledge's before-and-after line: the line before a change in the reading ink, after it in the brand, the change a dashed line in the action ink, named underneath.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/sparkline.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "trend-chart",
+      "type": "registry:component",
+      "title": "TrendChart",
+      "description": "QA's quality-score trend: ranges (Segmented), Compare (Chip), average/peak/low figures, a smooth accent curve over a fading area, the previous period dashed, a dashed goal with its pill, peak/low/latest written at their points, flagged dips banded in red, and a pointer or arrow-key readout. QA's mis-scaled grid and hand-placed marks are fixed; an empty range says so.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/chip",
+        "@aimy/segmented"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/trend-chart.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "score-tile",
+      "type": "registry:component",
+      "title": "ScoreTile",
+      "description": "QA's quality-score summary: the score in its tone, how far from the goal, how it moved with a Lucide arrow, and a small curve of the period that is also the button opening the full trend (aria-expanded, aria-controls), with the data's source under it.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/score-tile.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "donut",
+      "type": "registry:component",
+      "title": "Donut",
+      "description": "QA's pass/borderline/fail ring: contiguous arcs from twelve o'clock; pointing at a part or its key row (or focusing the row) thickens it with a glow, dims the rest and says it in the centre in its ink. The key gives each part's count and share.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/donut.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "heatmap",
+      "type": "registry:component",
+      "title": "Heatmap",
+      "description": "QA's goal-by-week grid: a row per goal, a column per period, each cell its score tinted by band, a coaching dot with its note, 'none' where there is no score. Bands are props and the key is drawn from them. Scrolls sideways before it squeezes.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/heatmap.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "leaderboard",
+      "type": "registry:component",
+      "title": "Leaderboard",
+      "description": "QA's achievers list: ranked, no bars; a rank badge in medal inks for the first three, the name, and each measure labelled and right-aligned. A row with onOpen is a button.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/leaderboard.tsx",
           "type": "registry:component"
         }
       ]
