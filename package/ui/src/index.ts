@@ -25,7 +25,16 @@ export { Switch } from "../../../registry/aimy/ui/switch"
 export { Segmented } from "../../../registry/aimy/ui/segmented"
 export { PasswordField } from "../../../registry/aimy/ui/password-field"
 export { CopyButton } from "../../../registry/aimy/ui/copy-button"
-export { Card, CardHead, CardType, CardTitle, CardSummary, CardFacts, CardBody, CardFoot } from "../../../registry/aimy/ui/card"
+export {
+  Card,
+  CardHead,
+  CardType,
+  CardTitle,
+  CardSummary,
+  CardFacts,
+  CardBody,
+  CardFoot,
+} from "../../../registry/aimy/ui/card"
 export { Tabs, TabsList, Tab, TabPanel } from "../../../registry/aimy/ui/tabs"
 export { Disclosure } from "../../../registry/aimy/ui/disclosure"
 export { Pager } from "../../../registry/aimy/ui/pager"
@@ -60,7 +69,16 @@ export { Suggestions } from "../../../registry/aimy/ui/suggestions"
 export { Reasoning } from "../../../registry/aimy/ui/reasoning"
 export { Composer } from "../../../registry/aimy/ui/composer"
 export { Canvas } from "../../../registry/aimy/ui/canvas"
-export type { Speaker, TurnStatus, Person, Turn, Basis, Attachment, ReasoningStep, Rating } from "../../../registry/aimy/lib/ai-types"
+export type {
+  Speaker,
+  TurnStatus,
+  Person,
+  Turn,
+  Basis,
+  Attachment,
+  ReasoningStep,
+  Rating,
+} from "../../../registry/aimy/lib/ai-types"
 export { Orb } from "../../../registry/aimy/ui/orb"
 export { VoiceStage } from "../../../registry/aimy/ui/voice-stage"
 export {
@@ -129,3 +147,16 @@ export {
   type BriefStart,
 } from "../../../registry/aimy/ui/brief"
 export { UsageLimit } from "../../../registry/aimy/ui/usage-limit"
+export { StatTiles, StatTile } from "../../../registry/aimy/ui/stat-tile"
+export { DescriptionList, FactGroup, FactGroups, type Fact } from "../../../registry/aimy/ui/description-list"
+export { Timeline, TimelineMonth, TimelineItem } from "../../../registry/aimy/ui/timeline"
+export {
+  DataTable,
+  SortHeader,
+  TableEmpty,
+  nextSort,
+  type Column,
+  type SortDir,
+  type SortState,
+} from "../../../registry/aimy/ui/data-table"
+export { VirtualList } from "../../../registry/aimy/ui/virtual-list"

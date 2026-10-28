@@ -76,6 +76,16 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
+    label: "Data display",
+    items: [
+      { href: "/components/stat-tile/", label: "Stat tiles" },
+      { href: "/components/description-list/", label: "Description list" },
+      { href: "/components/timeline/", label: "Timeline" },
+      { href: "/components/data-table/", label: "Data table" },
+      { href: "/components/virtual-list/", label: "Windowed list" },
+    ],
+  },
+  {
     label: "AI: conversation",
     items: [
       { href: "/components/composer/", label: "Composer" },

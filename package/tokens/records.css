@@ -1,0 +1,325 @@
+/* AiMY records: figures, facts, a history, tables and long lists (Phase 4,
+   batch P4-1). Ported from the products' effective CSS:
+   Sales sales.css then bdr.css; Knowledge settings.css; the design-system
+   spec for the two table gaps neither product has.
+
+   Deviations from the source, on purpose:
+   - Words in a muted, faint or quiet ink are secondary ink (no muted text).
+   - Sales' type roles map onto the library's scale: --t-ui and --t-small
+     14px (--fs-xs), --t-body 16px (--fs-base), --t-micro / --ty-micro 12px
+     (--fs-2xs). Knowledge's rem values are kept as written.
+   - Breakpoints that were on the window are on the component's own width
+     (container queries), so a tile strip in a narrow column reflows too.
+   - The timeline's chevron is a Lucide element, not Sales' mask variable. */
+
+/* ── Stat tiles: Sales' figure strip (.s-afs / .s-af, sales.css 8865-8970,
+   bdr.css 936, 1275-1292) ──────────────────────────────────────────────
+   Divided, never boxed: a hairline above each figure. The caption binds
+   tight to its figure and the sub-line sits back from both. */
+.s-afs-wrap { container-type: inline-size; }
+.s-afs { display: grid; grid-template-columns: repeat(var(--tiles, 4), minmax(0, 1fr)); gap: 12px 24px; }
+@container (max-width: 759.98px) {
+  .s-afs { grid-template-columns: repeat(min(var(--tiles, 4), 2), minmax(0, 1fr)); gap: 20px; }
+}
+@container (max-width: 399.98px) {
+  .s-afs { grid-template-columns: minmax(0, 1fr); }
+}
+.s-af {
+  display: flex; flex-direction: column; gap: 2px;
+  padding-top: 20px; border-top: 1px solid var(--card-border); min-width: 0;
+}
+.s-af .s-af-sub { margin-top: 6px; }
+.s-af-cap {
+  font-family: var(--font-sans); font-size: var(--fs-2xs);
+  font-weight: var(--fw-medium);
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--d200);
+}
+.s-af-val {
+  font-family: var(--font-sans); font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold); letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums; color: var(--d50); line-height: var(--lh-none);
+}
+.s-af-val.tone-ok { color: var(--ok-text); }
+.s-af-val.tone-warn { color: var(--warn-text); }
+.s-af-val.tone-err { color: var(--err-text); }
+.s-af-sub { font-size: var(--fs-xs); color: var(--d200); line-height: var(--lh-base); text-wrap: pretty; }
+/* A tile that opens a cut: the strip's anatomy, plus the arrow in its
+   sub-line, the rule turning accent on hover, and a press that answers.
+   Sales gives it 16px over a 4px gap; here it keeps the plain tile's 20 and
+   2, so a door beside a plain tile lines up caption for caption. */
+.b-af-door {
+  font: inherit; color: inherit; background: none; text-align: left;
+  border: 0; border-top: 1px solid var(--card-border); cursor: pointer;
+  padding: 20px 0 0; display: flex; flex-direction: column; gap: 2px;
+  transition: transform 160ms var(--ease-out), border-color var(--t-fast);
+}
+.b-af-door .s-af-sub { display: inline-flex; align-items: center; gap: 4px; color: var(--accent-text); font-weight: var(--fw-semibold); }
+.b-af-door .s-af-sub svg { width: 13px; height: 13px; flex: none; }
+.b-af-door:active { transform: scale(0.985); }
+.b-af-door:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; border-radius: 4px; }
+@media (hover: hover) and (pointer: fine) {
+  .b-af-door:hover { border-top-color: var(--accent); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .s-afs.is-rising .s-af { animation: s-exec-rise var(--t-emphasis) var(--ease-out) backwards; }
+}
+@keyframes s-exec-rise { from { opacity: 0; transform: translateY(8px); } }
+
+/* ── Description list, beside: Sales' record facts (.b-about-*, bdr.css
+   7363-7425) ─────────────────────────────────────────────────────────── */
+.b-about-grid {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+}
+/* Four groups go two by two, not three and a stray. */
+.b-about-grid.is-four { grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
+.b-about-g {
+  position: relative; min-width: 0; container-type: inline-size;
+  padding: 14px 16px 16px; border-radius: var(--r-lg);
+  border: 1px solid var(--card-border);
+}
+.b-about-gh {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  min-height: 28px; margin-bottom: 10px;
+}
+.b-about-h { margin: 0; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--d50); }
+.b-about-dl { display: flex; flex-direction: column; gap: 8px; margin: 0; container-type: inline-size; }
+.b-about-row { display: grid; grid-template-columns: 8rem minmax(0, 1fr); gap: 12px; align-items: baseline; }
+.b-about-row dt { font-size: var(--fs-xs); color: var(--d200); }
+.b-about-row dd {
+  margin: 0; min-width: 0; font-size: var(--fs-xs); font-weight: var(--fw-medium);
+  color: var(--d50); line-height: var(--lh-snug); overflow-wrap: anywhere;
+}
+.b-about-row dd.tone-ok { color: var(--ok-text); }
+.b-about-row dd.tone-warn { color: var(--warn-text); }
+.b-about-row dd.tone-err { color: var(--err-text); }
+/* Not known is a state, said in words in the reading ink, not a faded value. */
+.b-about-none { font-weight: var(--fw-regular, 400); font-style: italic; color: var(--d100); }
+/* A group being checked again breathes. */
+.b-about-g.is-checking::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.55), inset 0 0 32px rgba(var(--accent-rgb), 0.14);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .b-about-g.is-checking::before { animation: b-fill-breathe 1.6s ease-in-out infinite alternate; }
+}
+@keyframes b-fill-breathe { from { opacity: 0.45; } to { opacity: 1; } }
+/* Narrow: the label goes over its value rather than squeezing it. */
+@container (max-width: 359.98px) {
+  .b-about-row { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+}
+
+/* ── Description list, stacked: Knowledge's facts (.set2-us-fact,
+   settings.css 4945-4970) ──────────────────────────────────────────────
+   A state reads in its word and its ink, never in a fade. */
+.set2-us-facts { margin: 0; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+.set2-us-fact {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center;
+  column-gap: 0.75rem; padding: 0.625rem 0;
+}
+.set2-us-fact + .set2-us-fact { border-top: 0.0625rem solid var(--aimy-wash-edge); }
+.set2-us-fact dt {
+  grid-column: 1; display: flex; align-items: center; gap: 0.25rem;
+  font-size: var(--fs-2xs); color: var(--ink-secondary);
+  letter-spacing: var(--ls-wide); text-transform: uppercase;
+}
+.set2-us-fact dd { grid-column: 1; margin: 0.25rem 0 0; display: flex; flex-direction: column; gap: 0.125rem; min-width: 0; }
+.set2-us-fact dd b { font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--ink-primary); }
+.set2-us-fact dd b.is-ok { color: var(--ok-text); }
+.set2-us-fact dd b.is-warn { color: var(--warn-text); }
+.set2-us-fact dd b.is-err { color: var(--err-text); }
+.set2-us-fact dd > span { font-size: var(--fs-2xs); color: var(--ink-secondary); }
+.set2-us-fact-ed { grid-column: 2; grid-row: 1 / span 2; }
+
+/* ── Timeline: Sales' journey on a rail (.b-tl, bdr.css 1589-1643; the call
+   row .s-call, sales.css 6566-6600 and bdr.css 903-906, 1991-2026, 3824) ──
+   A 2px rail down the left, a node per touchpoint in the tone of how it
+   went, a larger accent node where a step was climbed. 10px dot, 14px
+   milestone, 26px gutter, rail at 7px. */
+.b-tl { position: relative; padding-left: 26px; display: flex; flex-direction: column; gap: 10px; }
+.b-tl::before {
+  content: ""; position: absolute; left: 6px; top: 10px; bottom: 10px; width: 2px;
+  background: var(--card-border); border-radius: 1px;
+}
+.b-month {
+  margin: 14px 0 6px; font-size: var(--fs-2xs); font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--ink-secondary);
+}
+.b-tl-month { margin: 6px 0 0; }
+.b-tl > .b-tl-month:first-child { margin-top: 0; }
+.s-call {
+  padding: 12px 16px; border-radius: var(--r-lg);
+  border: 1px solid var(--card-border); background: var(--card-bg);
+  interpolate-size: allow-keywords;
+}
+.s-call::details-content {
+  height: 0; overflow: clip;
+  transition: height 200ms var(--ease-out), content-visibility 200ms allow-discrete;
+}
+.s-call[open]::details-content { height: auto; }
+.s-call-sum {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  cursor: pointer; list-style: none;
+}
+.s-call-sum::-webkit-details-marker { display: none; }
+.s-call-chev {
+  width: 12px; height: 12px; flex: none; align-self: center; margin-right: -6px;
+  color: var(--ink-secondary); transition: transform 160ms var(--ease-out);
+}
+.s-call[open] .s-call-chev { transform: rotate(90deg); }
+.s-call-sum:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: var(--r-md); }
+.s-call-when { font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--d200); font-variant-numeric: tabular-nums; }
+.s-call-by { font-size: var(--fs-xs); color: var(--d200); }
+.s-call-by.is-ai { color: var(--ai-text); font-weight: var(--fw-bold); }
+/* How it went carries the tone: the one fact on the line that is news. */
+.s-call-out { font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--d100); }
+.s-call-out.tone-ok { color: var(--ok-text); }
+.s-call-out.tone-warn { color: var(--warn-text); }
+.s-call-out.tone-err { color: var(--err-text); }
+.b-kind { font-size: var(--fs-2xs); font-weight: var(--fw-semibold); color: var(--ink-secondary); white-space: nowrap; }
+.s-call-ago { margin-left: auto; font-size: var(--fs-2xs); color: var(--ink-secondary); }
+.s-call-body {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--hairline);
+  font-size: var(--fs-xs); color: var(--d100); line-height: var(--lh-base);
+}
+.b-tl-item { position: relative; transition: border-color var(--t-base); }
+.b-tl-item:hover { border-color: var(--card-border-hover); }
+.b-tl-dot {
+  position: absolute; left: -24px; top: 17px;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--d400); box-shadow: 0 0 0 3px var(--body-bg);
+}
+.b-tl-dot.tone-ok { background: var(--ok-text); }
+.b-tl-dot.tone-warn { background: var(--warn-text); }
+.b-tl-dot.tone-err { background: var(--err-text); }
+/* A step climbed: the node sits a shade larger, in accent. */
+.b-tl-item.is-milestone .b-tl-dot {
+  width: 14px; height: 14px; left: -26px; top: 15px;
+  background: var(--body-bg); border: 3px solid var(--accent);
+}
+.b-tl-item.is-milestone .b-tl-dot.tone-err { border-color: var(--err-text); }
+.b-tl-move { font-size: var(--fs-xs); font-weight: var(--fw-bold); color: var(--accent-text); white-space: nowrap; }
+.b-tl-move.is-out { color: var(--err-text); }
+/* Where it began. */
+.b-tl-end {
+  position: relative; padding: 4px 0 2px;
+  font-size: var(--fs-xs); font-weight: var(--fw-medium); color: var(--d200);
+  font-variant-numeric: tabular-nums;
+}
+.b-tl-dot.is-end { top: 8px; background: var(--d300); }
+
+/* ── Sort header: Knowledge's (.set2-th, settings.css 2115-2129) ─────────
+   The arrow is always drawn, so pressing a header is never a guess about
+   whether it does anything. It lights only for the column doing the work. */
+.set2-th {
+  display: inline-flex; align-items: center; gap: 0.3125rem;
+  appearance: none; border: 0; background: none; cursor: pointer; padding: 0;
+  font: inherit; font-size: var(--fs-2xs); font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--ink-secondary);
+  transition: color var(--t-fast) var(--ease-out);
+}
+.set2-th:hover { color: var(--ink-primary); }
+.set2-th:focus-visible { outline: 0.125rem solid var(--brand); outline-offset: 0.125rem; border-radius: 0.125rem; }
+.set2-th-a { color: var(--ink-rule); display: inline-flex; align-items: center; }
+.set2-th-a svg { width: 0.75rem; height: 0.75rem; display: block; }
+.set2-th-a.is-on { color: var(--ink-action); }
+.set2-th-l {
+  font-size: var(--fs-2xs); font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--ink-secondary);
+}
+
+/* ── Data table, rows: Knowledge's run history (.set2-runs / .set2-run,
+   settings.css 1125-1201, 2963) ──────────────────────────────────────────
+   Every row its own card at a gap you can see; one height for every row.
+   Below 46rem of its own width the first column takes a line and the rest
+   share the next, and the head that named the columns goes. */
+.dt { container-type: inline-size; min-width: 0; }
+/* One grid for the whole table, each row a subgrid of it, so a column is
+   one width all the way down. Knowledge sizes each row on its own, so an
+   auto column (a wider pill) shifts that row; here it cannot. */
+.set2-runs { display: grid; grid-template-columns: var(--dt-cols); column-gap: 1rem; row-gap: 0.375rem; }
+.set2-run {
+  display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: center;
+  padding: 0.75rem 1rem; background: var(--card-bg); border-radius: var(--r-md);
+  font-size: var(--fs-2xs); color: var(--ink-primary);
+  transition: background-color var(--t-fast) var(--ease-out);
+}
+.set2-run:not(.set2-run-hd) { min-height: 4.25rem; }
+.set2-run-hd { background: none; padding: 0 1rem 0.625rem; min-height: 0; }
+.set2-run[data-selected] { background: var(--accent-dim); }
+.set2-run > .is-end { justify-self: end; text-align: right; }
+@container (max-width: 735.98px) {
+  .set2-runs { grid-template-columns: minmax(0, 1fr); }
+  .set2-run:not(.set2-run-hd) { display: flex; flex-wrap: wrap; gap: 0.375rem 0.75rem; }
+  .set2-run:not(.set2-run-hd) > .dt-c1 { flex: 1 0 100%; min-width: 0; }
+  .set2-run:not(.set2-run-hd) > .is-end { margin-left: auto; }
+  .set2-run:not(.set2-run-hd) > .is-end ~ .is-end { margin-left: 0; }
+  /* The box stays beside the first column rather than taking a line. */
+  .set2-run:not(.set2-run-hd):has(> .dt-pick) > .dt-c1 { flex-basis: calc(100% - 1.0625rem - 0.75rem); }
+  .set2-run.set2-run-hd { display: none; }
+}
+
+/* ── Data table, table: Knowledge's preview table (.set2-pv, settings.css
+   1024-1039), and the design-system data table (.dtable, aimy-ds.css 2241)
+   for what neither product has: a head that stays put while the body
+   scrolls, and row selection. ──────────────────────────────────────────── */
+.set2-pv-wrap { overflow: auto; border-radius: var(--r-md); background: var(--card-bg); }
+.set2-pv { border-collapse: separate; border-spacing: 0; width: 100%; font-size: var(--fs-2xs); }
+.set2-pv th {
+  text-align: left; padding: 0.625rem 0.75rem 0.5rem; white-space: nowrap; vertical-align: bottom;
+  color: var(--ink-primary); font-weight: var(--fw-semibold);
+}
+.set2-pv th .set2-pv-sub {
+  display: block; font-family: var(--font-sans); font-weight: var(--fw-medium);
+  color: var(--ink-secondary); margin-top: 0.125rem;
+}
+.set2-pv td {
+  padding: 0.4375rem 0.75rem; color: var(--ink-secondary);
+  white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+.set2-pv tbody tr:nth-child(odd) td { background: var(--card-bg-raised); }
+.set2-pv tbody tr[data-selected] td { background: var(--accent-dim); }
+.set2-pv td i { color: var(--ink-secondary); }
+.set2-pv .is-end { text-align: right; }
+/* In a table head the sort button takes the head's own type. */
+.set2-pv th .set2-th { font-size: inherit; font-weight: inherit; letter-spacing: 0; text-transform: none; color: inherit; }
+/* The head stays put: the spec's raised head, opaque, with its rule. */
+.set2-pv.is-sticky thead th {
+  position: sticky; top: 0; z-index: 1;
+  background: var(--card-bg); box-shadow: inset 0 -1px 0 var(--card-border);
+}
+/* The selection column: as narrow as its box. */
+.set2-pv .dt-pick { width: 1px; padding-right: 0; }
+.set2-run > .dt-pick { display: inline-flex; }
+
+/* ── Empty: Knowledge's (.set2-empty, settings.css 564-575) ─────────────── */
+.set2-empty {
+  display: flex; flex-direction: column; align-items: center; gap: 0.375rem;
+  padding: 3rem 1.5rem; text-align: center;
+  background: var(--card-bg); border-radius: var(--r-lg);
+  font-size: var(--fs-xs); color: var(--ink-secondary);
+}
+.set2-empty b {
+  font-family: var(--font-display, var(--font-sans));
+  color: var(--ink-primary); font-weight: var(--fw-bold);
+  font-size: var(--fs-base); margin-bottom: 0.125rem;
+}
+.set2-empty > :last-child:not(b):not(span) { align-self: center; margin-top: 0.875rem; }
+
+/* ── Windowed list: Sales' (.b-vlist / .b-vrow, bdr.css 53-80, 152) ───────
+   The host is as tall as the whole list; about thirty rows exist at a time.
+   Positioning only: the row's own content decides what it looks like. The
+   hairline is on every row, because under windowing the first row in the
+   DOM is whichever one the scroll reached. */
+.b-vlist { position: relative; width: 100%; }
+.b-vrow { position: absolute; left: 0; right: 0; top: 0; box-sizing: border-box; padding: 12px 0; }
+.b-vrow { border-top: 1px solid var(--hairline); }
+.b-vrow.is-first { border-top: 0; }
+.b-vrow.is-cursor { background: var(--accent-dim); }
+.b-vfoot { padding: 12px 0 0; font-size: var(--fs-xs); color: var(--ink-secondary); }
+
+@media (prefers-reduced-motion: reduce) {
+  .s-call::details-content, .s-call-chev, .b-af-door, .set2-th { transition: none; }
+  .b-af-door:active { transform: none; }
+}

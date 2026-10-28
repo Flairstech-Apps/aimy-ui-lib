@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.11.0"
+        "@flairstech-aimy/tokens@^0.12.0"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.11.0"
+        "@flairstech-aimy/tokens@^0.12.0"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -1657,6 +1657,98 @@
       "files": [
         {
           "path": "registry/aimy/ui/usage-limit.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "stat-tile",
+      "type": "registry:component",
+      "title": "StatTile",
+      "description": "Sales' figure strip: a caption, one figure, and a sub-line that says what it means, divided by a hairline above, never boxed. The change is said in words in the sub-line, never an arrow. A tone recolours the figure. With onClick a tile is a door onto the set it counts (accent sub-line with an arrow). Up to four in a row, reflowing to two then one on the strip's own width.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/stat-tile.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "description-list",
+      "type": "registry:component",
+      "title": "DescriptionList",
+      "description": "Label and value pairs in the products' two shapes: beside (Sales' record facts, the label in an 8rem column; stacks when narrow) and stacked (Knowledge's facts, a small upper-case label over the value, a note, a hairline between rows, one control on the right). An unknown value says 'Not known' in words. FactGroup is Sales' titled card around a list; FactGroups lays them out.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/description-list.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "timeline",
+      "type": "registry:component",
+      "title": "Timeline",
+      "description": "Sales' history of one record on a rail: a dot per touchpoint in the tone of how it went, a larger accent node where a step was climbed, month headings, an end cap saying where it began. Each row is a disclosure: when, who, how it went, the step reached, how long ago; open, the whole record. Use Activity for a list across many subjects.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/timeline.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "data-table",
+      "type": "registry:component",
+      "title": "DataTable",
+      "description": "Records in columns, in Knowledge's two forms: rows (each row a card, one height, the first column takes its own line below 46rem) and table (a real table, zebra rows, sub-labels, scrolls sideways). Knowledge's three-state sort (up, down, back to the original order) with the arrow always drawn. From the design-system spec: a head that stays put while the body scrolls, and row selection with a select-all box. SortHeader and TableEmpty are exported for sort bars and empty states.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/checkbox"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/data-table.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "virtual-list",
+      "type": "registry:component",
+      "title": "VirtualList",
+      "description": "Sales' windowed list for long lists: only the rows near the view exist, about thirty at a time. The row height is measured from a row laid out out of sight, again on resize. Scrolls with the nearest scrolling ancestor or the page. A cursor row is tinted and kept in view. Positioning only; the row's content decides its look.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/virtual-list.tsx",
           "type": "registry:component"
         }
       ]

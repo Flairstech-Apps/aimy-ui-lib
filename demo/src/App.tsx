@@ -30,6 +30,7 @@ import { VoiceStage } from "@/components/voice-stage"
 import { useVoiceSession } from "@/hooks/use-voice"
 import type { Basis } from "@/lib/ai-types"
 import { AimyCanvas, useConversation } from "./conversation"
+import { Customers } from "./customers"
 
 // The demo: a believable AiMY briefing built only from installed registry
 // components. Ask from the float bar, or review a draft from a card, and the
@@ -310,8 +311,8 @@ export function App() {
             )}
             <Pager total={134} page={page} pageSize={15} noun="contacts" onPageChange={setPage} />
           </TabPanel>
-          <TabPanel value="customers" className="text-body text-ink-secondary">
-            28 customers. Customer cards come next.
+          <TabPanel value="customers">
+            <Customers />
           </TabPanel>
           <TabPanel value="calls">
             <Activity
