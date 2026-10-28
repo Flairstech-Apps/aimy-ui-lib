@@ -304,6 +304,18 @@ Small moments that say something happened, and what happens when a person reache
 
 AppShell (topnav, rail, main), Topnav (product tabs, bell, user menu, theme toggle; the nav moves into a menu at 900 to match the rail), Rail with its drawer below 1040, NotificationsPanel, the rail's widgets (added 28 Oct, Nour: Sales' left-rail cards, which Sales calls doors, `.b-door` in `.rail-doors`, bdr.css 4844 and bdr.js 10295-10370: the diary door (the "Today" caption, the day's head, "Open the diary"), the Financials door (the figure gained or signed, the bar to target, the pace sentence, "Open the report"), the year card a client book gets instead when it has no money target, and the conclusion card `.rail-card` above them; each is a button that opens its page, never a panel hanging off the rail), the Diary itself (added 28 Oct, Nour: Sales' diary page, `diaryPage` and `calBody` in bdr.js 9862-10520, `.b-cal` and `.b-diary` in bdr.css 4114-4370: the month head with its count and previous/next buttons, the Monday-first week grid with a dot per meeting coloured by kind, the selected day's agenda under it (hour, kind, who and what, tags), the row for a day with nothing on it, the add row, the AiMY lead line a client's diary opens on (how often we have met and what is next), and the meetings nobody wrote up; stacked on a page, landscape only where width is the spare axis), StatCard and the Sales KPI widget, Timeline, DataTable (with a windowed list for long ones, like Sales' `.b-vlist`), DescriptionList, and the chart primitives (line with goal and crosshair, funnel, sparkline). The shell is last because it is the most diverged between Sales, Knowledge and QA, and it's easiest to settle once the parts inside it exist.
 
+**Settled 28 Oct (Nour), after a survey of all three products:**
+- Shell widths: Knowledge's. The nav moves into a menu below 900 and the rail becomes a drawer below 1040, in rem. The rail's width is a setting, 320px by default (Sales'), so the diary and Financials doors fit.
+- The bell's panel: Sales' (card surface, a severity dot beside the type in words, the Menu's open and close motion).
+- Tables: Knowledge's console parts (the three-state sort header, the grid table, the scrolling table) and Sales' windowed list, plus the two gaps neither product has, a header that stays put on scroll and row selection, built from the design-system spec.
+- QA's charts are in: its trend chart with hover, the donut, the heatmap and the leaderboard, beside Sales' and Knowledge's.
+
+**Phase 4 runs in four batches:**
+- P4-1, figures and records: StatTile (Sales' `.s-af`, the change said in words), DescriptionList (Sales' `.b-about-dl` beside, Knowledge's `.set2-us-facts` stacked), Timeline (Sales' `.b-tl` call history), DataTable and VirtualList.
+- P4-2, charts: the KPI widget (Sales' `.b-wid` line with the promised goal and a hover readout), progress to target (`.s-att`), the funnel (`.b-funnel`), Knowledge's before-and-after sparkline, and QA's trend chart, donut, heatmap, leaderboard and score tile.
+- P4-3, the shell: AppShell, Topnav, product menu, user menu, Rail with its drawer, the rail doors, NotificationsPanel, page head.
+- P4-4: the Diary, and the note taker's canvas view.
+
 ## 11. AI-native for the people building with it
 
 The library itself is used by AI coding agents as much as by people, so it ships for them on purpose.
