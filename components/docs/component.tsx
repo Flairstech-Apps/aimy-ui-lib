@@ -5,7 +5,10 @@ export function Install({ name, exports }: { name: string; exports: string }) {
   return (
     <Section title="Install">
       <div className="flex flex-col gap-3">
-        <CodeBlock>{`npx shadcn@latest add @aimy/${name}`}</CodeBlock>
+        <CodeBlock>{`npx shadcn@latest add ${name
+          .split(" ")
+          .map((n) => `@aimy/${n}`)
+          .join(" ")}`}</CodeBlock>
         <p className="text-meta text-ink-secondary">Or, with the npm package:</p>
         <CodeBlock>{`import { ${exports} } from "@flairstech-aimy/ui"`}</CodeBlock>
       </div>

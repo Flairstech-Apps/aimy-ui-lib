@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.2.0"
+        "@flairstech-aimy/tokens@^0.3.0"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.2.0"
+        "@flairstech-aimy/tokens@^0.3.0"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -306,6 +306,196 @@
       "files": [
         {
           "path": "registry/aimy/ui/avatar.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "field",
+      "type": "registry:component",
+      "title": "Field",
+      "description": "Wraps a form control with its label above and help or an error below, and wires them up: the control gets the id, aria-describedby and aria-invalid. A new error makes the control shake once (transitions.dev 12); the message stays until fixed. Never use a placeholder as a label.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/field.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "input",
+      "type": "registry:component",
+      "title": "Input",
+      "description": "A one-line text field. variant box (card ground, edge, 36px; the default) or line (an underline, for forms inside dialogs and AiMY panels). 16px text, brand focus. Put it in a Field.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/field"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/input.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:component",
+      "title": "Textarea",
+      "description": "Several lines that grow with the text up to 12 lines, then scroll. No resize handle. variant box or line. Put it in a Field.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/field"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/textarea.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "search-field",
+      "type": "registry:component",
+      "title": "SearchField",
+      "description": "Find-as-you-type with a search icon, a clear button that appears only when there is text, and Escape to clear. variant box or line. label names the field for screen readers and is the default placeholder.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/search-field.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "select",
+      "type": "registry:component",
+      "title": "Select and SelectItem",
+      "description": "The only select control; never a native <select>. A pill with an inset ring that opens a raised panel; the chosen option is in the AI ink with a dot. Full keyboard model and typeahead. Opens and closes with transitions.dev menu dropdown (05). Use label when it is not inside a Field.",
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/field"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/select.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:component",
+      "title": "Checkbox",
+      "description": "A 17px box: brand fill and a white tick when on, a dash for some (checked=\"indeterminate\"). The tick draws in (transitions.dev 25). label puts clickable words beside it.",
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/checkbox.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "switch",
+      "type": "registry:component",
+      "title": "Switch",
+      "description": "An on/off switch, 36 by 20: the brand when on. The thumb travels with a small bounce (transitions.dev 27). A disabled switch keeps its position readable and shows lockedReason as a tooltip. label puts words beside it.",
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/switch.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "segmented",
+      "type": "registry:component",
+      "title": "Segmented",
+      "description": "Two to five mutually exclusive options in a pill, as a radiogroup: arrow keys move and choose. The highlight slides between options (transitions.dev 16). label names the group.",
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/segmented.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "password-field",
+      "type": "registry:component",
+      "title": "PasswordField",
+      "description": "A secret (API key, token, password), masked, in the mono face, with a show/hide control inside the field that names what it will do. variant box or line. Put it in a Field.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/field"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/password-field.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "copy-button",
+      "type": "registry:component",
+      "title": "CopyButton",
+      "description": "Copies a value and says so in words: Copy, then Copied for 1.4s (or Press Ctrl+C if the browser refuses), announced to screen readers. The icon swaps copy to check.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/button"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/copy-button.tsx",
           "type": "registry:component"
         }
       ]

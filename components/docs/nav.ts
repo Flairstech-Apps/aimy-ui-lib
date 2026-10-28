@@ -38,4 +38,16 @@ export const NAV: NavGroup[] = [
       { href: "/components/avatar/", label: "Avatar" },
     ],
   },
+  {
+    label: "Forms",
+    items: [
+      { href: "/components/field/", label: "Field and text inputs" },
+      { href: "/components/search-field/", label: "Search field" },
+      { href: "/components/select/", label: "Select" },
+      { href: "/components/checkbox/", label: "Checkbox" },
+      { href: "/components/switch/", label: "Switch" },
+      { href: "/components/segmented/", label: "Segmented" },
+      { href: "/components/copy-button/", label: "Copy button" },
+    ],
+  },
 ]

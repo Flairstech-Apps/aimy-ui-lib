@@ -4,32 +4,73 @@
     {
       "name": "docs",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["exec", "next", "dev", "--port", "5170"],
+      "runtimeArgs": [
+        "exec",
+        "next",
+        "dev",
+        "--port",
+        "5170"
+      ],
       "port": 5170
     },
     {
       "name": "fixture-plain",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--dir", "package/fixtures/plain", "dev"],
+      "runtimeArgs": [
+        "--dir",
+        "package/fixtures/plain",
+        "dev"
+      ],
       "port": 5181
     },
     {
       "name": "fixture-tailwind",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--dir", "package/fixtures/tailwind", "dev"],
+      "runtimeArgs": [
+        "--dir",
+        "package/fixtures/tailwind",
+        "dev"
+      ],
       "port": 5182
     },
     {
       "name": "fixture-html",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["--yes", "http-server@14.1.1", "package", "-p", "5183", "-c-1", "--silent"],
+      "runtimeArgs": [
+        "--yes",
+        "http-server@14.1.1",
+        "package",
+        "-p",
+        "5183",
+        "-c-1",
+        "--silent"
+      ],
       "port": 5183
     },
     {
       "name": "demo",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["--dir", "demo", "dev", "--port", "5180", "--strictPort"],
+      "runtimeArgs": [
+        "--dir",
+        "demo",
+        "dev",
+        "--port",
+        "5180",
+        "--strictPort"
+      ],
       "port": 5180
+    },
+    {
+      "name": "docs-check",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "exec",
+        "next",
+        "dev",
+        "--port",
+        "5171"
+      ],
+      "port": 5171
     }
   ]
 }

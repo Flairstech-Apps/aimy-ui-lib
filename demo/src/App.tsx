@@ -7,6 +7,10 @@ import { Chip } from "@/components/chip"
 import { CountBadge } from "@/components/count-badge"
 import { Divider } from "@/components/divider"
 import { IconButton } from "@/components/icon-button"
+import { SearchField } from "@/components/search-field"
+import { Segmented } from "@/components/segmented"
+import { Select, SelectItem } from "@/components/select"
+import { Switch } from "@/components/switch"
 import { Tag } from "@/components/tag"
 import { ThemeToggle } from "@/components/theme-toggle"
 
@@ -19,6 +23,7 @@ const CONTACTS = [
 
 export function App() {
   const [filter, setFilter] = useState<string | null>(null)
+  const [q, setQ] = useState("")
   return (
     <div className="min-h-dvh bg-body text-ink">
       <header className="flex h-(--topbar-height) items-center gap-3 border-b border-hairline bg-topbar px-5">
@@ -38,6 +43,15 @@ export function App() {
           <h1 className="text-3xl font-semibold tracking-tight">Good morning, Engy</h1>
           <p className="mt-2 text-body text-ink-secondary">Two calls need a reply today. AiMY has drafted both.</p>
         </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <SearchField label="Search contacts" value={q} onValueChange={setQ} className="w-56" />
+          <Segmented label="Show" options={[{ value: "today", label: "Today" }, { value: "week", label: "This week" }]} />
+          <Select label="Owner" defaultValue="me">
+            <SelectItem value="me">My contacts</SelectItem>
+            <SelectItem value="team">My team</SelectItem>
+          </Select>
+          <Switch label="Drafts only" className="ml-auto" />
+        </div>
         <div className="flex flex-wrap gap-2">
           {["Needs reply", "Meeting Set"].map((f) => (
             <Chip key={f} selected={filter === f} onClick={() => setFilter((v) => (v === f ? null : f))}>
@@ -45,7 +59,7 @@ export function App() {
             </Chip>
           ))}
         </div>
-        {CONTACTS.filter((c) => !filter || c.state[1] === filter).map((c) => (
+        {CONTACTS.filter((c) => (!filter || c.state[1] === filter) && c.name.toLowerCase().includes(q.toLowerCase())).map((c) => (
           <article key={c.name} className="rounded-xl border border-edge bg-card p-5 shadow-sm">
             <div className="flex items-center gap-3">
               <Avatar name={c.who} />
