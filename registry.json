@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.9.0"
+        "@flairstech-aimy/tokens@^0.10.0"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.9.0"
+        "@flairstech-aimy/tokens@^0.10.0"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -954,9 +954,10 @@
       "name": "composer",
       "type": "registry:component",
       "title": "Composer",
-      "description": "Where a person asks AiMY, as the products' voice.js arranges it. variant float (one line over the work) or canvas (several lines). Enter sends; nothing empty is sent. The mic dictates: a red waveform and clock replace the field, cancel or keep (keep puts the words in the field). onVoice turns the empty send slot into the voice button. generating rides the beam and turns send into stop. onAttach adds the clip; a file is a row inside the bar, saying not uploaded until it is. unavailable (a sentence saying what still works) keeps the bar and the text; a question sent then goes when AiMY is back.",
+      "description": "Where a person asks AiMY, as the products' voice.js arranges it. variant float (one line over the work) or canvas (several lines). Enter sends; nothing empty is sent. The mic dictates: a red waveform and clock replace the field, cancel or keep (keep puts the words in the field). onVoice turns the empty send slot into the voice button. generating rides the beam and turns send into stop. onAttach adds the clip; a file is a row inside the bar, saying not uploaded until it is. unavailable (a sentence saying what still works) keeps the bar and the text; a question sent then goes when AiMY is back. usage puts Knowledge's ring on the AiMY mark, opening the numbers on hover, focus or press.",
       "dependencies": [
-        "lucide-react"
+        "lucide-react",
+        "radix-ui"
       ],
       "registryDependencies": [
         "@aimy/theme",
@@ -1362,6 +1363,243 @@
       "files": [
         {
           "path": "registry/aimy/ui/activity.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "set-scope-bar",
+      "type": "registry:component",
+      "title": "SetScopeBar",
+      "description": "Bulk work states its scope: N selected, of what, filtered how, the actions that apply, and Clear (the design system's set-scope bar; neither product draws one). The action names the operation and count, never 'Apply'.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/set-scope-bar.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "audit-trail",
+      "type": "registry:component",
+      "title": "AuditTrail",
+      "description": "A governed record of changes (design system spec): what changed, who and how, when, and Revert or Irreversible on every entry. AiMY's entries carry its mark. For contact activity use Activity.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/audit-trail.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "decision-zone",
+      "type": "registry:component",
+      "title": "DecisionZone",
+      "description": "A proposal with operational consequences decided in place (design system spec): the question, its consequence and how long it stays reversible, Accept / Edit / Reject (edit required), Awaiting you, then what was decided and Undo.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/button",
+        "@aimy/work-state"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/decision-zone.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "step-list",
+      "type": "registry:component",
+      "title": "StepList",
+      "description": "The compact step list (design system spec): done with what it found ('3 matches · 1.2s'), running, pending with its number, failed. For a long watched run use AgentSteps.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/step-list.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "peek",
+      "type": "registry:component",
+      "title": "Peek",
+      "description": "AiMY's answer in a card that rises out of the float bar (Sales' .b-peek, Knowledge's .aimy-peek): thinks, then answers; three lines then a fade; press to open the canvas; one-click questions under it. The grip folds it into the bar; drag up opens the canvas, down tucks it; a press elsewhere tucks it; × dismisses; Escape tucks. Place it before the Composer in a relative dock.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/thinking"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/peek.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "memory-panel",
+      "type": "registry:component",
+      "title": "MemoryPanel",
+      "description": "What AiMY carries into this conversation from an earlier thread (Knowledge's memory panel), with Answer without it always present, and each line forgettable with Undo.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/button",
+        "@aimy/toast"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/memory-panel.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "aimy-note",
+      "type": "registry:component",
+      "title": "AimyNote",
+      "description": "A sentence from AiMY on a record or card with where it came from (Sales' .b-aimy): the mark, one useful sentence, the source line, one optional control. Variants quiet, gap, lead.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/aimy-note.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "briefing",
+      "type": "registry:component",
+      "title": "BriefingActions and Aggregate",
+      "description": "A briefing item's Acknowledge, and Dismiss with one-click reasons in place, each with Undo (doctrine §5.9; design system spec). Aggregate summarises a cluster: stats, rows with share bars, and what the rest add up to.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/toast"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/briefing.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "usage",
+      "type": "registry:component",
+      "title": "UsageSummary",
+      "description": "How much of AiMY a person has used (Knowledge's usage popover): groups by period, rows 'N of M' with a meter and what it means. Open it from the Composer's usage ring.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/usage.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "model-picker",
+      "type": "registry:component",
+      "title": "ModelPicker",
+      "description": "Which AiMY model answers (design system spec): the AI dot, the name and tag, and a menu where each model says what it is for.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/menu"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/model-picker.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "autonomy",
+      "type": "registry:component",
+      "title": "Autonomy and AskPolicy",
+      "description": "How much AiMY may do without asking, per kind of work, with the evidence it has earned it: Ask me first / Do it, then tell me / Do it, keep a log. AskPolicy sets Always ask or Just do it per category; governed categories are locked and say why. Every change toasts with Undo; anything irreversible or touching scoring always asks.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/segmented",
+        "@aimy/toast"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/autonomy.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "memory-list",
+      "type": "registry:component",
+      "title": "MemoryList",
+      "description": "Everything AiMY remembers about a person or account, with where each came from; forget one in a click with Undo, or all of it after one inline confirm.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/button",
+        "@aimy/toast"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/memory-list.tsx",
           "type": "registry:component"
         }
       ]

@@ -1,0 +1,94 @@
+/*
+ * The peek: AiMY's answer in a card that rises out of the float bar, so a
+ * quick question gets a quick answer without opening the canvas. Both
+ * products draw the same card (Sales .b-peek, bdr.css:2855-3274; Knowledge
+ * .aimy-peek, knowledge.css:8115-8253), values unchanged. Knowledge's timing:
+ * --t-base 250ms and the system's ease.
+ *
+ * It sits in the composer's dock: the parent is position: relative, and the
+ * card's bottom edge tucks 14px under the bar so it reads as coming out of it.
+ */
+.aimy-peek {
+  --peek-tuck: 14px; --peek-lip: 40px;
+  position: absolute; bottom: calc(100% + 6px); left: 0; right: 0;
+  display: flex; justify-content: center; pointer-events: none; z-index: 1;
+  clip-path: inset(-64px -64px calc(-1 * var(--peek-tuck)) -64px);
+}
+.aimy-peek + .aimy-float-bar, .aimy-peek ~ .aimy-float-bar { position: relative; z-index: 3; }
+.aimy-peek-card {
+  pointer-events: all; position: relative; width: 100%; max-width: 47.5rem;
+  display: flex; flex-direction: column; padding: 5px; border-radius: 24px;
+  background: #1e2428; border: 1px solid rgba(255,255,255,0.09);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.34), 0 0 0 1px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.05);
+  transition: transform var(--t-slow) var(--ease-out), max-width var(--t-base) var(--ease-out);
+  animation: aimy-peek-in var(--t-slow) var(--ease-out);
+}
+[data-theme="light"] .aimy-peek-card {
+  background: #fafcfe; border-color: rgba(16,24,40,0.14);
+  box-shadow: 0 4px 16px rgba(16,24,40,0.09), 0 0 0 1px rgba(16,24,40,0.03);
+}
+@keyframes aimy-peek-in {
+  from { opacity: 0; transform: translate3d(0, 10px, 0) scale(0.985); filter: blur(6px); }
+}
+.aimy-peek-lip { position: absolute; top: 0; left: 0; right: 0; height: 14px; z-index: 1; }
+.aimy-peek-grip {
+  position: absolute; inset: 0; display: grid; place-items: center; padding: 0; border: 0;
+  border-radius: 23px 23px 0 0; background: none; cursor: grab; touch-action: none;
+  transition: background-color var(--t-fast) var(--ease-out);
+}
+.aimy-peek-grip:hover { background: rgba(var(--accent-rgb), 0.07); }
+.aimy-peek-grip:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+.aimy-peek.is-dragging .aimy-peek-grip { cursor: grabbing; }
+.aimy-peek-grip-bar {
+  width: 36px; height: 4px; border-radius: 2px; background: var(--d400);
+  transition: width var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out);
+}
+.aimy-peek-grip:hover .aimy-peek-grip-bar { width: 48px; background: var(--d300); }
+.aimy-peek-x {
+  position: absolute; top: 6px; right: 6px; z-index: 2; width: 26px; height: 26px;
+  display: grid; place-items: center; border: 0; border-radius: 50%; background: none;
+  color: var(--ink-secondary); cursor: pointer;
+  transition: color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out), transform var(--t-press) var(--ease-out);
+}
+.aimy-peek-x::after { content: ""; position: absolute; inset: 50% auto auto 50%; width: 44px; height: 44px; transform: translate(-50%, -50%); }
+.aimy-peek-x:hover { color: var(--ink-primary); background: var(--card-bg); }
+.aimy-peek-x:active { transform: scale(0.97); }
+.aimy-peek-x:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.aimy-peek-x svg { width: 14px; height: 14px; }
+.aimy-peek-main { transition: opacity var(--t-fast) var(--ease-out) 160ms; }
+.aimy-peek-open {
+  display: grid; width: 100%; padding: 12px 44px 12px 16px; border: 0; border-radius: 20px;
+  background: none; text-align: left; cursor: pointer; color: inherit; font: inherit;
+  transition: background-color var(--t-fast) var(--ease-out), transform 120ms var(--ease-out);
+}
+.aimy-peek-open:hover { background: rgba(var(--accent-rgb), 0.07); }
+.aimy-peek-open:active { transform: translateY(1px); }
+.aimy-peek-open:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+.aimy-peek-body {
+  position: relative; display: block; overflow: hidden; max-height: calc(16px * 1.5 * 3);
+  font-size: 16px; line-height: 1.5; color: var(--d100); text-wrap: pretty;
+}
+.aimy-peek-body b { color: var(--d50); font-weight: var(--fw-semibold); }
+.aimy-peek.is-clipped .aimy-peek-body::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.7em;
+  background: linear-gradient(to bottom, transparent, #1e2428);
+}
+[data-theme="light"] .aimy-peek.is-clipped .aimy-peek-body::after { background: linear-gradient(to bottom, transparent, #fafcfe); }
+.aimy-peek.is-thinking .aimy-peek-body { max-height: none; }
+.aimy-peek-acts { display: block; padding: 0 16px 12px; }
+.aimy-peek-acts:empty { display: none; }
+.aimy-peek-acts > div { display: flex; flex-wrap: wrap; gap: 8px; }
+.aimy-peek-open:has(+ .aimy-peek-acts:not(:empty)) { padding-bottom: 8px; }
+/* Shut: tucked into the bar, the lip and its grip still in reach. */
+.aimy-peek.is-shut .aimy-peek-card { transform: translate3d(0, calc(100% - var(--peek-lip) + var(--peek-tuck)), 0); max-width: min(38rem, 80%); }
+.aimy-peek.is-shut .aimy-peek-lip { top: 5px; left: 5px; right: 5px; height: 26px; display: flex; align-items: center; justify-content: flex-end; }
+.aimy-peek.is-shut .aimy-peek-grip { border-radius: 19px 19px 0 0; }
+.aimy-peek.is-shut .aimy-peek-x { top: 0; right: 2px; }
+.aimy-peek.is-shut .aimy-peek-main { opacity: 0; transition-delay: 0s; }
+.aimy-peek.is-dragging .aimy-peek-card { transition: none; max-width: 47.5rem; }
+.aimy-peek.is-dragging .aimy-peek-main { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .aimy-peek-card { animation: none; transition: none; }
+  .aimy-peek-grip-bar { transition: background-color var(--t-fast) var(--ease-out); }
+  .aimy-peek-open:active, .aimy-peek-x:active { transform: none; }
+}

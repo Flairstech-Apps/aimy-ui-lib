@@ -85,6 +85,7 @@ export const NAV: NavGroup[] = [
       { href: "/components/suggestions/", label: "Suggestions" },
       { href: "/components/reasoning/", label: "Reasoning" },
       { href: "/components/canvas/", label: "Canvas" },
+      { href: "/components/peek/", label: "Peek" },
     ],
   },
   {
@@ -107,6 +108,21 @@ export const NAV: NavGroup[] = [
       { href: "/components/change-review/", label: "Change review" },
       { href: "/components/version-list/", label: "Version list" },
       { href: "/components/activity/", label: "Activity" },
+      { href: "/components/set-scope-bar/", label: "Set-scope bar" },
+      { href: "/components/audit-trail/", label: "Audit trail" },
+      { href: "/components/decision-zone/", label: "Decision zone" },
+      { href: "/components/step-list/", label: "Step list" },
+    ],
+  },
+  {
+    label: "AI: relationship and memory",
+    items: [
+      { href: "/components/memory/", label: "Memory" },
+      { href: "/components/aimy-note/", label: "AiMY note" },
+      { href: "/components/briefing/", label: "Briefing" },
+      { href: "/components/autonomy/", label: "Autonomy" },
+      { href: "/components/usage/", label: "Usage" },
+      { href: "/components/model-picker/", label: "Model picker" },
     ],
   },
   {

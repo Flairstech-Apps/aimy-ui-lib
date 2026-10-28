@@ -1,12 +1,72 @@
-"use client"
-
 import { AudioLines, Check, FileText, Mic, Paperclip, Send, X } from "lucide-react"
+import { Popover } from "radix-ui"
 import { useEffect, useId, useRef, useState } from "react"
 import { AimyMark } from "@/components/aimy-mark"
 import { CountBadge } from "@/components/count-badge"
 import { useDictation, voiceClock } from "@/hooks/use-voice"
 import type { Attachment } from "@/lib/ai-types"
 import { cn } from "@/lib/utils"
+
+export type Usage = {
+  /** How full the current slice is, 0 to 1. */
+  fill: number
+  tone?: "warn" | "err"
+  /** Said to screen readers: "Your usage: 67% of this slice, past your share". */
+  label: string
+  /** The popover: usually <UsageSummary />. */
+  content: React.ReactNode
+}
+
+/* The mark with its ring. Hover opens the numbers after 220ms and leaves a
+   240ms grace to reach them; focus opens them; a press pins them; Escape
+   closes them and returns to the mark (Knowledge's usage widget). */
+function UsageMark({ usage, badge }: { usage: Usage; badge?: number }) {
+  const [open, setOpen] = useState(false)
+  const t = useRef<number | undefined>(undefined)
+  const later = (fn: () => void, ms: number) => {
+    window.clearTimeout(t.current)
+    t.current = window.setTimeout(fn, ms)
+  }
+  const hover = typeof window !== "undefined" && window.matchMedia?.("(hover: hover)").matches
+  return (
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      <Popover.Trigger asChild>
+        <button
+          type="button"
+          className={cn("aimy-float-icon has-use", usage.tone && `is-${usage.tone}`)}
+          style={{ "--use": Math.min(1, Math.max(0, usage.fill)) } as React.CSSProperties}
+          aria-label={usage.label}
+          onPointerEnter={() => hover && later(() => setOpen(true), 220)}
+          onPointerLeave={() => hover && later(() => setOpen(false), 240)}
+          onFocus={() => setOpen(true)}
+          // A press pins it open (Radix would toggle it shut after focus opened it).
+          onClick={(e) => {
+            e.preventDefault()
+            setOpen(true)
+          }}
+        >
+          <AimyMark title="" />
+          {badge ? <CountBadge count={badge} label="alerts from AiMY" /> : null}
+        </button>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content
+          side="top"
+          align="start"
+          sideOffset={8}
+          collisionPadding={8}
+          aria-label="Your usage"
+          className="use-pop outline-none"
+          onPointerEnter={() => window.clearTimeout(t.current)}
+          onPointerLeave={() => hover && later(() => setOpen(false), 240)}
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
+          {usage.content}
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  )
+}
 
 // Where a person asks AiMY: one composer, everywhere, as the products' live
 // voice.js arranges it (ai.css draws the bar, voice.css the rest).
@@ -60,6 +120,11 @@ type ComposerProps = {
   attachments?: Attachment[]
   onAttach?: (file: File) => void
   onRemoveAttachment?: (id: string) => void
+  /**
+   * The usage ring on the AiMY mark (Knowledge's, ported to Sales): how full
+   * the current slice is, and a popover with the numbers (UsageSummary).
+   */
+  usage?: Usage
   /** What the send button says to a screen reader. Sales' float bar says "Run". */
   sendLabel?: string
   className?: string
@@ -88,6 +153,7 @@ export function Composer({
   onAttach,
   onRemoveAttachment,
   sendLabel = "Send",
+  usage,
   className,
 }: ComposerProps) {
   const [inner, setInner] = useState(defaultValue)
@@ -233,10 +299,14 @@ export function Composer({
       <span className="beam" aria-hidden="true">
         <i />
       </span>
-      <span className="aimy-float-icon">
-        <AimyMark title="" />
-        {badge ? <CountBadge count={badge} label="alerts from AiMY" /> : null}
-      </span>
+      {usage ? (
+        <UsageMark usage={usage} badge={badge} />
+      ) : (
+        <span className="aimy-float-icon">
+          <AimyMark title="" />
+          {badge ? <CountBadge count={badge} label="alerts from AiMY" /> : null}
+        </span>
+      )}
       {float ? (
         <input {...fieldProps} className="aimy-float-input" onChange={(e) => set(e.target.value)} />
       ) : (

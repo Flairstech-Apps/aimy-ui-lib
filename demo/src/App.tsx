@@ -20,6 +20,9 @@ import { EmptyState } from "@/components/empty-state"
 import { Reveal, SkeletonCard } from "@/components/skeleton"
 import { toast, Toaster } from "@/components/toast"
 import { Composer } from "@/components/composer"
+import { Peek } from "@/components/peek"
+import { StreamingText } from "@/components/streaming-text"
+import { UsageSummary } from "@/components/usage"
 import { Confidence } from "@/components/confidence"
 import { Activity } from "@/components/activity"
 import { WorkState } from "@/components/work-state"
@@ -85,6 +88,9 @@ export function App() {
   }, [])
   const left = CONTACTS.length - snoozed.length
   const conversation = useConversation()
+  // The float bar answers in the peek; the same turn is in the canvas thread.
+  const [peek, setPeek] = useState(false)
+  const lastAnswer = [...conversation.turns].reverse().find((t) => t.speaker === "aimy")
   const [canvasOpen, setCanvasOpen] = useState(false)
   const [basis, setBasis] = useState<Basis>([])
   const openCanvas = (b: Basis, question?: string) => {
@@ -309,14 +315,47 @@ export function App() {
         </Tabs>
       </main>
       <div className="pointer-events-none fixed inset-x-5 bottom-3.5 z-(--z-float) flex justify-center">
-        <Composer
-          className="pointer-events-auto"
-          onSubmit={(question) => openCanvas(["My contacts", "134 contacts"], question)}
-          generating={conversation.busy}
-          onStop={conversation.stop}
-          onVoice={voice.start}
-          badge={3}
-        />
+        {/* The dock: a quick answer rises out of the bar; the canvas holds the whole thread. */}
+        <div className="pointer-events-auto relative w-full max-w-[47.5rem]">
+          {peek && lastAnswer ? (
+            <Peek
+              status={
+                lastAnswer.status === "thinking"
+                  ? "thinking"
+                  : lastAnswer.status === "streaming"
+                    ? "streaming"
+                    : "answered"
+              }
+              thinkingLabel="Reading the record…"
+              onOpenCanvas={() => openCanvas(["My contacts", "134 contacts"])}
+              onDismiss={() => setPeek(false)}
+            >
+              <StreamingText text={lastAnswer.text} streaming={lastAnswer.status === "streaming"} />
+            </Peek>
+          ) : null}
+          <Composer
+            onSubmit={(question) => {
+              setPeek(true)
+              conversation.ask(question)
+            }}
+            generating={conversation.busy}
+            onStop={conversation.stop}
+            onVoice={voice.start}
+            badge={3}
+            usage={{
+              fill: 0.42,
+              label: "Your usage: 42% of this slice",
+              content: (
+                <UsageSummary
+                  groups={[
+                    { title: "October", rows: [{ label: "Chats", used: 126, of: 300, note: "Within your share." }] },
+                  ]}
+                  link={{ label: "Usage", href: "#usage" }}
+                />
+              ),
+            }}
+          />
+        </div>
       </div>
       <AimyCanvas open={canvasOpen} onOpenChange={setCanvasOpen} basis={basis} me={who} conversation={conversation} />
       <VoiceStage

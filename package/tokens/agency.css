@@ -318,3 +318,104 @@ button.ver-item:focus-visible { outline: 2px solid var(--brand); outline-offset:
   padding: 0.125rem 0.4375rem; border-radius: var(--r-pill);
   background: var(--accent-dim); color: var(--ink-action); border: 1px solid rgba(var(--accent-rgb),0.32);
 }
+
+/* ══ From the design system, drawn by neither product ════════════════════
+   Built from the spec's own values (aimy-ds.css): the set-scope bar
+   (3538-3559), the audit trail (3285-3315), the decision zone (3267-3282)
+   and the compact step list (2945-2956). Words in muted ink are secondary. */
+
+/* ── Set-scope bar ──────────────────────────────────────── */
+.set-scope-bar {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 10px 14px; border-radius: var(--r-lg);
+  background: var(--card-bg-raised); border: 1px solid rgba(var(--accent-rgb), 0.3);
+  box-shadow: var(--shadow-md);
+}
+.ss-count { display: inline-flex; align-items: baseline; gap: 5px; flex-shrink: 0; font-size: var(--fs-base); font-weight: var(--fw-bold); color: var(--d50); }
+.ss-num { letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.ss-scope { font-size: var(--fs-xs); color: var(--ink-secondary); line-height: 1.5; }
+.ss-scope strong { color: var(--d200); font-weight: var(--fw-bold); }
+.ss-actions { display: flex; align-items: center; gap: 7px; margin-left: auto; flex-wrap: wrap; }
+.ss-clear {
+  font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--ink-secondary);
+  background: none; border: 0; padding: 4px 6px; min-height: 24px; border-radius: var(--r-xs); cursor: pointer;
+  transition: color var(--t-fast) var(--ease-out), transform var(--t-press) var(--ease-out);
+}
+.ss-clear:hover { color: var(--d100); }
+.ss-clear:active { transform: scale(0.97); }
+.ss-clear:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+/* ── Audit trail ────────────────────────────────────────── */
+.audit-trail { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.audit-entry {
+  display: grid; grid-template-columns: 20px 1fr auto; gap: 10px; align-items: start;
+  padding: 10px 0; border-bottom: 1px solid var(--w07);
+}
+.audit-trail > li:last-child .audit-entry { border-bottom: none; }
+.audit-ico {
+  width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(255,255,255,0.05); color: var(--ink-secondary);
+}
+[data-theme="light"] .audit-ico { background: rgba(16,24,40,0.05); }
+.audit-ico svg { width: 11px; height: 11px; }
+.audit-entry.is-ok .audit-ico { background: var(--ok-bg); color: var(--ok-text); }
+.audit-entry.is-warn .audit-ico { background: var(--warn-bg); color: var(--warn-text); }
+.audit-entry.is-err .audit-ico { background: var(--err-bg); color: var(--err-text); }
+.audit-entry.is-ai .audit-ico { background: rgba(0,102,255,0.12); color: var(--ai-ink); }
+.audit-entry.is-ai .audit-ico svg { width: 9px; height: 10px; }
+.audit-action { font-size: var(--fs-base); font-weight: var(--fw-bold); color: var(--d100); line-height: 1.45; }
+.audit-actor { font-size: var(--fs-xs); color: var(--ink-secondary); margin-top: 2px; }
+.audit-who { font-weight: var(--fw-bold); }
+.audit-side { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.audit-time { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--ink-secondary); white-space: nowrap; }
+.audit-revert {
+  position: relative; font-size: var(--fs-xs); font-weight: var(--fw-bold); color: var(--ai-ink);
+  background: none; border: 0; padding: 2px 4px; border-radius: var(--r-xs); cursor: pointer;
+  transition: color var(--t-fast) var(--ease-out);
+}
+.audit-revert::after { content: ""; position: absolute; inset: 50% auto auto 50%; width: 100%; min-width: 24px; height: 24px; transform: translate(-50%, -50%); }
+.audit-revert:hover { color: var(--brand); }
+.audit-revert:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.audit-irreversible { font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--ink-secondary); }
+
+/* ── Decision zone ──────────────────────────────────────── */
+.decision-zone {
+  max-width: 520px; padding: 14px; border-radius: var(--r-lg);
+  background: var(--card-bg-raised); border: 1px solid var(--card-border);
+  transition: border-color var(--t-base) var(--ease-out);
+}
+.decision-zone.is-accepted { border-color: color-mix(in srgb, var(--ok) 28%, transparent); }
+.decision-zone.is-rejected { border-color: color-mix(in srgb, var(--err) 24%, transparent); }
+.dz-prompt { margin: 0 0 4px; font-size: var(--fs-base); font-weight: var(--fw-semibold); color: var(--d100); line-height: 1.55; }
+.decision-zone:is(.is-accepted, .is-rejected) .dz-prompt { margin-bottom: 10px; }
+.dz-consequence { display: flex; gap: 7px; margin: 0 0 12px; font-size: var(--fs-xs); line-height: 1.55; color: var(--ink-secondary); }
+.dz-consequence svg { width: 13px; height: 13px; flex-shrink: 0; margin-top: 3px; }
+.dz-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dz-spacer { margin-left: auto; }
+.dz-meta {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; padding-top: 10px;
+  border-top: 1px solid var(--w07); font-size: var(--fs-xs); color: var(--ink-secondary);
+}
+
+/* ── Step list: the design system's compact agent steps ── */
+.agent-steps { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.agent-step { display: flex; gap: 11px; padding: 6px 0; align-items: flex-start; }
+.agent-step-ico {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
+  background: var(--card-bg-raised); border: 1.5px solid var(--card-border); color: var(--ink-secondary);
+  font-size: var(--fs-2xs); font-weight: var(--fw-semibold);
+}
+.agent-step-ico svg { width: 11px; height: 11px; }
+.agent-step.done .agent-step-ico { background: var(--ok-bg); color: var(--ok-text); border-color: transparent; }
+.agent-step.running .agent-step-ico { border-color: var(--accent); }
+.agent-step.failed .agent-step-ico { background: var(--err-bg); color: var(--err-text); border-color: transparent; }
+.mini-spin {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 1.5px solid var(--accent-dim); border-top-color: var(--accent);
+  animation: aimy-mini-spin 0.7s linear infinite;
+}
+@keyframes aimy-mini-spin { to { transform: rotate(360deg); } }
+.agent-step-label { font-size: var(--fs-xs); font-weight: var(--fw-bold); color: var(--d200); line-height: 1.4; }
+.agent-step.pending .agent-step-label { color: var(--ink-secondary); font-weight: var(--fw-semibold); }
+.agent-step-meta { font-size: var(--fs-xs); color: var(--ink-secondary); margin-top: 1px; }
+@media (prefers-reduced-motion: reduce) { .mini-spin { animation: none; } }
