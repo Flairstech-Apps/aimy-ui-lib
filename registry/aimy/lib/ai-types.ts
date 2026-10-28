@@ -61,3 +61,18 @@ export type Source = {
   connector?: string
   collection?: string
 }
+
+/**
+ * Where a surfaced item stands (doctrine §2.3). Every item declares one.
+ * detected: AiMY noticed it · recommended: AiMY has an opinion · drafted:
+ * AiMY wrote it · staged: your turn · completed: it ran · failed: it did not.
+ */
+export type WorkStateValue = "detected" | "recommended" | "drafted" | "staged" | "completed" | "failed"
+
+/**
+ * How an action behaves when pressed (doctrine §3). Classification is
+ * mandatory: direct completes in place with Undo; investigate opens the
+ * canvas and starts; prompt stages a question to send; review shows a
+ * proposal to Accept, Edit or Reject, never applied silently.
+ */
+export type EntryMode = "direct" | "investigate" | "prompt" | "review"

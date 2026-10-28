@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.8.0"
+        "@flairstech-aimy/tokens@^0.9.0"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.8.0"
+        "@flairstech-aimy/tokens@^0.9.0"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -1203,6 +1203,165 @@
       "files": [
         {
           "path": "registry/aimy/ui/source-line.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "work-state",
+      "type": "registry:component",
+      "title": "WorkState",
+      "description": "Where a surfaced item stands, required on every item (doctrine §2.3): detected (Found), recommended (Suggested), drafted (Drafted), staged (Awaiting you), completed (Done), failed (Stopped). Sales' pill; a specific label may replace the word, never the state.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/ai-types"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/work-state.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "entry-action",
+      "type": "registry:component",
+      "title": "EntryAction",
+      "description": "An action that declares how it behaves (doctrine §3); mode is required so an unclassified action does not compile. direct = primary (completes in place, offers Undo; one per surface), review = secondary (shows a proposal), investigate and prompt = tertiary text (open a conversation). aimy puts the AiMY mark on actions AiMY carries out.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark",
+        "@aimy/ai-types"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/entry-action.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "suggestion",
+      "type": "registry:component",
+      "title": "Suggestion",
+      "description": "A change AiMY proposes, shown as a change (Knowledge's editor suggestion): old wording struck through, new wording after, Accept, Edit, Reject. Never applied silently; Edit makes the new wording editable and Accept applies what is there. pending shows the steps AiMY is on. Toasts Applied (with Undo) or Rejected.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark",
+        "@aimy/button",
+        "@aimy/skeleton",
+        "@aimy/thinking",
+        "@aimy/toast"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/suggestion.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "agent-steps",
+      "type": "registry:component",
+      "title": "AgentSteps",
+      "description": "AiMY's work step by step while it runs (Sales' curation trace): what it is doing with a running clock, a line saying the person can leave, steps that appear as they start, beat while live and tick with what they found. Done reads 'Curated in 6.0s'.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/agent-steps.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "change-review",
+      "type": "registry:component",
+      "title": "ChangeReview",
+      "description": "A governed or irreversible change, reviewed before it runs (Knowledge's commit surface): Now → After, why, 'What this will do' (changes, cautions, what is skipped), Reversible for 24h, and a typed word for destructive changes. Confirming toasts with Undo, logged to the audit trail.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/button",
+        "@aimy/dialog",
+        "@aimy/field",
+        "@aimy/input",
+        "@aimy/toast"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/change-review.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "conflict-pair",
+      "type": "registry:component",
+      "title": "ConflictPair",
+      "description": "Two sources that disagree, side by side, each with trust state, what it says, how it is used and 'Make this the one' (a review action into ChangeReview).",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/entry-action",
+        "@aimy/trust-state",
+        "@aimy/ai-types"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/conflict-pair.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "version-list",
+      "type": "registry:component",
+      "title": "VersionList",
+      "description": "A document's versions (Knowledge's versionList). AiMY's edits are ordinary versions with AiMY as the author and its mark, saying who accepted them. Rows can be picked to read a version; restore with ChangeReview, additively.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/version-list.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "activity",
+      "type": "registry:component",
+      "title": "Activity",
+      "description": "What happened, who did it and when (Sales' activity rows): the subject, the outcome in its tone, then who and when, with the note under it. AiMY's actions say AiMY, never the person's name.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/activity.tsx",
           "type": "registry:component"
         }
       ]

@@ -21,6 +21,8 @@ import { Reveal, SkeletonCard } from "@/components/skeleton"
 import { toast, Toaster } from "@/components/toast"
 import { Composer } from "@/components/composer"
 import { Confidence } from "@/components/confidence"
+import { Activity } from "@/components/activity"
+import { WorkState } from "@/components/work-state"
 import { VoiceStage } from "@/components/voice-stage"
 import { useVoiceSession } from "@/hooks/use-voice"
 import type { Basis } from "@/lib/ai-types"
@@ -222,7 +224,10 @@ export function App() {
                       <CardBody>
                         <div className="flex gap-2.5 rounded-lg bg-w04 p-3">
                           <AimyAvatar size="xs" />
-                          <p className="text-meta text-ink-secondary">{c.note}</p>
+                          <div className="flex flex-col items-start gap-1.5">
+                            <WorkState state={c.tone === "warn" ? "staged" : "drafted"} />
+                            <p className="text-meta text-ink-secondary">{c.note}</p>
+                          </div>
                         </div>
                       </CardBody>
                       <CardFoot>
@@ -268,8 +273,38 @@ export function App() {
           <TabPanel value="customers" className="text-body text-ink-secondary">
             28 customers. Customer cards come next.
           </TabPanel>
-          <TabPanel value="calls" className="text-body text-ink-secondary">
-            12 calls this week.
+          <TabPanel value="calls">
+            <Activity
+              onOpen={(t) => toast(`Opened ${t.subject}`)}
+              items={[
+                {
+                  id: "1",
+                  subject: "Dana Whitfield",
+                  outcome: "Meeting set",
+                  tone: "ok",
+                  by: who,
+                  when: "10:42",
+                  note: "Tuesday at 3pm, to go through the annual plan.",
+                },
+                {
+                  id: "2",
+                  subject: "Youssef Amin",
+                  outcome: "Moved to Needs reply",
+                  by: "aimy",
+                  when: "09:15",
+                  note: "He asked for a callback after 3pm.",
+                },
+                {
+                  id: "3",
+                  subject: "Priya Natarajan",
+                  outcome: "Missed call",
+                  tone: "warn",
+                  by: who,
+                  when: "Yesterday",
+                  note: "No answer twice.",
+                },
+              ]}
+            />
           </TabPanel>
         </Tabs>
       </main>

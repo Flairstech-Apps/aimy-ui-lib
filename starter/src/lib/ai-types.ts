@@ -33,3 +33,41 @@ export type ReasoningStep = { what: string; why?: string }
 
 /** A person's verdict on one answer. null means no verdict. */
 export type Rating = "up" | "down" | null
+
+/**
+ * The trust condition of a source, as Knowledge computes it. Superseded
+ * sources are excluded from answers; every other status still answers, and
+ * an answer citing one says so.
+ */
+export type TrustStatus = "current" | "outdated" | "conflicting" | "draft" | "unowned" | "unused" | "superseded"
+
+/** A document an answer stands on. */
+export type Source = {
+  id: string
+  title: string
+  status?: TrustStatus
+  /** The status was set by a person, not computed. */
+  setByHand?: boolean
+  /** The cited passage, quoted in the preview. */
+  passage?: string
+  /** What kind of document: "Article", "Policy". */
+  type?: string
+  /** Where it came from: "Confluence", "Zendesk". */
+  connector?: string
+  collection?: string
+}
+
+/**
+ * Where a surfaced item stands (doctrine §2.3). Every item declares one.
+ * detected: AiMY noticed it · recommended: AiMY has an opinion · drafted:
+ * AiMY wrote it · staged: your turn · completed: it ran · failed: it did not.
+ */
+export type WorkStateValue = "detected" | "recommended" | "drafted" | "staged" | "completed" | "failed"
+
+/**
+ * How an action behaves when pressed (doctrine §3). Classification is
+ * mandatory: direct completes in place with Undo; investigate opens the
+ * canvas and starts; prompt stages a question to send; review shows a
+ * proposal to Accept, Edit or Reject, never applied silently.
+ */
+export type EntryMode = "direct" | "investigate" | "prompt" | "review"

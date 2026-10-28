@@ -98,6 +98,18 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
+    label: "AI: agency and action",
+    items: [
+      { href: "/components/work-state/", label: "Work state" },
+      { href: "/components/entry-action/", label: "Entry action" },
+      { href: "/components/suggestion/", label: "Suggestion" },
+      { href: "/components/agent-steps/", label: "Agent steps" },
+      { href: "/components/change-review/", label: "Change review" },
+      { href: "/components/version-list/", label: "Version list" },
+      { href: "/components/activity/", label: "Activity" },
+    ],
+  },
+  {
     label: "AI: voice",
     items: [
       { href: "/components/orb/", label: "Orb" },
