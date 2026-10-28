@@ -114,3 +114,18 @@ export { ModelPicker, type Model } from "../../../registry/aimy/ui/model-picker"
 export { Autonomy, AskPolicy, type AutonomyLevel, type AskPolicyItem } from "../../../registry/aimy/ui/autonomy"
 export { MemoryList, type MemoryFact } from "../../../registry/aimy/ui/memory-list"
 export { type Usage } from "../../../registry/aimy/ui/composer"
+export { NotificationBell, type BellPing } from "../../../registry/aimy/ui/notification-bell"
+export {
+  Brief,
+  BriefHead,
+  BriefLines,
+  BriefFigure,
+  BriefDeck,
+  BriefActions,
+  BriefStarts,
+  BriefNext,
+  BriefLink,
+  DayBrief,
+  type BriefStart,
+} from "../../../registry/aimy/ui/brief"
+export { UsageLimit } from "../../../registry/aimy/ui/usage-limit"

@@ -1,13 +1,13 @@
-import { Bell, Phone, SearchX, UserRound } from "lucide-react"
+import { Phone, SearchX, UserRound } from "lucide-react"
 import { useEffect, useState } from "react"
 import { AimyMark } from "@/components/aimy-mark"
 import { AimyAvatar, Avatar } from "@/components/avatar"
 import { Button } from "@/components/button"
 import { Card, CardBody, CardFacts, CardFoot, CardHead, CardSummary, CardTitle, CardType } from "@/components/card"
-import { CountBadge } from "@/components/count-badge"
+import { BriefLink, DayBrief } from "@/components/brief"
 import { type DateRange } from "@/components/calendar"
 import { DatePicker } from "@/components/date-picker"
-import { IconButton } from "@/components/icon-button"
+import { NotificationBell, type BellPing } from "@/components/notification-bell"
 import { Menu, MenuContent, MenuLabel, MenuRadioGroup, MenuRadioItem, MenuTrigger } from "@/components/menu"
 import { Pager } from "@/components/pager"
 import { SearchField } from "@/components/search-field"
@@ -87,6 +87,17 @@ export function App() {
     return () => window.clearTimeout(t)
   }, [])
   const left = CONTACTS.length - snoozed.length
+  const [tab, setTab] = useState("contacts")
+  // The bell rings for what was finished away from the screen: a call's notes.
+  const [unread, setUnread] = useState(3)
+  const [ping, setPing] = useState<BellPing>()
+  const call = (first: string) => {
+    toast(`Calling ${first}`, { sub: "Your phone rings first." })
+    window.setTimeout(() => {
+      setUnread((n) => n + 1)
+      setPing({ id: Date.now(), text: <b>Notes from the call with {first} are ready</b> })
+    }, 4000)
+  }
   const conversation = useConversation()
   // The float bar answers in the peek; the same turn is in the canvas thread.
   const [peek, setPeek] = useState(false)
@@ -137,14 +148,14 @@ export function App() {
             </MenuRadioGroup>
           </MenuContent>
         </Menu>
-        <span className="relative">
-          <Tooltip content="Notifications">
-            <IconButton label="Notifications" size="lg">
-              <Bell />
-            </IconButton>
-          </Tooltip>
-          <CountBadge count={3} label="unread notifications" />
-        </span>
+        <NotificationBell
+          count={unread}
+          ping={ping}
+          onClick={() => {
+            setUnread(0)
+            toast("Notifications read")
+          }}
+        />
         <ThemeToggle />
         <Avatar name={who} size="sm" />
       </header>
@@ -152,10 +163,40 @@ export function App() {
       <main className="mx-auto flex max-w-[60rem] flex-col gap-6 px-5 pt-10 pb-28">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Good morning, {who.split(" ")[0]}</h1>
-          <p className="mt-2 text-body text-ink-secondary">Two calls need a reply today. AiMY has drafted both.</p>
         </div>
+        <DayBrief
+          date="28 Oct"
+          lines={[
+            <>
+              <BriefLink onClick={() => setTab("calls")}>2 calls</BriefLink> need a reply today. AiMY has drafted both.
+            </>,
+            <>
+              <BriefLink onClick={() => setTab("contacts")}>{134 - snoozed.length} contacts</BriefLink> can be called,
+              and <BriefLink onClick={() => setTab("customers")}>28 customers</BriefLink> have a renewal this quarter.
+            </>,
+          ]}
+          starts={[
+            {
+              label: "Call the next one",
+              n: 134 - snoozed.length,
+              why: "Amelia Taylor is top of the list",
+              onClick: () => call("Amelia"),
+            },
+            {
+              label: "Reply to the calls",
+              n: 2,
+              why: "both drafts are waiting for you",
+              onClick: () => setTab("calls"),
+            },
+            {
+              label: "Ask AiMY",
+              why: "about anyone on the list; the answer says what it read",
+              onClick: () => openCanvas(["My contacts", "134 contacts"]),
+            },
+          ]}
+        />
 
-        <Tabs defaultValue="contacts" size="page">
+        <Tabs value={tab} onValueChange={setTab} size="page">
           <TabsList aria-label="Views">
             <Tab value="contacts" count={134}>
               Contacts
@@ -245,14 +286,7 @@ export function App() {
                           <AimyMark title="" />
                           Review the draft
                         </Button>
-                        <Button
-                          size="sm"
-                          onClick={() =>
-                            toast(`Calling ${c.who.split(" ")[0]}`, {
-                              sub: "Your phone rings first.",
-                            })
-                          }
-                        >
+                        <Button size="sm" onClick={() => call(c.who.split(" ")[0] ?? c.who)}>
                           <Phone aria-hidden="true" />
                           Call {c.who.split(" ")[0]}
                         </Button>

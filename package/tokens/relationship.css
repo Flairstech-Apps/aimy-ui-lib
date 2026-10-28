@@ -160,3 +160,177 @@
   .use-pop[data-state="open"] { animation: none; }
   .bcard-ack-btn:active { transform: none; }
 }
+
+/* ── The day's briefing block: Sales' "Today" (.slv, sales.css 6876-6990;
+   start cards .s-starts, 7024-7072; bdr.css 1405, 3812) ──────────────────
+   The day in a few sentences with the numbers in them, each number a link to
+   the set it counts, and the ways to start under it. */
+.slv { background: var(--aimy-wash); border: 1px solid var(--aimy-wash-edge); border-radius: var(--r-lg); padding: 20px; }
+.slv-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 2rem; }
+.slv-head > svg { width: 0.9em; height: 1em; flex-shrink: 0; align-self: center; }
+.slv-title {
+  margin: 0;
+  font-family: var(--font-display, var(--font-sans));
+  font-size: 1em;
+  font-weight: var(--fw-bold);
+  color: var(--d50);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.slv-time { margin-left: auto; font-size: var(--fs-xs); color: var(--ink-secondary); }
+.slv-body { min-width: 0; max-width: 72ch; }
+.slv-line { font-size: var(--fs-base); color: var(--d100); line-height: var(--lh-base); margin: 0; }
+.slv-line + .slv-line { margin-top: 8px; }
+.slv-line strong { color: var(--d100); font-weight: var(--fw-semibold); }
+.slv-n {
+  font: inherit;
+  color: var(--d50);
+  font-weight: var(--fw-bold);
+  font-variant-numeric: tabular-nums;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--accent-rgb), 0.45);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  transition:
+    color var(--t-fast) var(--ease-out),
+    text-decoration-color var(--t-fast) var(--ease-out);
+}
+.slv-n:hover { color: var(--accent-text); text-decoration-color: rgba(var(--accent-rgb), 0.9); }
+.slv-n:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 3px; }
+.s-starts-wrap { margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(var(--accent-rgb), 0.18); }
+.s-starts-cap {
+  display: block;
+  margin-bottom: 12px;
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+}
+/* Declared columns: four openers reflow to two, never to a widowed three. Fewer
+   than four take one column each, so no slot sits empty. */
+.s-starts { display: grid; grid-template-columns: repeat(var(--starts, 4), minmax(0, 1fr)); gap: 16px; }
+/* Sales switches on the window; the library switches on the block's own width,
+   so four cards only sit side by side where each has room for its verb. */
+.s-starts-wrap { container-type: inline-size; }
+@container (max-width: 759.98px) {
+  .s-starts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@container (max-width: 399.98px) {
+  .s-starts { grid-template-columns: minmax(0, 1fr); }
+}
+.s-start {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  text-align: left;
+  cursor: pointer;
+  padding: 12px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  font-family: inherit;
+  transition:
+    transform 160ms var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    background-color var(--t-fast) var(--ease-out);
+}
+.s-start:hover { border-color: var(--accent); background: var(--accent-dim); }
+.s-start:active { transform: scale(0.985); }
+.s-start:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.s-start-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; width: 100%; min-width: 0; }
+.s-start-label { font-size: var(--fs-xs); font-weight: var(--fw-bold); color: var(--d50); }
+.s-start-n {
+  flex: none;
+  font-family: var(--font-display, var(--font-sans));
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--d50);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--t-fast) var(--ease-out);
+}
+.s-start:hover .s-start-n { color: var(--accent-text); }
+.s-start-why { font-size: var(--fs-xs); color: var(--ink-secondary); line-height: var(--lh-base); }
+@media (prefers-reduced-motion: reduce) {
+  .s-start:active { transform: none; }
+}
+
+/* ── Brief: the same block in its other forms ─────────────────────────────
+   Grounds: wash (Sales' Today), accent (Sales' .s-insight, sales.css 3591),
+   plain (a card). The small head: Sales' .s-lead-mark with the work state.
+   The figure: Sales' .s-lead-line / .s-lead-n / .s-lead-say / .s-lead-deck
+   (sales.css 3670-3734). The next row: Knowledge's .greet-next "Worth
+   asking" (knowledge.css 3355). */
+.slv.is-accent { background: rgba(var(--accent-rgb), 0.06); border-color: rgba(var(--accent-rgb), 0.16); }
+.slv.is-plain { background: var(--card-bg); border-color: var(--card-border); }
+.slv.is-compact { padding: 12px; }
+.s-lead-mark {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: var(--ty-micro);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+}
+.s-lead-mark > svg { width: 14px; height: 14px; }
+.s-lead-mark .slv-time { text-transform: none; letter-spacing: normal; font-weight: var(--fw-medium); }
+.s-lead-line { display: flex; align-items: baseline; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+.s-lead-n {
+  flex: none;
+  font-size: 34px;
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  color: var(--ink-primary);
+  font-variant-numeric: tabular-nums;
+}
+.s-lead-say {
+  flex: 1 1 260px;
+  min-width: 0;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-base);
+  color: var(--ink-secondary);
+  text-wrap: pretty;
+}
+.s-lead-of { color: var(--ink-secondary); font-weight: var(--fw-bold); }
+.s-lead-deck {
+  margin: 0 0 20px;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  color: var(--ink-primary);
+  max-width: 52ch;
+  text-wrap: balance;
+}
+.s-lead-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.slv-body + .s-lead-acts,
+.slv-body + .greet-next { margin-top: 16px; }
+.greet-next {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 16px;
+  padding-top: 0.75rem;
+  border-top: 0.0625rem solid var(--w07);
+}
+.greet-next-label {
+  flex: 0 0 100%;
+  font-size: var(--ty-micro);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+}

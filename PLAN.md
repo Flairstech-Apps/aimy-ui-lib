@@ -285,6 +285,21 @@ These come from the design system's AI and doctrine sections, checked against wh
 
 **Gaps, flagged rather than invented.** The doctrine says never invent a component that should exist in the design system. Three ideas from the agentic UX approach have no AiMY component yet: an autonomy setting (how much AiMY may do without asking, growing as trust grows), a per-category "always ask / just do it" control, and a forgetting control beyond the memory panel. These go on a gap list for you to decide, not into the build.
 
+## 9a. Batch M: micro-interactions and usage limits (added 28 Oct, Nour)
+
+Small moments that say something happened, and what happens when a person reaches a limit. Each follows the product that draws it, then the design system, then the doctrine, as before.
+
+**Micro-interactions.**
+- Bell wiggle: the bell rocks from its top when something lands, three swings that die away in 600ms (Knowledge's `nt-ring`). Not while its panel is open; still under reduced motion.
+- Tip: one line drops from under the bell saying what finished, then goes after about a second: 250ms in, 150ms out, no blur, nothing to press (Knowledge's `nt-peek`). It points at the bell and stays inside the window.
+- Count badge pop: the badge on the bell slides on and pops when the count changes (transitions.dev notification badge, 03, which section 7a already names for CountBadge).
+- Others found while building it are listed for review rather than added unasked.
+
+**Usage limits.**
+- The states the products already say in words: within the share, past the share ("You can keep going"), limit reached, and stopped by an admin ("Ask your admin to turn them back on").
+- The composer's stopped state: the placeholder says what still works ("Chats are stopped. Filters still work."), the ring turns red, and nothing typed is lost.
+- A limit notice for the surfaces that need it, and the usage meter states (Knowledge's settings meters, which Progress already draws with `limit`).
+
 ## 10. Phase 4: Shell and data display
 
 AppShell (topnav, rail, main), Topnav (product tabs, bell, user menu, theme toggle; the nav moves into a menu at 900 to match the rail), Rail with its drawer below 1040, NotificationsPanel, StatCard and the Sales KPI widget, Timeline, DataTable (with a windowed list for long ones, like Sales' `.b-vlist`), DescriptionList, and the chart primitives (line with goal and crosshair, funnel, sparkline). The shell is last because it is the most diverged between Sales, Knowledge and QA, and it's easiest to settle once the parts inside it exist.

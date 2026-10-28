@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.10.0"
+        "@flairstech-aimy/tokens@^0.11.0"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.10.0"
+        "@flairstech-aimy/tokens@^0.11.0"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -1600,6 +1600,63 @@
       "files": [
         {
           "path": "registry/aimy/ui/memory-list.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "notification-bell",
+      "type": "registry:component",
+      "title": "NotificationBell",
+      "description": "The topbar bell with its micro-interactions: the count slides on and pops (transitions.dev 03); a new ping rocks the bell from its top, three swings in 600ms, and drops one line under it saying what finished, gone after 1.4s (Knowledge's ring and tip). Quiet while its panel is open; still under reduced motion.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark",
+        "@aimy/icon-button"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/notification-bell.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "brief",
+      "type": "registry:component",
+      "title": "Brief",
+      "description": "What AiMY has to say at the top of a page, from parts: Brief (wash, accent or plain ground), BriefHead (Sales' large Today title, or the small AiMY label with a work state), BriefLines with BriefLink numbers, BriefFigure (one large figure and its sentence), BriefDeck, BriefActions, BriefStarts (ways to start with counts and reasons), BriefNext (Knowledge's 'Worth asking'). DayBrief is Sales' Today, ready made.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/brief.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "usage-limit",
+      "type": "registry:component",
+      "title": "UsageLimit",
+      "description": "What a person is told at a usage limit, in the products' words: past your share (You can keep going), limit reached (when it starts again), stopped by an admin (who can turn it back on); always what still works. Pair with the Composer's unavailable sentence and red usage ring.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/notice"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/usage-limit.tsx",
           "type": "registry:component"
         }
       ]
