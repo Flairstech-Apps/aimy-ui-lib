@@ -20,6 +20,7 @@ import { EmptyState } from "@/components/empty-state"
 import { Reveal, SkeletonCard } from "@/components/skeleton"
 import { toast, Toaster } from "@/components/toast"
 import { Composer } from "@/components/composer"
+import { Confidence } from "@/components/confidence"
 import { VoiceStage } from "@/components/voice-stage"
 import { useVoiceSession } from "@/hooks/use-voice"
 import type { Basis } from "@/lib/ai-types"
@@ -203,7 +204,19 @@ export function App() {
                         {c.who}, {c.role.toLowerCase()}
                       </CardSummary>
                       <CardFacts>
-                        <p>{c.where}</p>
+                        <p className="flex items-center gap-2">
+                          {c.where}
+                          <Confidence
+                            level={c.tone === "warn" ? "old" : "ok"}
+                            group="Company"
+                            when="2 weeks ago"
+                            source="on LinkedIn"
+                            checkedIn="March 2025"
+                            onCheckAgain={() =>
+                              toast("Company: checked again on LinkedIn", { sub: "Nothing had changed." })
+                            }
+                          />
+                        </p>
                         <p>{c.last}</p>
                       </CardFacts>
                       <CardBody>

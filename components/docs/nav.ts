@@ -88,6 +88,16 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
+    label: "AI: grounding and trust",
+    items: [
+      { href: "/components/citation/", label: "Citations and sources" },
+      { href: "/components/trust-state/", label: "Trust state" },
+      { href: "/components/trust-disclosure/", label: "Trust disclosure" },
+      { href: "/components/confidence/", label: "Confidence and score" },
+      { href: "/components/unavailable/", label: "When AiMY is unavailable" },
+    ],
+  },
+  {
     label: "AI: voice",
     items: [
       { href: "/components/orb/", label: "Orb" },

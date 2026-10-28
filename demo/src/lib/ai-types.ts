@@ -33,3 +33,26 @@ export type ReasoningStep = { what: string; why?: string }
 
 /** A person's verdict on one answer. null means no verdict. */
 export type Rating = "up" | "down" | null
+
+/**
+ * The trust condition of a source, as Knowledge computes it. Superseded
+ * sources are excluded from answers; every other status still answers, and
+ * an answer citing one says so.
+ */
+export type TrustStatus = "current" | "outdated" | "conflicting" | "draft" | "unowned" | "unused" | "superseded"
+
+/** A document an answer stands on. */
+export type Source = {
+  id: string
+  title: string
+  status?: TrustStatus
+  /** The status was set by a person, not computed. */
+  setByHand?: boolean
+  /** The cited passage, quoted in the preview. */
+  passage?: string
+  /** What kind of document: "Article", "Policy". */
+  type?: string
+  /** Where it came from: "Confluence", "Zendesk". */
+  connector?: string
+  collection?: string
+}

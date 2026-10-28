@@ -1,0 +1,241 @@
+/*
+ * Grounding and trust, as the products draw it: Knowledge's citation chip,
+ * its preview, source rows, trust state, trust disclosure and Fit meter, and
+ * Sales' confidence badge, its popover and its source line. Values are the
+ * effective ones: Knowledge's aimy-ds.css (2955-2964, 3125-3143, 3408-3531)
+ * with knowledge.css's overrides on top (515-546, 3451-3543, 6027-6035,
+ * 6397-6419, 7017, 7716), and Sales' bdr.css (7248-7286, 7397-7409) and
+ * sales.css (7339-7343).
+ *
+ * AiMY UI changes: words Knowledge drew in faint or muted ink are in secondary
+ * ink (no muted text), and the preview is placed by Radix instead of by hand.
+ */
+:root, [data-theme] {
+  --ink-warn: var(--warn-text);
+  --ink-info: var(--info-text);
+  --ai-text: var(--ai-ink);
+}
+
+/* ── The citation chip ─────────────────────────────────── */
+.cite {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 1rem; height: 1rem;
+  padding: 0 0.25rem; border-radius: 5px; background: var(--brand-dim); color: var(--brand);
+  font-size: 0.875rem; font-weight: var(--fw-bold); vertical-align: 2px; margin: 0 0.125rem; cursor: pointer;
+  border: 1px solid rgba(51,105,255,0.25);
+}
+.cite:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+/* ── The preview: what the citation stands on ──────────── */
+.cite-preview {
+  width: 20rem; max-width: 84vw; z-index: 300;
+  background: var(--panel-bg); border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-xl);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  padding: 0.6875rem 0.75rem; text-align: left;
+}
+/* Opens and closes with transitions.dev's tooltip (17), the plan's motion for
+   citation previews: in after its short delay, out at once. */
+.cite-preview[data-state="open"] {
+  opacity: 1; scale: 1;
+  transition: opacity var(--tt-in-dur) var(--tt-in-ease) var(--tt-delay), scale var(--tt-in-dur) var(--tt-in-ease) var(--tt-delay);
+}
+@starting-style { .cite-preview[data-state="open"] { opacity: 0; scale: var(--tt-scale); } }
+.cite-preview[data-state="closed"] { animation: t-tt-out var(--tt-out-dur) var(--tt-out-ease) both; }
+@media (prefers-reduced-motion: reduce) { .cite-preview[data-state] { transition: none; animation: none; } }
+.cp-head { display: flex; align-items: center; gap: 0.4375rem; flex-wrap: wrap; margin-bottom: 0.4375rem; }
+.cp-title { font-size: 0.875rem; font-weight: var(--fw-bold); color: var(--d50); line-height: 1.4;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 10.9375rem; }
+.cp-head .trust-state { margin-left: auto; }
+.cp-passage {
+  margin: 0; font-size: 0.875rem; line-height: 1.65; color: var(--ink-secondary);
+  max-height: 6rem; overflow: hidden; position: relative;
+  padding-left: 0.5625rem; border-left: 2px solid var(--card-border);
+}
+.cp-foot { display: flex; align-items: center; gap: 0.375rem; margin-top: 0.5625rem;
+  padding-top: 0.5rem; border-top: 1px solid var(--w07); }
+.cp-src { font-size: 0.875rem; color: var(--ink-secondary); margin-right: auto;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cp-src .tc-kind { display: inline-flex; align-items: center; gap: 0.25rem; }
+.cp-src .tc-kind svg { width: 0.625rem; height: 0.625rem; }
+.cite-action {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  font-family: var(--font-sans); font-size: var(--ty-meta); font-weight: var(--fw-semibold);
+  padding: 0.25rem 0.5rem; border-radius: var(--r-sm); cursor: pointer;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--card-border);
+  color: var(--ink-secondary); white-space: nowrap;
+  transition: background-color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+}
+[data-theme="light"] .cite-action { background: rgba(16,24,40,0.04); }
+.cite-action svg { width: 0.625rem; height: 0.625rem; flex-shrink: 0; }
+.cite-action:hover { background: rgba(255,255,255,0.09); color: var(--d50); }
+.cite-action:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.cite-action.is-flag:hover { background: var(--err-bg); border-color: color-mix(in srgb, var(--err) 30%, transparent); color: var(--err-text); }
+
+/* ── Source rows ───────────────────────────────────────── */
+.source-list { display: flex; flex-direction: column; gap: 0.375rem; }
+.source-item {
+  display: flex; align-items: center; gap: 0.5625rem; padding: 0.5rem 0.6875rem;
+  border-radius: var(--r-md); background: var(--card-bg-raised); border: 1px solid var(--card-border);
+  font-size: 0.875rem; font-weight: var(--fw-semibold); color: var(--d200); cursor: pointer; text-align: left;
+  transition: border-color var(--t-fast) var(--ease-out);
+}
+.source-item:hover { border-color: var(--card-border-hover); }
+.source-item:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.source-item .cite { margin: 0; flex-shrink: 0; }
+.source-item .source-title { flex: 1 1 8rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.source-item .tc-kind { display: inline-flex; align-items: center; gap: 0.25rem; flex-shrink: 0; color: var(--ink-secondary); font-weight: var(--fw-medium); }
+.source-item .tc-kind svg { width: 0.75rem; height: 0.75rem; }
+.source-domain { color: var(--ink-secondary); font-size: 0.875rem; font-weight: var(--fw-medium); }
+/* The row takes a second line rather than lose its title. Knowledge wraps
+   below a 520px window; a row in a narrow column of a wide window lost its
+   title entirely, so here it wraps whenever the title would drop under 8rem. */
+.source-item { flex-wrap: wrap; row-gap: 0.25rem; }
+.source-item .trust-state { flex-shrink: 0; }
+/* The drawer under an answer. */
+.msg-sources {
+  display: flex; flex-direction: column; gap: 0.25rem;
+  padding: 0.75rem;
+  border: 0.0625rem solid var(--card-border);
+  border-radius: var(--r-md);
+  background: var(--card-bg);
+}
+.msg-sources-cap {
+  font-size: var(--ty-micro); color: var(--ink-secondary);
+  letter-spacing: var(--ls-wide); text-transform: uppercase; margin: 0 0 0.25rem;
+}
+
+/* ── Trust state ───────────────────────────────────────── */
+.trust-state {
+  display: inline-flex; align-items: center; gap: 0.3125rem;
+  font-size: var(--ty-micro); font-weight: var(--fw-bold); letter-spacing: var(--ls-wide);
+  padding: 0.1875rem 0.5625rem 0.1875rem 0.4375rem;
+  border-radius: var(--r-pill); white-space: nowrap; vertical-align: middle;
+  border: 1px solid transparent;
+}
+.trust-state svg { width: 0.6875rem; height: 0.6875rem; flex-shrink: 0; }
+.ts-verified    { background: var(--ok-bg);   color: var(--ink-ok);   border-color: color-mix(in srgb, var(--ok) 24%, transparent); }
+.ts-due         { background: var(--warn-bg); color: var(--ink-warn); border-color: color-mix(in srgb, var(--warn) 24%, transparent); }
+.ts-expired     { background: var(--err-bg);  color: var(--ink-err);  border-color: color-mix(in srgb, var(--err) 32%, transparent); }
+.ts-unverified  { background: rgba(255,255,255,0.05); color: var(--ink-secondary); border-color: var(--card-border); }
+[data-theme="light"] .ts-unverified { background: rgba(16,24,40,0.05); }
+.ts-superseded  { background: var(--info-bg); color: var(--ink-info); border-color: color-mix(in srgb, var(--info) 24%, transparent); }
+/* Excluded from answers: the consequence is on the badge, not only in a title. */
+.trust-state.is-excluded { padding-right: 0.4375rem; }
+.trust-state .ts-excluded {
+  padding-left: 0.375rem; margin-left: 0.0625rem; border-left: 1px solid currentColor;
+}
+/* Set by hand carries a marker wherever it shows. */
+.pin-dot {
+  width: 0.3125rem; height: 0.3125rem; border-radius: 50%;
+  background: currentColor; margin-left: 0.125rem; flex-shrink: 0;
+}
+
+/* ── Trust disclosure ──────────────────────────────────── */
+.trust-disclosure {
+  display: flex; flex-direction: column; gap: 0.4375rem;
+  padding: 0.625rem 0.75rem; border-radius: var(--r-md);
+  background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);
+  font-size: 0.875rem; line-height: 1.55; color: var(--ink-secondary);
+}
+[data-theme="light"] .trust-disclosure { background: rgba(16,24,40,0.03); }
+.trust-disclosure.has-exclusion { background: var(--warn-bg); border-color: color-mix(in srgb, var(--warn) 28%, transparent); }
+.td-row { display: flex; align-items: flex-start; gap: 0.5rem; }
+.td-row svg { width: 0.75rem; height: 0.75rem; flex-shrink: 0; margin-top: 0.3125rem; }
+.td-row.is-ok   { color: var(--ink-ok); }
+.td-row.is-warn { color: var(--ink-warn); }
+.td-row.is-err  { color: var(--ink-err); }
+.td-row .td-text { color: var(--ink-secondary); }
+.td-row.is-warn .td-text, .td-row.is-err .td-text { color: var(--d200); }
+.td-row .td-text strong { color: var(--d50); font-weight: var(--fw-semibold); }
+.td-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.td-action {
+  align-self: flex-start; margin-top: 0.0625rem;
+  font-family: var(--font-sans); font-size: 0.875rem; font-weight: var(--fw-semibold);
+  color: var(--ai-text); background: none; border: none; cursor: pointer;
+  padding: 0.125rem 0; border-bottom: 1px solid transparent;
+  transition: border-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+}
+.td-action:hover { border-bottom-color: currentColor; }
+.td-action:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+/* ── Score: Knowledge's Fit meter ──────────────────────── */
+.conf-badge {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  font-size: var(--ty-micro); font-weight: var(--fw-bold); padding: 0.1875rem 0.5625rem 0.1875rem 0.4375rem;
+  border-radius: var(--r-pill); white-space: nowrap; vertical-align: middle;
+  background: rgba(255,255,255,0.05); border: 1px solid var(--card-border);
+  color: var(--ink-secondary);
+}
+.conf-meter { display: inline-flex; align-items: flex-end; gap: 0.125rem; height: 0.625rem; flex-shrink: 0; }
+.conf-meter i { width: 0.1875rem; border-radius: 1px; background: var(--d700); display: block; }
+.conf-meter i:nth-child(1) { height: 0.25rem; }
+.conf-meter i:nth-child(2) { height: 0.4375rem; }
+.conf-meter i:nth-child(3) { height: 0.625rem; }
+.conf-high .conf-meter i { background: var(--ok); }
+.conf-high   { color: var(--ink-ok);   border-color: color-mix(in srgb, var(--ok) 24%, transparent); background: var(--ok-bg); }
+.conf-medium .conf-meter i:nth-child(-n+2) { background: var(--warn); }
+.conf-medium { color: var(--ink-warn); border-color: color-mix(in srgb, var(--warn) 24%, transparent); background: var(--warn-bg); }
+.conf-low .conf-meter i:nth-child(1) { background: var(--err); }
+.conf-low    { color: var(--ink-err);  border-color: color-mix(in srgb, var(--err) 24%, transparent); background: var(--err-bg); }
+.conf-badge .conf-val { font-family: var(--font-mono); font-size: var(--ty-micro); }
+
+/* ── Confidence: Sales' badge and its popover ──────────── */
+.b-conf-wrap { position: relative; display: inline-flex; }
+.b-conf {
+  display: inline-flex; align-items: center; gap: 6px; flex: none;
+  height: 28px; padding: 0 8px; border-radius: var(--r-pill);
+  border: 1px solid transparent; background: none; cursor: default;
+  font-family: inherit; font-size: var(--fs-xs); font-weight: var(--fw-semibold); white-space: nowrap;
+}
+.b-conf svg { width: 16px; height: 16px; flex: none; }
+.b-conf:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.b-conf.is-ok { color: var(--ok-text); padding: 0 6px; }
+.b-conf.is-old { color: var(--warn-text); border-color: color-mix(in srgb, var(--warn-text) 40%, transparent); }
+.b-conf.is-gap, .b-conf.is-none { color: var(--info-text); border-color: color-mix(in srgb, currentColor 35%, transparent); }
+.b-conf.is-busy { padding: 0; color: var(--ink-secondary); }
+.b-wait-pop {
+  position: absolute; z-index: 60; top: calc(100% + 8px); right: 0;
+  width: max-content; max-width: 20rem; padding: 12px 14px;
+  border-radius: var(--r-lg); border: 1px solid var(--card-border-hover);
+  background: var(--panel-bg); box-shadow: var(--shadow-lg);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  font-size: var(--fs-xs); font-weight: var(--fw-regular, 400); color: var(--d100);
+  line-height: var(--lh-base); white-space: normal; text-align: left;
+  opacity: 0; visibility: hidden;
+  transform: translateY(-4px) scale(0.98); transform-origin: top right;
+  transition: opacity 150ms ease-out, transform 150ms ease-out, visibility 0s linear 150ms;
+}
+/* The 8px between the badge and the popover is bridged, so the pointer can
+   cross to the button without the popover closing under it. */
+.b-wait-pop::before { content: ''; position: absolute; left: 0; right: 0; top: -9px; height: 9px; }
+.b-wait-pop b { color: var(--d50); font-weight: var(--fw-semibold); }
+.b-wait-pop .b-pop-act { display: flex; margin-top: 8px; }
+/* In after a short intent delay, out at once: the tooltip timing. */
+.b-conf-wrap:hover .b-wait-pop,
+.b-conf-wrap:focus-within .b-wait-pop,
+.b-conf-wrap[data-open] .b-wait-pop {
+  opacity: 1; visibility: visible; transform: none;
+  transition: opacity 150ms ease-out 120ms, transform 150ms ease-out 120ms, visibility 0s linear 120ms;
+}
+.b-conf-wrap[data-closed] .b-wait-pop { opacity: 0; visibility: hidden; transition: none; }
+
+/* ── Sales' source line under an answer ────────────────── */
+.s-ans-cite {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--w07);
+  font-size: var(--fs-xs); color: var(--ink-secondary);
+}
+
+/* ── The composer while AiMY is unavailable (Knowledge's degraded bar) ──
+   Knowledge also faded the whole bar to 72%; that dims the words, so here the
+   placeholder says the state and only the send button steps back. */
+.is-degraded .aimy-float-input::placeholder,
+.is-degraded .overlay-input::placeholder { color: var(--ink-secondary); }
+.is-degraded .aimy-float-send,
+.is-degraded .overlay-send { pointer-events: none; opacity: 0.4; }
+
+@media (prefers-reduced-motion: reduce) {
+  .b-wait-pop, .b-conf-wrap:hover .b-wait-pop, .b-conf-wrap:focus-within .b-wait-pop, .b-conf-wrap[data-open] .b-wait-pop {
+    transform: none; transition: none;
+  }
+}

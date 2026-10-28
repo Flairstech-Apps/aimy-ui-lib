@@ -84,3 +84,11 @@ export {
   type VoicePhase,
   type DictationState,
 } from "../../../registry/aimy/hooks/use-voice"
+export { TrustState, trustLabel } from "../../../registry/aimy/ui/trust-state"
+export { Citation } from "../../../registry/aimy/ui/citation"
+export { SourceList } from "../../../registry/aimy/ui/source-list"
+export { TrustDisclosure, DisclosureAction } from "../../../registry/aimy/ui/trust-disclosure"
+export { Confidence, type ConfidenceLevel } from "../../../registry/aimy/ui/confidence"
+export { Score } from "../../../registry/aimy/ui/score"
+export { SourceLine } from "../../../registry/aimy/ui/source-line"
+export type { Source, TrustStatus } from "../../../registry/aimy/lib/ai-types"

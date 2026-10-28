@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.7.0"
+        "@flairstech-aimy/tokens@^0.8.0"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.7.0"
+        "@flairstech-aimy/tokens@^0.8.0"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -954,7 +954,7 @@
       "name": "composer",
       "type": "registry:component",
       "title": "Composer",
-      "description": "Where a person asks AiMY, as the products' voice.js arranges it. variant float (one line over the work) or canvas (several lines). Enter sends; nothing empty is sent. The mic dictates: a red waveform and clock replace the field, cancel or keep (keep puts the words in the field). onVoice turns the empty send slot into the voice button. generating rides the beam and turns send into stop. onAttach adds the clip; a file is a row inside the bar, saying not uploaded until it is.",
+      "description": "Where a person asks AiMY, as the products' voice.js arranges it. variant float (one line over the work) or canvas (several lines). Enter sends; nothing empty is sent. The mic dictates: a red waveform and clock replace the field, cancel or keep (keep puts the words in the field). onVoice turns the empty send slot into the voice button. generating rides the beam and turns send into stop. onAttach adds the clip; a file is a row inside the bar, saying not uploaded until it is. unavailable (a sentence saying what still works) keeps the bar and the text; a question sent then goes when AiMY is back.",
       "dependencies": [
         "lucide-react"
       ],
@@ -1066,6 +1066,143 @@
       "files": [
         {
           "path": "registry/aimy/ui/note-taker.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "trust-state",
+      "type": "registry:component",
+      "title": "TrustState",
+      "description": "The trust condition of a source, on the source (Knowledge's statusBadge): current (No issues), outdated (Out of date), conflicting, draft, unowned, unused, superseded (also says Not in answers). Tone and words together; the title says why; a dot when a person set it by hand.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/ai-types"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/trust-state.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "citation",
+      "type": "registry:component",
+      "title": "Citation",
+      "description": "A numbered marker in an answer that points at its source (Knowledge's .cite). Hover or keyboard focus opens the preview: title, trust state, the quoted passage, where it came from, and Flag (feedback per citation). Escape closes it; a tap opens it on touch. Numbers match the answer's SourceList.",
+      "dependencies": [
+        "lucide-react",
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/toast",
+        "@aimy/trust-state",
+        "@aimy/ai-types"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/citation.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "source-list",
+      "type": "registry:component",
+      "title": "SourceList",
+      "description": "The sources an answer stands on (Knowledge's sourceRow): number, kind, title, where it came from, trust state; a row opens the document. inline in the answer, or drawer under it ('What this answer stands on', opened from ResponseActions). Wraps to two lines below 520px rather than lose the title.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/trust-state",
+        "@aimy/ai-types"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/source-list.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "trust-disclosure",
+      "type": "registry:component",
+      "title": "TrustDisclosure",
+      "description": "What an answer is grounded on, said under it (Knowledge's .trust-disclosure): rows in ok, warn, err or none tone, and the warm exclusion ground when nothing could answer, with DisclosureAction for the way forward. Every answer states its grounding; the exclusion case is never silent.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/trust-disclosure.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "confidence",
+      "type": "registry:component",
+      "title": "Confidence",
+      "description": "How sure AiMY is about a group of facts, in words, with why (Sales' .b-conf): ok (a check), old (May be out of date, Check again), gap (Partly known), none (Not known yet, Find out more), busy (Checking again). The explanation says where the facts came from and when. Not a score: use Score for ratings.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/button"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/confidence.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "score",
+      "type": "registry:component",
+      "title": "Score",
+      "description": "A rating out of 100 with a three-bar meter (Knowledge's ICP Fit badge): high from 75, medium from 50, low below. For how well something matches; for how sure AiMY is about a fact, use Confidence.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/score.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "source-line",
+      "type": "registry:component",
+      "title": "SourceLine",
+      "description": "Where an answer's facts came from, in one plain line under it (Sales' .s-ans-cite): 'From your last 3 calls'. For numbered citations use SourceList.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/source-line.tsx",
           "type": "registry:component"
         }
       ]

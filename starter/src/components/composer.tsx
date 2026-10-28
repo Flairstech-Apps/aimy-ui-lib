@@ -1,7 +1,7 @@
 "use client"
 
 import { AudioLines, Check, FileText, Mic, Paperclip, Send, X } from "lucide-react"
-import { useId, useRef, useState } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import { AimyMark } from "@/components/aimy-mark"
 import { CountBadge } from "@/components/count-badge"
 import { useDictation, voiceClock } from "@/hooks/use-voice"
@@ -46,6 +46,12 @@ type ComposerProps = {
   onVoice?: () => void
   /** Shows the mic for dictation. On by default. */
   dictate?: boolean
+  /**
+   * AiMY can't answer right now. Pass what still works, in the placeholder's
+   * words: "AiMY is unavailable — the filters still work". The bar stays, the
+   * text stays, and a question sent now goes when AiMY is back.
+   */
+  unavailable?: string
   placeholder?: string
   /** Accessible name for the text box. Defaults to the placeholder. */
   label?: string
@@ -74,6 +80,7 @@ export function Composer({
   onStop,
   onVoice,
   dictate = true,
+  unavailable,
   placeholder = variant === "float" ? "Ask, filter, or name a contact…" : "Ask AiMY anything…",
   label,
   badge,
@@ -86,6 +93,25 @@ export function Composer({
   const [inner, setInner] = useState(defaultValue)
   const text = value ?? inner
   const [leaving, setLeaving] = useState<string[]>([])
+  // A question sent while AiMY is unavailable waits here, and goes when it is back.
+  const [queued, setQueued] = useState<string | null>(null)
+  const [wasDown, setWasDown] = useState(!!unavailable)
+  const [flush, setFlush] = useState<{ text: string } | null>(null)
+  if (!!unavailable !== wasDown) {
+    setWasDown(!!unavailable)
+    if (!unavailable && queued) {
+      setQueued(null)
+      setFlush({ text: queued })
+      if (value === undefined) setInner("")
+    }
+  }
+  const submit = useRef(onSubmit)
+  useEffect(() => {
+    submit.current = onSubmit
+  })
+  useEffect(() => {
+    if (flush) submit.current(flush.text)
+  }, [flush])
   const fileRef = useRef<HTMLInputElement>(null)
   const field = useRef<HTMLInputElement & HTMLTextAreaElement>(null)
   const keep = useRef<HTMLButtonElement>(null)
@@ -94,7 +120,7 @@ export function Composer({
   const id = useId()
   const float = variant === "float"
   const empty = !text.trim()
-  const voiceFace = !!onVoice && empty && !generating
+  const voiceFace = !!onVoice && empty && !generating && !unavailable
 
   const set = (v: string) => {
     if (value === undefined) setInner(v)
@@ -132,6 +158,10 @@ export function Composer({
       return
     }
     const t = text.trim()
+    if (unavailable) {
+      if (t) setQueued(t)
+      return
+    }
     if (!t) {
       onVoice?.()
       return
@@ -171,12 +201,20 @@ export function Composer({
     id: `${id}-input`,
     ref: field,
     value: text,
-    placeholder: generating ? "Generating…" : placeholder,
+    placeholder: unavailable ?? (generating ? "Generating…" : placeholder),
     "aria-label": label ?? placeholder,
     onKeyDown,
   }
 
-  const sendName = generating ? "Stop generating" : voiceFace ? "Start a voice session" : sendLabel
+  const sendName = unavailable
+    ? queued
+      ? "Sends when AiMY is back"
+      : "AiMY is unavailable"
+    : generating
+      ? "Stop generating"
+      : voiceFace
+        ? "Start a voice session"
+        : sendLabel
 
   const bar = (
     <div
@@ -186,7 +224,8 @@ export function Composer({
       className={cn(
         float ? "aimy-float-bar" : "overlay-input-bar",
         generating && "is-generating",
-        onVoice && empty && "vx-empty",
+        unavailable && "is-degraded",
+        onVoice && empty && !unavailable && "vx-empty",
         attachments.length > 0 && "vx-has-file",
         float && className
       )}
@@ -298,7 +337,7 @@ export function Composer({
         type="button"
         className={float ? "aimy-float-send" : "overlay-send"}
         aria-label={sendName}
-        title={generating ? "Stop generating" : voiceFace ? "Voice" : sendLabel}
+        title={unavailable ? sendName : generating ? "Stop generating" : voiceFace ? "Voice" : sendLabel}
         onClick={send}
       >
         <Send className="vx-i-send" aria-hidden="true" />

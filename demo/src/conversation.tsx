@@ -5,6 +5,7 @@ import { Message } from "@/components/message"
 import { Reasoning } from "@/components/reasoning"
 import { ResponseActions } from "@/components/response-actions"
 import { StreamingText } from "@/components/streaming-text"
+import { SourceLine } from "@/components/source-line"
 import { Suggestions } from "@/components/suggestions"
 import type { Basis, Rating, Turn } from "@/lib/ai-types"
 
@@ -119,6 +120,7 @@ export function AimyCanvas({ open, onOpenChange, basis, me, conversation }: Aimy
               after={
                 t.speaker === "aimy" && settled ? (
                   <>
+                    <SourceLine className="mt-0">From your last 3 calls and this contact&apos;s record</SourceLine>
                     <ResponseActions
                       text={t.text}
                       onRetry={() => ask(turns[i - 1]?.text ?? "")}
