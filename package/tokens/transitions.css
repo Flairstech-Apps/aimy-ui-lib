@@ -10,6 +10,8 @@
  *   16 Tabs sliding: Segmented
  *   25 Checkbox check: Checkbox
  *   27 Toggle: Switch
+ *   17 Tooltip: Tooltip (with a Radix adapter, same values)
+ *   21 Accordion: Accordion, Reasoning later
  */
 
 /* ── 09 Icon swap ─────────────────────────────────────── */
@@ -238,4 +240,98 @@
 
 @media (prefers-reduced-motion: reduce) {
   .t-toggle-thumb { animation: none !important; }
+}
+
+/* ── 17 Tooltip ───────────────────────────────────────────
+   The snippet's timing values, verbatim. Its layout rules (a shared bubble
+   that travels between triggers in one group) are not used: AiMY tooltips
+   are positioned by Radix, one per trigger, and the bubble's colours come
+   from AiMY tokens in the Tooltip component. */
+:root {
+  --tt-in-dur: 150ms;
+  --tt-out-dur: 50ms;
+  --tt-scale: 0.98;
+  --tt-delay: 80ms;
+  --tt-in-ease: ease-out;
+  --tt-out-ease: ease-out;
+  --tt-move-dur: 160ms;
+  --tt-move-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* AiMY adapter, same values: Radix mounts the tooltip when it opens and
+   removes it when it closes. Appear: the delay and 150ms fade and scale via
+   @starting-style. Leave: a 50ms keyframe Radix waits for. */
+.t-tt[data-state="delayed-open"],
+.t-tt[data-state="instant-open"] {
+  opacity: 1;
+  scale: 1;
+  transition:
+    opacity var(--tt-in-dur) var(--tt-in-ease) var(--tt-delay),
+    scale   var(--tt-in-dur) var(--tt-in-ease) var(--tt-delay);
+}
+@starting-style {
+  .t-tt[data-state="delayed-open"],
+  .t-tt[data-state="instant-open"] {
+    opacity: 0;
+    scale: var(--tt-scale);
+  }
+}
+.t-tt[data-state="closed"] {
+  animation: t-tt-out var(--tt-out-dur) var(--tt-out-ease) both;
+}
+@keyframes t-tt-out {
+  from { opacity: 1; scale: 1; }
+  to   { opacity: 0; scale: var(--tt-scale); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .t-tt[data-state] { transition: none !important; animation: none !important; }
+}
+
+/* ── 21 Accordion ─────────────────────────────────────── */
+:root {
+  --acc-expand: 250ms;
+  --acc-collapse: 250ms;
+  --acc-chevron: 250ms;
+  --acc-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.t-acc-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--acc-collapse) var(--acc-ease);
+}
+.t-acc[data-open="true"] .t-acc-panel {
+  grid-template-rows: 1fr;
+  transition: grid-template-rows var(--acc-expand) var(--acc-ease);
+}
+.t-acc-panel-inner {
+  overflow: hidden;
+  opacity: 0;
+  filter: blur(2px);
+  transition:
+    opacity var(--acc-collapse) var(--acc-ease),
+    filter var(--acc-collapse) var(--acc-ease);
+}
+.t-acc[data-open="true"] .t-acc-panel-inner {
+  opacity: 1;
+  filter: blur(0);
+  transition:
+    opacity var(--acc-expand) var(--acc-ease),
+    filter var(--acc-expand) var(--acc-ease);
+}
+.t-acc-chevron {
+  display: inline-flex;
+  transform: scaleY(1);
+  transform-origin: center;
+  transition: transform var(--acc-chevron) var(--acc-ease);
+}
+.t-acc-chevron path { vector-effect: non-scaling-stroke; }
+.t-acc[data-open="true"] .t-acc-chevron {
+  transform: scaleY(-1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .t-acc-panel, .t-acc-panel-inner, .t-acc-chevron {
+    transition: none !important;
+  }
 }

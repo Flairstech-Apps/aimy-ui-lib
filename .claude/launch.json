@@ -61,16 +61,18 @@
       "port": 5180
     },
     {
-      "name": "docs-check",
-      "runtimeExecutable": "pnpm",
+      "name": "docs-static",
+      "runtimeExecutable": "npx",
       "runtimeArgs": [
-        "exec",
-        "next",
-        "dev",
-        "--port",
-        "5171"
+        "--yes",
+        "http-server@14.1.1",
+        "out",
+        "-p",
+        "5191",
+        "-c-1",
+        "--silent"
       ],
-      "port": 5171
+      "port": 5191
     }
   ]
 }

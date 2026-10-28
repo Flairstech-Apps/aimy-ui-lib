@@ -24,6 +24,9 @@
       ],
       "@/components/*": [
         "../../registry/aimy/ui/*"
+      ],
+      "@/lib/theme": [
+        "../../registry/aimy/lib/theme.ts"
       ]
     }
   },

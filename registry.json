@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.3.0"
+        "@flairstech-aimy/tokens@^0.4.0"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.3.0"
+        "@flairstech-aimy/tokens@^0.4.0"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -47,6 +47,18 @@
       ]
     },
     {
+      "name": "theme-constants",
+      "type": "registry:lib",
+      "title": "Theme constants",
+      "description": "THEME_KEY (aimy-ds-theme) and themeScript, the pre-paint script, in a plain module so a Next.js server component can render it in <head>.",
+      "files": [
+        {
+          "path": "registry/aimy/lib/theme.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "use-theme",
       "type": "registry:hook",
       "title": "useTheme",
@@ -56,6 +68,9 @@
           "path": "registry/aimy/hooks/use-theme.ts",
           "type": "registry:hook"
         }
+      ],
+      "registryDependencies": [
+        "@aimy/theme-constants"
       ]
     },
     {
@@ -64,7 +79,8 @@
       "title": "ThemeScript",
       "description": "Put inside <head>. Applies the saved theme before first paint so a light-theme user never sees a dark flash.",
       "registryDependencies": [
-        "@aimy/use-theme"
+        "@aimy/use-theme",
+        "@aimy/theme-constants"
       ],
       "files": [
         {
@@ -496,6 +512,178 @@
       "files": [
         {
           "path": "registry/aimy/ui/copy-button.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "card",
+      "type": "registry:component",
+      "title": "Card",
+      "description": "The record card both products draw: an article with CardHead (a state Tag and CardType), CardTitle (a real button or link whose hit area covers the card), CardSummary, CardFacts, CardBody and CardFoot (stay clickable on their own). status ok, warn or err tints the edge; never a left stripe.",
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/card.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:component",
+      "title": "Tabs, TabsList, Tab, TabPanel",
+      "description": "A real tablist with arrow keys. size page (18px, counts, an ink bar: Sales view switcher) or section (14px, a hairline under the strip, a brand underline: Knowledge settings). The bar slides with transitions.dev tabs sliding (16). Use for views of one thing; not for moving between pages.",
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/tabs.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "disclosure",
+      "type": "registry:component",
+      "title": "Disclosure",
+      "description": "Show or hide one section in place: a header with an optional count and a chevron, the body sliding open with transitions.dev accordion (21). For bounded sections such as a call transcript; not for hiding open-ended data.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/disclosure.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "pager",
+      "type": "registry:component",
+      "title": "Pager",
+      "description": "Paging in words: 1–15 of 134 contacts, page 1 of 9, with Back and Next text actions that say how many. One page reads: 134 contacts, all shown.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/button"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/pager.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "menu",
+      "type": "registry:component",
+      "title": "Menu",
+      "description": "A menu of actions or choices from a control: MenuItem (acts and closes; danger for destructive), MenuRadioGroup and MenuRadioItem (one answer), MenuCheckboxItem (several answers; stays open), MenuLabel, MenuSeparator, MenuSearch (filters long lists). Items take a description line and a leading icon or avatar. Full keyboard model. Opens with transitions.dev menu dropdown (05).",
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/menu.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:component",
+      "title": "Tooltip and InfoTip",
+      "description": "A short hint on hover or keyboard focus, after 80ms (transitions.dev tooltip, 17). Nothing inside can be clicked; use Popover for that. InfoTip is the small question-mark button that explains a label.",
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/tooltip.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "popover",
+      "type": "registry:component",
+      "title": "Popover",
+      "description": "A small panel tied to a control, for a few fields or an explanation with a button. Moves focus inside; Escape or an outside click closes and returns focus. Opens with transitions.dev menu dropdown (05).",
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/popover.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "calendar",
+      "type": "registry:component",
+      "title": "Calendar",
+      "description": "A month grid, single day or range, weeks from Monday: today outlined, the choice in the accent, a range on an accent wash. Arrow keys, Home, End, Page Up and Down. disableFuture for filters on past activity.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/calendar.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "date-picker",
+      "type": "registry:component",
+      "title": "DatePicker",
+      "description": "A date or range filter: a pill like Select that opens quick choices and the Calendar. A quick choice or the second day of a range closes it.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/calendar",
+        "@aimy/popover"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/date-picker.tsx",
           "type": "registry:component"
         }
       ]

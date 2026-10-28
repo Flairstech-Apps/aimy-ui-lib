@@ -4,7 +4,7 @@ import Link from "next/link"
 import { Sidebar } from "@/components/docs/sidebar"
 import { AimyMark } from "@/registry/aimy/brand/aimy-mark"
 import Script from "next/script"
-import { themeScript } from "@/registry/aimy/hooks/use-theme"
+import { themeScript } from "@/registry/aimy/lib/theme"
 import { ThemeToggle } from "@/registry/aimy/ui/theme-toggle"
 import "./globals.css"
 
@@ -19,9 +19,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         {/* Docs only: ?theme=light or ?theme=dark picks the theme, for shareable review links. Then the
             library's pre-paint script, loaded the Next.js way so React doesn't render a <script> itself. */}
-        <Script id="aimy-theme" strategy="beforeInteractive">
-          {`try{var q=new URLSearchParams(location.search).get("theme");if(q==="light"||q==="dark")localStorage.setItem("aimy-ds-theme",q)}catch(e){}${themeScript}`}
-        </Script>
+        <Script
+          id="aimy-theme"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `try{var q=new URLSearchParams(location.search).get("theme");if(q==="light"||q==="dark")localStorage.setItem("aimy-ds-theme",q)}catch(e){};${themeScript};`,
+          }}
+        />
       </head>
       <body className="min-h-dvh">
         <header className="sticky top-0 z-(--z-float) flex h-(--topbar-height) items-center gap-3 border-b border-hairline bg-topbar px-5 backdrop-blur-md">

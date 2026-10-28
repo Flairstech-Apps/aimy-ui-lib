@@ -48,6 +48,18 @@ export const NAV: NavGroup[] = [
       { href: "/components/switch/", label: "Switch" },
       { href: "/components/segmented/", label: "Segmented" },
       { href: "/components/copy-button/", label: "Copy button" },
+      { href: "/components/date-picker/", label: "Date picker" },
+    ],
+  },
+  {
+    label: "Containers and navigation",
+    items: [
+      { href: "/components/card/", label: "Card" },
+      { href: "/components/tabs/", label: "Tabs" },
+      { href: "/components/menu/", label: "Menu" },
+      { href: "/components/tooltip/", label: "Tooltip and popover" },
+      { href: "/components/disclosure/", label: "Disclosure" },
+      { href: "/components/pager/", label: "Pager" },
     ],
   },
 ]

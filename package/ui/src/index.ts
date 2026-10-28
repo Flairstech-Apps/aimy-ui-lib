@@ -1,5 +1,6 @@
 export { cn } from "../../../registry/aimy/lib/utils"
-export { THEME_KEY, themeScript, useTheme, type Theme } from "../../../registry/aimy/hooks/use-theme"
+export { THEME_KEY, themeScript, type Theme } from "../../../registry/aimy/lib/theme"
+export { useTheme } from "../../../registry/aimy/hooks/use-theme"
 export { ThemeScript } from "../../../registry/aimy/ui/theme-script"
 export { ThemeToggle } from "../../../registry/aimy/ui/theme-toggle"
 export { Icon } from "../../../registry/aimy/ui/icon"
@@ -24,3 +25,23 @@ export { Switch } from "../../../registry/aimy/ui/switch"
 export { Segmented } from "../../../registry/aimy/ui/segmented"
 export { PasswordField } from "../../../registry/aimy/ui/password-field"
 export { CopyButton } from "../../../registry/aimy/ui/copy-button"
+export { Card, CardHead, CardType, CardTitle, CardSummary, CardFacts, CardBody, CardFoot } from "../../../registry/aimy/ui/card"
+export { Tabs, TabsList, Tab, TabPanel } from "../../../registry/aimy/ui/tabs"
+export { Disclosure } from "../../../registry/aimy/ui/disclosure"
+export { Pager } from "../../../registry/aimy/ui/pager"
+export {
+  Menu,
+  MenuTrigger,
+  MenuContent,
+  MenuItem,
+  MenuRadioGroup,
+  MenuRadioItem,
+  MenuCheckboxItem,
+  MenuLabel,
+  MenuSeparator,
+  MenuSearch,
+} from "../../../registry/aimy/ui/menu"
+export { Tooltip, InfoTip } from "../../../registry/aimy/ui/tooltip"
+export { Popover, PopoverTrigger, PopoverContent, PopoverClose } from "../../../registry/aimy/ui/popover"
+export { Calendar, type DateRange } from "../../../registry/aimy/ui/calendar"
+export { DatePicker, formatRange } from "../../../registry/aimy/ui/date-picker"
