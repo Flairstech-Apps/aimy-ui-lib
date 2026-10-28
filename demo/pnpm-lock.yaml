@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@flairstech-aimy/tokens':
-        specifier: ^0.4.0
-        version: 0.4.0
+        specifier: ^0.5.0
+        version: 0.5.0
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -199,8 +199,8 @@ packages:
   '@dotenvx/primitives@0.8.0':
     resolution: {integrity: sha512-VYJy0uhFm9zTJ1TxBaW/pA8bjbOM/OttaNMwZ1RHG4JKyRG7DhSdiqD1ipQoAyoD22olUtxbP78W9xY3Wd11bg==}
 
-  '@flairstech-aimy/tokens@0.4.0':
-    resolution: {integrity: sha512-sQkE1xB0mhyaVk1+Dqy7SmcQVHvn4AeYYd2pmsxXvJjev8m7xEafmh9NI8eP4ZAbPzg0DyIpK6hn93Pm9La4rw==}
+  '@flairstech-aimy/tokens@0.5.0':
+    resolution: {integrity: sha512-pDhgum4HDSreCQ0X3PUMY6lna6JQHca6qZvBNXXfMkQt0QpJ8Rrzyeint5aIt8UZtkzQU0IJyEEPhOxBYS8niA==}
 
   '@floating-ui/core@1.8.0':
     resolution: {integrity: sha512-0CIZ5itps/8x7BG8dEIhs53BvCUH2PCoogtakwRTut+Arm58sJooJ0AuZhLw2HJYIR5cMLNPBSS728sPho2khQ==}
@@ -2444,7 +2444,7 @@ snapshots:
 
   '@dotenvx/primitives@0.8.0': {}
 
-  '@flairstech-aimy/tokens@0.4.0':
+  '@flairstech-aimy/tokens@0.5.0':
     dependencies:
       '@fontsource/jetbrains-mono': 5.3.0
       '@fontsource/poppins': 5.3.0

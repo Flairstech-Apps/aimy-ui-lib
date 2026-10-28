@@ -62,4 +62,16 @@ export const NAV: NavGroup[] = [
       { href: "/components/pager/", label: "Pager" },
     ],
   },
+  {
+    label: "Feedback and overlays",
+    items: [
+      { href: "/components/toast/", label: "Toast" },
+      { href: "/components/dialog/", label: "Dialog" },
+      { href: "/components/sheet/", label: "Sheet" },
+      { href: "/components/notice/", label: "Notice" },
+      { href: "/components/empty-state/", label: "Empty and error states" },
+      { href: "/components/skeleton/", label: "Skeleton" },
+      { href: "/components/progress/", label: "Progress" },
+    ],
+  },
 ]

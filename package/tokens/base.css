@@ -39,6 +39,21 @@
     background: var(--w14);
   }
 
+  /* The toast's countdown bar: shrinks to nothing over the toast's life
+     (set inline). Frozen full under reduced motion, as Sales does. */
+  .aimy-countdown {
+    animation-name: aimy-countdown;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+  }
+  @keyframes aimy-countdown {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .aimy-countdown { animation: none; }
+  }
+
   /* Swapping theme should not animate every colour on the page. */
   :root.theme-swapping *,
   :root.theme-swapping *::before,

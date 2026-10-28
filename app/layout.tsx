@@ -6,6 +6,7 @@ import { AimyMark } from "@/registry/aimy/brand/aimy-mark"
 import Script from "next/script"
 import { themeScript } from "@/registry/aimy/lib/theme"
 import { ThemeToggle } from "@/registry/aimy/ui/theme-toggle"
+import { Toaster } from "@/registry/aimy/ui/toast"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -56,6 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </aside>
           <main className="min-w-0 px-5 py-10 rail:px-12">{children}</main>
         </div>
+        <Toaster />
       </body>
     </html>
   )

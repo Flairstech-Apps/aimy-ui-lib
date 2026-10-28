@@ -1,5 +1,6 @@
 import { AimyMark } from "@/components/aimy-mark"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { Toaster } from "@/components/toast"
 
 // A new AiMY product starts here: the theme, fonts and topbar are in place.
 // Add components with `pnpm aimy:add @aimy/<name>`; the shell components
@@ -22,6 +23,8 @@ export function App() {
           aimy:add.
         </p>
       </main>
+      {/* Every reversible action ends in toast("…", { onUndo }). */}
+      <Toaster />
     </div>
   )
 }

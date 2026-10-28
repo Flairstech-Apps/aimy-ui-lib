@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.4.0"
+        "@flairstech-aimy/tokens@^0.5.0"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.4.0"
+        "@flairstech-aimy/tokens@^0.5.0"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -684,6 +684,140 @@
       "files": [
         {
           "path": "registry/aimy/ui/date-picker.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "toast",
+      "type": "registry:component",
+      "title": "toast() and Toaster",
+      "description": "The confirmation every action ends with: act at once, then toast what happened with Undo. toast(title, { sub, onUndo }). One at a time; 6s with Undo, 4s without; waits while hovered or focused; announced politely. Render <Toaster /> once at the root (offset lifts it above a composer bar). Rises and leaves with transitions.dev toast (22).",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/toast.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "dialog",
+      "type": "registry:component",
+      "title": "Dialog and TypeToConfirm",
+      "description": "Dialog: for ordered forms and changes with consequences, never to confirm what Undo can take back. Title, optional description, a scrolling body and an end-aligned footer; focus trapped, Escape closes, focus returns (transitions.dev modal, 06). TypeToConfirm: the last rung for destructive or governed changes: the named action stays disabled until the word or number is typed.",
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/button",
+        "@aimy/field",
+        "@aimy/input"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/dialog.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "sheet",
+      "type": "registry:component",
+      "title": "Sheet",
+      "description": "A panel that slides in from the side over the page, with a scrim: the rail as a drawer below the rail rung, settings and connection sheets. Title, scrolling body, Escape or the scrim closes, focus returns. Slides with transitions.dev panel reveal (07).",
+      "dependencies": [
+        "radix-ui",
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/sheet.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "notice",
+      "type": "registry:component",
+      "title": "Notice",
+      "description": "A notice in the page: neutral, info, ok, warn or err. A tinted ground with an icon and words, an optional title and an action that resolves it (Try again, Open the new version). Never a coloured left stripe. err is announced at once.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/notice.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "empty-state",
+      "type": "registry:component",
+      "title": "EmptyState and ErrorState",
+      "description": "EmptyState: why there is nothing here and the way forward (Clear filters, New document), with an icon tile and an optional fine line; dashed or plain. ErrorState: what failed, that nothing was lost, and Try again.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/button"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/empty-state.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:component",
+      "title": "Skeleton, SkeletonCard, Reveal",
+      "description": "Placeholders shaped like what is coming, pulsing while loading; Reveal cross-fades from the skeleton to the content when loading ends (transitions.dev skeleton reveal, 14). label names what is loading for screen readers.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/skeleton.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "progress",
+      "type": "registry:component",
+      "title": "Progress",
+      "description": "How much is done or used: thin (3px) for work in progress, meter (6px) or large (8px) for usage. limit turns a meter warn from 80% and err from 95%. Always put the numbers in words beside it.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/progress.tsx",
           "type": "registry:component"
         }
       ]
