@@ -20,6 +20,8 @@ import { EmptyState } from "@/components/empty-state"
 import { Reveal, SkeletonCard } from "@/components/skeleton"
 import { toast, Toaster } from "@/components/toast"
 import { Composer } from "@/components/composer"
+import { VoiceStage } from "@/components/voice-stage"
+import { useVoiceSession } from "@/hooks/use-voice"
 import type { Basis } from "@/lib/ai-types"
 import { AimyCanvas, useConversation } from "./conversation"
 
@@ -87,6 +89,15 @@ export function App() {
     setCanvasOpen(true)
     if (question) conversation.ask(question)
   }
+  // A spoken question is asked the way a typed one is: into the canvas
+  // thread, behind the stage, so ending the session lands on what was said.
+  const voice = useVoiceSession({
+    ask: (question) => {
+      setBasis(["My contacts", "134 contacts"])
+      setCanvasOpen(true)
+      return conversation.ask(question)
+    },
+  })
   const shown = CONTACTS.filter((c) => !snoozed.includes(c.name) && c.name.toLowerCase().includes(q.toLowerCase()))
 
   return (
@@ -255,10 +266,22 @@ export function App() {
           onSubmit={(question) => openCanvas(["My contacts", "134 contacts"], question)}
           generating={conversation.busy}
           onStop={conversation.stop}
+          onVoice={voice.start}
           badge={3}
         />
       </div>
       <AimyCanvas open={canvasOpen} onOpenChange={setCanvasOpen} basis={basis} me={who} conversation={conversation} />
+      <VoiceStage
+        open={voice.active}
+        phase={voice.phase}
+        heard={voice.heard}
+        error={voice.error}
+        level={voice.level}
+        seconds={voice.seconds}
+        onEnd={voice.end}
+        onMute={voice.toggleMute}
+        onInterrupt={voice.interrupt}
+      />
       {/* Lifted above the float bar, as both products do. */}
       <Toaster offset="5.5rem" />
     </div>

@@ -26,24 +26,31 @@ export function useConversation() {
 
   const patchLast = (p: Partial<Turn>) => setTurns((ts) => ts.map((t, i) => (i === ts.length - 1 ? { ...t, ...p } : t)))
 
-  const ask = (q: string) => {
-    window.clearInterval(timer.current)
-    const id = String(Date.now())
-    setTurns((ts) => [
-      ...ts,
-      { id: `${id}-q`, speaker: "user", text: q },
-      { id: `${id}-a`, speaker: "aimy", text: "", status: "thinking" },
-    ])
-    const words = answerFor(q).split(" ")
-    let n = 0
-    window.setTimeout(() => {
-      timer.current = window.setInterval(() => {
-        n += 3
-        patchLast({ text: words.slice(0, n).join(" "), status: n >= words.length ? "done" : "streaming" })
-        if (n >= words.length) window.clearInterval(timer.current)
-      }, 180)
-    }, 2400)
-  }
+  // Resolves with the whole answer once it has streamed in, so a voice
+  // session can read it aloud. Typed questions ignore it.
+  const ask = (q: string) =>
+    new Promise<string>((resolve) => {
+      window.clearInterval(timer.current)
+      const id = String(Date.now())
+      setTurns((ts) => [
+        ...ts,
+        { id: `${id}-q`, speaker: "user", text: q },
+        { id: `${id}-a`, speaker: "aimy", text: "", status: "thinking" },
+      ])
+      const answer = answerFor(q)
+      const words = answer.split(" ")
+      let n = 0
+      window.setTimeout(() => {
+        timer.current = window.setInterval(() => {
+          n += 3
+          patchLast({ text: words.slice(0, n).join(" "), status: n >= words.length ? "done" : "streaming" })
+          if (n >= words.length) {
+            window.clearInterval(timer.current)
+            resolve(answer)
+          }
+        }, 180)
+      }, 2400)
+    })
 
   const stop = () => {
     window.clearInterval(timer.current)

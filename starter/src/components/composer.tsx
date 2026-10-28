@@ -1,29 +1,36 @@
 "use client"
 
-import { FileText, Paperclip, Send, X } from "lucide-react"
+import { AudioLines, Check, FileText, Mic, Paperclip, Send, X } from "lucide-react"
 import { useId, useRef, useState } from "react"
 import { AimyMark } from "@/components/aimy-mark"
 import { CountBadge } from "@/components/count-badge"
+import { useDictation, voiceClock } from "@/hooks/use-voice"
 import type { Attachment } from "@/lib/ai-types"
 import { cn } from "@/lib/utils"
 
-// Where a person asks AiMY. Both products draw two bars from one control
-// (ai.css): "float", the single-line bar that floats over the work, and
-// "canvas", the bar at the foot of the canvas, which takes several lines.
-// Enter sends; in the canvas Shift+Enter starts a new line. Nothing empty is
-// sent.
+// Where a person asks AiMY: one composer, everywhere, as the products' live
+// voice.js arranges it (ai.css draws the bar, voice.css the rest).
 //
-// While AiMY answers, pass `generating`: the beam rides the bar's border (the
-// same fact the think-mark carries in the thread, put where the eye already
-// is), the placeholder says "Generating…", and send becomes stop through
-// transitions.dev's icon swap (09). Stop keeps whatever was already written.
+//   at rest    [mark] [ field ............. ] [clip][mic] (◉ voice)
+//   typing     [mark] [ field ............. ] [clip][mic] (➤ send)
+//   dictating  [mark] [ ▁▂▅▇▅▂ waveform  0:07 ]  [✕] [✓]
 //
-// Attachments are Knowledge's paperclip: pass onAttach to show it. A file
-// shows as a chip above the bar until it is sent or removed. Sales has none.
+// "float" is the single-line bar over the work; "canvas" is the bar at the
+// foot of the canvas, which takes several lines (Shift+Enter). Enter sends;
+// nothing empty is sent.
 //
-//   <Composer onSubmit={ask} generating={busy} onStop={stop} />
-//   <Composer variant="canvas" onSubmit={ask} attachments={files}
-//     onAttach={(f) => add(f)} onRemoveAttachment={remove} />
+// The mic dictates (Sales' "Say it instead of typing"): the field gives way to
+// a waveform and a clock in recording red, and the way out is two buttons,
+// cancel and keep. Keep puts the words in the field to edit; nothing is sent.
+// Empty, the send slot is the voice button when you pass onVoice (a voice
+// session, see VoiceStage); with text in the field it is send again. While
+// AiMY answers, the beam rides the border and send becomes stop; stop keeps
+// whatever was already written.
+//
+// A file is a row of its own inside the bar, which grows to hold it, and says
+// what happened to it ("not uploaded" until you upload it).
+//
+//   <Composer onSubmit={ask} generating={busy} onStop={stop} onVoice={voice.start} />
 
 type ComposerProps = {
   variant?: "float" | "canvas"
@@ -35,6 +42,10 @@ type ComposerProps = {
   /** True while AiMY is answering. */
   generating?: boolean
   onStop?: () => void
+  /** Starts a voice session from the empty bar. Leave out for no voice button. */
+  onVoice?: () => void
+  /** Shows the mic for dictation. On by default. */
+  dictate?: boolean
   placeholder?: string
   /** Accessible name for the text box. Defaults to the placeholder. */
   label?: string
@@ -48,6 +59,11 @@ type ComposerProps = {
   className?: string
 }
 
+/** The waveform's bars: enough to run edge to edge in the widest bar. */
+const BARS = 200
+/** The attachment row's collapse, matched to --t-fast in voice.css. */
+const CHIP_OUT_MS = 150
+
 export function Composer({
   variant = "float",
   value,
@@ -56,6 +72,8 @@ export function Composer({
   onSubmit,
   generating = false,
   onStop,
+  onVoice,
+  dictate = true,
   placeholder = variant === "float" ? "Ask, filter, or name a contact…" : "Ask AiMY anything…",
   label,
   badge,
@@ -67,13 +85,45 @@ export function Composer({
 }: ComposerProps) {
   const [inner, setInner] = useState(defaultValue)
   const text = value ?? inner
+  const [leaving, setLeaving] = useState<string[]>([])
   const fileRef = useRef<HTMLInputElement>(null)
+  const field = useRef<HTMLInputElement & HTMLTextAreaElement>(null)
+  const keep = useRef<HTMLButtonElement>(null)
+  const closeNote = useRef<HTMLButtonElement>(null)
+  const prefix = useRef("")
   const id = useId()
   const float = variant === "float"
+  const empty = !text.trim()
+  const voiceFace = !!onVoice && empty && !generating
 
   const set = (v: string) => {
     if (value === undefined) setInner(v)
     onValueChange?.(v)
+  }
+
+  const focusEnd = () =>
+    window.setTimeout(() => {
+      const f = field.current
+      if (!f) return
+      f.focus()
+      f.setSelectionRange(f.value.length, f.value.length)
+    })
+
+  const dictation = useDictation({
+    bars: BARS,
+    onText: (said) => set((prefix.current ? prefix.current + " " : "") + said),
+  })
+  const vx = dictation.state === "idle" ? undefined : dictation.state
+
+  const startDictation = async () => {
+    prefix.current = text.replace(/\s+$/, "")
+    window.setTimeout(() => (keep.current ?? closeNote.current)?.focus())
+    await dictation.start()
+    window.setTimeout(() => closeNote.current?.focus())
+  }
+  const stopDictation = (k: boolean) => {
+    dictation.stop(k)
+    focusEnd()
   }
 
   const send = () => {
@@ -82,7 +132,10 @@ export function Composer({
       return
     }
     const t = text.trim()
-    if (!t) return
+    if (!t) {
+      onVoice?.()
+      return
+    }
     onSubmit(t)
     if (value === undefined) setInner("")
   }
@@ -90,23 +143,53 @@ export function Composer({
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault()
-      if (!generating) send()
+      if (!generating && !empty) send()
     }
   }
 
-  const field = {
+  // Escape cancels dictation or closes its note; Enter on keep is keep.
+  const onVxKey = (e: React.KeyboardEvent) => {
+    if (e.key !== "Escape") return
+    e.stopPropagation()
+    if (dictation.state === "rec") stopDictation(false)
+    else {
+      dictation.closeNote()
+      focusEnd()
+    }
+  }
+
+  const removeFile = (fileId: string) => {
+    setLeaving((l) => [...l, fileId])
+    window.setTimeout(() => {
+      setLeaving((l) => l.filter((x) => x !== fileId))
+      onRemoveAttachment?.(fileId)
+      focusEnd()
+    }, CHIP_OUT_MS)
+  }
+
+  const fieldProps = {
     id: `${id}-input`,
+    ref: field,
     value: text,
     placeholder: generating ? "Generating…" : placeholder,
     "aria-label": label ?? placeholder,
     onKeyDown,
   }
 
+  const sendName = generating ? "Stop generating" : voiceFace ? "Start a voice session" : sendLabel
+
   const bar = (
     <div
       data-slot="composer"
       data-variant={variant}
-      className={cn(float ? "aimy-float-bar" : "overlay-input-bar", generating && "is-generating", float && className)}
+      data-vx={vx}
+      className={cn(
+        float ? "aimy-float-bar" : "overlay-input-bar",
+        generating && "is-generating",
+        onVoice && empty && "vx-empty",
+        attachments.length > 0 && "vx-has-file",
+        float && className
+      )}
     >
       <span className="beam" aria-hidden="true">
         <i />
@@ -116,81 +199,141 @@ export function Composer({
         {badge ? <CountBadge count={badge} label="alerts from AiMY" /> : null}
       </span>
       {float ? (
-        <input {...field} className="aimy-float-input" onChange={(e) => set(e.target.value)} />
+        <input {...fieldProps} className="aimy-float-input" onChange={(e) => set(e.target.value)} />
       ) : (
-        <textarea {...field} rows={1} className="overlay-input" onChange={(e) => set(e.target.value)} />
+        <textarea {...fieldProps} rows={1} className="overlay-input" onChange={(e) => set(e.target.value)} />
       )}
-      {onAttach ? (
-        <>
+
+      {dictation.state === "rec" ? (
+        <span className="vx-read" onKeyDown={onVxKey}>
+          <span className="vx-wave" aria-hidden="true">
+            {dictation.levels.map((l, i) => (
+              <i key={i} style={{ transform: `scaleY(${Math.max(0.12, l).toFixed(3)})` }} />
+            ))}
+          </span>
+          <span className="vx-clock" role="timer" aria-label="Dictating for">
+            {voiceClock(dictation.seconds)}
+          </span>
           <button
             type="button"
-            aria-label="Attach a file"
-            title="Attach a file"
-            onClick={() => fileRef.current?.click()}
-            className="grid size-7 shrink-0 place-items-center rounded-sm text-ink-secondary transition-[background-color,color] duration-(--t-fast) ease-out hover:bg-w06 hover:text-ink"
+            className="vx-ctl vx-drop"
+            aria-label="Cancel dictation"
+            title="Cancel"
+            onClick={() => stopDictation(false)}
           >
-            <Paperclip className="size-4" aria-hidden="true" />
+            <X aria-hidden="true" />
           </button>
-          <input
-            ref={fileRef}
-            type="file"
-            hidden
-            onChange={(e) => {
-              const f = e.target.files?.[0]
-              if (f) onAttach(f)
-              e.target.value = ""
-            }}
-          />
-        </>
+          <button
+            ref={keep}
+            type="button"
+            className="vx-ctl vx-keep"
+            aria-label="Use what I said"
+            title="Done"
+            onClick={() => stopDictation(true)}
+          >
+            <Check aria-hidden="true" />
+          </button>
+        </span>
       ) : null}
+      {dictation.state === "note" ? (
+        <span className="vx-note" role="alert" onKeyDown={onVxKey}>
+          <span className="vx-note-t">{dictation.note}</span>
+          <button
+            ref={closeNote}
+            type="button"
+            className="vx-ctl vx-note-x"
+            aria-label="Close this message"
+            title="Close"
+            onClick={() => {
+              dictation.closeNote()
+              focusEnd()
+            }}
+          >
+            <X aria-hidden="true" />
+          </button>
+        </span>
+      ) : null}
+
+      {onAttach || dictate ? (
+        <span className="vx-tools">
+          {onAttach ? (
+            <>
+              <button
+                type="button"
+                className="clip-btn vx-clip"
+                aria-label="Attach a file"
+                title="Attach a file"
+                onClick={() => fileRef.current?.click()}
+              >
+                <Paperclip aria-hidden="true" />
+              </button>
+              <input
+                ref={fileRef}
+                type="file"
+                hidden
+                onChange={(e) => {
+                  const f = e.target.files?.[0]
+                  if (f) onAttach(f)
+                  e.target.value = ""
+                }}
+              />
+            </>
+          ) : null}
+          {dictate ? (
+            <button
+              type="button"
+              className="vx-mic"
+              aria-pressed={dictation.state === "rec"}
+              aria-label="Dictate"
+              title="Dictate"
+              onClick={startDictation}
+            >
+              <Mic aria-hidden="true" />
+            </button>
+          ) : null}
+        </span>
+      ) : null}
+
       <button
         type="button"
         className={float ? "aimy-float-send" : "overlay-send"}
-        aria-label={generating ? "Stop generating" : sendLabel}
-        title={generating ? "Stop generating" : sendLabel}
+        aria-label={sendName}
+        title={generating ? "Stop generating" : voiceFace ? "Voice" : sendLabel}
         onClick={send}
       >
-        <span className="t-icon-swap" data-state={generating ? "b" : "a"}>
-          <Send className="t-icon" data-icon="a" aria-hidden="true" />
-          <span className="t-icon grid place-items-center" data-icon="b" aria-hidden="true">
-            <span className="aimy-stop-square" />
-          </span>
-        </span>
+        <Send className="vx-i-send" aria-hidden="true" />
+        {onVoice ? <AudioLines className="vx-i-voice" aria-hidden="true" /> : null}
+        <span className="vx-i-stop aimy-stop-square" aria-hidden="true" />
       </button>
-    </div>
-  )
 
-  if (float && !attachments.length) return bar
-
-  return (
-    <div
-      data-slot="composer-wrap"
-      className={cn("flex w-full flex-col gap-2", !float && "mx-auto max-w-[45rem] px-3", className)}
-    >
-      {attachments.length ? (
-        <ul className="flex flex-wrap gap-1.5" aria-label="Attached">
-          {attachments.map((a) => (
-            <li
-              key={a.id}
-              className="inline-flex items-center gap-1.5 rounded-sm border border-edge bg-card py-1 pr-1 pl-2 text-2xs text-ink"
-            >
-              <FileText className="size-3 shrink-0 text-ink-secondary" aria-hidden="true" />
-              <span className="font-semibold">{a.name}</span>
-              {a.note ? <span className="text-ink-secondary">{a.note}</span> : null}
+      {attachments.map((a) => (
+        <div key={a.id} className={cn("vx-att", leaving.includes(a.id) && "is-leaving")}>
+          <div className="vx-att-in">
+            <span className="vx-chip">
+              <FileText aria-hidden="true" />
+              <span className="vx-chip-n">{a.name}</span>
+              {a.note ? <span className="vx-chip-note">{a.note}</span> : null}
               {onRemoveAttachment ? (
                 <button
                   type="button"
+                  className="vx-chip-x"
                   aria-label={`Remove ${a.name}`}
-                  onClick={() => onRemoveAttachment(a.id)}
-                  className="grid size-5 place-items-center rounded-xs text-ink-secondary transition-[background-color,color] duration-(--t-fast) ease-out hover:bg-w06 hover:text-ink"
+                  title="Remove"
+                  onClick={() => removeFile(a.id)}
                 >
                   <X className="size-3" aria-hidden="true" />
                 </button>
               ) : null}
-            </li>
-          ))}
-        </ul>
-      ) : null}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+
+  if (float) return bar
+  return (
+    <div data-slot="composer-wrap" className={cn("mx-auto w-full max-w-[45rem] px-3", className)}>
       {bar}
     </div>
   )

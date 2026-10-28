@@ -1,4 +1,4 @@
-import { act, render, screen } from "@testing-library/react"
+import { act, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { Canvas } from "@/registry/aimy/ui/canvas"
@@ -56,7 +56,7 @@ describe("Composer", () => {
     )
     expect(screen.getByRole("button", { name: "Attach a file" })).toBeInTheDocument()
     await userEvent.click(screen.getByRole("button", { name: "Remove pricing.pdf" }))
-    expect(onRemove).toHaveBeenCalledWith("a")
+    await waitFor(() => expect(onRemove).toHaveBeenCalledWith("a"))
   })
 
   it("has no axe violations", async () => {

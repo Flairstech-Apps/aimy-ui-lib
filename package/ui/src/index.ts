@@ -61,3 +61,26 @@ export { Reasoning } from "../../../registry/aimy/ui/reasoning"
 export { Composer } from "../../../registry/aimy/ui/composer"
 export { Canvas } from "../../../registry/aimy/ui/canvas"
 export type { Speaker, TurnStatus, Person, Turn, Basis, Attachment, ReasoningStep, Rating } from "../../../registry/aimy/lib/ai-types"
+export { Orb } from "../../../registry/aimy/ui/orb"
+export { VoiceStage } from "../../../registry/aimy/ui/voice-stage"
+export {
+  NoteTaker,
+  NoteTakerConsent,
+  NOTE_STEPS,
+  type NoteItem,
+  type NotePhase,
+  type NoteStep,
+  type NoteTab,
+  type NoteView,
+  type StepState,
+  type MeetingSummary,
+} from "../../../registry/aimy/ui/note-taker"
+export {
+  useDictation,
+  useVoiceSession,
+  canDictate,
+  voiceClock,
+  VOICE_SAY,
+  type VoicePhase,
+  type DictationState,
+} from "../../../registry/aimy/hooks/use-voice"

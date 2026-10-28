@@ -17,6 +17,9 @@ const EXEMPT = {
   "registry/aimy/brand/aimy-mark.tsx": {
     "raw-colour": "The logo's own gradient stops and wordmark blue are the brand mark, not UI colour.",
   },
+  "registry/aimy/ui/orb.tsx": {
+    "raw-colour": "The Silk orb is a canvas drawing in the products' own strand colours (voice.js makeSilk), not UI colour.",
+  },
   "registry/aimy/ui/thinking.tsx": {
     "raw-colour": "The think-mark paints each particle in the logo's own gradient colour (read from MARK_GRADIENT), as the products do.",
   },

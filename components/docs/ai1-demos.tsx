@@ -152,6 +152,7 @@ export function ComposerDemo() {
           toast("Stopped", { sub: "What was written stays." })
         }}
         badge={2}
+        onVoice={() => toast("Opens Voice mode", { sub: "See the Voice mode page" })}
       />
       <Composer
         variant="canvas"

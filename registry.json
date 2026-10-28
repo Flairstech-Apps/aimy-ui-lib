@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.6.0"
+        "@flairstech-aimy/tokens@^0.7.0"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.6.0"
+        "@flairstech-aimy/tokens@^0.7.0"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -954,7 +954,7 @@
       "name": "composer",
       "type": "registry:component",
       "title": "Composer",
-      "description": "Where a person asks AiMY. variant float: the single-line bar over the work; canvas: the multi-line bar at the foot of the canvas (Shift+Enter for a new line). Enter sends; nothing empty is sent. generating rides the beam on the border, says Generating…, and turns send into stop (icon swap, 09); onStop keeps what was written. onAttach adds Knowledge's paperclip and file chips.",
+      "description": "Where a person asks AiMY, as the products' voice.js arranges it. variant float (one line over the work) or canvas (several lines). Enter sends; nothing empty is sent. The mic dictates: a red waveform and clock replace the field, cancel or keep (keep puts the words in the field). onVoice turns the empty send slot into the voice button. generating rides the beam and turns send into stop. onAttach adds the clip; a file is a row inside the bar, saying not uploaded until it is.",
       "dependencies": [
         "lucide-react"
       ],
@@ -963,7 +963,8 @@
         "@aimy/utils",
         "@aimy/aimy-mark",
         "@aimy/count-badge",
-        "@aimy/ai-types"
+        "@aimy/ai-types",
+        "@aimy/use-voice"
       ],
       "files": [
         {
@@ -990,6 +991,81 @@
       "files": [
         {
           "path": "registry/aimy/ui/canvas.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "use-voice",
+      "type": "registry:hook",
+      "title": "useDictation and useVoiceSession",
+      "description": "The microphone, ported from the products' voice.js. useDictation: the composer's mic (waveform levels, a clock, keep puts the words in the field, nothing is sent). useVoiceSession({ ask }): a spoken conversation with phases connecting, listening, thinking, speaking, muted and error; sends once you pause, reads the answer aloud, tap to interrupt. Uses the browser's own speech recognition and synthesis; where they are missing or the mic is refused it says so in words (VOICE_SAY) and never invents a sentence.",
+      "files": [
+        {
+          "path": "registry/aimy/hooks/use-voice.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "orb",
+      "type": "registry:component",
+      "title": "Orb",
+      "description": "The Silk orb: hair-fine strands of light on a turning drum (ported from the products' voice.js). phase connecting, listening (your voice level swells it), thinking, speaking (breathes), muted (drains to grey), error. Fills its box; draws one still frame under reduced motion. Used by VoiceStage and NoteTaker.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/utils",
+        "@aimy/use-voice"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/orb.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "voice-stage",
+      "type": "registry:component",
+      "title": "VoiceStage",
+      "description": "A voice conversation as a place: the page goes away, one orb stays with a line saying what it does (Listening, Thinking, Answering, You're muted, or the error in words), the session clock, and mute and end. The orb is a button only while AiMY answers (tap to interrupt). Pair with useVoiceSession. onTakeNotes adds Take meeting notes; asking replaces the state line (NoteTakerConsent).",
+      "dependencies": [
+        "lucide-react",
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark",
+        "@aimy/orb",
+        "@aimy/use-voice"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/voice-stage.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "note-taker",
+      "type": "registry:component",
+      "title": "NoteTaker and NoteTakerConsent",
+      "description": "AiMY takes notes in a meeting, hearing only you. fold: the Silk orb in the corner (drag it; it settles on the nearer side) with who is speaking and a count. card: Transcription and Notes tabs, End notes, and one bar that asks AiMY or adds a private note. Phases live, ended, writing (three steps tick off), ready (summary, decisions, your to-dos), short, failed (Try again; the transcript is safe). NoteTakerConsent asks on the voice stage first.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark",
+        "@aimy/button",
+        "@aimy/orb",
+        "@aimy/use-voice"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/note-taker.tsx",
           "type": "registry:component"
         }
       ]
