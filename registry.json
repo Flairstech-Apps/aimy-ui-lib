@@ -8,8 +8,12 @@
       "type": "registry:style",
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
-      "dependencies": ["@flairstech-aimy/tokens@^0.1.0"],
-      "registryDependencies": ["@aimy/utils"],
+      "dependencies": [
+        "@flairstech-aimy/tokens@^0.2.0"
+      ],
+      "registryDependencies": [
+        "@aimy/utils"
+      ],
       "css": {
         "@import \"@flairstech-aimy/tokens/tailwind.css\"": {}
       }
@@ -19,7 +23,9 @@
       "type": "registry:style",
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
-      "dependencies": ["@flairstech-aimy/tokens@^0.1.0"],
+      "dependencies": [
+        "@flairstech-aimy/tokens@^0.2.0"
+      ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
       }
@@ -29,49 +35,280 @@
       "type": "registry:lib",
       "title": "cn() class helper",
       "description": "Joins class names and resolves Tailwind conflicts so a className passed to any AiMY component overrides its defaults. Every AiMY component depends on it.",
-      "dependencies": ["clsx", "tailwind-merge"],
-      "files": [{ "path": "registry/aimy/lib/utils.ts", "type": "registry:lib" }]
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/lib/utils.ts",
+          "type": "registry:lib"
+        }
+      ]
     },
     {
       "name": "use-theme",
       "type": "registry:hook",
       "title": "useTheme",
       "description": "Reads and sets the AiMY theme (dark or light) on <html data-theme>, saved under the localStorage key aimy-ds-theme that every AiMY product uses. Pauses colour transitions for the swap. Also exports themeScript for the pre-paint script.",
-      "files": [{ "path": "registry/aimy/hooks/use-theme.ts", "type": "registry:hook" }]
+      "files": [
+        {
+          "path": "registry/aimy/hooks/use-theme.ts",
+          "type": "registry:hook"
+        }
+      ]
     },
     {
       "name": "theme-script",
       "type": "registry:component",
       "title": "ThemeScript",
       "description": "Put inside <head>. Applies the saved theme before first paint so a light-theme user never sees a dark flash.",
-      "registryDependencies": ["@aimy/use-theme"],
-      "files": [{ "path": "registry/aimy/ui/theme-script.tsx", "type": "registry:component" }]
+      "registryDependencies": [
+        "@aimy/use-theme"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/theme-script.tsx",
+          "type": "registry:component"
+        }
+      ]
     },
     {
       "name": "theme-toggle",
       "type": "registry:component",
       "title": "ThemeToggle",
       "description": "The one-click light/dark switch from the AiMY topnav. Sun and moon cross-fade with the transitions.dev icon swap. Has an accessible name that says which theme it switches to.",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["@aimy/theme", "@aimy/utils", "@aimy/use-theme"],
-      "files": [{ "path": "registry/aimy/ui/theme-toggle.tsx", "type": "registry:component" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/use-theme",
+        "@aimy/icon-button"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/theme-toggle.tsx",
+          "type": "registry:component"
+        }
+      ]
     },
     {
       "name": "icon",
       "type": "registry:component",
       "title": "Icon",
       "description": "Renders a lucide-react glyph at an AiMY size (xs 12, sm 14, md 16, lg 20, xl 24), stroke 2, hidden from screen readers unless given a label. Use it for every icon; never draw icon paths by hand.",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["@aimy/utils"],
-      "files": [{ "path": "registry/aimy/ui/icon.tsx", "type": "registry:component" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/icon.tsx",
+          "type": "registry:component"
+        }
+      ]
     },
     {
       "name": "aimy-mark",
       "type": "registry:component",
       "title": "AimyMark",
       "description": "The AiMY logo: the mark alone (variant icon) or with the wordmark (variant lockup), path data verbatim from the canonical logo. Set --aimy-mark: currentColor on a brand-filled control to keep the mark legible.",
-      "registryDependencies": ["@aimy/utils"],
-      "files": [{ "path": "registry/aimy/brand/aimy-mark.tsx", "type": "registry:component" }]
+      "registryDependencies": [
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/brand/aimy-mark.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "button",
+      "type": "registry:component",
+      "title": "Button",
+      "description": "The AiMY button, a pill as both products draw it. Variants: brand (the one filled primary per surface, white words, the AiMY mark turns white), ghost (the quiet control: an edge, no fill; the default), accent (an action AiMY will take), ok, warn, err (tinted ground, readable ink), text (a quiet verb in the accent ink). Sizes sm 28, md 32, lg 40. loading shows a spinner and blocks clicks. Label every button with a verb; never Open or Learn more when the action has a name. Use asChild to style a router link.",
+      "dependencies": [
+        "class-variance-authority",
+        "lucide-react",
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/button.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "icon-button",
+      "type": "registry:component",
+      "title": "IconButton",
+      "description": "A square control for an icon alone, with a required label that becomes its accessible name and tooltip. default sits on the raised surface with an edge; toolbar has no box until hovered and shows its on state (aria-pressed) in the accent. Sizes sm 28, md 32, lg 36.",
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/icon-button.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "link",
+      "type": "registry:component",
+      "title": "Link",
+      "description": "Coloured words for going somewhere: brand ink, underline on hover, or always underlined inside a sentence (variant inline). A link has neither fill nor edge. For an action, use Button variant text instead. asChild wraps a router link.",
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/link.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "tag",
+      "type": "registry:component",
+      "title": "Tag",
+      "description": "A label for a state: a soft ground of the hue and the word in the readable ink, no edge (a label has a fill, a control has an edge). Tones neutral, ok, warn, err, info, ai, accent. Write the name of the state in sentence case, two words both capitalised: Meeting Set. Never colour alone.",
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/tag.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "chip",
+      "type": "registry:component",
+      "title": "Chip",
+      "description": "A toggle for filtering, with an edge because you can press it. selected takes the accent; unselected words stay fully readable. onRemove adds a remove control with its own name. Reports state with aria-pressed.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/chip.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "count-badge",
+      "type": "registry:component",
+      "title": "CountBadge",
+      "description": "An unread count pinned to the top right of a control (put it in a relative parent). White on #d92d20 so it reads in both themes. label says what is counted, for screen readers. Over max shows as 99+.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/count-badge.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "status",
+      "type": "registry:component",
+      "title": "StatusPill and StatusDot",
+      "description": "Presence in words with a coloured dot: online, busy, away, offline. The dot never appears without the word in a product surface, and it never pulses.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/status.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "kbd",
+      "type": "registry:component",
+      "title": "Kbd",
+      "description": "Key caps for a keyboard shortcut: <Kbd keys={[\"Ctrl\", \"K\"]} />.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/kbd.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "divider",
+      "type": "registry:component",
+      "title": "Divider",
+      "description": "A 1px rule in the edge colour, horizontal or vertical. With children it becomes a labelled section marker between two rules.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/divider.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "avatar",
+      "type": "registry:component",
+      "title": "Avatar, AimyAvatar, AvatarGroup",
+      "description": "A person as their photo (with the face ring) or initials on the avatar gradient; AiMY as its mark on the AiMY tile, so AiMY is never shown with a person's face. Sizes xs 24, sm 28, md 32, lg 44. AvatarGroup overlaps faces and shows +N past max.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/avatar.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }

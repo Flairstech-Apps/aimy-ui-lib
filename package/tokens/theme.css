@@ -38,6 +38,8 @@
   --color-ink-rule: var(--ink-rule);
   --color-link: var(--text-link);
   --color-on-status: var(--text-on-status);
+  --color-on-brand: var(--on-brand);
+  --color-badge: var(--badge-ground);
 
   /* Edges */
   --color-hairline: var(--w07);

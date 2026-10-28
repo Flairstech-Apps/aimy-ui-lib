@@ -38,6 +38,32 @@ export const PATCHES = [
     },
   },
   {
+    id: "on-brand",
+    why: "new --on-brand (#fff both themes) for words and marks on brand-filled controls; Sales typed #fff directly (Nour, 28 Oct)",
+    apply({ dark, light }) {
+      dark.set("--on-brand", "#ffffff")
+      light.set("--on-brand", "#ffffff")
+    },
+  },
+  {
+    id: "badge-ground",
+    why: "Sales' --badge-ground (#d92d20, sales.css:341) for count badges: white on it reads 4.8:1, white on dark --err does not",
+    apply({ dark, light }) {
+      dark.set("--badge-ground", "#d92d20")
+      light.set("--badge-ground", "#d92d20")
+    },
+  },
+  {
+    id: "aimy-tile",
+    why: "Knowledge's .aimy-av-tile ground and edge behind the AiMY mark (aimy-ds.css:1728 and :787), as tokens so the AI avatar can use them",
+    apply({ dark, light }) {
+      dark.set("--aimy-tile", "linear-gradient(135deg, #3d1f6b, #1a3a6e)")
+      dark.set("--aimy-tile-edge", "rgba(139,79,244,0.3)")
+      light.set("--aimy-tile", "linear-gradient(135deg, #f2ecff, #e6efff)")
+      light.set("--aimy-tile-edge", "rgba(110,70,220,0.28)")
+    },
+  },
+  {
     id: "product-inks",
     why: "Sales and Knowledge both set --ink-secondary to d200 and --ink-rule to d600, and add --ink-quiet, --ink-faint, --ink-action; where both products agree, they win",
     apply({ dark, light }) {

@@ -8,6 +8,9 @@
  * Patches applied on top of the source (scripts/token-patches.mjs):
  *   - brand-hover: dark --brand-hover referred to itself (invalid); set to Knowledge's #4a7bff
  *   - one-accent: one global --accent with Sales' values (Nour, 27 Oct); --qa-accent* lives on only in aimy-aliases.css
+ *   - on-brand: new --on-brand (#fff both themes) for words and marks on brand-filled controls; Sales typed #fff directly (Nour, 28 Oct)
+ *   - badge-ground: Sales' --badge-ground (#d92d20, sales.css:341) for count badges: white on it reads 4.8:1, white on dark --err does not
+ *   - aimy-tile: Knowledge's .aimy-av-tile ground and edge behind the AiMY mark (aimy-ds.css:1728 and :787), as tokens so the AI avatar can use them
  *   - product-inks: Sales and Knowledge both set --ink-secondary to d200 and --ink-rule to d600, and add --ink-quiet, --ink-faint, --ink-action; where both products agree, they win
  *   - product-leading: Sales and Knowledge both set line heights to 1.25 / 1.5 / 1.6 (tight / base / relaxed); where both products agree, they win
  *   - motion-moves-out: durations, curves and lifts move to motion.css, which follows transitions.dev (PLAN.md 7a)
@@ -210,6 +213,10 @@
   --heat-ink: #0d1117;
   --scrim: rgba(6,9,13,0.66);
   --accent-text: #a06ff7;
+  --on-brand: #ffffff;
+  --badge-ground: #d92d20;
+  --aimy-tile: linear-gradient(135deg, #3d1f6b, #1a3a6e);
+  --aimy-tile-edge: rgba(139,79,244,0.3);
   --ink-quiet: var(--d300);
   --ink-faint: var(--d400);
   --ink-action: var(--accent-text);
@@ -349,6 +356,10 @@
   --ink-placeholder: var(--text-placeholder);
   --ink-rule: var(--d600);
   --accent-text: #6d3bd4;
+  --on-brand: #ffffff;
+  --badge-ground: #d92d20;
+  --aimy-tile: linear-gradient(135deg, #f2ecff, #e6efff);
+  --aimy-tile-edge: rgba(110,70,220,0.28);
   --teal: var(--cyan);
   --teal-dim: var(--cyan-bg);
   --ink-quiet: var(--d300);

@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
@@ -9,9 +13,22 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "paths": {
-      "@/lib/utils": ["../../registry/aimy/lib/utils.ts"],
-      "@/hooks/*": ["../../registry/aimy/hooks/*"]
+      "@/lib/utils": [
+        "../../registry/aimy/lib/utils.ts"
+      ],
+      "@/hooks/*": [
+        "../../registry/aimy/hooks/*"
+      ],
+      "@/components/aimy-mark": [
+        "../../registry/aimy/brand/aimy-mark.tsx"
+      ],
+      "@/components/*": [
+        "../../registry/aimy/ui/*"
+      ]
     }
   },
-  "include": ["src", "../../registry/aimy"]
+  "include": [
+    "src",
+    "../../registry/aimy"
+  ]
 }

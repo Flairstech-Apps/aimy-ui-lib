@@ -23,4 +23,19 @@ export const NAV: NavGroup[] = [
       { href: "/foundations/writing/", label: "Writing" },
     ],
   },
+  {
+    label: "Components",
+    items: [
+      { href: "/components/button/", label: "Button" },
+      { href: "/components/icon-button/", label: "Icon button" },
+      { href: "/components/link/", label: "Link" },
+      { href: "/components/tag/", label: "Tag" },
+      { href: "/components/chip/", label: "Chip" },
+      { href: "/components/count-badge/", label: "Count badge" },
+      { href: "/components/status/", label: "Status" },
+      { href: "/components/kbd/", label: "Kbd" },
+      { href: "/components/divider/", label: "Divider" },
+      { href: "/components/avatar/", label: "Avatar" },
+    ],
+  },
 ]

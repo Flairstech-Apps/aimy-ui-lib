@@ -28,8 +28,8 @@ export default function LogoPage() {
         lead="The gradient would sink into a filled button, so the button sets --aimy-mark: currentColor and the mark takes the button's white text colour, as Sales' primary does."
       >
         <ThemePair>
-          {/* Sales .s-insight-lnk.primary: brand ground, #fff text, pill, mark in currentColor. */}
-          <span className="inline-flex min-h-8 items-center gap-2 rounded-pill bg-brand px-4 text-xs font-bold text-[#fff] [--aimy-mark:currentColor]">
+          {/* Sales .s-insight-lnk.primary: brand ground, --on-brand text, pill, mark in currentColor. */}
+          <span className="inline-flex min-h-8 items-center gap-2 rounded-pill bg-brand px-4 text-xs font-bold text-on-brand [--aimy-mark:currentColor]">
             <AimyMark title="" className="size-3.5" />
             Prepare me for it
           </span>
