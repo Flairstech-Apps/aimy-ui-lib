@@ -1,6 +1,4 @@
-import { Sparkles } from "lucide-react"
 import { AimyMark } from "@/components/aimy-mark"
-import { Icon } from "@/components/icon"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 // A new AiMY product starts here: the theme, fonts and topbar are in place.
@@ -16,7 +14,7 @@ export function App() {
       </header>
       <main className="mx-auto flex max-w-[48rem] flex-col items-start gap-4 px-5 py-15">
         <span className="grid size-12 place-items-center rounded-xl bg-w05">
-          <Icon icon={Sparkles} size="xl" className="text-ai-ink" />
+          <AimyMark title="" className="size-6" />
         </span>
         <h1 className="text-3xl font-semibold tracking-tight">Your AiMY product</h1>
         <p className="text-body text-ink-secondary">

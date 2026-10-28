@@ -1,4 +1,4 @@
-import { Phone, Sparkles } from "lucide-react"
+import { Phone } from "lucide-react"
 import { AimyMark } from "@/components/aimy-mark"
 import { Icon } from "@/components/icon"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -30,7 +30,7 @@ export function App() {
             <span className="ml-auto rounded-sm bg-ok-bg px-2 py-0.5 text-micro font-semibold text-ok-text">Meeting Set</span>
           </div>
           <p className="mt-4 flex gap-2 rounded-lg bg-w04 p-3 text-meta text-ink-secondary">
-            <Icon icon={Sparkles} size="sm" className="mt-0.5 text-ai-ink" />
+            <AimyMark title="" className="mt-0.5 size-3.5" />
             They asked for pricing on the annual plan. A reply is drafted and waiting for you.
           </p>
         </article>

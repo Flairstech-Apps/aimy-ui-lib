@@ -10,7 +10,7 @@ import {
   RefreshCw,
   Search,
   Send,
-  Sparkles,
+
   Square,
   ThumbsDown,
   ThumbsUp,
@@ -20,6 +20,7 @@ import {
 } from "lucide-react"
 import type { Metadata } from "next"
 import { Code, DoDont, PageHeader, Section } from "@/components/docs/page"
+import { AimyMark } from "@/registry/aimy/brand/aimy-mark"
 import { Icon } from "@/registry/aimy/ui/icon"
 
 export const metadata: Metadata = { title: "Icons" }
@@ -37,7 +38,6 @@ const MEANINGS: [LucideIcon, string, string][] = [
   [Search, "search", "Search"],
   [Paperclip, "paperclip", "Attach"],
   [Phone, "phone", "Call"],
-  [Sparkles, "sparkles", "AI-written or AI-suggested"],
   [Info, "info", "Information"],
   [TriangleAlert, "triangle-alert", "Warning"],
   [ChevronDown, "chevron-down", "Opens a menu or section"],
@@ -63,7 +63,7 @@ export default function IconsPage() {
         <div className="flex flex-wrap items-end gap-8 rounded-xl border border-hairline p-6">
           {SIZES.map(([size, px, use]) => (
             <div key={size} className="flex flex-col items-start gap-2">
-              <Icon icon={Sparkles} size={size} className="text-ink" />
+              <Icon icon={Phone} size={size} className="text-ink" />
               <p className="font-mono text-xs text-ink">
                 {size} <span className="text-ink-secondary">{px}px</span>
               </p>
@@ -78,6 +78,16 @@ export default function IconsPage() {
       </Section>
       <Section title="One meaning, one glyph" lead="The same idea always gets the same icon across products.">
         <div className="grid gap-2 canvas:grid-cols-2 rail:grid-cols-3">
+          {/* AI is marked with the AiMY mark, as in Sales and Knowledge, never a Lucide glyph. */}
+          <div className="flex items-center gap-3 rounded-lg border border-hairline p-3">
+            <span className="grid size-9 place-items-center rounded-md bg-w05">
+              <AimyMark title="" className="size-4" />
+            </span>
+            <div>
+              <p className="text-meta font-semibold text-ink">AI-written or AI-suggested</p>
+              <p className="font-mono text-2xs text-ink-secondary">AimyMark</p>
+            </div>
+          </div>
           {MEANINGS.map(([glyph, name, meaning]) => (
             <div key={name} className="flex items-center gap-3 rounded-lg border border-hairline p-3">
               <span className="grid size-9 place-items-center rounded-md bg-w05 text-ink">
@@ -92,10 +102,16 @@ export default function IconsPage() {
         </div>
       </Section>
       <Section title="Rules">
-        <DoDont
-          doText="Pair an icon with a word when the action matters. An icon alone needs a label and a tooltip."
-          dontText="Draw a new icon, or bring in a second icon set because Lucide lacks a glyph. Ask for the gap instead."
-        />
+        <div className="flex flex-col gap-3">
+          <DoDont
+            doText="Mark anything AiMY wrote, suggested or did with the AiMY mark, the way Sales and Knowledge do."
+            dontText="Use a sparkles or magic-wand glyph for AI. In AiMY, the mark is the AI."
+          />
+          <DoDont
+            doText="Pair an icon with a word when the action matters. An icon alone needs a label and a tooltip."
+            dontText="Draw a new icon, or bring in a second icon set because Lucide lacks a glyph. Ask for the gap instead."
+          />
+        </div>
       </Section>
     </>
   )

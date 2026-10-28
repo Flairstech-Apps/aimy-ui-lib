@@ -25,18 +25,15 @@ export default function LogoPage() {
       </Section>
       <Section
         title="On a brand-filled control"
-        lead="On a filled primary the gradient disappears into the button. Set --aimy-mark: currentColor on the control and the mark takes the button's text colour."
+        lead="The gradient would sink into a filled button, so the button sets --aimy-mark: currentColor and the mark takes the button's white text colour, as Sales' primary does."
       >
-        <div className="flex flex-wrap gap-4">
-          <span className="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2 text-xs font-semibold text-on-status">
-            <AimyMark title="" className="size-4" />
-            Without the fix
+        <ThemePair>
+          {/* Sales .s-insight-lnk.primary: brand ground, #fff text, pill, mark in currentColor. */}
+          <span className="inline-flex min-h-8 items-center gap-2 rounded-pill bg-brand px-4 text-xs font-bold text-[#fff] [--aimy-mark:currentColor]">
+            <AimyMark title="" className="size-3.5" />
+            Prepare me for it
           </span>
-          <span className="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2 text-xs font-semibold text-[var(--d50)] [--aimy-mark:currentColor]">
-            <AimyMark title="" className="size-4" />
-            Fill them in
-          </span>
-        </div>
+        </ThemePair>
       </Section>
       <Section title="Rules">
         <div className="flex flex-col gap-3">
