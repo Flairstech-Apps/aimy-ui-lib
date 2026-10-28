@@ -1,4 +1,4 @@
-import { Phone, SearchX, UserRound } from "lucide-react"
+import { Phone, SearchX, Settings } from "lucide-react"
 import { useEffect, useState } from "react"
 import { AimyMark } from "@/components/aimy-mark"
 import { AimyAvatar, Avatar } from "@/components/avatar"
@@ -7,8 +7,12 @@ import { Card, CardBody, CardFacts, CardFoot, CardHead, CardSummary, CardTitle, 
 import { BriefLink, DayBrief } from "@/components/brief"
 import { type DateRange } from "@/components/calendar"
 import { DatePicker } from "@/components/date-picker"
-import { NotificationBell, type BellPing } from "@/components/notification-bell"
-import { Menu, MenuContent, MenuLabel, MenuRadioGroup, MenuRadioItem, MenuTrigger } from "@/components/menu"
+import { type BellPing } from "@/components/notification-bell"
+import { NotificationCenter, type NotificationItem } from "@/components/notification-center"
+import { AppShell, Page, PageHead } from "@/components/app-shell"
+import { Topnav, UserMenu } from "@/components/topnav"
+import { Rail, RailDoor, RailDoors, RailLink } from "@/components/rail"
+import { MenuItem, MenuLabel, MenuRadioGroup, MenuRadioItem, MenuSeparator } from "@/components/menu"
 import { Pager } from "@/components/pager"
 import { SearchField } from "@/components/search-field"
 import { Select, SelectItem } from "@/components/select"
@@ -76,6 +80,31 @@ const PEOPLE = [
   { name: "Rami Saleh", role: "Chief executive" },
 ]
 
+const PRODUCTS = [
+  { label: "Knowledge", onSelect: () => toast("Opens AiMY Knowledge") },
+  { label: "Sales", current: true },
+  { label: "QA", onSelect: () => toast("Opens AiMY QA") },
+  { label: "Talent", soon: "soon" },
+]
+
+const NOTICES: NotificationItem[] = [
+  {
+    id: "n1",
+    type: "Callback overdue",
+    when: "09:40",
+    severity: 1,
+    body: "Youssef Amin asked to be called back after 3pm yesterday.",
+    action: { label: "Call Youssef", onClick: () => toast("Calling Youssef", { sub: "Your phone rings first." }) },
+  },
+  {
+    id: "n2",
+    type: "Draft ready",
+    when: "08:15",
+    severity: 3,
+    body: "AiMY drafted a reply to Kestrel Logistics about the annual plan.",
+  },
+]
+
 export function App() {
   const [q, setQ] = useState("")
   const [range, setRange] = useState<DateRange>()
@@ -91,13 +120,24 @@ export function App() {
   const left = CONTACTS.length - snoozed.length
   const [tab, setTab] = useState("contacts")
   // The bell rings for what was finished away from the screen: a call's notes.
-  const [unread, setUnread] = useState(3)
+  const [notes, setNotes] = useState<NotificationItem[]>(NOTICES)
   const [ping, setPing] = useState<BellPing>()
   const call = (first: string) => {
     toast(`Calling ${first}`, { sub: "Your phone rings first." })
     window.setTimeout(() => {
-      setUnread((n) => n + 1)
-      setPing({ id: Date.now(), text: <b>Notes from the call with {first} are ready</b> })
+      const id = String(Date.now())
+      setNotes((n) => [
+        {
+          id,
+          type: "Meeting notes",
+          when: "Just now",
+          severity: 2,
+          body: `Notes from the call with ${first} are ready.`,
+          action: { label: "Open the notes", onClick: () => toast(`Opened the notes from ${first}`) },
+        },
+        ...n,
+      ])
+      setPing({ id, text: <b>Notes from the call with {first} are ready</b> })
     }, 4000)
   }
   const conversation = useConversation()
@@ -123,245 +163,278 @@ export function App() {
   const shown = CONTACTS.filter((c) => !snoozed.includes(c.name) && c.name.toLowerCase().includes(q.toLowerCase()))
 
   return (
-    <div className="min-h-dvh bg-body text-ink">
-      <header className="flex h-(--topbar-height) items-center gap-3 border-b border-hairline bg-topbar px-5">
-        <AimyMark variant="lockup" className="h-6" />
-        <span className="ml-auto" />
-        <Menu>
-          <MenuTrigger asChild>
-            <Button size="sm">
-              <UserRound aria-hidden="true" />
-              Viewing as {who.split(" ")[0]}
-            </Button>
-          </MenuTrigger>
-          <MenuContent align="end">
-            <MenuLabel>View as</MenuLabel>
-            <MenuRadioGroup value={who} onValueChange={setWho}>
-              {PEOPLE.map((p) => (
-                <MenuRadioItem
-                  key={p.name}
-                  value={p.name}
-                  description={p.role}
-                  leading={<Avatar name={p.name} size="xs" />}
-                >
-                  {p.name}
-                </MenuRadioItem>
-              ))}
-            </MenuRadioGroup>
-          </MenuContent>
-        </Menu>
-        <NotificationBell
-          count={unread}
-          ping={ping}
-          onClick={() => {
-            setUnread(0)
-            toast("Notifications read")
-          }}
-        />
-        <ThemeToggle />
-        <Avatar name={who} size="sm" />
-      </header>
-
-      <main className="mx-auto flex max-w-[60rem] flex-col gap-6 px-5 pt-10 pb-28">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Good morning, {who.split(" ")[0]}</h1>
-        </div>
-        <DayBrief
-          date="28 Oct"
-          lines={[
-            <>
-              <BriefLink onClick={() => setTab("calls")}>2 calls</BriefLink> need a reply today. AiMY has drafted both.
-            </>,
-            <>
-              <BriefLink onClick={() => setTab("contacts")}>{134 - snoozed.length} contacts</BriefLink> can be called,
-              and <BriefLink onClick={() => setTab("customers")}>28 customers</BriefLink> have a renewal this quarter.
-            </>,
-          ]}
-          starts={[
-            {
-              label: "Call the next one",
-              n: 134 - snoozed.length,
-              why: "Amelia Taylor is top of the list",
-              onClick: () => call("Amelia"),
-            },
-            {
-              label: "Reply to the calls",
-              n: 2,
-              why: "both drafts are waiting for you",
-              onClick: () => setTab("calls"),
-            },
-            {
-              label: "Ask AiMY",
-              why: "about anyone on the list; the answer says what it read",
-              onClick: () => openCanvas(["My contacts", "134 contacts"]),
-            },
-          ]}
-        />
-
-        <Tabs value={tab} onValueChange={setTab} size="page">
-          <TabsList aria-label="Views">
-            <Tab value="contacts" count={134}>
-              Contacts
-            </Tab>
-            <Tab value="customers" count={28}>
-              Customers
-            </Tab>
-            <Tab value="calls" count={12}>
-              Calls
-            </Tab>
-          </TabsList>
-
-          <TabPanel value="contacts" className="flex flex-col gap-5">
-            <div className="flex flex-wrap items-center gap-3">
-              <SearchField label="Search contacts" value={q} onValueChange={setQ} className="w-56" />
-              <DatePicker label="Last contact" value={range} onValueChange={setRange} />
-              <Select label="Owner" defaultValue="me">
-                <SelectItem value="me">My contacts</SelectItem>
-                <SelectItem value="team">My team</SelectItem>
-              </Select>
-            </div>
-
-            {!loading && shown.length === 0 ? (
-              <EmptyState
-                icon={<SearchX />}
-                title="No matches"
-                description={`${left} ${left === 1 ? "contact" : "contacts"}, none of them matching "${q}".`}
-                actions={
-                  <Button size="sm" onClick={() => setQ("")}>
-                    Clear the search
-                  </Button>
-                }
+    <>
+      <AppShell
+        topnav={
+          <Topnav
+            logo={<AimyMark variant="lockup" title="AiMY Sales" className="h-7" />}
+            products={PRODUCTS}
+            actions={
+              <>
+                <ThemeToggle />
+                <NotificationCenter
+                  items={notes}
+                  ping={ping}
+                  onMarkAllRead={() => setNotes((n) => n.map((x) => ({ ...x, read: true })))}
+                  onAsk={() => openCanvas(["My contacts", "134 contacts"], "What should I do first today?")}
+                />
+                <UserMenu name={who} role={PEOPLE.find((p) => p.name === who)?.role}>
+                  <MenuLabel>View as</MenuLabel>
+                  <MenuRadioGroup value={who} onValueChange={setWho}>
+                    {PEOPLE.map((p) => (
+                      <MenuRadioItem
+                        key={p.name}
+                        value={p.name}
+                        description={p.role}
+                        leading={<Avatar name={p.name} size="xs" />}
+                      >
+                        {p.name}
+                      </MenuRadioItem>
+                    ))}
+                  </MenuRadioGroup>
+                  <MenuSeparator />
+                  <MenuItem onSelect={() => toast("Signed out")}>Sign out</MenuItem>
+                </UserMenu>
+              </>
+            }
+          />
+        }
+        rail={
+          <Rail
+            foot={
+              <RailLink icon={<Settings aria-hidden="true" />} onClick={() => toast("Opens the console")}>
+                Console
+              </RailLink>
+            }
+          >
+            <RailDoors>
+              <RailDoor
+                cap="Today"
+                clock
+                fig="10:30"
+                who="Dana Whitfield"
+                kind="Demo"
+                go="Open the diary"
+                onClick={() => toast("Opens the diary")}
               />
-            ) : (
-              <Reveal
-                loading={loading}
-                label="Loading contacts"
-                skeleton={
-                  <div className="grid gap-4 column:grid-cols-2">
-                    <SkeletonCard />
-                    <SkeletonCard />
-                  </div>
-                }
-              >
-                <div className="grid gap-4 column:grid-cols-2">
-                  {shown.map((c) => (
-                    <Card key={c.name} status={c.tone === "warn" ? "warn" : undefined}>
-                      <CardHead>
-                        <Tag tone={c.tone}>{c.state}</Tag>
-                        <CardType>Contact</CardType>
-                      </CardHead>
-                      <CardTitle>{c.name}</CardTitle>
-                      <CardSummary>
-                        {c.who}, {c.role.toLowerCase()}
-                      </CardSummary>
-                      <CardFacts>
-                        <p className="flex items-center gap-2">
-                          {c.where}
-                          <Confidence
-                            level={c.tone === "warn" ? "old" : "ok"}
-                            group="Company"
-                            when="2 weeks ago"
-                            source="on LinkedIn"
-                            checkedIn="March 2025"
-                            onCheckAgain={() =>
-                              toast("Company: checked again on LinkedIn", { sub: "Nothing had changed." })
-                            }
-                          />
-                        </p>
-                        <p>{c.last}</p>
-                      </CardFacts>
-                      <CardBody>
-                        <div className="flex gap-2.5 rounded-lg bg-w04 p-3">
-                          <AimyAvatar size="xs" />
-                          <div className="flex flex-col items-start gap-1.5">
-                            <WorkState state={c.tone === "warn" ? "staged" : "drafted"} />
-                            <p className="text-meta text-ink-secondary">{c.note}</p>
-                          </div>
-                        </div>
-                      </CardBody>
-                      <CardFoot>
-                        <Button
-                          variant="brand"
-                          size="sm"
-                          onClick={() => openCanvas([c.name, "Contact"], `Draft the reply to ${c.who.split(" ")[0]}`)}
-                        >
-                          <AimyMark title="" />
-                          Review the draft
-                        </Button>
-                        <Button size="sm" onClick={() => call(c.who.split(" ")[0] ?? c.who)}>
-                          <Phone aria-hidden="true" />
-                          Call {c.who.split(" ")[0]}
-                        </Button>
-                        <Button
-                          variant="text"
-                          onClick={() => {
-                            setSnoozed((s) => [...s, c.name])
-                            toast(`${c.name} snoozed`, {
-                              sub: "Back in your contacts in a week.",
-                              onUndo: () => setSnoozed((s) => s.filter((n) => n !== c.name)),
-                            })
-                          }}
-                        >
-                          Snooze a week
-                        </Button>
-                      </CardFoot>
-                    </Card>
-                  ))}
+              <RailDoor
+                cap="Financials"
+                fig="€182k"
+                of="gained"
+                bar={{ value: 182, target: 300 }}
+                say="€11k behind where you should be today."
+                go="Open the customers"
+                onClick={() => setTab("customers")}
+              />
+            </RailDoors>
+          </Rail>
+        }
+      >
+        <Page>
+          <div className="flex flex-col gap-6">
+            <PageHead title={`Good morning, ${who.split(" ")[0]}`} stamp="Read 09:12" />
+            <DayBrief
+              date="28 Oct"
+              lines={[
+                <>
+                  <BriefLink onClick={() => setTab("calls")}>2 calls</BriefLink> need a reply today. AiMY has drafted
+                  both.
+                </>,
+                <>
+                  <BriefLink onClick={() => setTab("contacts")}>{134 - snoozed.length} contacts</BriefLink> can be
+                  called, and <BriefLink onClick={() => setTab("customers")}>28 customers</BriefLink> have a renewal
+                  this quarter.
+                </>,
+              ]}
+              starts={[
+                {
+                  label: "Call the next one",
+                  n: 134 - snoozed.length,
+                  why: "Amelia Taylor is top of the list",
+                  onClick: () => call("Amelia"),
+                },
+                {
+                  label: "Reply to the calls",
+                  n: 2,
+                  why: "both drafts are waiting for you",
+                  onClick: () => setTab("calls"),
+                },
+                {
+                  label: "Ask AiMY",
+                  why: "about anyone on the list; the answer says what it read",
+                  onClick: () => openCanvas(["My contacts", "134 contacts"]),
+                },
+              ]}
+            />
+
+            <Tabs value={tab} onValueChange={setTab} size="page">
+              <TabsList aria-label="Views">
+                <Tab value="contacts" count={134}>
+                  Contacts
+                </Tab>
+                <Tab value="customers" count={28}>
+                  Customers
+                </Tab>
+                <Tab value="calls" count={12}>
+                  Calls
+                </Tab>
+              </TabsList>
+
+              <TabPanel value="contacts" className="flex flex-col gap-5">
+                <div className="flex flex-wrap items-center gap-3">
+                  <SearchField label="Search contacts" value={q} onValueChange={setQ} className="w-56" />
+                  <DatePicker label="Last contact" value={range} onValueChange={setRange} />
+                  <Select label="Owner" defaultValue="me">
+                    <SelectItem value="me">My contacts</SelectItem>
+                    <SelectItem value="team">My team</SelectItem>
+                  </Select>
                 </div>
-              </Reveal>
-            )}
-            <Pager total={134} page={page} pageSize={15} noun="contacts" onPageChange={setPage} />
-          </TabPanel>
-          <TabPanel value="customers">
-            <Customers />
-          </TabPanel>
-          <TabPanel value="calls" className="flex flex-col gap-6">
-            <Funnel
-              arriving
-              label="Where today's 12 calls got to"
-              head={{ name: "Today", n: "Calls" }}
-              total={12}
-              rows={[
-                { name: "Answered", n: 9, tone: "neutral" },
-                { name: "Talked it through", n: 6, tone: "neutral" },
-                { name: "Meeting set", n: 2, tone: "ok" },
-                { name: "No answer", n: 3, tone: "warn" },
-              ]}
-            />
-            <Activity
-              onOpen={(t) => toast(`Opened ${t.subject}`)}
-              items={[
-                {
-                  id: "1",
-                  subject: "Dana Whitfield",
-                  outcome: "Meeting set",
-                  tone: "ok",
-                  by: who,
-                  when: "10:42",
-                  note: "Tuesday at 3pm, to go through the annual plan.",
-                },
-                {
-                  id: "2",
-                  subject: "Youssef Amin",
-                  outcome: "Moved to Needs reply",
-                  by: "aimy",
-                  when: "09:15",
-                  note: "He asked for a callback after 3pm.",
-                },
-                {
-                  id: "3",
-                  subject: "Priya Natarajan",
-                  outcome: "Missed call",
-                  tone: "warn",
-                  by: who,
-                  when: "Yesterday",
-                  note: "No answer twice.",
-                },
-              ]}
-            />
-          </TabPanel>
-        </Tabs>
-      </main>
+
+                {!loading && shown.length === 0 ? (
+                  <EmptyState
+                    icon={<SearchX />}
+                    title="No matches"
+                    description={`${left} ${left === 1 ? "contact" : "contacts"}, none of them matching "${q}".`}
+                    actions={
+                      <Button size="sm" onClick={() => setQ("")}>
+                        Clear the search
+                      </Button>
+                    }
+                  />
+                ) : (
+                  <Reveal
+                    loading={loading}
+                    label="Loading contacts"
+                    skeleton={
+                      <div className="grid gap-4 column:grid-cols-2">
+                        <SkeletonCard />
+                        <SkeletonCard />
+                      </div>
+                    }
+                  >
+                    <div className="grid gap-4 column:grid-cols-2">
+                      {shown.map((c) => (
+                        <Card key={c.name} status={c.tone === "warn" ? "warn" : undefined}>
+                          <CardHead>
+                            <Tag tone={c.tone}>{c.state}</Tag>
+                            <CardType>Contact</CardType>
+                          </CardHead>
+                          <CardTitle>{c.name}</CardTitle>
+                          <CardSummary>
+                            {c.who}, {c.role.toLowerCase()}
+                          </CardSummary>
+                          <CardFacts>
+                            <p className="flex items-center gap-2">
+                              {c.where}
+                              <Confidence
+                                level={c.tone === "warn" ? "old" : "ok"}
+                                group="Company"
+                                when="2 weeks ago"
+                                source="on LinkedIn"
+                                checkedIn="March 2025"
+                                onCheckAgain={() =>
+                                  toast("Company: checked again on LinkedIn", { sub: "Nothing had changed." })
+                                }
+                              />
+                            </p>
+                            <p>{c.last}</p>
+                          </CardFacts>
+                          <CardBody>
+                            <div className="flex gap-2.5 rounded-lg bg-w04 p-3">
+                              <AimyAvatar size="xs" />
+                              <div className="flex flex-col items-start gap-1.5">
+                                <WorkState state={c.tone === "warn" ? "staged" : "drafted"} />
+                                <p className="text-meta text-ink-secondary">{c.note}</p>
+                              </div>
+                            </div>
+                          </CardBody>
+                          <CardFoot>
+                            <Button
+                              variant="brand"
+                              size="sm"
+                              onClick={() =>
+                                openCanvas([c.name, "Contact"], `Draft the reply to ${c.who.split(" ")[0]}`)
+                              }
+                            >
+                              <AimyMark title="" />
+                              Review the draft
+                            </Button>
+                            <Button size="sm" onClick={() => call(c.who.split(" ")[0] ?? c.who)}>
+                              <Phone aria-hidden="true" />
+                              Call {c.who.split(" ")[0]}
+                            </Button>
+                            <Button
+                              variant="text"
+                              onClick={() => {
+                                setSnoozed((s) => [...s, c.name])
+                                toast(`${c.name} snoozed`, {
+                                  sub: "Back in your contacts in a week.",
+                                  onUndo: () => setSnoozed((s) => s.filter((n) => n !== c.name)),
+                                })
+                              }}
+                            >
+                              Snooze a week
+                            </Button>
+                          </CardFoot>
+                        </Card>
+                      ))}
+                    </div>
+                  </Reveal>
+                )}
+                <Pager total={134} page={page} pageSize={15} noun="contacts" onPageChange={setPage} />
+              </TabPanel>
+              <TabPanel value="customers">
+                <Customers />
+              </TabPanel>
+              <TabPanel value="calls" className="flex flex-col gap-6">
+                <Funnel
+                  arriving
+                  label="Where today's 12 calls got to"
+                  head={{ name: "Today", n: "Calls" }}
+                  total={12}
+                  rows={[
+                    { name: "Answered", n: 9, tone: "neutral" },
+                    { name: "Talked it through", n: 6, tone: "neutral" },
+                    { name: "Meeting set", n: 2, tone: "ok" },
+                    { name: "No answer", n: 3, tone: "warn" },
+                  ]}
+                />
+                <Activity
+                  onOpen={(t) => toast(`Opened ${t.subject}`)}
+                  items={[
+                    {
+                      id: "1",
+                      subject: "Dana Whitfield",
+                      outcome: "Meeting set",
+                      tone: "ok",
+                      by: who,
+                      when: "10:42",
+                      note: "Tuesday at 3pm, to go through the annual plan.",
+                    },
+                    {
+                      id: "2",
+                      subject: "Youssef Amin",
+                      outcome: "Moved to Needs reply",
+                      by: "aimy",
+                      when: "09:15",
+                      note: "He asked for a callback after 3pm.",
+                    },
+                    {
+                      id: "3",
+                      subject: "Priya Natarajan",
+                      outcome: "Missed call",
+                      tone: "warn",
+                      by: who,
+                      when: "Yesterday",
+                      note: "No answer twice.",
+                    },
+                  ]}
+                />
+              </TabPanel>
+            </Tabs>
+          </div>
+        </Page>
+      </AppShell>
       <div className="pointer-events-none fixed inset-x-5 bottom-3.5 z-(--z-float) flex justify-center">
         {/* The dock: a quick answer rises out of the bar; the canvas holds the whole thread. */}
         <div className="pointer-events-auto relative w-full max-w-[47.5rem]">
@@ -419,6 +492,6 @@ export function App() {
       />
       {/* Lifted above the float bar, as both products do. */}
       <Toaster offset="5.5rem" />
-    </div>
+    </>
   )
 }

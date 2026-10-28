@@ -1,3 +1,5 @@
+"use client"
+
 import { Check, Search } from "lucide-react"
 import { DropdownMenu as Primitive } from "radix-ui"
 import { cn } from "@/lib/utils"

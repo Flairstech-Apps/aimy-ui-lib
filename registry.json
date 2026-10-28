@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.13.0"
+        "@flairstech-aimy/tokens@^0.14.0"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.13.0"
+        "@flairstech-aimy/tokens@^0.14.0"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -1909,6 +1909,87 @@
       "files": [
         {
           "path": "registry/aimy/ui/leaderboard.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "app-shell",
+      "type": "registry:component",
+      "title": "AppShell",
+      "description": "The frame every AiMY product sits in: topnav, rail, page. Knowledge's widths on the shell's own width (rail a drawer below 1040, products to a menu below 900); the rail width a setting, 320px by default. useShell gives the rail state. Page and PageHead are Knowledge's page and head.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/app-shell.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "topnav",
+      "type": "registry:component",
+      "title": "Topnav",
+      "description": "The bar: Knowledge's markup with Sales' values. Mark, products in a centred pill strip (current in the accent's ink and bolder; not-yet-open ones shown and named), the right-hand controls. Below 1120 the account drops its name, below 1040 a rail toggle appears, below 900 the strip becomes a chevron menu. UserMenu is the account pill and its menu.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/app-shell",
+        "@aimy/avatar",
+        "@aimy/icon-button",
+        "@aimy/menu"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/topnav.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "rail",
+      "type": "registry:component",
+      "title": "Rail",
+      "description": "Sales' left column of standing facts, Knowledge's drawer below 1040 (scrim, Escape, focus in and back). RailDoors/RailDoor are Sales' doors: a standing fact (the diary today, Financials against target, the year left) and the page it opens, each one button. RailLink is the foot row.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/app-shell"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/rail.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "notification-center",
+      "type": "registry:component",
+      "title": "NotificationCenter",
+      "description": "The bell and Sales' panel: Needs you with the unread count and Mark all read; a row per thing with a severity dot beside its type in words, when, one sentence and one action; a question for AiMY at the foot. Read rows keep their ink (hollow dot, 'read'). Empty says so.",
+      "dependencies": [
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/notification-bell",
+        "@aimy/aimy-mark"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/notification-center.tsx",
           "type": "registry:component"
         }
       ]
