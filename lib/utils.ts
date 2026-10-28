@@ -1,1 +1,1 @@
-export { cn } from "@/registry/aimy/lib/utils"
+export * from "@/registry/aimy/lib/utils"

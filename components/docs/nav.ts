@@ -74,4 +74,17 @@ export const NAV: NavGroup[] = [
       { href: "/components/progress/", label: "Progress" },
     ],
   },
+  {
+    label: "AI: conversation",
+    items: [
+      { href: "/components/composer/", label: "Composer" },
+      { href: "/components/message/", label: "Message" },
+      { href: "/components/streaming-text/", label: "Streaming text" },
+      { href: "/components/thinking/", label: "Thinking" },
+      { href: "/components/response-actions/", label: "Response actions" },
+      { href: "/components/suggestions/", label: "Suggestions" },
+      { href: "/components/reasoning/", label: "Reasoning" },
+      { href: "/components/canvas/", label: "Canvas" },
+    ],
+  },
 ]

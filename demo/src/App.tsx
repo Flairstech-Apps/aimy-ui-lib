@@ -1,53 +1,41 @@
-import { Bell, Phone, SearchX, UserRound } from "lucide-react";
-import { useEffect, useState } from "react";
-import { AimyMark } from "@/components/aimy-mark";
-import { AimyAvatar, Avatar } from "@/components/avatar";
-import { Button } from "@/components/button";
-import {
-  Card,
-  CardBody,
-  CardFacts,
-  CardFoot,
-  CardHead,
-  CardSummary,
-  CardTitle,
-  CardType,
-} from "@/components/card";
-import { CountBadge } from "@/components/count-badge";
-import { type DateRange } from "@/components/calendar";
-import { DatePicker } from "@/components/date-picker";
-import { IconButton } from "@/components/icon-button";
-import {
-  Menu,
-  MenuContent,
-  MenuLabel,
-  MenuRadioGroup,
-  MenuRadioItem,
-  MenuTrigger,
-} from "@/components/menu";
-import { Pager } from "@/components/pager";
-import { SearchField } from "@/components/search-field";
-import { Select, SelectItem } from "@/components/select";
-import { Tab, TabPanel, Tabs, TabsList } from "@/components/tabs";
-import { Tag } from "@/components/tag";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { Tooltip } from "@/components/tooltip";
-import { EmptyState } from "@/components/empty-state";
-import { Reveal, SkeletonCard } from "@/components/skeleton";
-import { toast, Toaster } from "@/components/toast";
+import { Bell, Phone, SearchX, UserRound } from "lucide-react"
+import { useEffect, useState } from "react"
+import { AimyMark } from "@/components/aimy-mark"
+import { AimyAvatar, Avatar } from "@/components/avatar"
+import { Button } from "@/components/button"
+import { Card, CardBody, CardFacts, CardFoot, CardHead, CardSummary, CardTitle, CardType } from "@/components/card"
+import { CountBadge } from "@/components/count-badge"
+import { type DateRange } from "@/components/calendar"
+import { DatePicker } from "@/components/date-picker"
+import { IconButton } from "@/components/icon-button"
+import { Menu, MenuContent, MenuLabel, MenuRadioGroup, MenuRadioItem, MenuTrigger } from "@/components/menu"
+import { Pager } from "@/components/pager"
+import { SearchField } from "@/components/search-field"
+import { Select, SelectItem } from "@/components/select"
+import { Tab, TabPanel, Tabs, TabsList } from "@/components/tabs"
+import { Tag } from "@/components/tag"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { Tooltip } from "@/components/tooltip"
+import { EmptyState } from "@/components/empty-state"
+import { Reveal, SkeletonCard } from "@/components/skeleton"
+import { toast, Toaster } from "@/components/toast"
+import { Composer } from "@/components/composer"
+import type { Basis } from "@/lib/ai-types"
+import { AimyCanvas, useConversation } from "./conversation"
 
 // The demo: a believable AiMY briefing built only from installed registry
-// components. Later batches add the AI parts (the AiMY note, the canvas).
+// components. Ask from the float bar, or review a draft from a card, and the
+// AiMY canvas opens over the briefing, based on what you asked from.
 type Contact = {
-  name: string;
-  who: string;
-  role: string;
-  where: string;
-  tone: "ok" | "warn";
-  state: string;
-  note: string;
-  last: string;
-};
+  name: string
+  who: string
+  role: string
+  where: string
+  tone: "ok" | "warn"
+  state: string
+  note: string
+  last: string
+}
 
 const CONTACTS: Contact[] = [
   {
@@ -70,32 +58,36 @@ const CONTACTS: Contact[] = [
     note: "Youssef asked for a callback after 3pm. AiMY has added it to your day.",
     last: "Missed call this morning",
   },
-];
+]
 
 const PEOPLE = [
   { name: "Engy Hassan", role: "Sales" },
   { name: "Lina Farouk", role: "Sales manager" },
   { name: "Rami Saleh", role: "Chief executive" },
-];
+]
 
 export function App() {
-  const [q, setQ] = useState("");
-  const [range, setRange] = useState<DateRange>();
-  const [who, setWho] = useState("Engy Hassan");
-  const [page, setPage] = useState(1);
-  const [snoozed, setSnoozed] = useState<string[]>([]);
+  const [q, setQ] = useState("")
+  const [range, setRange] = useState<DateRange>()
+  const [who, setWho] = useState("Engy Hassan")
+  const [page, setPage] = useState(1)
+  const [snoozed, setSnoozed] = useState<string[]>([])
   // A first visit shows skeletons while the contacts "load".
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
-    const t = window.setTimeout(() => setLoading(false), 700);
-    return () => window.clearTimeout(t);
-  }, []);
+    const t = window.setTimeout(() => setLoading(false), 700)
+    return () => window.clearTimeout(t)
+  }, [])
   const left = CONTACTS.length - snoozed.length
-  const shown = CONTACTS.filter(
-    (c) =>
-      !snoozed.includes(c.name) &&
-      c.name.toLowerCase().includes(q.toLowerCase()),
-  );
+  const conversation = useConversation()
+  const [canvasOpen, setCanvasOpen] = useState(false)
+  const [basis, setBasis] = useState<Basis>([])
+  const openCanvas = (b: Basis, question?: string) => {
+    setBasis(b)
+    setCanvasOpen(true)
+    if (question) conversation.ask(question)
+  }
+  const shown = CONTACTS.filter((c) => !snoozed.includes(c.name) && c.name.toLowerCase().includes(q.toLowerCase()))
 
   return (
     <div className="min-h-dvh bg-body text-ink">
@@ -137,14 +129,10 @@ export function App() {
         <Avatar name={who} size="sm" />
       </header>
 
-      <main className="mx-auto flex max-w-[60rem] flex-col gap-6 px-5 py-10">
+      <main className="mx-auto flex max-w-[60rem] flex-col gap-6 px-5 pt-10 pb-28">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">
-            Good morning, {who.split(" ")[0]}
-          </h1>
-          <p className="mt-2 text-body text-ink-secondary">
-            Two calls need a reply today. AiMY has drafted both.
-          </p>
+          <h1 className="text-3xl font-semibold tracking-tight">Good morning, {who.split(" ")[0]}</h1>
+          <p className="mt-2 text-body text-ink-secondary">Two calls need a reply today. AiMY has drafted both.</p>
         </div>
 
         <Tabs defaultValue="contacts" size="page">
@@ -162,17 +150,8 @@ export function App() {
 
           <TabPanel value="contacts" className="flex flex-col gap-5">
             <div className="flex flex-wrap items-center gap-3">
-              <SearchField
-                label="Search contacts"
-                value={q}
-                onValueChange={setQ}
-                className="w-56"
-              />
-              <DatePicker
-                label="Last contact"
-                value={range}
-                onValueChange={setRange}
-              />
+              <SearchField label="Search contacts" value={q} onValueChange={setQ} className="w-56" />
+              <DatePicker label="Last contact" value={range} onValueChange={setRange} />
               <Select label="Owner" defaultValue="me">
                 <SelectItem value="me">My contacts</SelectItem>
                 <SelectItem value="team">My team</SelectItem>
@@ -203,10 +182,7 @@ export function App() {
               >
                 <div className="grid gap-4 column:grid-cols-2">
                   {shown.map((c) => (
-                    <Card
-                      key={c.name}
-                      status={c.tone === "warn" ? "warn" : undefined}
-                    >
+                    <Card key={c.name} status={c.tone === "warn" ? "warn" : undefined}>
                       <CardHead>
                         <Tag tone={c.tone}>{c.state}</Tag>
                         <CardType>Contact</CardType>
@@ -222,13 +198,15 @@ export function App() {
                       <CardBody>
                         <div className="flex gap-2.5 rounded-lg bg-w04 p-3">
                           <AimyAvatar size="xs" />
-                          <p className="text-meta text-ink-secondary">
-                            {c.note}
-                          </p>
+                          <p className="text-meta text-ink-secondary">{c.note}</p>
                         </div>
                       </CardBody>
                       <CardFoot>
-                        <Button variant="brand" size="sm">
+                        <Button
+                          variant="brand"
+                          size="sm"
+                          onClick={() => openCanvas([c.name, "Contact"], `Draft the reply to ${c.who.split(" ")[0]}`)}
+                        >
                           <AimyMark title="" />
                           Review the draft
                         </Button>
@@ -246,14 +224,11 @@ export function App() {
                         <Button
                           variant="text"
                           onClick={() => {
-                            setSnoozed((s) => [...s, c.name]);
+                            setSnoozed((s) => [...s, c.name])
                             toast(`${c.name} snoozed`, {
                               sub: "Back in your contacts in a week.",
-                              onUndo: () =>
-                                setSnoozed((s) =>
-                                  s.filter((n) => n !== c.name),
-                                ),
-                            });
+                              onUndo: () => setSnoozed((s) => s.filter((n) => n !== c.name)),
+                            })
                           }}
                         >
                           Snooze a week
@@ -264,13 +239,7 @@ export function App() {
                 </div>
               </Reveal>
             )}
-            <Pager
-              total={134}
-              page={page}
-              pageSize={15}
-              noun="contacts"
-              onPageChange={setPage}
-            />
+            <Pager total={134} page={page} pageSize={15} noun="contacts" onPageChange={setPage} />
           </TabPanel>
           <TabPanel value="customers" className="text-body text-ink-secondary">
             28 customers. Customer cards come next.
@@ -280,7 +249,18 @@ export function App() {
           </TabPanel>
         </Tabs>
       </main>
-      <Toaster />
+      <div className="pointer-events-none fixed inset-x-5 bottom-3.5 z-(--z-float) flex justify-center">
+        <Composer
+          className="pointer-events-auto"
+          onSubmit={(question) => openCanvas(["My contacts", "134 contacts"], question)}
+          generating={conversation.busy}
+          onStop={conversation.stop}
+          badge={3}
+        />
+      </div>
+      <AimyCanvas open={canvasOpen} onOpenChange={setCanvasOpen} basis={basis} me={who} conversation={conversation} />
+      {/* Lifted above the float bar, as both products do. */}
+      <Toaster offset="5.5rem" />
     </div>
-  );
+  )
 }

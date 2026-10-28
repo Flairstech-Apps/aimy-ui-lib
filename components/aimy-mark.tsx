@@ -1,1 +1,1 @@
-export { AimyMark } from "@/registry/aimy/brand/aimy-mark"
+export * from "@/registry/aimy/brand/aimy-mark"

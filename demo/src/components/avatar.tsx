@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { AimyMark } from "@/components/aimy-mark"
 import { cn } from "@/lib/utils"

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { cn } from "@/lib/utils"
+import { cn, cssDuration } from "@/lib/utils"
 
 // Placeholders shaped like what is coming (Sales' skelCard over each card
 // slot, Knowledge's stage skeletons), then a cross-fade to the real thing.
@@ -50,7 +50,7 @@ export function Reveal({ loading, skeleton, label, children, className }: Reveal
   useEffect(() => {
     if (phase !== "revealing") return
     const raf = requestAnimationFrame(() => requestAnimationFrame(() => setLifted(true)))
-    const dur = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--reveal-dur")) || 400
+    const dur = cssDuration("--reveal-dur", 400)
     const t = window.setTimeout(() => {
       setPhase("done")
       setLifted(false)

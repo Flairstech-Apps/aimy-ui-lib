@@ -1,0 +1,363 @@
+/*
+ * AiMY's AI surfaces, as the products draw them: the composer bars, the beam
+ * that rides a composer while AiMY answers, the send button that becomes stop,
+ * suggestion chips, and the canvas glass. Ported from Knowledge's
+ * assets/aimy-ds.css (lines 722-791, 1508-1776, 1851-2056, 4069) with the
+ * values unchanged; Sales draws the same pieces from its own copy. Selectors
+ * keep the products' class names so a reader can find the source.
+ *
+ * Changes from the source, each on purpose:
+ * - Theme selectors read [data-theme="light"] (the library's nested scopes)
+ *   instead of :root[data-theme="light"].
+ * - Suggestion chips use Sales' 14px (--fs-xs) instead of Knowledge's 12px,
+ *   with Sales' message shape (Nour, 28 Oct).
+ * - The canvas textarea grows with its text (field-sizing: content) up to the
+ *   products' 7.5rem cap. Both products set the cap but never grew the box,
+ *   so a second line was cut off.
+ */
+
+/* ── Composer bars ─────────────────────────────────────── */
+.aimy-float-bar,
+.overlay-input-bar { position: relative; isolation: isolate; }
+
+.aimy-float-bar {
+  width: 100%; max-width: 47.5rem;
+  background: #1e2428;
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 40px;
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  display: flex; align-items: center; gap: 0.625rem;
+  padding: 0.5rem;
+  transition: border-color var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out);
+}
+.aimy-float-bar:focus-within {
+  border-color: rgba(var(--accent-rgb),0.55);
+  box-shadow:
+    0 12px 40px rgba(0,0,0,0.6),
+    0 0 0 3px rgba(var(--accent-rgb),0.18),
+    0 0 24px rgba(var(--accent-rgb),0.12),
+    inset 0 1px 0 rgba(255,255,255,0.07);
+  outline: none;
+}
+
+.overlay-input-bar {
+  display: flex; align-items: center; gap: 0.625rem;
+  background: #1e2428; border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 40px; padding: 0.5rem;
+  transition: border-color var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out);
+}
+.overlay-input-bar:focus-within {
+  border-color: rgba(var(--accent-rgb),0.45);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb),0.12);
+}
+
+[data-theme="light"] .aimy-float-bar,
+[data-theme="light"] .overlay-input-bar {
+  background: #fafcfe;
+  border-color: rgba(16,24,40,0.14);
+  box-shadow: 0 8px 32px rgba(16,24,40,0.14), 0 0 0 1px rgba(16,24,40,0.03);
+}
+
+.aimy-float-icon {
+  width: 2.25rem; height: 2.25rem; border-radius: 50%; position: relative;
+  background: linear-gradient(135deg, #3d1f6b 0%, #1a3a6e 50%, #163b5e 100%);
+  border: 1px solid rgba(139,79,244,0.3);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  box-shadow: 0 0 12px rgba(100,60,200,0.25);
+}
+.aimy-float-icon svg { width: 1.125rem; height: 1.25rem; }
+.overlay-input-bar .aimy-float-icon svg { width: 1rem; height: 1.125rem; }
+[data-theme="light"] .aimy-float-icon {
+  background: linear-gradient(135deg, #f2ecff, #e6efff);
+  border-color: rgba(110,70,220,0.28);
+  box-shadow: 0 0 12px rgba(110,70,220,0.15);
+}
+
+.aimy-float-input,
+.overlay-input {
+  flex: 1; min-width: 0; background: none; border: none; outline: none;
+  font-family: var(--font-sans); font-size: 0.84375rem; font-weight: 500;
+  color: var(--d50); caret-color: var(--accent);
+  padding: 0 0.25rem;
+}
+.aimy-float-input { line-height: 1.4; }
+.overlay-input {
+  resize: none; overflow-y: auto;
+  line-height: 1.5; min-height: 1.5rem; max-height: 7.5rem;
+  field-sizing: content;
+}
+.aimy-float-input::placeholder,
+.overlay-input::placeholder { color: var(--d500); font-weight: 400; }
+
+.aimy-float-send,
+.overlay-send {
+  position: relative;
+  width: 2.25rem; height: 2.25rem; border-radius: 50%;
+  background: var(--accent); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: transform var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out);
+  box-shadow: 0 2px 10px rgba(var(--accent-rgb),0.4);
+  color: var(--on-brand);
+}
+.aimy-float-send:hover,
+.overlay-send:hover {
+  box-shadow: 0 4px 18px rgba(var(--accent-rgb),0.55);
+  transform: translateY(-1px);
+}
+.aimy-float-send:active { transform: scale(0.97); }
+.aimy-float-send svg,
+.overlay-send svg { width: 0.875rem; height: 0.875rem; }
+
+/* ── The send button becomes the stop button ──
+   The square comes from the product's ::after rule; here it is the second
+   icon of the transitions.dev icon swap (09), so the change cross-fades. */
+.is-generating .aimy-float-send,
+.is-generating .overlay-send {
+  background: rgba(var(--accent-rgb),0.22);
+  box-shadow: none;
+  transform: none;
+}
+.is-generating .aimy-float-send:hover,
+.is-generating .overlay-send:hover {
+  background: rgba(var(--accent-rgb),0.34);
+  box-shadow: none;
+  transform: none;
+}
+.aimy-stop-square {
+  display: block;
+  width: 0.5625rem; height: 0.5625rem;
+  border-radius: 2px;
+  background: var(--d50);
+}
+[data-theme="light"] .aimy-stop-square { background: var(--d900); }
+
+/* ── The beam: the composer while AiMY is answering ──
+   Seven blobs pinned to the border; a conic mask is the window onto them,
+   and only its angle turns. Verbatim from Knowledge (aimy-ds.css:1851). */
+@property --beam-angle { syntax: "<angle>"; inherits: true; initial-value: 0deg; }
+
+.beam {
+  position: absolute; inset: -1px;
+  border-radius: inherit;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity var(--t-slow) var(--ease-out);
+}
+.is-generating > .beam { opacity: 1; animation: beam-spin 4.2s linear infinite; }
+
+.beam {
+  --beam-blobs:
+    radial-gradient(ellipse 130px 30px at  16%  -8%, rgb(139, 79,244), transparent),
+    radial-gradient(ellipse 104px 26px at  41%  -5%, rgb( 51,105,255), transparent),
+    radial-gradient(ellipse  84px 26px at  87%  -4%, rgb(106, 91,245), transparent),
+    radial-gradient(ellipse  30px 42px at   1%  60%, rgb( 97,173,241), transparent),
+    radial-gradient(ellipse  28px 40px at 100%  32%, rgb( 76,203,224), transparent),
+    radial-gradient(ellipse 168px 28px at  68% 104%, rgb(  0,102,255), transparent),
+    radial-gradient(ellipse  96px 24px at  31% 104%, rgb(111,223,226), transparent);
+}
+
+.beam::before,
+.beam::after,
+.beam > i {
+  content: ""; position: absolute; inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.beam::before {
+  background: var(--beam-blobs);
+  box-shadow: inset 0 0 9px 1px rgba(255,255,255,0.22);
+  opacity: 0.42;
+  -webkit-mask-image:
+    conic-gradient(from var(--beam-angle),
+      transparent 0%, transparent 30%,
+      rgba(255,255,255,0.1) 36%, rgba(255,255,255,0.35) 44%,
+      #fff 52%, #fff 80%,
+      rgba(255,255,255,0.35) 86%, rgba(255,255,255,0.1) 92%,
+      transparent 95%, transparent 100%),
+    linear-gradient(#fff, transparent 14px, transparent calc(100% - 14px), #fff),
+    linear-gradient(to right, #fff, transparent 28px, transparent calc(100% - 28px), #fff);
+  -webkit-mask-composite: source-in, source-over;
+  mask-image:
+    conic-gradient(from var(--beam-angle),
+      transparent 0%, transparent 30%,
+      rgba(255,255,255,0.1) 36%, rgba(255,255,255,0.35) 44%,
+      #fff 52%, #fff 80%,
+      rgba(255,255,255,0.35) 86%, rgba(255,255,255,0.1) 92%,
+      transparent 95%, transparent 100%),
+    linear-gradient(#fff, transparent 14px, transparent calc(100% - 14px), #fff),
+    linear-gradient(to right, #fff, transparent 28px, transparent calc(100% - 28px), #fff);
+  mask-composite: intersect, add;
+  z-index: 1;
+}
+
+.beam::after {
+  padding: 0.0625rem;
+  background:
+    conic-gradient(from var(--beam-angle),
+      transparent 0%, transparent 42%,
+      rgba(255,255,255,0.06) 48%,
+      rgba(255,255,255,0.20) 54%,
+      rgba(255,255,255,0.42) 60%,
+      rgba(255,255,255,0.62) 66%,
+      rgba(255,255,255,0.42) 72%,
+      rgba(255,255,255,0.20) 78%,
+      rgba(255,255,255,0.06) 84%,
+      transparent 90%, transparent 100%),
+    var(--beam-blobs);
+  opacity: 0.26;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  z-index: 2;
+}
+
+.beam > i {
+  padding: 0.0625rem;
+  background: conic-gradient(from var(--beam-angle),
+    transparent 0%, transparent 50%,
+    rgba(255,255,255,0.03) 56%,
+    rgba(255,255,255,0.10) 61%,
+    rgba(255,255,255,0.24) 65%,
+    rgba(255,255,255,0.46) 68%,
+    rgba(255,255,255,0.70) 71%,
+    rgba(255,255,255,0.70) 74%,
+    rgba(255,255,255,0.46) 77%,
+    rgba(255,255,255,0.24) 80%,
+    rgba(255,255,255,0.10) 84%,
+    rgba(255,255,255,0.03) 88%,
+    transparent 94%);
+  opacity: 0.24;
+  filter: blur(8px) brightness(1.3) saturate(1.2);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  z-index: 3;
+}
+
+.is-generating > .beam::before,
+.is-generating > .beam::after { animation: beam-hue 18s ease-in-out infinite; }
+
+[data-theme="light"] .beam {
+  --beam-blobs:
+    radial-gradient(ellipse 130px 30px at  16%  -8%, rgb(109, 40,217), transparent),
+    radial-gradient(ellipse 104px 26px at  41%  -5%, rgb( 29, 78,216), transparent),
+    radial-gradient(ellipse  84px 26px at  87%  -4%, rgb( 76, 50,224), transparent),
+    radial-gradient(ellipse  30px 42px at   1%  60%, rgb( 14,116,180), transparent),
+    radial-gradient(ellipse  28px 40px at 100%  32%, rgb( 13,148,160), transparent),
+    radial-gradient(ellipse 168px 28px at  68% 104%, rgb(  0, 88,200), transparent),
+    radial-gradient(ellipse  96px 24px at  31% 104%, rgb( 16,168,170), transparent);
+}
+[data-theme="light"] .beam::before {
+  opacity: 0.8;
+  box-shadow: inset 0 0 9px 1px rgba(16,24,40,0.10);
+}
+[data-theme="light"] .beam::after { opacity: 0.7; }
+[data-theme="light"] .beam > i   { opacity: 0.4; }
+
+@keyframes beam-spin {
+  to { --beam-angle: 360deg; }
+}
+@keyframes beam-hue {
+  0%, 100% { filter: hue-rotate(-30deg) brightness(1.3) saturate(1.2); }
+  50%      { filter: hue-rotate( 30deg) brightness(1.3) saturate(1.2); }
+}
+
+/* ── Suggestion chips ── */
+.overlay-sugg-chip {
+  font-family: var(--font-sans); font-size: var(--fs-xs); font-weight: 600;
+  padding: 0.4375rem 1rem; border-radius: var(--r-pill);
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  color: var(--d300); cursor: pointer;
+  transition: background-color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+}
+.overlay-sugg-chip:hover {
+  background: rgba(var(--accent-rgb),0.1);
+  border-color: rgba(var(--accent-rgb),0.25);
+  color: var(--accent-text);
+}
+/* The entrance: each chip rises 6px over 500ms, 40ms after the one before
+   (Knowledge's gate-chip-in, on the motion tokens). */
+.overlay-sugg-chip.aimy-sugg-in {
+  transition:
+    background-color var(--t-fast) var(--ease-out),
+    border-color var(--t-fast) var(--ease-out),
+    color var(--t-fast) var(--ease-out),
+    opacity var(--duration-very-slow) var(--ease-smooth-out) calc(var(--i, 0) * var(--duration-stagger)),
+    translate var(--duration-very-slow) var(--ease-smooth-out) calc(var(--i, 0) * var(--duration-stagger));
+}
+@starting-style {
+  .overlay-sugg-chip.aimy-sugg-in { opacity: 0; translate: 0 var(--distance-small); }
+}
+[data-theme="light"] .overlay-sugg-chip {
+  background: rgba(255,255,255,0.60);
+  border-color: rgba(16,24,40,0.14);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* ── The canvas glass ──
+   The doctrine keeps the canvas's backdrop-filter: the work behind stays
+   visible, sunk a stop in dark and lifted in light. Opens with the panel
+   reveal's clocks (07): 400ms in, 350ms out. */
+.aimy-overlay {
+  -webkit-backdrop-filter: blur(28px) saturate(1.4) brightness(0.85);
+  backdrop-filter: blur(28px) saturate(1.4) brightness(0.85);
+  background: rgba(20,27,34,0.30);
+  opacity: 0;
+  transition: opacity var(--t-medium) var(--ease-out);
+}
+.aimy-overlay[data-state="open"] { opacity: 1; transition: opacity var(--t-slow) var(--ease-out); }
+@starting-style { .aimy-overlay[data-state="open"] { opacity: 0; } }
+.aimy-overlay[data-state="closed"] { animation: aimy-overlay-out var(--t-medium) var(--ease-out) forwards; }
+@keyframes aimy-overlay-out { from { opacity: 1; } to { opacity: 0; } }
+[data-theme="light"] .aimy-overlay {
+  background: rgba(255,255,255,0.45);
+  -webkit-backdrop-filter: blur(28px) saturate(1.5) brightness(1.06);
+  backdrop-filter: blur(28px) saturate(1.5) brightness(1.06);
+}
+.overlay-close {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  color: var(--d300);
+  transition: background-color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+}
+.overlay-close:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.18); color: var(--d50); }
+.overlay-context-tag {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+}
+[data-theme="light"] .overlay-close,
+[data-theme="light"] .overlay-context-tag { background: rgba(16,24,40,0.05); border-color: rgba(16,24,40,0.12); }
+[data-theme="light"] .overlay-close:hover { background: rgba(16,24,40,0.1); border-color: rgba(16,24,40,0.2); }
+
+/* ── Thinking states (28) in AiMY ink ──
+   The snippet's greys become the ink ladder: the line holds in secondary ink,
+   never fainter, and the sweep lifts it to primary. */
+:root, [data-theme] {
+  --think-base: var(--ink-secondary);
+  --think-highlight: var(--ink-primary);
+}
+
+/* The thinking line shares a left edge with the think-mark beside it; the
+   snippet centres it (its own notes say to set this when lines should align). */
+[data-slot="thinking"] .t-think { text-align: left; }
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  /* The beam is the answer being produced, so it cannot simply stop: the sweep
+     goes and the colour stays, parked where it lights the long bottom edge. */
+  .is-generating > .beam { animation: none !important; --beam-angle: 168deg; }
+  .is-generating > .beam::before,
+  .is-generating > .beam::after { animation: none !important;
+    filter: brightness(1.3) saturate(1.2); }
+  .aimy-float-send:hover, .overlay-send:hover { transform: none; }
+  .overlay-sugg-chip.aimy-sugg-in { transition-delay: 0s; translate: none; }
+  .aimy-overlay, .aimy-overlay[data-state="open"] { transition: none; }
+  .aimy-overlay[data-state="closed"] { animation-duration: 1ms; }
+}

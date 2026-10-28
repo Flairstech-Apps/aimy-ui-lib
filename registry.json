@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.5.0"
+        "@flairstech-aimy/tokens@^0.6.0"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.5.0"
+        "@flairstech-aimy/tokens@^0.6.0"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -818,6 +818,178 @@
       "files": [
         {
           "path": "registry/aimy/ui/progress.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "ai-types",
+      "type": "registry:lib",
+      "title": "AI data types",
+      "description": "The shapes every AI component reads: Turn (speaker, text, status: thinking, streaming, done, stopped, failed), Person, Basis, Attachment, ReasoningStep, Rating. Map your stream (SignalR, the Vercel AI SDK) to these once.",
+      "files": [
+        {
+          "path": "registry/aimy/lib/ai-types.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "thinking",
+      "type": "registry:component",
+      "title": "ThinkingIndicator and ThinkMark",
+      "description": "AiMY at work before any words: the particle think-mark (the AiMY mark scattering and gathering, ported from the products) and a line saying what it does. Pass one label or several beats to step through; the line shimmers and swaps with transitions.dev thinking states (28). Under reduced motion the mark is drawn once, at rest. Use while a turn's status is thinking; never a spinner.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/thinking.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "streaming-text",
+      "type": "registry:component",
+      "title": "StreamingText",
+      "description": "Text that arrives over time: pass the text so far and streaming. Each new word resolves from a 1px blur, 60ms apart (transitions.dev streaming text, 30); text present at mount shows at once. No caret. Reduced motion shows words as they come.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/streaming-text.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "message",
+      "type": "registry:component",
+      "title": "Message",
+      "description": "One conversation turn in Sales' shape: 28px avatar (AiMY's tile, or the person), a bubble up to 540px with the square corner on the speaker's side. status thinking shows the think-mark instead of a bubble; stopped keeps the text and says Stopped; failed says nothing was lost. `after` holds ResponseActions or follow-up Suggestions, aligned with the bubble. AiMY's turns never show a person's face.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/avatar",
+        "@aimy/thinking",
+        "@aimy/ai-types"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/message.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "response-actions",
+      "type": "registry:component",
+      "title": "ResponseActions",
+      "description": "What a person can do with one answer (Knowledge's .msg-acts): Copy, Retry, the N sources it stands on, and Useful / Not useful (mutually exclusive, toggles). Each says what happened in a toast. Always shown, in secondary ink. Needs <Toaster /> at the root.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/toast",
+        "@aimy/ai-types"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/response-actions.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "suggestions",
+      "type": "registry:component",
+      "title": "Suggestions",
+      "description": "One-click questions: openers centred in an empty conversation, follow-ups under an answer. Write them as the questions a person would ask. Chips rise in 40ms apart.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/suggestions.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "reasoning",
+      "type": "registry:component",
+      "title": "Reasoning",
+      "description": "How AiMY got to an answer, folded under it: 'How this was answered' with steps that say what AiMY did and why (Knowledge's act-log; Sales' 'Why AiMY wrote it this way'). Opens with the accordion (21). Not a 'Thought for Ns' timer: neither product uses one.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/disclosure",
+        "@aimy/ai-types"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/reasoning.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "composer",
+      "type": "registry:component",
+      "title": "Composer",
+      "description": "Where a person asks AiMY. variant float: the single-line bar over the work; canvas: the multi-line bar at the foot of the canvas (Shift+Enter for a new line). Enter sends; nothing empty is sent. generating rides the beam on the border, says Generating…, and turns send into stop (icon swap, 09); onStop keeps what was written. onAttach adds Knowledge's paperclip and file chips.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark",
+        "@aimy/count-badge",
+        "@aimy/ai-types"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/composer.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "canvas",
+      "type": "registry:component",
+      "title": "Canvas",
+      "description": "The AiMY canvas: glass over the page from under the topbar, with 'Based on' (what the conversation is about), a chats column that becomes a drawer below 900px, the thread (a polite live log) and the canvas Composer. Focus goes to the composer; Escape or × closes and returns focus. 400ms in, 350ms out. Keeps the backdrop-filter, as the doctrine requires.",
+      "dependencies": [
+        "lucide-react",
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/sheet",
+        "@aimy/ai-types"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/canvas.tsx",
           "type": "registry:component"
         }
       ]
