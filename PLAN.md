@@ -392,6 +392,7 @@ Each phase ends with a review where you look at screenshots and say yes before t
 **Phase 3: AI components (about 3 to 4 weeks, five batches).** Checkpoint after each batch. Settle the gap list.
 
 **Phase 4: shell and data display (about 2 weeks).** Settle disagreements 6 and 8.
+- *Status 29 Oct: done in four batches (P4-1 figures and records, P4-2 charts, P4-3 the shell, P4-4 the Diary and the meeting in the canvas), packages 0.15.0.*
 
 **Phase 5: adoption.** Finish the starter (Vite and Next.js) so a new AiMY product can start from it, and the demo app as the full reference screen. Publish `1.0.0` of the package. Write the "how to adopt" notes for any React team. Whether the dev team uses the library is their decision; we never change their repo. Feed every design-system fix found along the way back into the design-system repo.
 
