@@ -13,6 +13,7 @@ export default tseslint.config(
       "next-env.d.ts",
       "demo/",
       "starter/",
+      "starter-next/",
       "package/fixtures/",
       "package/*/dist/",
       "package/*/node_modules/",
