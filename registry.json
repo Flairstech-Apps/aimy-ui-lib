@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.14.0"
+        "@flairstech-aimy/tokens@^0.15.0"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.14.0"
+        "@flairstech-aimy/tokens@^0.15.0"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -978,7 +978,7 @@
       "name": "canvas",
       "type": "registry:component",
       "title": "Canvas",
-      "description": "The AiMY canvas: glass over the page from under the topbar, with 'Based on' (what the conversation is about), a chats column that becomes a drawer below 900px, the thread (a polite live log) and the canvas Composer. Focus goes to the composer; Escape or × closes and returns focus. 400ms in, 350ms out. Keeps the backdrop-filter, as the doctrine requires.",
+      "description": "The AiMY canvas: glass over the page from under the topbar, with 'Based on' (what the conversation is about), a chats column that becomes a drawer below 900px, the thread (a polite live log) and the canvas Composer. Focus goes to the composer; Escape or × closes and returns focus. 400ms in, 350ms out. Keeps the backdrop-filter, as the doctrine requires. The meeting slot holds a NoteTaker with layout=\"canvas\" in place of the thread and composer (Knowledge's meeting view).",
       "dependencies": [
         "lucide-react",
         "radix-ui"
@@ -1052,7 +1052,7 @@
       "name": "note-taker",
       "type": "registry:component",
       "title": "NoteTaker and NoteTakerConsent",
-      "description": "AiMY takes notes in a meeting, hearing only you. fold: the Silk orb in the corner (drag it; it settles on the nearer side) with who is speaking and a count. card: Transcription and Notes tabs, End notes, and one bar that asks AiMY or adds a private note. Phases live, ended, writing (three steps tick off), ready (summary, decisions, your to-dos), short, failed (Try again; the transcript is safe). NoteTakerConsent asks on the voice stage first.",
+      "description": "AiMY takes notes in a meeting, hearing only you. fold: the Silk orb in the corner (drag it; it settles on the nearer side) with who is speaking and a count. card: Transcription and Notes tabs, End notes, and one bar that asks AiMY or adds a private note. Phases live, ended, writing (three steps tick off), ready (summary, decisions, your to-dos), short, failed (Try again; the transcript is safe). NoteTakerConsent asks on the voice stage first. layout=\"canvas\" lays the meeting out full height in the AiMY Canvas (Knowledge's canvas view): tabs in the header, Back to the meeting, a 42rem reading column.",
       "dependencies": [
         "lucide-react"
       ],
@@ -1990,6 +1990,25 @@
       "files": [
         {
           "path": "registry/aimy/ui/notification-center.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "diary",
+      "type": "registry:component",
+      "title": "Diary",
+      "description": "Sales' diary: the month (count, Today, the months either side; a Monday-first grid with up to three dots a day by kind, today marked) and the chosen day beside it (hour or all day, kind in words, who, what, who set the time), add one, and the next three. Arrow keys, Home/End and Page Up/Down move through the days. DiaryLoop is Missing details: meetings nobody wrote up.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/diary.tsx",
           "type": "registry:component"
         }
       ]

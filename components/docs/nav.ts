@@ -81,6 +81,7 @@ export const NAV: NavGroup[] = [
       { href: "/components/app-shell/", label: "App shell" },
       { href: "/components/rail-door/", label: "Rail doors" },
       { href: "/components/notification-center/", label: "Notification center" },
+      { href: "/components/diary/", label: "Diary" },
     ],
   },
   {
@@ -166,6 +167,7 @@ export const NAV: NavGroup[] = [
       { href: "/components/orb/", label: "Orb" },
       { href: "/components/voice-mode/", label: "Voice mode" },
       { href: "/components/note-taker/", label: "Note taker" },
+      { href: "/components/note-canvas/", label: "Meeting in the canvas" },
     ],
   },
 ]

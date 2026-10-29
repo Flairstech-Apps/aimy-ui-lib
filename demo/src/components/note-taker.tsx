@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Calendar,
   Check,
@@ -215,6 +217,11 @@ type NoteTakerProps = {
   onOpenCanvas?: () => void
   onOpenDocument?: () => void
   onMakeTasks?: () => void
+  /** "canvas": the meeting laid out full height in the AiMY Canvas (Knowledge's
+   *  canvas view), the reading column 42rem, the tabs in the header. */
+  layout?: "widget" | "canvas"
+  /** Canvas layout: back to the widget beside the page. */
+  onBack?: () => void
 }
 
 export function NoteTaker({
@@ -238,6 +245,8 @@ export function NoteTaker({
   onOpenCanvas,
   onOpenDocument,
   onMakeTasks,
+  layout = "widget",
+  onBack,
 }: NoteTakerProps) {
   const [innerView, setInnerView] = useState<NoteView>(defaultView)
   const v = view ?? innerView
@@ -454,6 +463,141 @@ export function NoteTaker({
     return null
   }
 
+  const tabsEl = (
+    <div className="nt-tabs" role="tablist" aria-label="Meeting notes">
+      {(["chat", "notes"] as const).map((t) => (
+        <button key={t} type="button" role="tab" aria-selected={tab === t} onClick={() => setTab(t)}>
+          {t === "chat" ? "Transcription" : "Notes"}
+        </button>
+      ))}
+      {live ? (
+        <span className="nt-ctl">
+          <button
+            type="button"
+            className="nt-pill nt-end"
+            title="End notes now. Otherwise they end when the meeting’s time on your calendar is up."
+            onClick={onEnd}
+          >
+            <Square className="nt-ic size-[11px]" aria-hidden="true" />
+            End notes
+          </button>
+        </span>
+      ) : null}
+    </div>
+  )
+  const bodyEl = (
+    <div className="nt-body" role="tabpanel">
+      {tab === "chat" ? (
+        <div ref={stream} className="nt-stream" aria-live="polite">
+          {items.map(item)}
+        </div>
+      ) : (
+        <div className="nt-np" data-done={phase === "ready"}>
+          {npState ? <p className="nt-np-state">{npState}</p> : null}
+          {phase === "ready" && summary ? (
+            <div className="nt-np-final">
+              <FinalNotes summary={summary} onOpenDocument={onOpenDocument} onMakeTasks={onMakeTasks} />
+            </div>
+          ) : (
+            <div className="nt-np-live">
+              <p className="nt-np-wait">
+                <Mark size={14} />
+                <span>
+                  AiMY hears only you, so your notes are how the rest of the meeting gets in. Write down what others say
+                  or decide, and AiMY uses it in the summary when the meeting ends.
+                </span>
+              </p>
+            </div>
+          )}
+          <section>
+            <h5>
+              <Pen className="nt-ic size-3.5" aria-hidden="true" />
+              Your notes
+              <Only />
+            </h5>
+            <ul>
+              {mine.length ? (
+                mine.map((m) => (
+                  <li key={m.id}>
+                    {m.text}
+                    <small>{voiceClock(m.at)}</small>
+                  </li>
+                ))
+              ) : (
+                <li className="is-none">Write one in the bar below. Only you see them.</li>
+              )}
+            </ul>
+          </section>
+        </div>
+      )}
+    </div>
+  )
+  const composerEl = (
+    <form
+      className="nt-cz"
+      onSubmit={(e) => {
+        e.preventDefault()
+        send()
+      }}
+    >
+      {live && tab === "chat" ? (
+        <div className="nt-chips">
+          {quickAsks.map((q) => (
+            <button key={q} type="button" className="nt-chip" onClick={() => onSend(q, "chat")}>
+              {q}
+            </button>
+          ))}
+        </div>
+      ) : null}
+      <div className="overlay-input-bar nt-ask-bar">
+        <span className="nt-ask-mark" aria-hidden="true">
+          <Mark size={16} />
+        </span>
+        <input
+          ref={input}
+          className="overlay-input nt-in"
+          value={drafts[tab]}
+          onChange={(e) => setDrafts((d) => ({ ...d, [tab]: e.target.value }))}
+          placeholder={hint}
+          aria-label={hint}
+          autoComplete="off"
+        />
+        <button type="submit" className="overlay-send" aria-label={tab === "notes" ? "Add the note" : "Ask"}>
+          <Send aria-hidden="true" />
+        </button>
+      </div>
+    </form>
+  )
+
+  // Knowledge's canvas view: the same meeting, full height in the canvas.
+  if (layout === "canvas")
+    return (
+      <div data-slot="note-taker" className="nt-cv" data-phase={phase} data-tab={tab}>
+        <div className="nt-cv-h">
+          <span className="nt-orb is-xs">
+            <Orb phase={live ? "listening" : phase === "writing" ? "thinking" : "muted"} level={level} running />
+          </span>
+          <div className="nt-ht">
+            <b>{meeting}</b>
+            <span className="nt-ps">
+              {live ? <span className="nt-rec" aria-hidden="true" /> : null}
+              <span className="nt-st">{STATUS[phase]}</span>
+              {live ? <span className="nt-tm">{voiceClock(seconds)}</span> : null}
+            </span>
+          </div>
+          {tabsEl}
+          {onBack ? (
+            <Button size="sm" className="nt-cv-back" onClick={onBack}>
+              <Minimize2 aria-hidden="true" />
+              Back to the meeting
+            </Button>
+          ) : null}
+        </div>
+        {bodyEl}
+        <div className="nt-cv-cz">{composerEl}</div>
+      </div>
+    )
+
   return (
     <div
       ref={root}
@@ -573,107 +717,9 @@ export function NoteTaker({
           </div>
         </div>
 
-        <div className="nt-tabs" role="tablist" aria-label="Meeting notes">
-          {(["chat", "notes"] as const).map((t) => (
-            <button key={t} type="button" role="tab" aria-selected={tab === t} onClick={() => setTab(t)}>
-              {t === "chat" ? "Transcription" : "Notes"}
-            </button>
-          ))}
-          {live ? (
-            <span className="nt-ctl">
-              <button
-                type="button"
-                className="nt-pill nt-end"
-                title="End notes now. Otherwise they end when the meeting’s time on your calendar is up."
-                onClick={onEnd}
-              >
-                <Square className="nt-ic size-[11px]" aria-hidden="true" />
-                End notes
-              </button>
-            </span>
-          ) : null}
-        </div>
-
-        <div className="nt-body" role="tabpanel">
-          {tab === "chat" ? (
-            <div ref={stream} className="nt-stream" aria-live="polite">
-              {items.map(item)}
-            </div>
-          ) : (
-            <div className="nt-np" data-done={phase === "ready"}>
-              {npState ? <p className="nt-np-state">{npState}</p> : null}
-              {phase === "ready" && summary ? (
-                <div className="nt-np-final">
-                  <FinalNotes summary={summary} onOpenDocument={onOpenDocument} onMakeTasks={onMakeTasks} />
-                </div>
-              ) : (
-                <div className="nt-np-live">
-                  <p className="nt-np-wait">
-                    <Mark size={14} />
-                    <span>
-                      AiMY hears only you, so your notes are how the rest of the meeting gets in. Write down what others
-                      say or decide, and AiMY uses it in the summary when the meeting ends.
-                    </span>
-                  </p>
-                </div>
-              )}
-              <section>
-                <h5>
-                  <Pen className="nt-ic size-3.5" aria-hidden="true" />
-                  Your notes
-                  <Only />
-                </h5>
-                <ul>
-                  {mine.length ? (
-                    mine.map((m) => (
-                      <li key={m.id}>
-                        {m.text}
-                        <small>{voiceClock(m.at)}</small>
-                      </li>
-                    ))
-                  ) : (
-                    <li className="is-none">Write one in the bar below. Only you see them.</li>
-                  )}
-                </ul>
-              </section>
-            </div>
-          )}
-        </div>
-
-        <form
-          className="nt-cz"
-          onSubmit={(e) => {
-            e.preventDefault()
-            send()
-          }}
-        >
-          {live && tab === "chat" ? (
-            <div className="nt-chips">
-              {quickAsks.map((q) => (
-                <button key={q} type="button" className="nt-chip" onClick={() => onSend(q, "chat")}>
-                  {q}
-                </button>
-              ))}
-            </div>
-          ) : null}
-          <div className="overlay-input-bar nt-ask-bar">
-            <span className="nt-ask-mark" aria-hidden="true">
-              <Mark size={16} />
-            </span>
-            <input
-              ref={input}
-              className="overlay-input nt-in"
-              value={drafts[tab]}
-              onChange={(e) => setDrafts((d) => ({ ...d, [tab]: e.target.value }))}
-              placeholder={hint}
-              aria-label={hint}
-              autoComplete="off"
-            />
-            <button type="submit" className="overlay-send" aria-label={tab === "notes" ? "Add the note" : "Ask"}>
-              <Send aria-hidden="true" />
-            </button>
-          </div>
-        </form>
+        {tabsEl}
+        {bodyEl}
+        {composerEl}
       </div>
     </div>
   )

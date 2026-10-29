@@ -1,0 +1,187 @@
+/* AiMY diary (Phase 4, batch P4-4): Sales' diary page (diaryPage, calBody,
+   calRow, calNext and openLoop in bdr.js 9862-10520; .b-cal bdr.css
+   4114-4424, the page form .b-diary 5262-5307, the loop .b-loop 4440-4596).
+
+   Deviations, on purpose:
+   - Muted and faint words are secondary ink.
+   - The month and the day sit side by side on the diary's own width, not the
+     window's (a container query), and stack below 1024px of it.
+   - Sales draws the month as role="grid" with no arrow keys; here the days
+     are a real grid you move through with the arrow keys, Home and End, and
+     Page Up and Page Down for the month.
+   - Sales' type roles map onto the library's scale (--t-ui and --t-small
+     14px, --t-micro 12px, --t-deck 18px, --t-h3 20px). */
+
+.b-diary { container-type: inline-size; }
+.b-cal-panel {
+  padding: 12px 14px 14px; border-radius: var(--r-lg);
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  display: grid; grid-template-columns: minmax(0, 1fr) 21.25rem; align-items: start;
+}
+.b-cal-head {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+  gap: 10px; padding: 2px 2px 12px; margin-bottom: 10px;
+  border-bottom: 1px solid var(--card-border);
+}
+.b-cal-month {
+  display: flex; align-items: center; gap: 10px; margin: 0; min-width: 0;
+  font-size: var(--fs-xl); font-weight: var(--fw-bold); color: var(--d50); letter-spacing: -0.02em;
+}
+.b-cal-count {
+  min-width: 24px; text-align: center; padding: 3px 8px; border-radius: var(--r-pill);
+  font-size: var(--fs-2xs); font-weight: var(--fw-semibold); color: var(--d200);
+  background: var(--card-bg); border: 1px solid var(--card-border); font-variant-numeric: tabular-nums;
+}
+.b-cal-nav { display: flex; align-items: center; gap: 8px; }
+.b-cal-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  width: 32px; height: 32px; flex: none;
+  border-radius: var(--r-pill); cursor: pointer;
+  color: var(--d200); background: none; border: 1px solid var(--card-border);
+  font-family: inherit; font-size: var(--fs-xs); font-weight: var(--fw-semibold);
+  transition: color var(--t-fast), border-color var(--t-fast), background-color var(--t-fast), transform 160ms var(--ease-out);
+}
+.b-cal-btn.is-word { width: auto; padding: 0 14px; }
+.b-cal-btn svg { width: 16px; height: 16px; }
+.b-cal-btn:hover { color: var(--d50); border-color: var(--card-border-hover); }
+.b-cal-btn:active { transform: scale(0.96); }
+.b-cal-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.b-cal-btn-n {
+  min-width: 18px; padding: 1px 6px; border-radius: var(--r-pill);
+  background: var(--err-bg); color: var(--err-text); font-size: var(--fs-2xs); font-weight: var(--fw-bold); font-variant-numeric: tabular-nums;
+}
+.b-cal-mo { min-width: 0; }
+.b-cal-week { display: grid; grid-template-columns: repeat(7, 1fr); padding: 4px 0 8px; }
+.b-cal-wd { text-align: center; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--d200); }
+.b-cal-wd.is-end { color: var(--ink-secondary); }
+.b-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+.b-cal-row { display: contents; }
+.b-cal-day {
+  position: relative; height: 72px; padding: 0; border: 0; background: none; width: 100%;
+  cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 7px; border-radius: var(--r-md); font-family: inherit;
+}
+.b-cal-day:focus { outline: none; }
+.b-cal-bg {
+  position: absolute; inset: 2px 4px; border-radius: var(--r-md);
+  opacity: 0; transform: scale(0.9); background: rgba(var(--accent-rgb), 0.12);
+  transition: opacity 160ms var(--ease-out), transform 200ms var(--ease-out);
+}
+.b-cal-day:hover .b-cal-bg { opacity: 1; transform: none; }
+.b-cal-day[aria-selected="true"] .b-cal-bg,
+.b-cal-day[aria-selected="true"]:hover .b-cal-bg { opacity: 1; transform: none; background: rgba(var(--accent-rgb), 0.22); }
+.b-cal-day:focus-visible .b-cal-bg { opacity: 1; transform: none; box-shadow: inset 0 0 0 2px var(--brand); }
+.b-cal-num { position: relative; font-size: var(--fs-lg); font-weight: var(--fw-medium); color: var(--d100); font-variant-numeric: tabular-nums; }
+.b-cal-day.is-out .b-cal-num { color: var(--ink-secondary); }
+.b-cal-day.is-end .b-cal-num { color: var(--d200); }
+.b-cal-day[aria-selected="true"] .b-cal-num { color: var(--d50); font-weight: var(--fw-bold); }
+.b-cal-day.is-today .b-cal-num::after {
+  content: ""; position: absolute; left: 50%; bottom: -9px; width: 4px; height: 4px;
+  margin-left: -2px; border-radius: var(--r-pill); background: var(--accent);
+}
+.b-cal-day.is-today[aria-selected="true"] .b-cal-num::after { display: none; }
+.b-cal-dots { position: relative; display: flex; gap: 4px; height: 7px; align-items: center; }
+.b-cal-dot { width: 7px; height: 7px; border-radius: var(--r-pill); flex: none; }
+.b-cal-day.is-out .b-cal-dot { opacity: 0.4; }
+/* A dot per kind of thing; the kind is always said in words beside it. */
+.k-meeting { background: var(--accent-label); }
+.k-demo { background: var(--info); }
+.k-dinner { background: var(--warn); }
+.k-held { background: var(--ok); }
+.k-callback { background: var(--cyan); }
+.k-owed { background: var(--d400); }
+
+.b-cal-side { min-width: 0; padding-left: 18px; margin-left: 18px; border-left: 1px solid var(--card-border); }
+.b-cal-cap {
+  margin: 0; padding: 0 8px 8px;
+  font-size: var(--fs-2xs); font-weight: var(--fw-medium); letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink-secondary);
+}
+.b-cal-agenda { display: flex; flex-direction: column; }
+.b-cal-ev {
+  display: flex; flex-direction: column; align-items: stretch; gap: 3px;
+  width: 100%; text-align: left; padding: 9px 8px; border: 0; border-radius: var(--r-md);
+  background: none; cursor: pointer; font-family: inherit; color: inherit;
+  transition: background-color var(--t-fast);
+}
+.b-cal-ev.is-plain { cursor: default; }
+.b-cal-ev:not(.is-plain):hover { background: rgba(var(--accent-rgb), 0.10); }
+.b-cal-ev:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+.b-cal-ev .b-cal-dot { width: 8px; height: 8px; }
+.b-cal-evtop { display: flex; align-items: center; gap: 8px; }
+.b-cal-etime { flex: none; min-width: 3rem; white-space: nowrap; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--d200); font-variant-numeric: tabular-nums; }
+.b-cal-ename { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--d50); }
+.b-cal-ewhat { font-size: var(--fs-xs); font-weight: var(--fw-medium); color: var(--d200); }
+.b-cal-none { margin: 0; padding: 4px 8px 8px; font-size: var(--fs-base); color: var(--d200); }
+.b-cal-add {
+  display: flex; align-items: center; gap: 11px; width: 100%; margin-top: 4px;
+  padding: 9px 8px; border: 0; background: none; border-radius: var(--r-md);
+  cursor: pointer; font-family: inherit; font-size: var(--fs-xs); font-weight: var(--fw-medium); color: var(--d200);
+  transition: background-color var(--t-fast), color var(--t-fast);
+}
+.b-cal-add:hover { background: rgba(var(--accent-rgb), 0.10); color: var(--d50); }
+.b-cal-add:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+.b-cal-plus {
+  display: flex; align-items: center; justify-content: center; flex: none;
+  width: 24px; height: 24px; border-radius: var(--r-pill); border: 1px solid var(--card-border); color: inherit;
+  transition: transform 200ms var(--ease-out), border-color var(--t-fast);
+}
+.b-cal-plus svg { width: 13px; height: 13px; }
+.b-cal-add:hover .b-cal-plus { transform: rotate(90deg); border-color: var(--card-border-hover); }
+.b-cal-next { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--card-border); }
+.b-cal-nrow {
+  display: flex; align-items: center; gap: 9px; width: 100%; text-align: left;
+  padding: 7px 8px; border: 0; border-radius: var(--r-md);
+  background: none; cursor: pointer; font-family: inherit; color: inherit;
+  transition: background-color var(--t-fast);
+}
+.b-cal-nrow:hover { background: rgba(var(--accent-rgb), 0.10); }
+.b-cal-nrow:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+.b-cal-nwhen { flex: none; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--ink-secondary); font-variant-numeric: tabular-nums; }
+.b-cal-nwho { flex: 1; min-width: 0; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--d100); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Rows rise in, 40ms apart. */
+@media (prefers-reduced-motion: no-preference) {
+  .b-cal-ev, .b-cal-nrow, .b-loop-row {
+    animation: b-surface-in 220ms var(--ease-out) both;
+    animation-delay: calc(min(var(--i, 0), 8) * 40ms);
+  }
+}
+@keyframes b-surface-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* The month and the day stack on a narrower diary. */
+@container (max-width: 1023.98px) {
+  .b-cal-panel { grid-template-columns: minmax(0, 1fr); }
+  .b-cal-side { padding-left: 0; margin-left: 0; padding-top: 12px; margin-top: 12px; border-left: 0; border-top: 1px solid var(--card-border); }
+  .b-cal-day { height: 60px; }
+}
+@container (max-width: 559.98px) {
+  .b-cal-day { height: 48px; gap: 5px; }
+  .b-cal-num { font-size: var(--fs-xs); }
+  .b-cal-dot { width: 5px; height: 5px; }
+  .b-cal-wd { font-size: var(--fs-2xs); }
+}
+
+/* ── Missing details: the meetings nobody wrote up (.b-loop) ──────────── */
+.b-loop { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--card-border); }
+.b-loop-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; padding-right: 10px; }
+.b-loop-cap { margin: 0; font-size: var(--fs-2xs); font-weight: var(--fw-medium); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-secondary); }
+.b-loop .b-aimy { max-width: 35rem; margin-bottom: 10px; }
+.b-loop-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px;
+  width: 100%; text-align: left; padding: 9px 10px; border: 0; border-radius: var(--r-md);
+  background: none; cursor: pointer; font-family: inherit; color: inherit;
+  transition: background-color var(--t-fast);
+}
+.b-loop-row:hover { background: rgba(var(--accent-rgb), 0.10); }
+.b-loop-row:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
+.b-loop-when { width: 84px; flex: none; font-size: var(--fs-xs); color: var(--d200); }
+.b-loop-who { flex: 1; min-width: min(180px, 100%); display: flex; flex-direction: column; gap: 2px; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--d50); }
+.b-loop-what { font-size: var(--fs-xs); font-weight: var(--fw-medium); color: var(--d200); }
+.b-loop-go { flex: none; margin-left: auto; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--accent-text); }
+
+@media (prefers-reduced-motion: reduce) {
+  .b-cal-bg, .b-cal-plus, .b-cal-btn { transition: none; }
+  .b-cal-btn:active { transform: none; }
+  .b-cal-add:hover .b-cal-plus { transform: none; }
+}

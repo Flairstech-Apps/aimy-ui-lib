@@ -39,7 +39,10 @@ type CanvasProps = {
   /** The list of earlier chats. */
   chats?: React.ReactNode
   /** Usually <Composer variant="canvas" />. */
-  composer: React.ReactNode
+  composer?: React.ReactNode
+  /** Knowledge's meeting view: a NoteTaker with layout="canvas". It takes the
+   *  canvas in place of the thread, its basis and its composer. */
+  meeting?: React.ReactNode
   /** The accessible name. Sales removed the visible "AiMY Canvas" badge. */
   title?: string
   className?: string
@@ -55,6 +58,7 @@ export function Canvas({
   basis,
   chats,
   composer,
+  meeting,
   title = "AiMY Canvas",
   className,
   children,
@@ -120,35 +124,41 @@ export function Canvas({
               </button>
             </Primitive.Close>
 
-            {hasBasis ? (
-              // In the flow, 66px down as the products place it, so the thread
-              // starts below it even when the tags wrap to a second line.
-              <div className="mx-auto mt-[4.125rem] flex max-w-[calc(100%-8.75rem)] shrink-0 flex-wrap items-center justify-center gap-2">
-                <span className="text-2xs font-medium tracking-wider text-ink-secondary uppercase">Based on</span>
-                {basis.map((b) => (
-                  <span
-                    key={b}
-                    className="overlay-context-tag rounded-pill px-2 py-0.5 text-2xs font-semibold text-ink-secondary"
-                  >
-                    {b}
-                  </span>
-                ))}
-              </div>
-            ) : null}
+            {meeting ? (
+              <div className="flex min-h-0 flex-1 flex-col">{meeting}</div>
+            ) : (
+              <>
+                {hasBasis ? (
+                  // In the flow, 66px down as the products place it, so the thread
+                  // starts below it even when the tags wrap to a second line.
+                  <div className="mx-auto mt-[4.125rem] flex max-w-[calc(100%-8.75rem)] shrink-0 flex-wrap items-center justify-center gap-2">
+                    <span className="text-2xs font-medium tracking-wider text-ink-secondary uppercase">Based on</span>
+                    {basis.map((b) => (
+                      <span
+                        key={b}
+                        className="overlay-context-tag rounded-pill px-2 py-0.5 text-2xs font-semibold text-ink-secondary"
+                      >
+                        {b}
+                      </span>
+                    ))}
+                  </div>
+                ) : null}
 
-            <div
-              role="log"
-              aria-live="polite"
-              aria-label="Conversation"
-              className={cn(
-                "flex flex-1 flex-col gap-4 overflow-y-auto px-[max(1.5rem,calc((100%-42rem)/2))] pb-4",
-                hasBasis ? "pt-4" : "pt-[5rem]"
-              )}
-            >
-              {children}
-            </div>
+                <div
+                  role="log"
+                  aria-live="polite"
+                  aria-label="Conversation"
+                  className={cn(
+                    "flex flex-1 flex-col gap-4 overflow-y-auto px-[max(1.5rem,calc((100%-42rem)/2))] pb-4",
+                    hasBasis ? "pt-4" : "pt-[5rem]"
+                  )}
+                >
+                  {children}
+                </div>
 
-            {composer}
+                {composer}
+              </>
+            )}
           </div>
         </Primitive.Content>
       </Primitive.Portal>

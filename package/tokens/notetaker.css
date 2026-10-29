@@ -292,3 +292,27 @@
 /* The quick questions are about a meeting that is running; once it ends,
    the notes answer them, so they go (the bar still asks). */
 .nt-w:not([data-phase="live"]) .nt-chips { display: none !important; }
+
+/* ── The canvas view: Knowledge's (.nt-cv, notetaker.css 197-222) ──────────
+   The same meeting, full height in the AiMY Canvas: the small orb, the
+   meeting and its status, the tabs and End notes in the header, Back to the
+   meeting on the right; the transcript and the notes in a 42rem column. On a
+   narrow canvas the header wraps and the tabs take a row of their own. */
+.nt-cv { container-type: inline-size; display: flex; flex-direction: column; flex: 1; height: 100%; min-height: 0; width: 100%; }
+.nt-cv-h { gap: 0.75rem; padding: 0.75rem 1.25rem; padding-right: 4.25rem; }
+.nt-cv-h .nt-ht { flex: 0 1 auto; }
+.nt-cv-h .nt-ht b { font-size: var(--fs-base); }
+.nt-cv .nt-tabs { padding: 0; margin: 0 auto; }
+.nt-cv-back { flex: none; }
+.nt-cv .nt-body { flex: 1; min-height: 0; }
+.nt-cv .nt-stream { padding: 1.25rem max(1.25rem, calc((100% - 42rem) / 2)) 0.75rem; }
+.nt-cv .nt-np { padding: 1.5rem max(1.25rem, calc((100% - 42rem) / 2)) 2rem; gap: 1.25rem; }
+.nt-cv-cz { padding: 0 max(1.25rem, calc((100% - 42rem) / 2)) 0.5rem; }
+.nt-cv-cz .nt-cz { padding: 0.5rem 0 0.25rem; }
+@container (max-width: 720px) {
+  .nt-cv-h { padding: 0.625rem 0.75rem; padding-right: 3.75rem; flex-wrap: wrap; }
+  .nt-cv .nt-tabs { order: 5; width: 100%; margin: 0; }
+  .nt-cv .nt-stream { padding: 0.875rem 0.75rem 0.5rem; }
+  .nt-cv .nt-np { padding: 1rem 0.75rem 1.5rem; }
+  .nt-cv-cz { padding: 0 0.75rem 0.5rem; }
+}

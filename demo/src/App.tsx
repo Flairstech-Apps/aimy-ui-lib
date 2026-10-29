@@ -36,6 +36,7 @@ import { useVoiceSession } from "@/hooks/use-voice"
 import type { Basis } from "@/lib/ai-types"
 import { AimyCanvas, useConversation } from "./conversation"
 import { Customers } from "./customers"
+import { DiaryTab } from "./diary-tab"
 
 // The demo: a believable AiMY briefing built only from installed registry
 // components. Ask from the float bar, or review a draft from a card, and the
@@ -215,7 +216,7 @@ export function App() {
                 who="Dana Whitfield"
                 kind="Demo"
                 go="Open the diary"
-                onClick={() => toast("Opens the diary")}
+                onClick={() => setTab("diary")}
               />
               <RailDoor
                 cap="Financials"
@@ -277,6 +278,9 @@ export function App() {
                 </Tab>
                 <Tab value="calls" count={12}>
                   Calls
+                </Tab>
+                <Tab value="diary" count={3}>
+                  Diary
                 </Tab>
               </TabsList>
 
@@ -385,6 +389,9 @@ export function App() {
               </TabPanel>
               <TabPanel value="customers">
                 <Customers />
+              </TabPanel>
+              <TabPanel value="diary">
+                <DiaryTab />
               </TabPanel>
               <TabPanel value="calls" className="flex flex-col gap-6">
                 <Funnel

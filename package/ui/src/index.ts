@@ -173,3 +173,4 @@ export { AppShell, useShell, Page, PageHead } from "../../../registry/aimy/ui/ap
 export { Topnav, UserMenu, type TopnavProduct } from "../../../registry/aimy/ui/topnav"
 export { Rail, RailLink, RailDoors, RailDoor, RailDoorMiss } from "../../../registry/aimy/ui/rail"
 export { NotificationCenter, type NotificationItem } from "../../../registry/aimy/ui/notification-center"
+export { Diary, DiaryLoop, type DiaryEntry, type DiaryKind, type DiaryLoopRow } from "../../../registry/aimy/ui/diary"
