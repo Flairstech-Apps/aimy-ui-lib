@@ -145,7 +145,7 @@ export default function Landing() {
               <Line i={1}>
                 <p className="mt-6 max-w-[34rem] text-lg text-ink-secondary [line-height:var(--lh-base)]">
                   Voice, streamed answers, proposals you accept, agents that show their steps. {COMPONENTS} React
-                  components from AiMY Sales and Knowledge.
+                  components.
                 </p>
               </Line>
               <Line i={2}>
