@@ -164,9 +164,6 @@ export default function Landing() {
                   <CodeBlock what="the install command" wrap>
                     {INIT}
                   </CodeBlock>
-                  <p className="mt-2 text-meta text-ink-secondary">
-                    Adds the theme, the toast with Undo and the rules for AI agents. No sign-in, no token.
-                  </p>
                 </div>
               </Line>
             </Reveal>
