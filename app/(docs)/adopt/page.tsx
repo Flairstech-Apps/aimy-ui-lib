@@ -39,7 +39,7 @@ export default function Adopt() {
         <ol data-ai="li" className="flex max-w-[46rem] list-decimal flex-col gap-2 pl-5 text-body text-ink-secondary">
           <li>
             For the package and the tokens, add the line from{" "}
-            <Link className="text-ink-action underline" href="/">
+            <Link className="text-ink-action underline" href="/start/">
               Install and start
             </Link>{" "}
             to your <Code>.npmrc</Code>.

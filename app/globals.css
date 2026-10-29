@@ -4,3 +4,41 @@
 /* The docs render the library's own source, so Tailwind scans it too. */
 @source "../registry";
 @source "../components";
+
+/* The landing page's entrance: transitions.dev texts reveal (18), verbatim,
+   with the line delay read from --i so any number of lines can stagger. */
+:root {
+  --stagger-dur: 500ms;
+  --stagger-distance: 12px;
+  --stagger-stagger: 40ms;
+  --stagger-blur: 3px;
+  --stagger-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Lines are visible until a script arms the block, so the words never depend on it. */
+.t-stagger-line {
+  display: block;
+  transition:
+    opacity var(--stagger-dur) var(--stagger-ease),
+    transform var(--stagger-dur) var(--stagger-ease),
+    filter var(--stagger-dur) var(--stagger-ease);
+  transition-delay: calc(var(--stagger-stagger) * var(--i, 0));
+  will-change: transform, opacity, filter;
+}
+.t-stagger[data-armed] .t-stagger-line {
+  opacity: 0;
+  transform: translateY(var(--stagger-distance));
+  filter: blur(var(--stagger-blur));
+}
+.t-stagger[data-armed].is-shown .t-stagger-line {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .t-stagger-line {
+    transition: none !important;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
