@@ -34,18 +34,23 @@ export default function Home() {
 
       <Section
         title="Start a new AiMY product"
-        lead="Copies the starter: React, TypeScript, Vite and Tailwind v4 with the theme, fonts and agent rules already installed."
+        lead="Copies the starter: React, TypeScript, Vite and Tailwind v4, already in the AiMY shell, with the theme, fonts and agent rules installed. For Next.js, copy starter-next instead."
       >
         <CodeBlock>npx tiged --mode=git https://github.com/Flairstech-AIMY/aimy-ui-lib/starter my-product</CodeBlock>
+        <div className="mt-3">
+          <CodeBlock>
+            npx tiged --mode=git https://github.com/Flairstech-AIMY/aimy-ui-lib/starter-next my-product
+          </CodeBlock>
+        </div>
       </Section>
 
       <Section
         title="Add AiMY to an existing app (Tailwind v4)"
-        lead="Components are copied into your project, so you own them. Add the registry once, install the theme, then add components by name."
+        lead="Components are copied into your project, so you own them. Add the registry once, then init brings the theme, the toast and the rules for agents; add components by name after that."
       >
         <CodeBlock>{registries}</CodeBlock>
         <div className="mt-3">
-          <CodeBlock>npx shadcn@latest add @aimy/theme @aimy/theme-toggle @aimy/icon @aimy/aimy-mark</CodeBlock>
+          <CodeBlock>npx shadcn@latest add @aimy/init</CodeBlock>
         </div>
       </Section>
 
@@ -56,7 +61,10 @@ export default function Home() {
         <CodeBlock>npm install @flairstech-aimy/ui @flairstech-aimy/tokens</CodeBlock>
       </Section>
 
-      <Section title="Tokens only" lead="Colour, type, spacing and motion as plain CSS variables. Works in any page, React or not.">
+      <Section
+        title="Tokens only"
+        lead="Colour, type, spacing and motion as plain CSS variables. Works in any page, React or not."
+      >
         <CodeBlock>{`@import "@flairstech-aimy/tokens";`}</CodeBlock>
       </Section>
 

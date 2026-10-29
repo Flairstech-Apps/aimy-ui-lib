@@ -4,7 +4,10 @@ export type NavGroup = { label: string; items: NavItem[] }
 export const NAV: NavGroup[] = [
   {
     label: "Start here",
-    items: [{ href: "/", label: "Install and start" }],
+    items: [
+      { href: "/", label: "Install and start" },
+      { href: "/adopt/", label: "How to adopt" },
+    ],
   },
   {
     label: "Foundations",
