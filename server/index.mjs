@@ -16,7 +16,7 @@
 
 import { createServer } from "node:http"
 import { readFile, stat } from "node:fs/promises"
-import { createReadStream } from "node:fs"
+import { createReadStream, readFileSync } from "node:fs"
 import { extname, join, normalize, resolve, sep } from "node:path"
 import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto"
 
@@ -61,14 +61,25 @@ const TYPES = {
 // Small text files that may carry the baked address.
 const TEXT = new Set([".html", ".txt", ".md", ".json"])
 
-if (!TOKEN) console.warn("REGISTRY_TOKEN is not set: every request will be refused.")
+// Without REGISTRY_TOKEN in the environment, the token is checked against its
+// SHA-256 in server/token.sha256, which is safe to commit: the token is random
+// and long, so the hash can't be turned back into it.
+let TOKEN_HASH = ""
+try {
+  TOKEN_HASH = readFileSync(new URL("./token.sha256", import.meta.url), "utf8").trim().toLowerCase()
+} catch {
+  // No hash file: only REGISTRY_TOKEN can open the locks.
+}
+const sha256 = (s) => createHash("sha256").update(s).digest()
+
+if (!TOKEN && !TOKEN_HASH) console.warn("No REGISTRY_TOKEN and no token.sha256: every request will be refused.")
 console.log(SSO ? `Company sign-in on, through ${ISSUER}` : "Company sign-in off: the docs take the token.")
 
 function same(given) {
-  if (!TOKEN) return false
-  const a = Buffer.from(given)
-  const b = Buffer.from(TOKEN)
-  return a.length === b.length && timingSafeEqual(a, b)
+  if (!given) return false
+  if (TOKEN) return timingSafeEqual(sha256(given), sha256(TOKEN))
+  if (/^[0-9a-f]{64}$/.test(TOKEN_HASH)) return timingSafeEqual(sha256(given), Buffer.from(TOKEN_HASH, "hex"))
+  return false
 }
 
 function cookie(req, name) {
