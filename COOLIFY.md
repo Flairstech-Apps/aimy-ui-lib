@@ -16,28 +16,36 @@ None are needed for the token. The server checks it against `server/token.sha256
 
 To replace the token: make a new one, put it in `.env.local`, write its SHA-256 to `server/token.sha256`, run `npx wrangler secret put REGISTRY_TOKEN` for Cloudflare, then commit and push. Coolify picks it up when it redeploys. Never commit the token itself.
 
-For company sign-in (Cognito) to the docs. Leave these out and the docs ask for the token instead:
+Company sign-in (Cognito) to the docs needs no environment variables either. Commit `server/sso.json`; without it the docs ask for the token:
 
-- `OIDC_ISSUER`: for Cognito, `https://cognito-idp.<region>.amazonaws.com/<user pool id>`.
-- `OIDC_CLIENT_ID`: the Cognito app client ID.
-- `OIDC_CLIENT_SECRET`: the Cognito app client secret.
-- `ALLOWED_EMAIL_DOMAINS`: `flairstech.com`, so only company accounts get in.
+```json
+{
+  "issuer": "https://cognito-idp.<region>.amazonaws.com/<user pool id>",
+  "clientId": "<the Cognito app client ID>",
+  "allowedEmailDomains": ["flairstech.com"]
+}
+```
 
-Optional:
+Neither value is a secret. The app client is a public client: it signs in with PKCE and has no client secret.
 
+Optional, in Coolify's environment variables, for whoever has access:
+
+- `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `ALLOWED_EMAIL_DOMAINS`, `OIDC_SCOPES`: override `sso.json`.
+- `OIDC_CLIENT_SECRET`: only if the app client was made with a secret.
+- `SESSION_SECRET`: a long random string that signs the sign-in cookie. Without it, a new key is made on each start, so a redeploy signs people out and Cognito signs them straight back in.
 - `PUBLIC_URL`: the site's address, if links ever come out with the wrong one. Normally the server reads it from the request.
-- `SESSION_SECRET`: a long random string that signs the sign-in cookie. Without it, a key derived from the client secret is used. Changing it signs everyone out.
-- `OIDC_SCOPES`: defaults to `openid email profile`.
 
 ## What the Cognito app client needs
 
 Whoever owns Cognito sets these on the app client:
 
-- Allowed callback URL: `https://<the Coolify address>/auth/callback`.
-- Allowed sign-out URL: `https://<the Coolify address>/auth/signed-out`.
+- Client type: public client, no client secret ("Single-page application" in the Cognito console).
+- Allowed callback URL: `https://aimy-ui-lib.aimy.flairstech.com/auth/callback`.
+- Allowed sign-out URL: `https://aimy-ui-lib.aimy.flairstech.com/auth/signed-out`.
 - OAuth grant type: authorization code. Scopes: `openid`, `email`, `profile`.
-- A client secret (a confidential client).
 - The company identity provider (Microsoft) enabled on it, if Cognito signs people in through Microsoft.
+
+Then they send the user pool ID with its region, and the app client ID.
 
 ## When Coolify is live: make it the home
 

@@ -5,10 +5,12 @@
 // - Everything else (the docs) needs the same token once, entered on /login,
 //   which sets an HttpOnly cookie, or sent as the same Bearer header.
 //
-// Company sign-in: set OIDC_ISSUER, OIDC_CLIENT_ID and OIDC_CLIENT_SECRET (for
-// Cognito the issuer is https://cognito-idp.<region>.amazonaws.com/<pool id>)
+// Company sign-in: fill in server/sso.json (issuer and client ID, neither is a
+// secret; for Cognito the issuer is https://cognito-idp.<region>.amazonaws.com/<pool id>)
 // and people sign in to the docs with their company account instead of the
-// token. /r and /npm keep the Bearer token, because a terminal can't sign in.
+// token. A public app client with PKCE needs no secret; OIDC_CLIENT_SECRET in
+// the environment is used if the app client has one. OIDC_* variables override
+// the file. /r and /npm keep the Bearer token, because a terminal can't sign in.
 //
 // The build bakes the Cloudflare address into a few files (npm tarball URLs,
 // the registry index, the install commands on the docs). They are rewritten to
@@ -27,21 +29,29 @@ const BAKED = "https://aimy-ui-lib.aimy.flairstech.com"
 const COOKIE = "aimy_ui"
 const YEAR = 60 * 60 * 24 * 365
 
-const ISSUER = (process.env.OIDC_ISSUER ?? "").replace(/\/$/, "")
-const CLIENT_ID = process.env.OIDC_CLIENT_ID ?? ""
+let ssoFile = {}
+try {
+  ssoFile = JSON.parse(readFileSync(new URL("./sso.json", import.meta.url), "utf8"))
+} catch {
+  // No sso.json: company sign-in comes from the environment or stays off.
+}
+const ISSUER = (process.env.OIDC_ISSUER || ssoFile.issuer || "").replace(/\/$/, "")
+const CLIENT_ID = process.env.OIDC_CLIENT_ID || ssoFile.clientId || ""
 const CLIENT_SECRET = process.env.OIDC_CLIENT_SECRET ?? ""
-const SCOPES = process.env.OIDC_SCOPES ?? "openid email profile"
+const SCOPES = process.env.OIDC_SCOPES || ssoFile.scopes || "openid email profile"
 // Optional: only these email domains get in, e.g. "flairstech.com".
-const DOMAINS = (process.env.ALLOWED_EMAIL_DOMAINS ?? "")
+const DOMAINS = String(process.env.ALLOWED_EMAIL_DOMAINS || (ssoFile.allowedEmailDomains ?? []).join(","))
   .split(",")
   .map((d) => d.trim().toLowerCase())
   .filter(Boolean)
-const SSO = Boolean(ISSUER && CLIENT_ID && CLIENT_SECRET)
+const SSO = Boolean(ISSUER && CLIENT_ID)
 const SESSION = "aimy_sso"
 const PENDING = "aimy_sso_pending"
 const SESSION_AGE = 60 * 60 * 12
+// Signs the sign-in cookies. Without a secret, a fresh key each start: a
+// redeploy signs people out, and the company sign-in lets them straight back in.
 const KEY = createHash("sha256")
-  .update("aimy-ui-session:" + (process.env.SESSION_SECRET || CLIENT_SECRET))
+  .update("aimy-ui-session:" + (process.env.SESSION_SECRET || CLIENT_SECRET || randomBytes(32).toString("hex")))
   .digest()
 
 const TYPES = {
@@ -66,7 +76,9 @@ const TEXT = new Set([".html", ".txt", ".md", ".json"])
 // and long, so the hash can't be turned back into it.
 let TOKEN_HASH = ""
 try {
-  TOKEN_HASH = readFileSync(new URL("./token.sha256", import.meta.url), "utf8").trim().toLowerCase()
+  TOKEN_HASH = readFileSync(new URL("./token.sha256", import.meta.url), "utf8")
+    .trim()
+    .toLowerCase()
 } catch {
   // No hash file: only REGISTRY_TOKEN can open the locks.
 }
@@ -251,7 +263,10 @@ async function callback(req, res, url) {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      Authorization: `Basic ${Buffer.from(`${encodeURIComponent(CLIENT_ID)}:${encodeURIComponent(CLIENT_SECRET)}`).toString("base64")}`,
+      // A public client proves itself with the PKCE verifier alone.
+      ...(CLIENT_SECRET && {
+        Authorization: `Basic ${Buffer.from(`${encodeURIComponent(CLIENT_ID)}:${encodeURIComponent(CLIENT_SECRET)}`).toString("base64")}`,
+      }),
     },
     body: new URLSearchParams({
       grant_type: "authorization_code",
