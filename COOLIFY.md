@@ -39,6 +39,16 @@ Whoever owns Cognito sets these on the app client:
 - A client secret (a confidential client).
 - The company identity provider (Microsoft) enabled on it, if Cognito signs people in through Microsoft.
 
+## When Coolify is live: make it the home
+
+Until then, every install command, the How to adopt page, the agent rules and the starters name the Cloudflare address. One switch moves them all, with the repo the starters are copied from:
+
+```bash
+node scripts/set-address.mjs https://<the Coolify address> --repo Flairstech-Apps/aimy-ui-lib
+```
+
+Then `pnpm check`, commit and push. Coolify rebuilds from `main`, and the docs lead to Coolify for installing and adopting. Run it with `--dry-run` first to see the 24 files it touches. `site.json` remembers the current address, so the switch can be run again later. Keep Cloudflare running until every app's `.npmrc` and `components.json` name the new address. Packages already installed keep working, because the lockfile records where each one came from.
+
 ## How it behaves
 
 - The docs: people sign in with their company account and stay signed in for 12 hours. `/auth/logout` signs them out. Agents can still read the docs with the token as a Bearer header.
