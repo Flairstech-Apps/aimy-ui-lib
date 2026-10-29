@@ -7,12 +7,12 @@
   "scripts": {
     "dev": "next dev",
     "registry:build": "node -e \"require('fs').rmSync('public/r',{recursive:true,force:true})\" && shadcn build --output public/r",
-    "build": "pnpm registry:build && node scripts/npm-registry.mjs build && next build",
+    "build": "pnpm registry:build && node scripts/agent-files.mjs && node scripts/npm-registry.mjs build && next build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint:doctrine": "node scripts/doctrine-lint.mjs",
     "test": "vitest run",
-    "check": "pnpm typecheck && pnpm lint && pnpm lint:doctrine && pnpm test",
+    "check": "pnpm typecheck && pnpm lint && pnpm lint:doctrine && node scripts/agent-files.mjs --check && pnpm test",
     "deploy": "pnpm build && wrangler deploy",
     "npm:publish": "node scripts/npm-registry.mjs publish"
   },

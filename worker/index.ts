@@ -4,7 +4,8 @@
 // - /r/* (registry JSON, fetched by the shadcn CLI) and /npm/* (our npm
 //   registry, fetched by npm and pnpm) need "Authorization: Bearer <REGISTRY_TOKEN>".
 // - Everything else (the docs) needs the same token once, entered on /login,
-//   which sets an HttpOnly cookie. Cloudflare Access can replace this later.
+//   which sets an HttpOnly cookie, or sent as the same Bearer header (how an
+//   agent reads /llms.txt and /AGENTS.md). Cloudflare Access can replace this later.
 
 interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> }
@@ -63,7 +64,10 @@ function loginPage(error: boolean, next: string): Response {
 // scripts/npm-registry.mjs writes into public/npm/.
 async function npm(request: Request, url: URL, env: Env): Promise<Response> {
   if (request.method !== "GET" && request.method !== "HEAD") {
-    return Response.json({ error: "This registry is read-only. Publish with scripts/npm-registry.mjs." }, { status: 405 })
+    return Response.json(
+      { error: "This registry is read-only. Publish with scripts/npm-registry.mjs." },
+      { status: 405 }
+    )
   }
   const rest = decodeURIComponent(url.pathname.slice("/npm/".length))
   const meta = /^(@[a-z0-9-]+\/[a-z0-9._-]+)\/?$/.exec(rest)
@@ -118,7 +122,10 @@ export default {
       return loginPage(false, url.searchParams.get("next") ?? "/")
     }
 
-    if (!token || !same(cookie(request, COOKIE), token)) {
+    // People sign in once and carry a cookie; agents reading /llms.txt,
+    // /AGENTS.md or a page send the same token as a Bearer header instead.
+    const bearer = (request.headers.get("Authorization") ?? "").replace(/^Bearer /, "")
+    if (!token || !(same(cookie(request, COOKIE), token) || same(bearer, token))) {
       return Response.redirect(`${url.origin}/login?next=${encodeURIComponent(url.pathname + url.search)}`, 302)
     }
     return env.ASSETS.fetch(request)

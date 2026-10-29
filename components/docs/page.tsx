@@ -1,11 +1,19 @@
 import { Check, X } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { CopyForAi } from "./copy-for-ai"
 
 export function PageHeader({ title, lead }: { title: string; lead: string }) {
   return (
     <header className="max-w-[46rem]">
-      <h1 className="text-3xl font-semibold tracking-tight text-ink">{title}</h1>
-      <p className="mt-3 text-body text-ink-secondary">{lead}</p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 data-ai="h1" className="text-3xl font-semibold tracking-tight text-ink">
+          {title}
+        </h1>
+        <CopyForAi />
+      </div>
+      <p data-ai="p" className="mt-3 text-body text-ink-secondary">
+        {lead}
+      </p>
     </header>
   )
 }
@@ -13,8 +21,14 @@ export function PageHeader({ title, lead }: { title: string; lead: string }) {
 export function Section({ title, children, lead }: { title: string; lead?: string; children: React.ReactNode }) {
   return (
     <section className="mt-12">
-      <h2 className="text-xl font-semibold text-ink">{title}</h2>
-      {lead ? <p className="mt-2 max-w-[46rem] text-body text-ink-secondary">{lead}</p> : null}
+      <h2 data-ai="h2" className="text-xl font-semibold text-ink">
+        {title}
+      </h2>
+      {lead ? (
+        <p data-ai="p" className="mt-2 max-w-[46rem] text-body text-ink-secondary">
+          {lead}
+        </p>
+      ) : null}
       <div className="mt-5">{children}</div>
     </section>
   )
@@ -24,14 +38,14 @@ export function Section({ title, children, lead }: { title: string; lead?: strin
 export function DoDont({ doText, dontText }: { doText: string; dontText: string }) {
   return (
     <div className="grid gap-3 column:grid-cols-2">
-      <p className="flex gap-3 rounded-lg bg-ok-bg p-4 text-meta text-ink">
+      <p data-ai="li" className="flex gap-3 rounded-lg bg-ok-bg p-4 text-meta text-ink">
         <Check className="mt-0.5 size-4 shrink-0 text-ok-text" strokeWidth={2} aria-hidden="true" />
         <span>
           <strong className="font-semibold text-ok-text">Do: </strong>
           {doText}
         </span>
       </p>
-      <p className="flex gap-3 rounded-lg bg-err-bg p-4 text-meta text-ink">
+      <p data-ai="li" className="flex gap-3 rounded-lg bg-err-bg p-4 text-meta text-ink">
         <X className="mt-0.5 size-4 shrink-0 text-err-text" strokeWidth={2} aria-hidden="true" />
         <span>
           <strong className="font-semibold text-err-text">Don&apos;t: </strong>
@@ -44,13 +58,18 @@ export function DoDont({ doText, dontText }: { doText: string; dontText: string 
 
 export function Code({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <code className={cn("rounded-xs bg-w07 px-1.5 py-0.5 font-mono text-[0.875em] text-ink", className)}>{children}</code>
+    <code className={cn("rounded-xs bg-w07 px-1.5 py-0.5 font-mono text-[0.875em] text-ink", className)}>
+      {children}
+    </code>
   )
 }
 
 export function CodeBlock({ children }: { children: string }) {
   return (
-    <pre className="overflow-x-auto rounded-lg border border-hairline bg-code p-4 font-mono text-xs leading-relaxed text-[var(--syn-base)]">
+    <pre
+      data-ai="code"
+      className="overflow-x-auto rounded-lg border border-hairline bg-code p-4 font-mono text-xs leading-relaxed text-[var(--syn-base)]"
+    >
       {children}
     </pre>
   )
