@@ -11,7 +11,7 @@
     "aimy:add": "shadcn add"
   },
   "dependencies": {
-    "@flairstech-aimy/tokens": "^0.16.2",
+    "@flairstech-aimy/tokens": "^1.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.62.0",
