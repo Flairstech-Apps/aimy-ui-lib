@@ -15,7 +15,7 @@ import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs"
 import path from "node:path"
 
 const ROOT = path.resolve(import.meta.dirname, "..")
-const SITE = "https://aimy-ui-lib.nour-ali.workers.dev"
+const SITE = "https://aimy-ui-lib.aimy.flairstech.com"
 const read = (p) => readFileSync(path.join(ROOT, p), "utf8")
 
 const registry = JSON.parse(read("registry.json"))

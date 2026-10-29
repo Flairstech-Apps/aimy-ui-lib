@@ -23,7 +23,7 @@ import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypt
 const ROOT = resolve(process.env.OUT_DIR ?? "out")
 const TOKEN = process.env.REGISTRY_TOKEN ?? ""
 const PORT = Number(process.env.PORT ?? 3000)
-const BAKED = "https://aimy-ui-lib.nour-ali.workers.dev"
+const BAKED = "https://aimy-ui-lib.aimy.flairstech.com"
 const COOKIE = "aimy_ui"
 const YEAR = 60 * 60 * 24 * 365
 

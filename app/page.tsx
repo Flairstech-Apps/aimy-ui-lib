@@ -1,13 +1,13 @@
 import Link from "next/link"
 import { Code, CodeBlock, PageHeader, Section } from "@/components/docs/page"
 
-const npmrc = `@flairstech-aimy:registry=https://aimy-ui-lib.nour-ali.workers.dev/npm/
-//aimy-ui-lib.nour-ali.workers.dev/npm/:_authToken=\${AIMY_REGISTRY_TOKEN}`
+const npmrc = `@flairstech-aimy:registry=https://aimy-ui-lib.aimy.flairstech.com/npm/
+//aimy-ui-lib.aimy.flairstech.com/npm/:_authToken=\${AIMY_REGISTRY_TOKEN}`
 
 const registries = `{
   "registries": {
     "@aimy": {
-      "url": "https://aimy-ui-lib.nour-ali.workers.dev/r/{name}.json",
+      "url": "https://aimy-ui-lib.aimy.flairstech.com/r/{name}.json",
       "headers": { "Authorization": "Bearer \${AIMY_REGISTRY_TOKEN}" }
     }
   }
@@ -36,10 +36,10 @@ export default function Home() {
         title="Start a new AiMY product"
         lead="Copies the starter: React, TypeScript, Vite and Tailwind v4, already in the AiMY shell, with the theme, fonts and agent rules installed. For Next.js, copy starter-next instead."
       >
-        <CodeBlock>npx tiged --mode=git https://github.com/Flairstech-AIMY/aimy-ui-lib/starter my-product</CodeBlock>
+        <CodeBlock>npx tiged --mode=git https://github.com/Flairstech-Apps/aimy-ui-lib/starter my-product</CodeBlock>
         <div className="mt-3">
           <CodeBlock>
-            npx tiged --mode=git https://github.com/Flairstech-AIMY/aimy-ui-lib/starter-next my-product
+            npx tiged --mode=git https://github.com/Flairstech-Apps/aimy-ui-lib/starter-next my-product
           </CodeBlock>
         </div>
       </Section>

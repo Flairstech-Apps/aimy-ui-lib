@@ -21,7 +21,7 @@ import { gunzipSync } from "node:zlib"
 const ROOT = path.resolve(import.meta.dirname, "..")
 const STORE = path.join(ROOT, "npm-store")
 const OUT = path.join(ROOT, "public", "npm")
-const ORIGIN = "https://aimy-ui-lib.nour-ali.workers.dev"
+const ORIGIN = "https://aimy-ui-lib.aimy.flairstech.com"
 const SCOPE = "@flairstech-aimy"
 
 function fail(message) {

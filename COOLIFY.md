@@ -12,9 +12,9 @@ Coolify builds the repo's `Dockerfile` and runs `server/index.mjs`. It serves th
 
 ## Environment variables
 
-Always:
+None are needed for the token. The server checks it against `server/token.sha256`, the token's SHA-256, which is committed (the token is 32 random characters, so the hash can't be turned back into it). Setting `REGISTRY_TOKEN` in Coolify overrides the file.
 
-- `REGISTRY_TOKEN`: the library token, the same value as `AIMY_REGISTRY_TOKEN` in `.env.local`. The shadcn CLI, npm and pnpm send it to `/r` and `/npm`.
+To replace the token: make a new one, put it in `.env.local`, write its SHA-256 to `server/token.sha256`, run `npx wrangler secret put REGISTRY_TOKEN` for Cloudflare, then commit and push. Coolify picks it up when it redeploys. Never commit the token itself.
 
 For company sign-in (Cognito) to the docs. Leave these out and the docs ask for the token instead:
 

@@ -2,7 +2,7 @@
 
 AiMY UI is the component library for AiMY products at FlairsTech. Every component documents what AiMY Sales and AiMY Knowledge already draw; nothing in it is a new design. Build screens from it. If a screen needs something the library does not have, say so and stop; do not invent a component.
 
-Docs, with every component's preview, rules and source notes: https://aimy-ui-lib.nour-ali.workers.dev (sign in with the library token). A plain index for agents is at `/llms.txt` on the same site.
+Docs, with every component's preview, rules and source notes: https://aimy-ui-lib.aimy.flairstech.com (sign in with the library token). A plain index for agents is at `/llms.txt` on the same site.
 
 ## Installing
 

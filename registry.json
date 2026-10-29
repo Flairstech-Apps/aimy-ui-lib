@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "aimy",
-  "homepage": "https://aimy-ui-lib.nour-ali.workers.dev",
+  "homepage": "https://aimy-ui-lib.aimy.flairstech.com",
   "items": [
     {
       "name": "theme",

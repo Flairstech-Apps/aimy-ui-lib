@@ -20,7 +20,7 @@
   },
   "registries": {
     "@aimy": {
-      "url": "https://aimy-ui-lib.nour-ali.workers.dev/r/{name}.json",
+      "url": "https://aimy-ui-lib.aimy.flairstech.com/r/{name}.json",
       "headers": { "Authorization": "Bearer ${AIMY_REGISTRY_TOKEN}" }
     }
   }

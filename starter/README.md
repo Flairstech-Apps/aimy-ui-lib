@@ -31,4 +31,4 @@ Started from the AiMY UI starter: React, TypeScript, Vite and Tailwind v4, alrea
 pnpm aimy:add @aimy/<name>
 ```
 
-The full list, with previews, rules and where each comes from in Sales and Knowledge, is on the AiMY UI docs site: https://aimy-ui-lib.nour-ali.workers.dev. Every page has "Copy for AI".
+The full list, with previews, rules and where each comes from in Sales and Knowledge, is on the AiMY UI docs site: https://aimy-ui-lib.aimy.flairstech.com. Every page has "Copy for AI".

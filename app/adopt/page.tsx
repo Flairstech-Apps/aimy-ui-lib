@@ -58,7 +58,7 @@ export default function Adopt() {
         title="Starting a new AiMY product"
         lead="Start from a starter: the AiMY shell, a briefing, the canvas and toast with undo are already wired."
       >
-        <CodeBlock>npx tiged --mode=git https://github.com/Flairstech-AIMY/aimy-ui-lib/starter my-product</CodeBlock>
+        <CodeBlock>npx tiged --mode=git https://github.com/Flairstech-Apps/aimy-ui-lib/starter my-product</CodeBlock>
         <p data-ai="p" className="mt-3 max-w-[46rem] text-body text-ink-secondary">
           That is Vite. For Next.js (App Router), copy <Code>starter-next</Code> the same way. Both use your own GitHub
           login for the private repo. Then rename the product and the person at the top of the screen file, and replace{" "}

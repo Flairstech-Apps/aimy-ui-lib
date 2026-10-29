@@ -18,6 +18,6 @@ This repo is the library itself. The rules for building AiMY products with it ar
 ## Shipping
 
 - Bump `package/tokens` and `package/ui` together, publish both (`node scripts/npm-registry.mjs publish tokens|ui`, with `AIMY_REGISTRY_TOKEN` exported), then `pnpm run deploy`. The npm store is append-only: a fix after publishing is a new patch version.
-- Two hosts serve the same build behind the same locks: Cloudflare (`worker/index.ts`, `pnpm run deploy`) and Coolify (`Dockerfile` + `server/index.mjs`, deployed by pushing `main`, set up as in `COOLIFY.md`). A lock change goes into both files. Only the Coolify server has company sign-in (OIDC, for Cognito).
+- Two hosts serve the same build behind the same locks: Cloudflare (`worker/index.ts`, `pnpm run deploy`) and Coolify (`Dockerfile` + `server/index.mjs`, deployed by pushing `main`, set up as in `COOLIFY.md`). A lock change goes into both files. Only the Coolify server has company sign-in (OIDC, for Cognito). Coolify checks the token against `server/token.sha256`; a new token means a new hash there and a new Cloudflare secret.
 - The token lives in `.env.local`, which is ignored. Never commit it; check every commit with `git diff --cached | grep -F "$AIMY_REGISTRY_TOKEN"`.
 - Never edit, branch or open pull requests on the product repos or the dev team's `aimy-knowledge-ui`. Try changes in `demo/`, then copy into `starter/`.
