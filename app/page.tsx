@@ -2,7 +2,7 @@ import { ArrowRight, Menu } from "lucide-react"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { CodeBlock, ThemePair } from "@/components/docs/page"
-import { HeroStack, LiveProposal, Ways } from "@/components/landing/live"
+import { AgentLoop, ConversationCard, GroundedCard, LiveProposal, VoicePanel, Ways } from "@/components/landing/live"
 import { Line, Reveal } from "@/components/landing/reveal"
 import ui from "@/package/ui/package.json"
 import registry from "@/registry.json"
@@ -11,9 +11,10 @@ import { Button } from "@/registry/aimy/ui/button"
 import { StatTile, StatTiles } from "@/registry/aimy/ui/stat-tile"
 import { ThemeToggle } from "@/registry/aimy/ui/theme-toggle"
 
-export const metadata: Metadata = { title: { absolute: "AiMY UI: build AiMY screens from the real parts" } }
+export const metadata: Metadata = { title: { absolute: "AiMY UI: the AI-native interface kit for AiMY products" } }
 
 const COMPONENTS = registry.items.filter((i) => i.type === "registry:component").length
+const INIT = "npx shadcn@latest add https://aimy-ui-lib.aimy.flairstech.com/r/init.json"
 
 const LINKS = [
   { href: "/start/", label: "Docs" },
@@ -81,43 +82,96 @@ function Heading({ title, lead, center = false }: { title: string; lead: string;
   )
 }
 
+/** One cell of the AI bento: what it is, the live part, and where its page is. */
+function Moment({
+  title,
+  words,
+  href,
+  link,
+  i,
+  className,
+  children,
+}: {
+  title: string
+  words: string
+  href: string
+  link: string
+  i: number
+  className?: string
+  children: React.ReactNode
+}) {
+  return (
+    <Line i={i} className={className}>
+      <article className="flex h-full flex-col gap-5 rounded-2xl border border-hairline bg-card p-6">
+        <div className="flex-1">{children}</div>
+        <div className="border-t border-hairline pt-4">
+          <h3 className="text-body font-semibold text-ink">{title}</h3>
+          <p className="mt-1 text-meta text-ink-secondary">{words}</p>
+          <Link
+            href={href}
+            className="group mt-3 inline-flex items-center gap-1.5 rounded-sm text-meta font-semibold text-ink-action"
+          >
+            {link}
+            <ArrowRight
+              aria-hidden="true"
+              strokeWidth={2}
+              className="size-3.5 transition-transform duration-(--t-fast) ease-out group-hover:translate-x-0.5"
+            />
+          </Link>
+        </div>
+      </article>
+    </Line>
+  )
+}
+
 export default function Landing() {
   return (
     <>
       <SiteNav />
       <main>
-        {/* Hero: the promise on the left, the real thing working on the right. */}
+        {/* Hero: the promise, the way in, and AiMY's voice working beside it. */}
         <section className="relative overflow-hidden">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(56rem_32rem_at_15%_0%,color-mix(in_oklab,var(--brand)_16%,transparent),transparent_70%)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(52rem_34rem_at_78%_30%,color-mix(in_oklab,var(--accent)_16%,transparent),transparent_70%),radial-gradient(48rem_30rem_at_12%_0%,color-mix(in_oklab,var(--brand)_14%,transparent),transparent_70%)]"
           />
-          <div className="relative mx-auto grid max-w-[80rem] items-center gap-12 px-5 pt-16 pb-20 column:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] column:pt-24 column:pb-28">
+          <div className="relative mx-auto grid max-w-[80rem] items-center gap-12 px-5 pt-14 pb-20 column:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] column:pt-20 column:pb-24">
             <Reveal>
               <Line>
-                <h1 className="max-w-[36rem] text-4xl font-semibold tracking-tight text-ink [line-height:var(--lh-tight)] column:text-5xl">
-                  Build AiMY screens from the real parts.
+                <h1 className="max-w-[38rem] text-4xl font-semibold tracking-tight text-ink [line-height:var(--lh-tight)] column:text-5xl">
+                  The AI-native interface kit for AiMY products.
                 </h1>
               </Line>
               <Line i={1}>
-                <p className="mt-6 max-w-[32rem] text-lg text-ink-secondary [line-height:var(--lh-base)]">
-                  Every button, rail and chart from AiMY Sales and Knowledge, as React components you can install today.
+                <p className="mt-6 max-w-[34rem] text-lg text-ink-secondary [line-height:var(--lh-base)]">
+                  Voice, streamed answers, proposals you accept, agents that show their steps. {COMPONENTS} React
+                  components from AiMY Sales and Knowledge.
                 </p>
               </Line>
               <Line i={2}>
-                <div className="mt-9 flex flex-wrap gap-3">
+                <div className="mt-8 flex flex-wrap items-center gap-3">
                   <Button asChild variant="brand" size="lg">
-                    <Link href="/start/">Install</Link>
-                  </Button>
-                  <Button asChild size="lg">
                     <Link href="/components/button/">Browse components</Link>
                   </Button>
+                  <Button asChild size="lg">
+                    <Link href="/start/">Read the docs</Link>
+                  </Button>
+                </div>
+              </Line>
+              <Line i={3}>
+                <div className="mt-6 max-w-[40rem]">
+                  <CodeBlock what="the install command" wrap>
+                    {INIT}
+                  </CodeBlock>
+                  <p className="mt-2 text-meta text-ink-secondary">
+                    Adds the theme, the toast with Undo and the rules for AI agents. No sign-in, no token.
+                  </p>
                 </div>
               </Line>
             </Reveal>
             <Reveal>
-              <Line i={3}>
-                <HeroStack />
+              <Line i={2}>
+                <VoicePanel />
               </Line>
             </Reveal>
           </div>
@@ -144,47 +198,65 @@ export default function Landing() {
           </Reveal>
         </section>
 
-        {/* Three ways in, one at a time. */}
+        {/* Every AI moment, live. */}
         <section className="mx-auto max-w-[80rem] px-5 py-28">
           <Heading
-            center
-            title="Pick your way in"
-            lead="All three come from one source, so nothing is written twice and you can mix them."
+            title="Every AI moment, already designed"
+            lead="AiMY never changes anything silently. It shows its work, says where answers came from, and waits for your yes."
           />
-          <Reveal className="mt-10">
-            <Line i={2}>
-              <Ways />
-            </Line>
+          <Reveal className="mt-12 grid gap-4 column:grid-cols-3">
+            <Moment
+              i={1}
+              className="column:col-span-2"
+              title="Conversation"
+              words="Turns, thinking and streamed answers, in the thread or the canvas."
+              href="/components/message/"
+              link="See Message"
+            >
+              <ConversationCard />
+            </Moment>
+            <Moment
+              i={2}
+              title="Agent steps"
+              words="Long work runs in the open, step by step, with what each step found."
+              href="/components/agent-steps/"
+              link="See Agent steps"
+            >
+              <AgentLoop />
+            </Moment>
+            <Moment
+              i={3}
+              title="Grounded answers"
+              words="Every claim cites its source, and facts say how fresh they are."
+              href="/components/citation/"
+              link="See Citation"
+            >
+              <GroundedCard />
+            </Moment>
+            <Moment
+              i={4}
+              className="column:col-span-2"
+              title="Proposals"
+              words="AiMY proposes a change; you accept, edit or reject it, and Undo stays one click away."
+              href="/components/suggestion/"
+              link="See Suggestion"
+            >
+              <LiveProposal />
+            </Moment>
           </Reveal>
         </section>
 
-        {/* The doctrine, shown working. */}
+        {/* The live result beside its code. */}
         <section className="border-t border-hairline bg-card/40">
-          <div className="mx-auto grid max-w-[80rem] items-center gap-12 px-5 py-28 column:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-            <div>
-              <Heading
-                title="AiMY never changes anything silently"
-                lead="It proposes, and a person accepts, edits or rejects. Every direct action ends in a toast with Undo. The rules ship with the components."
-              />
-              <Reveal className="mt-8">
-                <Line i={2}>
-                  <Link
-                    href="/components/suggestion/"
-                    className="group inline-flex items-center gap-2 rounded-sm text-body font-semibold text-ink-action"
-                  >
-                    How proposals work
-                    <ArrowRight
-                      aria-hidden="true"
-                      strokeWidth={2}
-                      className="size-4 transition-transform duration-(--t-fast) ease-out group-hover:translate-x-0.5"
-                    />
-                  </Link>
-                </Line>
-              </Reveal>
-            </div>
-            <Reveal>
-              <Line i={1}>
-                <LiveProposal />
+          <div className="mx-auto max-w-[80rem] px-5 py-28">
+            <Heading
+              center
+              title="Pick your way in"
+              lead="All three come from one source, so nothing is written twice and you can mix them."
+            />
+            <Reveal className="mt-12">
+              <Line i={2}>
+                <Ways />
               </Line>
             </Reveal>
           </div>
@@ -215,14 +287,11 @@ export default function Landing() {
           <div className="mx-auto grid max-w-[80rem] items-center gap-12 px-5 py-28 column:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
             <Heading
               title="Your AI agent knows the rules too"
-              lead="One command adds the theme, the toast with Undo, and AGENTS.md with the aimy-ui skill, so Claude Code and Copilot build the AiMY way."
+              lead="The install command adds AGENTS.md and the aimy-ui skill, so Claude Code and Copilot build the AiMY way."
             />
             <Reveal>
               <Line i={2}>
-                <CodeBlock>npx shadcn@latest add @aimy/init</CodeBlock>
-              </Line>
-              <Line i={3}>
-                <ul className="mt-6 flex flex-col gap-3 text-body text-ink-secondary">
+                <ul className="flex flex-col gap-4 text-body text-ink-secondary">
                   <li>
                     <span className="font-mono text-ink">AGENTS.md</span> and the aimy-ui skill: the doctrine, the
                     writing rules, and which component to use for what.
@@ -261,7 +330,7 @@ export default function Landing() {
               <Line i={3}>
                 <div className="flex flex-wrap justify-center gap-3">
                   <Button asChild variant="brand" size="lg">
-                    <Link href="/start/">Install</Link>
+                    <Link href="/components/button/">Browse components</Link>
                   </Button>
                   <Button asChild size="lg">
                     <Link href="/adopt/">How to adopt</Link>

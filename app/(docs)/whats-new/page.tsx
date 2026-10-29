@@ -14,6 +14,7 @@ const RELEASES: { version: string; date: string; summary: string; changes: strin
       "Installing needs no token. .npmrc is one line, and components.json names the @aimy registry by its address alone.",
       "Every code block has a Copy button, and every page has On this page and links to the pages either side.",
       "A landing page at the address itself. Install and start moved to /start/; every other page kept its address.",
+      "Any item installs from its address with no setup, for example npx shadcn@latest add https://aimy-ui-lib.aimy.flairstech.com/r/init.json.",
     ],
     action:
       "In an app set up before today, change the address in .npmrc and components.json to aimy-ui-lib.aimy.flairstech.com and delete the token lines. AIMY_REGISTRY_TOKEN is no longer needed.",

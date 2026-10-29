@@ -6,7 +6,7 @@
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev": "next dev",
-    "registry:build": "node -e \"require('fs').rmSync('public/r',{recursive:true,force:true})\" && shadcn build --output public/r",
+    "registry:build": "node -e \"require('fs').rmSync('public/r',{recursive:true,force:true})\" && shadcn build --output public/r && node scripts/registry-urls.mjs",
     "build": "pnpm registry:build && node scripts/agent-files.mjs && node scripts/npm-registry.mjs build && next build",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

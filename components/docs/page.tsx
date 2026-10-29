@@ -89,13 +89,25 @@ export function Code({ children, className }: { children: React.ReactNode; class
 }
 
 /** Code with its own Copy button, so nobody selects by hand. */
-export function CodeBlock({ children, what = "the code" }: { children: string; what?: string }) {
+/** wrap lets a long one-line command break instead of scrolling, so it reads in full. */
+export function CodeBlock({
+  children,
+  what = "the code",
+  wrap = false,
+}: {
+  children: string
+  what?: string
+  wrap?: boolean
+}) {
   return (
     // Code sits on a dark ground in both themes, so its Copy button takes the dark theme too.
     <div data-theme="dark" className="flex items-start rounded-lg border border-hairline bg-code">
       <pre
         data-ai="code"
-        className="min-w-0 flex-1 overflow-x-auto py-4 pr-3 pl-4 font-mono text-xs leading-relaxed text-[var(--syn-base)]"
+        className={cn(
+          "min-w-0 flex-1 overflow-x-auto py-4 pr-3 pl-4 font-mono text-xs leading-relaxed text-[var(--syn-base)]",
+          wrap && "break-all whitespace-pre-wrap"
+        )}
       >
         {children}
       </pre>
