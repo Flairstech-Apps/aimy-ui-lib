@@ -1,0 +1,15 @@
+**/node_modules
+.next
+out
+public/r
+public/npm
+.env*
+.wrangler
+.git
+*.log
+*.tsbuildinfo
+demo/dist
+starter/dist
+starter-next/.next
+test-results
+playwright-report

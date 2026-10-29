@@ -17,7 +17,7 @@
     "npm:publish": "node scripts/npm-registry.mjs publish"
   },
   "dependencies": {
-    "@flairstech-aimy/tokens": "link:package\\tokens",
+    "@flairstech-aimy/tokens": "link:package/tokens",
     "@fontsource/jetbrains-mono": "5.3.0",
     "@fontsource/poppins": "5.3.0",
     "class-variance-authority": "0.7.1",

@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@flairstech-aimy/tokens':
-        specifier: link:package\tokens
+        specifier: link:package/tokens
         version: link:package/tokens
       '@fontsource/jetbrains-mono':
         specifier: 5.3.0
