@@ -42,3 +42,23 @@
     filter: none;
   }
 }
+
+/* The landing page's floating pill nav: frosted glass over the page, a light
+   inner edge on top, and a solid fallback for anyone who asks for less
+   transparency. */
+.nav-glass {
+  background: color-mix(in oklab, var(--body-bg) 58%, transparent);
+  border: 1px solid color-mix(in oklab, var(--ink-primary) 12%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--ink-primary) 10%, transparent),
+    0 12px 40px -12px rgb(0 0 0 / 0.45);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .nav-glass {
+    background: var(--body-bg);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

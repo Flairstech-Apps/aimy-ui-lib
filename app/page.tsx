@@ -23,13 +23,14 @@ const LINKS = [
 ]
 
 const navLink =
-  "rounded-md px-3 py-2 text-xs text-ink-secondary transition-[background-color,color] duration-(--t-fast) ease-out hover:bg-w05 hover:text-ink"
+  "rounded-full px-3.5 py-2 text-xs text-ink-secondary transition-[background-color,color] duration-(--t-fast) ease-out hover:bg-w05 hover:text-ink"
 
 function SiteNav() {
   return (
-    <header className="sticky top-0 z-(--z-float) border-b border-hairline bg-topbar backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-[80rem] items-center gap-2 px-5">
-        <Link href="/" className="mr-4 flex items-center gap-3 rounded-md" aria-label="AiMY UI home">
+    // A pill of frosted glass that floats over the page; the strip around it lets clicks through.
+    <header className="pointer-events-none fixed inset-x-0 top-4 z-(--z-float) px-4">
+      <div className="nav-glass pointer-events-auto mx-auto flex h-14 max-w-[58rem] items-center gap-1 rounded-full pr-2 pl-5">
+        <Link href="/" className="mr-3 flex items-center gap-3 rounded-full" aria-label="AiMY UI home">
           <AimyMark variant="lockup" title="" className="h-6" />
           <span className="rounded-sm bg-w07 px-2 py-0.5 text-2xs font-semibold text-ink-secondary">UI</span>
         </Link>
@@ -41,22 +42,21 @@ function SiteNav() {
           ))}
         </nav>
         <span className="ml-auto" />
-        <ThemeToggle />
-        <Button asChild variant="brand">
-          <Link href="/start/">Install</Link>
-        </Button>
+        <div className="flex items-center gap-3">
+          <ThemeToggle className="rounded-full" />
+          <Button asChild variant="brand">
+            <Link href="/start/">Install</Link>
+          </Button>
+        </div>
         {/* Below the canvas rung the links become a menu (they change form, they never disappear). */}
         <details className="group relative canvas:hidden">
           <summary
             aria-label="Menu"
-            className="flex size-9 cursor-pointer list-none items-center justify-center rounded-md text-ink hover:bg-w05"
+            className="flex size-10 cursor-pointer list-none items-center justify-center rounded-full text-ink hover:bg-w05"
           >
             <Menu aria-hidden="true" strokeWidth={2} className="size-5" />
           </summary>
-          <nav
-            aria-label="Site"
-            className="absolute top-11 right-0 flex w-48 flex-col rounded-lg border border-hairline bg-raised p-1.5 shadow-lg"
-          >
+          <nav aria-label="Site" className="nav-glass absolute top-14 right-0 flex w-52 flex-col rounded-2xl p-1.5">
             {LINKS.map((l) => (
               <Link key={l.href} href={l.href} className={navLink}>
                 {l.label}
@@ -135,7 +135,7 @@ export default function Landing() {
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(52rem_34rem_at_78%_30%,color-mix(in_oklab,var(--accent)_16%,transparent),transparent_70%),radial-gradient(48rem_30rem_at_12%_0%,color-mix(in_oklab,var(--brand)_14%,transparent),transparent_70%)]"
           />
-          <div className="relative mx-auto grid max-w-[80rem] items-center gap-12 px-5 pt-14 pb-20 column:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] column:pt-20 column:pb-24">
+          <div className="relative mx-auto grid max-w-[80rem] items-center gap-12 px-5 pt-32 pb-20 column:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] column:pt-36 column:pb-24">
             <Reveal>
               <Line>
                 <h1 className="max-w-[38rem] text-4xl font-semibold tracking-tight text-ink [line-height:var(--lh-tight)] column:text-5xl">
