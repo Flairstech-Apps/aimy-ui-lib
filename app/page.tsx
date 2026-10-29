@@ -27,9 +27,10 @@ const navLink =
 
 function SiteNav() {
   return (
-    // A pill of frosted glass that floats over the page; the strip around it lets clicks through.
-    <header className="pointer-events-none fixed inset-x-0 top-4 z-(--z-float) px-4">
-      <div className="nav-glass pointer-events-auto mx-auto flex h-14 max-w-[58rem] items-center gap-1 rounded-full pr-2 pl-5">
+    // A pill of frosted glass that floats over the page, as wide as the page's content; the strip
+    // around it lets clicks through.
+    <header className="pointer-events-none fixed inset-x-0 top-4 z-(--z-float) mx-auto max-w-[80rem] px-5">
+      <div className="nav-glass pointer-events-auto flex h-14 items-center gap-1 rounded-full pr-2 pl-5">
         <Link href="/" className="mr-3 flex items-center gap-3 rounded-full" aria-label="AiMY UI home">
           <AimyMark variant="lockup" title="" className="h-6" />
           <span className="rounded-sm bg-w07 px-2 py-0.5 text-2xs font-semibold text-ink-secondary">UI</span>
