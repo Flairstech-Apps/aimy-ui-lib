@@ -1,5 +1,10 @@
+import { ArrowRight } from "lucide-react"
 import Link from "next/link"
-import { Code, CodeBlock, PageHeader, Section } from "@/components/docs/page"
+import { CopyForAi } from "@/components/docs/copy-for-ai"
+import { HomePreview } from "@/components/docs/home-preview"
+import { NAV } from "@/components/docs/nav"
+import { Code, CodeBlock, Section } from "@/components/docs/page"
+import { Button } from "@/registry/aimy/ui/button"
 
 const npmrc = `@flairstech-aimy:registry=https://aimy-ui-lib.aimy.flairstech.com/npm/`
 
@@ -9,73 +14,114 @@ const registries = `{
   }
 }`
 
+/** One way in: what it is for, then the code at full width so no line is cut. */
+function Way({ title, children, code }: { title: string; children: React.ReactNode; code: string[] }) {
+  return (
+    <div className="flex flex-col gap-4 border-t border-hairline py-8 first:border-t-0 first:pt-0">
+      <div className="max-w-[46rem]">
+        <h3 data-ai="h3" className="text-lg font-semibold text-ink">
+          {title}
+        </h3>
+        <p data-ai="p" className="mt-1.5 text-body text-ink-secondary">
+          {children}
+        </p>
+      </div>
+      <div className="flex min-w-0 flex-col gap-3">
+        {code.map((c) => (
+          <CodeBlock key={c}>{c}</CodeBlock>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function Home() {
+  const groups = NAV.filter((g) => g.label !== "Start here")
   return (
     <>
-      <PageHeader
-        title="AiMY UI"
-        lead="The building blocks of AiMY Sales and Knowledge, ready to install in any React app. Nothing here is a new design: every value is lifted from the products and checked against them."
-      />
+      <section className="grid items-center gap-10 column:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <div>
+          <h1 data-ai="h1" className="text-5xl font-semibold tracking-tight text-ink">
+            AiMY UI
+          </h1>
+          <p data-ai="p" className="mt-5 max-w-[30rem] text-lg text-ink-secondary [line-height:var(--lh-base)]">
+            The building blocks of AiMY Sales and Knowledge, ready for any React app. Every value is lifted from the
+            products.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Button asChild variant="brand" size="lg">
+              <a href="#install">Install it</a>
+            </Button>
+            <Button asChild size="lg">
+              <Link href="/adopt/">How to adopt</Link>
+            </Button>
+            <CopyForAi />
+          </div>
+        </div>
+        <HomePreview />
+      </section>
 
-      <Section
-        title="Before anything: one line in .npmrc"
-        lead="No sign-in and no token: anyone can install. The theme and the npm package come from this site's own registry, so npm needs to know where it is."
-      >
-        <CodeBlock>{npmrc}</CodeBlock>
-        <p className="mt-3 text-meta text-ink-secondary">
-          Put this line in your project&apos;s <Code>.npmrc</Code>.
-        </p>
+      <Section title="Install" lead="No sign-in and no token: anyone can install, on any machine and in CI.">
+        <Way title="Point npm at the registry" code={[npmrc]}>
+          One line in your project&apos;s <Code>.npmrc</Code>. The theme and the npm package come from this site.
+        </Way>
+        <Way title="Copy components in" code={[registries, "npx shadcn@latest add @aimy/init"]}>
+          For apps on Tailwind v4. Add the registry to <Code>components.json</Code>; init brings the theme, the toast
+          and the rules for agents. Then add components by name. The copied code is yours.
+        </Way>
+        <Way title="Or import the package" code={["npm install @flairstech-aimy/ui @flairstech-aimy/tokens"]}>
+          For apps without Tailwind, or when you would rather import than copy. Versioned, so you choose when to
+          upgrade.
+        </Way>
+        <Way title="Tokens only" code={[`@import "@flairstech-aimy/tokens";`]}>
+          Colour, type, spacing and motion as plain CSS variables. Works in any page, React or not.
+        </Way>
       </Section>
 
       <Section
         title="Start a new AiMY product"
-        lead="Copies the starter: React, TypeScript, Vite and Tailwind v4, already in the AiMY shell, with the theme, fonts and agent rules installed. For Next.js, copy starter-next instead."
+        lead="Copies a starter already in the AiMY shell, with the theme, fonts and agent rules installed. It needs read access to the Flairstech-Apps repo on GitHub."
       >
-        <CodeBlock>npx tiged --mode=git https://github.com/Flairstech-Apps/aimy-ui-lib/starter my-product</CodeBlock>
-        <div className="mt-3">
-          <CodeBlock>
-            npx tiged --mode=git https://github.com/Flairstech-Apps/aimy-ui-lib/starter-next my-product
-          </CodeBlock>
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-2">
+            <p className="text-xs font-semibold text-ink">Vite</p>
+            <CodeBlock>
+              npx tiged --mode=git https://github.com/Flairstech-Apps/aimy-ui-lib/starter my-product
+            </CodeBlock>
+          </div>
+          <div className="flex flex-col gap-2">
+            <p className="text-xs font-semibold text-ink">Next.js</p>
+            <CodeBlock>
+              npx tiged --mode=git https://github.com/Flairstech-Apps/aimy-ui-lib/starter-next my-product
+            </CodeBlock>
+          </div>
         </div>
       </Section>
 
-      <Section
-        title="Add AiMY to an existing app (Tailwind v4)"
-        lead="Components are copied into your project, so you own them. Add the registry once, then init brings the theme, the toast and the rules for agents; add components by name after that."
-      >
-        <CodeBlock>{registries}</CodeBlock>
-        <div className="mt-3">
-          <CodeBlock>npx shadcn@latest add @aimy/init</CodeBlock>
-        </div>
-      </Section>
-
-      <Section
-        title="Or import the npm package"
-        lead="For React apps without Tailwind, or when you'd rather import than copy. Versioned, so you choose when to upgrade."
-      >
-        <CodeBlock>npm install @flairstech-aimy/ui @flairstech-aimy/tokens</CodeBlock>
-      </Section>
-
-      <Section
-        title="Tokens only"
-        lead="Colour, type, spacing and motion as plain CSS variables. Works in any page, React or not."
-      >
-        <CodeBlock>{`@import "@flairstech-aimy/tokens";`}</CodeBlock>
-      </Section>
-
-      <Section title="Foundations" lead="Start with the rules the whole system rests on.">
-        <ul className="grid gap-2 column:grid-cols-3">
-          {[
-            ["Colour", "/foundations/color/"],
-            ["Typography", "/foundations/typography/"],
-            ["Motion", "/foundations/motion/"],
-          ].map(([label, href]) => (
-            <li key={href}>
+      <Section title="Browse the library" lead="Start with the foundations; every component rests on them.">
+        <ul className="grid gap-3 phone:grid-cols-2 min-[80rem]:grid-cols-3">
+          {groups.map((g) => (
+            <li key={g.label}>
               <Link
-                href={href!}
-                className="block rounded-lg border border-edge bg-card p-4 text-body font-semibold text-ink transition-[border-color,background-color] duration-(--t-fast) ease-out hover:border-edge-hover hover:bg-raised"
+                href={g.items[0]?.href ?? "/"}
+                className="group flex h-full flex-col gap-2 rounded-lg border border-hairline p-4 transition-[border-color,background-color] duration-(--t-fast) ease-out hover:border-edge-hover hover:bg-w05"
               >
-                {label}
+                <span className="flex items-center justify-between gap-3">
+                  <span className="text-body font-semibold text-ink">{g.label}</span>
+                  <ArrowRight
+                    aria-hidden="true"
+                    strokeWidth={2}
+                    className="size-4 shrink-0 text-ink-secondary transition-transform duration-(--t-fast) ease-out group-hover:translate-x-0.5"
+                  />
+                </span>
+                <span className="text-meta text-ink-secondary">
+                  {g.items.length} {g.items.length === 1 ? "page" : "pages"}:{" "}
+                  {g.items
+                    .slice(0, 3)
+                    .map((i) => i.label)
+                    .join(", ")}
+                  {g.items.length > 3 ? " and more" : ""}
+                </span>
               </Link>
             </li>
           ))}

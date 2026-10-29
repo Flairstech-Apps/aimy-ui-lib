@@ -18,6 +18,7 @@ function pageAsMarkdown() {
     const kind = el.dataset.ai
     if (kind === "h1") out.push(`# ${text}`)
     else if (kind === "h2") out.push(`## ${text}`)
+    else if (kind === "h3") out.push(`### ${text}`)
     else if (kind === "code") out.push("```tsx\n" + text + "\n```")
     else if (kind === "li") out.push(`- ${text.replace(/\s*\n\s*/g, " ")}`)
     else out.push(text)

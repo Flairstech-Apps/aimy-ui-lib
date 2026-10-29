@@ -50,7 +50,7 @@ export function A11y({ items }: { items: string[] }) {
 export function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-2xs font-semibold text-ink-quiet">{label}</p>
+      <p className="text-2xs font-semibold text-ink-secondary">{label}</p>
       <div className="flex flex-wrap items-center gap-3">{children}</div>
     </div>
   )

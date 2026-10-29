@@ -1,7 +1,9 @@
 import { ChevronRight } from "lucide-react"
 import type { Metadata } from "next"
 import Link from "next/link"
+import { PageNav, Toc } from "@/components/docs/page-chrome"
 import { Sidebar } from "@/components/docs/sidebar"
+import ui from "@/package/ui/package.json"
 import { AimyMark } from "@/registry/aimy/brand/aimy-mark"
 import Script from "next/script"
 import { themeScript } from "@/registry/aimy/lib/theme"
@@ -11,7 +13,8 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   title: { default: "AiMY UI", template: "%s · AiMY UI" },
-  description: "The component library for AiMY products. Internal to FlairsTech.",
+  description: "The component library for AiMY products at FlairsTech.",
+  robots: { index: false, follow: false },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -35,6 +38,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <span className="rounded-sm bg-w07 px-2 py-0.5 text-2xs font-semibold text-ink-secondary">UI</span>
           </Link>
           <span className="ml-auto" />
+          <Link
+            href="/whats-new/"
+            className="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-xs text-ink-secondary transition-[background-color,color] duration-(--t-fast) ease-out hover:bg-w05 hover:text-ink"
+          >
+            What&apos;s new
+            <span className="rounded-sm bg-w07 px-1.5 py-0.5 font-mono text-2xs text-ink">{ui.version}</span>
+          </Link>
           <ThemeToggle />
         </header>
         {/* Below the rail rung the sidebar becomes a menu under the topbar (it changes form, it never disappears). */}
@@ -51,11 +61,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </details>
         <div className="mx-auto grid max-w-(--bp-ref) grid-cols-1 rail:grid-cols-[var(--sidebar-width)_1fr]">
           <aside className="hidden border-r border-hairline rail:block">
-            <div className="sticky top-(--topbar-height) max-h-[calc(100dvh-var(--topbar-height))] overflow-y-auto">
+            <div
+              data-scroll
+              className="sticky top-(--topbar-height) max-h-[calc(100dvh-var(--topbar-height))] overflow-y-auto"
+            >
               <Sidebar />
             </div>
           </aside>
-          <main className="min-w-0 px-5 py-10 rail:px-12">{children}</main>
+          {/* At 80rem and up, "On this page" sits beside the content. */}
+          <div className="grid min-w-0 grid-cols-1 px-5 py-12 rail:px-12 min-[80rem]:grid-cols-[minmax(0,1fr)_12rem] min-[80rem]:gap-12">
+            <main className="min-w-0">
+              {children}
+              <PageNav />
+            </main>
+            <aside className="hidden min-[80rem]:block">
+              <div className="sticky top-[calc(var(--topbar-height)+3rem)]">
+                <Toc />
+              </div>
+            </aside>
+          </div>
         </div>
         <Toaster />
       </body>
