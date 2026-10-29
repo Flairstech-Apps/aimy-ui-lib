@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Needs the @flairstech-aimy npm scope in .npmrc.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.15.0"
+        "@flairstech-aimy/tokens@^0.16.0"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^0.15.0"
+        "@flairstech-aimy/tokens@^0.16.0"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -2034,6 +2034,52 @@
       "files": [
         {
           "path": "registry/aimy/ui/diary.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "document",
+      "type": "registry:component",
+      "title": "DocPage",
+      "description": "Knowledge's document page: the paper and the details beside it (one column below 1100px of its own width). The bar goes back, says whether changes are saved (SaveState), and hides or shows the details. DocHead holds a DocNotice (archived, replaced, out of date, with the way out), the DocByline (trust state, kind, owner, source with a link to the original, collection, DocVersions) and a note; DocTitle edits in place; VersionPreview says an old version is being read. DocRail holds DocInsights (AiMY noticed), RailBlocks you fold with RailActions, and DocRailFoot (Report a problem inline, Archive or Restore, Delete). DocComments mark and resolve reported problems. DocStart is a blank document's ways to start.",
+      "dependencies": [
+        "lucide-react",
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark",
+        "@aimy/button",
+        "@aimy/input",
+        "@aimy/textarea",
+        "@aimy/version-list"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/document.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "doc-editor",
+      "type": "registry:component",
+      "title": "DocEditor",
+      "description": "Knowledge's writing tools: SelectionMenu (Bold, Italic, Underline, then what AiMY can do with the selected words), WritingToolbar (add a block, formats, headings, lists, quote, undo, redo, AiMY), BlockMenu ('+' or '/' on an empty line) and AiMenu (AiMY for the whole document), wired together in DocEditor over a contenteditable body. Menus stay on the page, flip above a selection with no room below, close on Escape and move with the arrow keys. AiMY's proposals go to Suggestion, never into the text directly.",
+      "dependencies": [
+        "lucide-react",
+        "radix-ui"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/doc-editor.tsx",
           "type": "registry:component"
         }
       ]

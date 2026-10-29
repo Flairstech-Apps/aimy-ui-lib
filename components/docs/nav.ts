@@ -85,6 +85,13 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
+    label: "Documents",
+    items: [
+      { href: "/components/document/", label: "Document page" },
+      { href: "/components/doc-editor/", label: "Writing tools" },
+    ],
+  },
+  {
     label: "Data display",
     items: [
       { href: "/components/stat-tile/", label: "Stat tiles" },

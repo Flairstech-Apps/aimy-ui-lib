@@ -107,6 +107,11 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 - **Notification center** (`@aimy/notification-center`): The bell and Sales' panel: Needs you with the unread count and Mark all read; a row per thing with a severity dot beside its type in words, when, one sentence and one action; a question for AiMY at the foot. https://aimy-ui-lib.nour-ali.workers.dev/components/notification-center/
 - **Diary** (`@aimy/diary`): Sales' diary: the month (count, Today, the months either side; a Monday-first grid with up to three dots a day by kind, today marked) and the chosen day beside it (hour or all day, kind in words, who, what, who set the time), add one, and the next three. https://aimy-ui-lib.nour-ali.workers.dev/components/diary/
 
+### Documents
+
+- **Document page** (`@aimy/document`): Knowledge's document page: the paper and the details beside it (one column below 1100px of its own width). https://aimy-ui-lib.nour-ali.workers.dev/components/document/
+- **Writing tools** (`@aimy/doc-editor`): Knowledge's writing tools: SelectionMenu (Bold, Italic, Underline, then what AiMY can do with the selected words), WritingToolbar (add a block, formats, headings, lists, quote, undo, redo, AiMY), BlockMenu ('+' or '/' on an empty line) and AiMenu (AiMY for the whole document), wired together in DocEditor over a contenteditable body. https://aimy-ui-lib.nour-ali.workers.dev/components/doc-editor/
+
 ### Data display
 
 - **Stat tiles** (`@aimy/stat-tile`): Sales' figure strip: a caption, one figure, and a sub-line that says what it means, divided by a hairline above, never boxed. https://aimy-ui-lib.nour-ali.workers.dev/components/stat-tile/

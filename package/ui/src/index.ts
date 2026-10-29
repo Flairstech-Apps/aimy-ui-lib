@@ -174,3 +174,30 @@ export { Topnav, UserMenu, type TopnavProduct } from "../../../registry/aimy/ui/
 export { Rail, RailLink, RailDoors, RailDoor, RailDoorMiss } from "../../../registry/aimy/ui/rail"
 export { NotificationCenter, type NotificationItem } from "../../../registry/aimy/ui/notification-center"
 export { Diary, DiaryLoop, type DiaryEntry, type DiaryKind, type DiaryLoopRow } from "../../../registry/aimy/ui/diary"
+export {
+  DocPage,
+  SaveState,
+  DocHead,
+  DocNotice,
+  DocByline,
+  DocVersions,
+  VersionPreview,
+  DocTitle,
+  DocStart,
+  DocComments,
+  DocRail,
+  RailBlock,
+  RailAction,
+  DocInsights,
+  DocRailFoot,
+  type DocComment,
+} from "../../../registry/aimy/ui/document"
+export {
+  DocEditor,
+  SelectionMenu,
+  WritingToolbar,
+  BlockMenu,
+  AiMenu,
+  applyFormat,
+  type Format,
+} from "../../../registry/aimy/ui/doc-editor"
