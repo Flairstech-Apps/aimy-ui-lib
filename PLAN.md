@@ -396,6 +396,7 @@ Each phase ends with a review where you look at screenshots and say yes before t
 
 **Phase 5: adoption.** Finish the starter (Vite and Next.js) so a new AiMY product can start from it, and the demo app as the full reference screen. Publish `1.0.0` of the package. Write the "how to adopt" notes for any React team. Whether the dev team uses the library is their decision; we never change their repo. Feed every design-system fix found along the way back into the design-system repo.
 - *Added 29 Oct (Nour): the document tools from Knowledge's document page, ported as their own batch inside Phase 5.*
+- *Decided 29 Oct (Nour): this library replaces the design-system repo for developers, so design-system fixes are not fed back to that repo. The step "feed every design-system fix back" is dropped.*
 - *Status 29 Oct: P5-1 done (agents/AGENTS.md and the aimy-ui skill generated from the registry, @aimy/init, llms.txt, Copy for AI on every page).*
 
 ## 16. Risks and how we handle them

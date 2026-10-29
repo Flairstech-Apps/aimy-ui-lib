@@ -37,6 +37,7 @@ import type { Basis } from "@/lib/ai-types"
 import { AimyCanvas, useConversation } from "./conversation"
 import { Customers } from "./customers"
 import { DiaryTab } from "./diary-tab"
+import { DocumentsTab } from "./documents-tab"
 
 // The demo: a believable AiMY briefing built only from installed registry
 // components. Ask from the float bar, or review a draft from a card, and the
@@ -282,6 +283,9 @@ export function App() {
                 <Tab value="diary" count={3}>
                   Diary
                 </Tab>
+                <Tab value="documents" count={3}>
+                  Documents
+                </Tab>
               </TabsList>
 
               <TabPanel value="contacts" className="flex flex-col gap-5">
@@ -389,6 +393,9 @@ export function App() {
               </TabPanel>
               <TabPanel value="customers">
                 <Customers />
+              </TabPanel>
+              <TabPanel value="documents">
+                <DocumentsTab />
               </TabPanel>
               <TabPanel value="diary">
                 <DiaryTab />

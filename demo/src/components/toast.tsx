@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 import { AimyMark } from "@/components/aimy-mark"
 import { cn } from "@/lib/utils"

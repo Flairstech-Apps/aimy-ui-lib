@@ -510,7 +510,7 @@ export function DocEditor({
         <div
           key={`${sel.box.left}-${sel.box.top}`}
           ref={place}
-          className="absolute z-[5]"
+          className="absolute z-[5] max-w-[calc(100%-1rem)]"
           style={{ left: -9999, top: 0 }}
         >
           <SelectionMenu

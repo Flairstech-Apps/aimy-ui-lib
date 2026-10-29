@@ -161,7 +161,7 @@
   box-shadow: var(--shadow-lg); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   max-width: calc(100% - 1rem); flex-wrap: wrap;
 }
-.ai-menu.is-static { position: static; }
+.ai-menu.is-static { position: static; max-width: none; }
 .ai-menu button {
   display: inline-flex; align-items: center; gap: 0.3125rem; padding: 0.3125rem 0.625rem;
   border-radius: var(--r-sm); background: none; border: none; cursor: pointer;

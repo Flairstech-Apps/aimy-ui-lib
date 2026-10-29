@@ -1,6 +1,6 @@
 {
   "name": "@flairstech-aimy/ui",
-  "version": "0.16.1",
+  "version": "0.16.2",
   "description": "AiMY UI as an npm package: import components plus two stylesheets, no Tailwind needed. Internal to FlairsTech; served from the AiMY UI registry.",
   "type": "module",
   "sideEffects": [
