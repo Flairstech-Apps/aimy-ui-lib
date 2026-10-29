@@ -1,0 +1,33 @@
+{
+  "name": "aimy-product",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A new AiMY product on Next.js, started from the AiMY UI starter.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "aimy:add": "shadcn add"
+  },
+  "dependencies": {
+    "@flairstech-aimy/tokens": "0.15.0",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "lucide-react": "1.62.0",
+    "next": "16.4.3",
+    "radix-ui": "1.8.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "tailwind-merge": "3.7.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "24.19.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "shadcn": "4.23.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "6.0.3"
+  }
+}

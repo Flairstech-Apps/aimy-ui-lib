@@ -1,0 +1,20 @@
+@import "tailwindcss";
+@import "@flairstech-aimy/tokens/tailwind.css";
+
+/* Your product's accent. AiMY uses one accent, Sales' violet, in every
+   product; change it only if your product has been given its own. Each theme
+   needs the colour, its RGB triple, and the two inks made from it (the text
+   ink must read at 4.5:1 on the card). */
+/*
+:root {
+  --accent: #8b4ff4;
+  --accent-rgb: 139, 79, 244;
+  --accent-text: #a06ff7;
+  --accent-label: #ab7ffb;
+}
+[data-theme="light"] {
+  --accent: #6725cc;
+  --accent-rgb: 103, 37, 204;
+  --accent-text: #6d3bd4;
+}
+*/

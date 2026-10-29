@@ -1,0 +1,201 @@
+---
+name: aimy-ui
+description: Build AiMY product screens from the AiMY UI library, following AiMY's doctrine, accessibility and writing rules. Use when building or changing any UI in an AiMY product (Sales, Knowledge, QA, Talent or a new one), choosing a component, or writing UI copy.
+---
+
+<!-- Written by scripts/agent-files.mjs from agents/rules.md and registry.json. Edit those, not this. -->
+
+## What AiMY UI is
+
+AiMY UI is the component library for AiMY products at FlairsTech. Every component documents what AiMY Sales and AiMY Knowledge already draw; nothing in it is a new design. Build screens from it. If a screen needs something the library does not have, say so and stop; do not invent a component.
+
+Docs, with every component's preview, rules and source notes: https://aimy-ui-lib.nour-ali.workers.dev (sign in with the library token). A plain index for agents is at `/llms.txt` on the same site.
+
+## Installing
+
+The library is internal. Every install needs the library token in the environment as `AIMY_REGISTRY_TOKEN`. Never write the token into a file that is committed.
+
+- Copy a component into the project (the shadcn way): `npx shadcn@latest add @aimy/<name>`. The project's `components.json` must list the `@aimy` registry with the token header.
+- Or import from the package: `import { Button } from "@flairstech-aimy/ui"` and `import "@flairstech-aimy/ui/styles.css"`.
+- Tokens only (any HTML): `@flairstech-aimy/tokens`.
+
+## The rules every screen follows
+
+Doctrine, from the AiMY Knowledge-to-Action doctrine and the products:
+
+- Dark by default, with the light theme one toggle away. Use the theme's tokens for every colour, size, radius, shadow and duration; never a raw hex value or an off-scale size.
+- Classify every action into one of the four entry modes (prompt, investigate, reviewed action, direct action) with `EntryAction`, and declare the work state of every surfaced item with `WorkState`.
+- AI never applies a change silently. A change AiMY proposes is shown for Accept, Edit or Reject (`ChangeReview`, `Suggestion`); a direct action happens at once and ends in a toast with Undo.
+- Pair every insight with its next step. A number in a sentence opens the set it counts.
+- Generated content, confirmation of a workflow and drill-through go to the AiMY Canvas, not to a new page.
+- One-click inline controls with toast undo. No modal, picker, choice list or drag as the only way to do something. Ask before anything destructive with a typed confirmation, never a plain "Are you sure?".
+- When space runs out, change a component's form (a drawer, a menu, its own line). Never hide it, and never shrink it past use.
+- Mark AI with the AiMY mark (`AimyMark`), never with sparkles.
+
+Accessibility (WCAG 2.2 AA in both themes):
+
+- No muted text. A state is said in words and colour, never by lowering contrast or fading.
+- Status is colour plus words or an icon, never colour alone.
+- Full keyboard use, the theme's focus ring, correct roles and names. A control made of several parts reads as one sentence.
+- Every animation honours `prefers-reduced-motion`. Motion comes from the theme's motion tokens (transitions.dev); never `transition: all`.
+
+Writing:
+
+- Plain English. Say "call", never "ring"; "contacts", never "board" or "book". No sales slang.
+- A verb on every button that names the action; never "Open" or "Learn more" when the real action has a name.
+- Errors say what happened and what to do next.
+
+Never:
+
+- Never use a native `<select>`, an inline `onclick` string, a coloured left-edge stripe, gradient text, or a pulsing decorative dot.
+- Never build a dropdown, dialog or menu by hand; use the library's, which carry the keyboard model and ARIA.
+- Never fix a bug you find in passing without saying so.
+- Never expand scope. When matching a design from another page, copy its style, not its content.
+
+Icons are Lucide only, on the 24 grid at stroke 2.
+
+## Which component
+
+### Components
+
+- **Button** (`@aimy/button`): The AiMY button, a pill as both products draw it. https://aimy-ui-lib.nour-ali.workers.dev/components/button/
+- **Icon button** (`@aimy/icon-button`): A square control for an icon alone, with a required label that becomes its accessible name and tooltip. https://aimy-ui-lib.nour-ali.workers.dev/components/icon-button/
+- **Link** (`@aimy/link`): Coloured words for going somewhere: brand ink, underline on hover, or always underlined inside a sentence (variant inline). https://aimy-ui-lib.nour-ali.workers.dev/components/link/
+- **Tag** (`@aimy/tag`): A label for a state: a soft ground of the hue and the word in the readable ink, no edge (a label has a fill, a control has an edge). https://aimy-ui-lib.nour-ali.workers.dev/components/tag/
+- **Chip** (`@aimy/chip`): A toggle for filtering, with an edge because you can press it. https://aimy-ui-lib.nour-ali.workers.dev/components/chip/
+- **Count badge** (`@aimy/count-badge`): An unread count pinned to the top right of a control (put it in a relative parent). https://aimy-ui-lib.nour-ali.workers.dev/components/count-badge/
+- **Status** (`@aimy/status`): Presence in words with a coloured dot: online, busy, away, offline. https://aimy-ui-lib.nour-ali.workers.dev/components/status/
+- **Kbd** (`@aimy/kbd`): Key caps for a keyboard shortcut: <Kbd keys={["Ctrl", "K"]} />. https://aimy-ui-lib.nour-ali.workers.dev/components/kbd/
+- **Divider** (`@aimy/divider`): A 1px rule in the edge colour, horizontal or vertical. https://aimy-ui-lib.nour-ali.workers.dev/components/divider/
+- **Avatar** (`@aimy/avatar`): A person as their photo (with the face ring) or initials on the avatar gradient; AiMY as its mark on the AiMY tile, so AiMY is never shown with a person's face. https://aimy-ui-lib.nour-ali.workers.dev/components/avatar/
+
+### Forms
+
+- **Field and text inputs** (`@aimy/field`): Wraps a form control with its label above and help or an error below, and wires them up: the control gets the id, aria-describedby and aria-invalid. https://aimy-ui-lib.nour-ali.workers.dev/components/field/
+- **Search field** (`@aimy/search-field`): Find-as-you-type with a search icon, a clear button that appears only when there is text, and Escape to clear. https://aimy-ui-lib.nour-ali.workers.dev/components/search-field/
+- **Select** (`@aimy/select`): The only select control; never a native <select>. https://aimy-ui-lib.nour-ali.workers.dev/components/select/
+- **Checkbox** (`@aimy/checkbox`): A 17px box: brand fill and a white tick when on, a dash for some (checked="indeterminate"). https://aimy-ui-lib.nour-ali.workers.dev/components/checkbox/
+- **Switch** (`@aimy/switch`): An on/off switch, 36 by 20: the brand when on. https://aimy-ui-lib.nour-ali.workers.dev/components/switch/
+- **Segmented** (`@aimy/segmented`): Two to five mutually exclusive options in a pill, as a radiogroup: arrow keys move and choose. https://aimy-ui-lib.nour-ali.workers.dev/components/segmented/
+- **Copy button** (`@aimy/copy-button`): Copies a value and says so in words: Copy, then Copied for 1.4s (or Press Ctrl+C if the browser refuses), announced to screen readers. https://aimy-ui-lib.nour-ali.workers.dev/components/copy-button/
+- **Date picker** (`@aimy/date-picker`): A date or range filter: a pill like Select that opens quick choices and the Calendar. https://aimy-ui-lib.nour-ali.workers.dev/components/date-picker/
+
+### Containers and navigation
+
+- **Card** (`@aimy/card`): The record card both products draw: an article with CardHead (a state Tag and CardType), CardTitle (a real button or link whose hit area covers the card), CardSummary, CardFacts, CardBody and CardFoot (stay clickable on their own). https://aimy-ui-lib.nour-ali.workers.dev/components/card/
+- **Tabs** (`@aimy/tabs`): A real tablist with arrow keys. https://aimy-ui-lib.nour-ali.workers.dev/components/tabs/
+- **Menu** (`@aimy/menu`): A menu of actions or choices from a control: MenuItem (acts and closes; danger for destructive), MenuRadioGroup and MenuRadioItem (one answer), MenuCheckboxItem (several answers; stays open), MenuLabel, MenuSeparator, MenuSearch (filters long lists). https://aimy-ui-lib.nour-ali.workers.dev/components/menu/
+- **Tooltip and popover** (`@aimy/tooltip`): A short hint on hover or keyboard focus, after 80ms (transitions.dev tooltip, 17). https://aimy-ui-lib.nour-ali.workers.dev/components/tooltip/
+- **Disclosure** (`@aimy/disclosure`): Show or hide one section in place: a header with an optional count and a chevron, the body sliding open with transitions.dev accordion (21). https://aimy-ui-lib.nour-ali.workers.dev/components/disclosure/
+- **Pager** (`@aimy/pager`): Paging in words: 1–15 of 134 contacts, page 1 of 9, with Back and Next text actions that say how many. https://aimy-ui-lib.nour-ali.workers.dev/components/pager/
+
+### Feedback and overlays
+
+- **Toast** (`@aimy/toast`): The confirmation every action ends with: act at once, then toast what happened with Undo. https://aimy-ui-lib.nour-ali.workers.dev/components/toast/
+- **Dialog** (`@aimy/dialog`): Dialog: for ordered forms and changes with consequences, never to confirm what Undo can take back. https://aimy-ui-lib.nour-ali.workers.dev/components/dialog/
+- **Sheet** (`@aimy/sheet`): A panel that slides in from the side over the page, with a scrim: the rail as a drawer below the rail rung, settings and connection sheets. https://aimy-ui-lib.nour-ali.workers.dev/components/sheet/
+- **Notice** (`@aimy/notice`): A notice in the page: neutral, info, ok, warn or err. https://aimy-ui-lib.nour-ali.workers.dev/components/notice/
+- **Empty and error states** (`@aimy/empty-state`): EmptyState: why there is nothing here and the way forward (Clear filters, New document), with an icon tile and an optional fine line; dashed or plain. https://aimy-ui-lib.nour-ali.workers.dev/components/empty-state/
+- **Skeleton** (`@aimy/skeleton`): Placeholders shaped like what is coming, pulsing while loading; Reveal cross-fades from the skeleton to the content when loading ends (transitions.dev skeleton reveal, 14). https://aimy-ui-lib.nour-ali.workers.dev/components/skeleton/
+- **Progress** (`@aimy/progress`): How much is done or used: thin (3px) for work in progress, meter (6px) or large (8px) for usage. https://aimy-ui-lib.nour-ali.workers.dev/components/progress/
+- **Notification bell** (`@aimy/notification-bell`): The topbar bell with its micro-interactions: the count slides on and pops (transitions.dev 03); a new ping rocks the bell from its top, three swings in 600ms, and drops one line under it saying what finished, gone after 1.4s (Knowledge's ring and tip). https://aimy-ui-lib.nour-ali.workers.dev/components/notification-bell/
+
+### Shell
+
+- **App shell** (`@aimy/app-shell`): The frame every AiMY product sits in: topnav, rail, page. https://aimy-ui-lib.nour-ali.workers.dev/components/app-shell/
+- **Rail doors**: https://aimy-ui-lib.nour-ali.workers.dev/components/rail-door/
+- **Notification center** (`@aimy/notification-center`): The bell and Sales' panel: Needs you with the unread count and Mark all read; a row per thing with a severity dot beside its type in words, when, one sentence and one action; a question for AiMY at the foot. https://aimy-ui-lib.nour-ali.workers.dev/components/notification-center/
+- **Diary** (`@aimy/diary`): Sales' diary: the month (count, Today, the months either side; a Monday-first grid with up to three dots a day by kind, today marked) and the chosen day beside it (hour or all day, kind in words, who, what, who set the time), add one, and the next three. https://aimy-ui-lib.nour-ali.workers.dev/components/diary/
+
+### Data display
+
+- **Stat tiles** (`@aimy/stat-tile`): Sales' figure strip: a caption, one figure, and a sub-line that says what it means, divided by a hairline above, never boxed. https://aimy-ui-lib.nour-ali.workers.dev/components/stat-tile/
+- **Description list** (`@aimy/description-list`): Label and value pairs in the products' two shapes: beside (Sales' record facts, the label in an 8rem column; stacks when narrow) and stacked (Knowledge's facts, a small upper-case label over the value, a note, a hairline between rows, one control on the right). https://aimy-ui-lib.nour-ali.workers.dev/components/description-list/
+- **Timeline** (`@aimy/timeline`): Sales' history of one record on a rail: a dot per touchpoint in the tone of how it went, a larger accent node where a step was climbed, month headings, an end cap saying where it began. https://aimy-ui-lib.nour-ali.workers.dev/components/timeline/
+- **Data table** (`@aimy/data-table`): Records in columns, in Knowledge's two forms: rows (each row a card, one height, the first column takes its own line below 46rem) and table (a real table, zebra rows, sub-labels, scrolls sideways). https://aimy-ui-lib.nour-ali.workers.dev/components/data-table/
+- **Windowed list** (`@aimy/virtual-list`): Sales' windowed list for long lists: only the rows near the view exist, about thirty at a time. https://aimy-ui-lib.nour-ali.workers.dev/components/virtual-list/
+
+### Charts
+
+- **KPI widget** (`@aimy/kpi-widget`): Sales' floor widget: one measure over time against what was promised. https://aimy-ui-lib.nour-ali.workers.dev/components/kpi-widget/
+- **Progress to target** (`@aimy/target-bar`): Sales' attainment bar: the figure of its target and the share in words, then one bar with what is in (solid accent), what AiMY expects could still come (hatched), the target crossing the bar and today's pace as a tick inside it. https://aimy-ui-lib.nour-ali.workers.dev/components/target-bar/
+- **Funnel** (`@aimy/funnel`): Sales' funnel: a name, a pill bar and a right-aligned count a row. https://aimy-ui-lib.nour-ali.workers.dev/components/funnel/
+- **Sparkline** (`@aimy/sparkline`): Knowledge's before-and-after line: the line before a change in the reading ink, after it in the brand, the change a dashed line in the action ink, named underneath. https://aimy-ui-lib.nour-ali.workers.dev/components/sparkline/
+- **Score tile** (`@aimy/score-tile`): QA's quality-score summary: the score in its tone, how far from the goal, how it moved with a Lucide arrow, and a small curve of the period that is also the button opening the full trend (aria-expanded, aria-controls), with the data's source under it. https://aimy-ui-lib.nour-ali.workers.dev/components/score-tile/
+- **Trend chart** (`@aimy/trend-chart`): QA's quality-score trend: ranges (Segmented), Compare (Chip), average/peak/low figures, a smooth accent curve over a fading area, the previous period dashed, a dashed goal with its pill, peak/low/latest written at their points, flagged dips banded in red, and a pointer or arrow-key readout. https://aimy-ui-lib.nour-ali.workers.dev/components/trend-chart/
+- **Donut** (`@aimy/donut`): QA's pass/borderline/fail ring: contiguous arcs from twelve o'clock; pointing at a part or its key row (or focusing the row) thickens it with a glow, dims the rest and says it in the centre in its ink. https://aimy-ui-lib.nour-ali.workers.dev/components/donut/
+- **Heatmap** (`@aimy/heatmap`): QA's goal-by-week grid: a row per goal, a column per period, each cell its score tinted by band, a coaching dot with its note, 'none' where there is no score. https://aimy-ui-lib.nour-ali.workers.dev/components/heatmap/
+- **Leaderboard** (`@aimy/leaderboard`): QA's achievers list: ranked, no bars; a rank badge in medal inks for the first three, the name, and each measure labelled and right-aligned. https://aimy-ui-lib.nour-ali.workers.dev/components/leaderboard/
+
+### AI: conversation
+
+- **Composer** (`@aimy/composer`): Where a person asks AiMY, as the products' voice.js arranges it. https://aimy-ui-lib.nour-ali.workers.dev/components/composer/
+- **Message** (`@aimy/message`): One conversation turn in Sales' shape: 28px avatar (AiMY's tile, or the person), a bubble up to 540px with the square corner on the speaker's side. https://aimy-ui-lib.nour-ali.workers.dev/components/message/
+- **Streaming text** (`@aimy/streaming-text`): Text that arrives over time: pass the text so far and streaming. https://aimy-ui-lib.nour-ali.workers.dev/components/streaming-text/
+- **Thinking** (`@aimy/thinking`): AiMY at work before any words: the particle think-mark (the AiMY mark scattering and gathering, ported from the products) and a line saying what it does. https://aimy-ui-lib.nour-ali.workers.dev/components/thinking/
+- **Response actions** (`@aimy/response-actions`): What a person can do with one answer (Knowledge's .msg-acts): Copy, Retry, the N sources it stands on, and Useful / Not useful (mutually exclusive, toggles). https://aimy-ui-lib.nour-ali.workers.dev/components/response-actions/
+- **Suggestions** (`@aimy/suggestions`): One-click questions: openers centred in an empty conversation, follow-ups under an answer. https://aimy-ui-lib.nour-ali.workers.dev/components/suggestions/
+- **Reasoning** (`@aimy/reasoning`): How AiMY got to an answer, folded under it: 'How this was answered' with steps that say what AiMY did and why (Knowledge's act-log; Sales' 'Why AiMY wrote it this way'). https://aimy-ui-lib.nour-ali.workers.dev/components/reasoning/
+- **Canvas** (`@aimy/canvas`): The AiMY canvas: glass over the page from under the topbar, with 'Based on' (what the conversation is about), a chats column that becomes a drawer below 900px, the thread (a polite live log) and the canvas Composer. https://aimy-ui-lib.nour-ali.workers.dev/components/canvas/
+- **Peek** (`@aimy/peek`): AiMY's answer in a card that rises out of the float bar (Sales' .b-peek, Knowledge's .aimy-peek): thinks, then answers; three lines then a fade; press to open the canvas; one-click questions under it. https://aimy-ui-lib.nour-ali.workers.dev/components/peek/
+
+### AI: grounding and trust
+
+- **Citations and sources** (`@aimy/citation`): A numbered marker in an answer that points at its source (Knowledge's .cite). https://aimy-ui-lib.nour-ali.workers.dev/components/citation/
+- **Trust state** (`@aimy/trust-state`): The trust condition of a source, on the source (Knowledge's statusBadge): current (No issues), outdated (Out of date), conflicting, draft, unowned, unused, superseded (also says Not in answers). https://aimy-ui-lib.nour-ali.workers.dev/components/trust-state/
+- **Trust disclosure** (`@aimy/trust-disclosure`): What an answer is grounded on, said under it (Knowledge's .trust-disclosure): rows in ok, warn, err or none tone, and the warm exclusion ground when nothing could answer, with DisclosureAction for the way forward. https://aimy-ui-lib.nour-ali.workers.dev/components/trust-disclosure/
+- **Confidence and score** (`@aimy/confidence`): How sure AiMY is about a group of facts, in words, with why (Sales' .b-conf): ok (a check), old (May be out of date, Check again), gap (Partly known), none (Not known yet, Find out more), busy (Checking again). https://aimy-ui-lib.nour-ali.workers.dev/components/confidence/
+- **When AiMY is unavailable**: https://aimy-ui-lib.nour-ali.workers.dev/components/unavailable/
+
+### AI: agency and action
+
+- **Work state** (`@aimy/work-state`): Where a surfaced item stands, required on every item (doctrine §2.3): detected (Found), recommended (Suggested), drafted (Drafted), staged (Awaiting you), completed (Done), failed (Stopped). https://aimy-ui-lib.nour-ali.workers.dev/components/work-state/
+- **Entry action** (`@aimy/entry-action`): An action that declares how it behaves (doctrine §3); mode is required so an unclassified action does not compile. https://aimy-ui-lib.nour-ali.workers.dev/components/entry-action/
+- **Suggestion** (`@aimy/suggestion`): A change AiMY proposes, shown as a change (Knowledge's editor suggestion): old wording struck through, new wording after, Accept, Edit, Reject. https://aimy-ui-lib.nour-ali.workers.dev/components/suggestion/
+- **Agent steps** (`@aimy/agent-steps`): AiMY's work step by step while it runs (Sales' curation trace): what it is doing with a running clock, a line saying the person can leave, steps that appear as they start, beat while live and tick with what they found. https://aimy-ui-lib.nour-ali.workers.dev/components/agent-steps/
+- **Change review** (`@aimy/change-review`): A governed or irreversible change, reviewed before it runs (Knowledge's commit surface): Now → After, why, 'What this will do' (changes, cautions, what is skipped), Reversible for 24h, and a typed word for destructive changes. https://aimy-ui-lib.nour-ali.workers.dev/components/change-review/
+- **Version list** (`@aimy/version-list`): A document's versions (Knowledge's versionList). https://aimy-ui-lib.nour-ali.workers.dev/components/version-list/
+- **Activity** (`@aimy/activity`): What happened, who did it and when (Sales' activity rows): the subject, the outcome in its tone, then who and when, with the note under it. https://aimy-ui-lib.nour-ali.workers.dev/components/activity/
+- **Set-scope bar** (`@aimy/set-scope-bar`): Bulk work states its scope: N selected, of what, filtered how, the actions that apply, and Clear (the design system's set-scope bar; neither product draws one). https://aimy-ui-lib.nour-ali.workers.dev/components/set-scope-bar/
+- **Audit trail** (`@aimy/audit-trail`): A governed record of changes (design system spec): what changed, who and how, when, and Revert or Irreversible on every entry. https://aimy-ui-lib.nour-ali.workers.dev/components/audit-trail/
+- **Decision zone** (`@aimy/decision-zone`): A proposal with operational consequences decided in place (design system spec): the question, its consequence and how long it stays reversible, Accept / Edit / Reject (edit required), Awaiting you, then what was decided and Undo. https://aimy-ui-lib.nour-ali.workers.dev/components/decision-zone/
+- **Step list** (`@aimy/step-list`): The compact step list (design system spec): done with what it found ('3 matches · 1.2s'), running, pending with its number, failed. https://aimy-ui-lib.nour-ali.workers.dev/components/step-list/
+
+### AI: relationship and memory
+
+- **Brief** (`@aimy/brief`): What AiMY has to say at the top of a page, from parts: Brief (wash, accent or plain ground), BriefHead (Sales' large Today title, or the small AiMY label with a work state), BriefLines with BriefLink numbers, BriefFigure (one large figure and its sentence), BriefDeck, BriefActions, BriefStarts (ways to start with counts and reasons), BriefNext (Knowledge's 'Worth asking'). https://aimy-ui-lib.nour-ali.workers.dev/components/brief/
+- **Memory**: https://aimy-ui-lib.nour-ali.workers.dev/components/memory/
+- **AiMY note** (`@aimy/aimy-note`): A sentence from AiMY on a record or card with where it came from (Sales' .b-aimy): the mark, one useful sentence, the source line, one optional control. https://aimy-ui-lib.nour-ali.workers.dev/components/aimy-note/
+- **Briefing** (`@aimy/briefing`): A briefing item's Acknowledge, and Dismiss with one-click reasons in place, each with Undo (doctrine §5.9; design system spec). https://aimy-ui-lib.nour-ali.workers.dev/components/briefing/
+- **Autonomy** (`@aimy/autonomy`): How much AiMY may do without asking, per kind of work, with the evidence it has earned it: Ask me first / Do it, then tell me / Do it, keep a log. https://aimy-ui-lib.nour-ali.workers.dev/components/autonomy/
+- **Usage** (`@aimy/usage`): How much of AiMY a person has used (Knowledge's usage popover): groups by period, rows 'N of M' with a meter and what it means. https://aimy-ui-lib.nour-ali.workers.dev/components/usage/
+- **Usage limits** (`@aimy/usage-limit`): What a person is told at a usage limit, in the products' words: past your share (You can keep going), limit reached (when it starts again), stopped by an admin (who can turn it back on); always what still works. https://aimy-ui-lib.nour-ali.workers.dev/components/usage-limit/
+- **Model picker** (`@aimy/model-picker`): Which AiMY model answers (design system spec): the AI dot, the name and tag, and a menu where each model says what it is for. https://aimy-ui-lib.nour-ali.workers.dev/components/model-picker/
+
+### AI: voice
+
+- **Orb** (`@aimy/orb`): The Silk orb: hair-fine strands of light on a turning drum (ported from the products' voice.js). https://aimy-ui-lib.nour-ali.workers.dev/components/orb/
+- **Voice mode**: https://aimy-ui-lib.nour-ali.workers.dev/components/voice-mode/
+- **Note taker** (`@aimy/note-taker`): AiMY takes notes in a meeting, hearing only you. https://aimy-ui-lib.nour-ali.workers.dev/components/note-taker/
+- **Meeting in the canvas**: https://aimy-ui-lib.nour-ali.workers.dev/components/note-canvas/
+
+### Also in the registry
+
+- **ThemeScript** (`@aimy/theme-script`): Put inside <head>.
+- **ThemeToggle** (`@aimy/theme-toggle`): The one-click light/dark switch from the AiMY topnav.
+- **Icon** (`@aimy/icon`): Renders a lucide-react glyph at an AiMY size (xs 12, sm 14, md 16, lg 20, xl 24), stroke 2, hidden from screen readers unless given a label.
+- **AimyMark** (`@aimy/aimy-mark`): The AiMY logo: the mark alone (variant icon) or with the wordmark (variant lockup), path data verbatim from the canonical logo.
+- **Input** (`@aimy/input`): A one-line text field.
+- **Textarea** (`@aimy/textarea`): Several lines that grow with the text up to 12 lines, then scroll.
+- **PasswordField** (`@aimy/password-field`): A secret (API key, token, password), masked, in the mono face, with a show/hide control inside the field that names what it will do.
+- **Popover** (`@aimy/popover`): A small panel tied to a control, for a few fields or an explanation with a button.
+- **Calendar** (`@aimy/calendar`): A month grid, single day or range, weeks from Monday: today outlined, the choice in the accent, a range on an accent wash.
+- **VoiceStage** (`@aimy/voice-stage`): A voice conversation as a place: the page goes away, one orb stays with a line saying what it does (Listening, Thinking, Answering, You're muted, or the error in words), the session clock, and mute and end.
+- **SourceList** (`@aimy/source-list`): The sources an answer stands on (Knowledge's sourceRow): number, kind, title, where it came from, trust state; a row opens the document.
+- **Score** (`@aimy/score`): A rating out of 100 with a three-bar meter (Knowledge's ICP Fit badge): high from 75, medium from 50, low below.
+- **SourceLine** (`@aimy/source-line`): Where an answer's facts came from, in one plain line under it (Sales' .s-ans-cite): 'From your last 3 calls'.
+- **ConflictPair** (`@aimy/conflict-pair`): Two sources that disagree, side by side, each with trust state, what it says, how it is used and 'Make this the one' (a review action into ChangeReview).
+- **MemoryPanel** (`@aimy/memory-panel`): What AiMY carries into this conversation from an earlier thread (Knowledge's memory panel), with Answer without it always present, and each line forgettable with Undo.
+- **MemoryList** (`@aimy/memory-list`): Everything AiMY remembers about a person or account, with where each came from; forget one in a click with Undo, or all of it after one inline confirm.
+- **Topnav** (`@aimy/topnav`): The bar: Knowledge's markup with Sales' values.
+- **Rail** (`@aimy/rail`): Sales' left column of standing facts, Knowledge's drawer below 1040 (scrim, Escape, focus in and back).

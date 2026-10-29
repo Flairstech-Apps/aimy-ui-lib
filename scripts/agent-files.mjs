@@ -6,6 +6,7 @@
 //   agents/AGENTS.md                          the rules and the index, for any product
 //   starter/AGENTS.md                         the same, inside the starter
 //   starter/.claude/skills/aimy-ui/SKILL.md   the same as a Claude skill
+//   starter-next/…                             both again, in the Next.js starter
 //   public/llms.txt                           the docs site's index for agents
 //
 // Run by `pnpm build`; `node scripts/agent-files.mjs --check` fails if any is stale.
@@ -96,6 +97,8 @@ const out = {
   "agents/AGENTS.md": agents,
   "starter/AGENTS.md": agents,
   "starter/.claude/skills/aimy-ui/SKILL.md": skill,
+  "starter-next/AGENTS.md": agents,
+  "starter-next/.claude/skills/aimy-ui/SKILL.md": skill,
   "public/llms.txt": llms,
   "public/AGENTS.md": agents,
 }
