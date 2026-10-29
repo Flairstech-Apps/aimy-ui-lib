@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-React 19 and TypeScript, Tailwind CSS v4, Radix primitives for behaviour, cva, lucide-react, Poppins and JetBrains Mono. Delivered three ways from one source: a private shadcn-style registry (copy-in), an npm package on GitHub Packages (`@flairstech-aimy/ui`, compiled CSS, no Tailwind needed), and a tokens-only CSS package (`@flairstech-aimy/tokens`). The docs site is a static Next.js export served by a Cloudflare Worker that requires the library token.
+React 19 and TypeScript, Tailwind CSS v4, Radix primitives for behaviour, cva, lucide-react, Poppins and JetBrains Mono. Delivered three ways from one source: a shadcn-style registry (copy-in), an npm package from the site's own npm registry (`@flairstech-aimy/ui`, compiled CSS, no Tailwind needed), and a tokens-only CSS package (`@flairstech-aimy/tokens`). The docs site is a static Next.js export served on Coolify (https://aimy-ui-lib.aimy.flairstech.com), open to anyone since 29 Oct 2026 but kept out of search engines; the older Cloudflare Worker still requires the library token.
 
 ## Users
 
@@ -32,7 +32,7 @@ A record of a system that already exists, made installable. Where Sales and Know
 
 ## Operating Context
 
-Internal to FlairsTech. The repo (`Flairstech-AIMY/aimy-ui-lib`) is private, the docs and registry are locked behind a shared token, and packages are on the org's GitHub Packages. Reference viewport is 1536px; dark theme is the default, light is designed rather than inverted.
+Internal to FlairsTech. The repo (`Flairstech-AIMY/aimy-ui-lib`) is private, the docs, registry and packages are open on Coolify (the owner chose this on 29 Oct 2026; `server/access.json` turns the locks back on). Reference viewport is 1536px; dark theme is the default, light is designed rather than inverted.
 
 ## Capabilities and Constraints
 

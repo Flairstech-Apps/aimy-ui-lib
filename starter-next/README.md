@@ -4,8 +4,7 @@ Started from the AiMY UI Next.js starter: React, TypeScript, Next.js (App Router
 
 ## First run
 
-1. Get the library token from the AiMY UI owner and put it in your environment as `AIMY_REGISTRY_TOKEN`. It is needed to install packages and components. Never commit it (`.env.example` shows the name only).
-2. Install and start:
+1. Install and start:
 
    ```bash
    pnpm install

@@ -10,6 +10,10 @@ Coolify builds the repo's `Dockerfile` and runs `server/index.mjs`. It serves th
 - Health check: the image has one (`/healthz`), so nothing to add.
 - Environment variables: see below. Coolify keeps them out of the build; never put them in the repo.
 
+## Open or locked
+
+Since 29 Oct 2026 the site is open to anyone: `server/access.json` says `{ "public": true }`, so the docs, `/r` and `/npm` need no sign-in and no token, and the install setup in the docs and starters sends none. Search engines are told to stay out (`robots.txt` and an `X-Robots-Tag` header). To lock it again, set `"public": false`, commit and push; the token and the Cognito sign-in below come back as they were, and the install setup needs its token lines back (see git history for 29 Oct).
+
 ## Environment variables
 
 None are needed for the token. The server checks it against `server/token.sha256`, the token's SHA-256, which is committed (the token is 32 random characters, so the hash can't be turned back into it). Setting `REGISTRY_TOKEN` in Coolify overrides the file.

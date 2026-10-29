@@ -6,13 +6,13 @@
 
 AiMY UI is the component library for AiMY products at FlairsTech. Every component documents what AiMY Sales and AiMY Knowledge already draw; nothing in it is a new design. Build screens from it. If a screen needs something the library does not have, say so and stop; do not invent a component.
 
-Docs, with every component's preview, rules and source notes: https://aimy-ui-lib.aimy.flairstech.com (sign in with the library token). A plain index for agents is at `/llms.txt` on the same site.
+Docs, with every component's preview, rules and source notes: https://aimy-ui-lib.aimy.flairstech.com. A plain index for agents is at `/llms.txt` on the same site.
 
 ## Installing
 
-The library is internal. Every install needs the library token in the environment as `AIMY_REGISTRY_TOKEN`. Never write the token into a file that is committed.
+Installing needs no token. The project's `.npmrc` names the registry for `@flairstech-aimy` packages.
 
-- Copy a component into the project (the shadcn way): `npx shadcn@latest add @aimy/<name>`. The project's `components.json` must list the `@aimy` registry with the token header.
+- Copy a component into the project (the shadcn way): `npx shadcn@latest add @aimy/<name>`. The project's `components.json` must list the `@aimy` registry.
 - Or import from the package: `import { Button } from "@flairstech-aimy/ui"` and `import "@flairstech-aimy/ui/styles.css"`.
 - Tokens only (any HTML): `@flairstech-aimy/tokens`.
 

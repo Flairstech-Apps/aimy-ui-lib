@@ -1,15 +1,11 @@
 import Link from "next/link"
 import { Code, CodeBlock, PageHeader, Section } from "@/components/docs/page"
 
-const npmrc = `@flairstech-aimy:registry=https://aimy-ui-lib.aimy.flairstech.com/npm/
-//aimy-ui-lib.aimy.flairstech.com/npm/:_authToken=\${AIMY_REGISTRY_TOKEN}`
+const npmrc = `@flairstech-aimy:registry=https://aimy-ui-lib.aimy.flairstech.com/npm/`
 
 const registries = `{
   "registries": {
-    "@aimy": {
-      "url": "https://aimy-ui-lib.aimy.flairstech.com/r/{name}.json",
-      "headers": { "Authorization": "Bearer \${AIMY_REGISTRY_TOKEN}" }
-    }
+    "@aimy": "https://aimy-ui-lib.aimy.flairstech.com/r/{name}.json"
   }
 }`
 
@@ -22,13 +18,12 @@ export default function Home() {
       />
 
       <Section
-        title="Before anything: the token"
-        lead="The library is internal to FlairsTech. Ask the AiMY UI owner for the library token and set it in your environment as AIMY_REGISTRY_TOKEN. Every install below sends it."
+        title="Before anything: one line in .npmrc"
+        lead="No sign-in and no token: anyone can install. The theme and the npm package come from this site's own registry, so npm needs to know where it is."
       >
         <CodeBlock>{npmrc}</CodeBlock>
         <p className="mt-3 text-meta text-ink-secondary">
-          Put these two lines in your project&apos;s <Code>.npmrc</Code>. The theme and the npm package come from this
-          private registry.
+          Put this line in your project&apos;s <Code>.npmrc</Code>.
         </p>
       </Section>
 

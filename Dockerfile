@@ -1,6 +1,6 @@
 # AiMY UI on Coolify: builds the docs, registry and npm store, then serves
-# them with server/index.mjs behind the library token. Set REGISTRY_TOKEN in
-# Coolify's environment variables; it is never baked into the image.
+# them with server/index.mjs. Open to anyone while server/access.json says
+# public; otherwise behind the library token (see COOLIFY.md).
 
 FROM node:24-slim AS build
 WORKDIR /app

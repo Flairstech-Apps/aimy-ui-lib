@@ -35,13 +35,10 @@ export default function Adopt() {
         </ul>
       </Section>
 
-      <Section title="Set up once" lead="The library is internal to FlairsTech. Every install sends the library token.">
+      <Section title="Set up once" lead="No sign-in and no token: every install works on any machine and in CI.">
         <ol data-ai="li" className="flex max-w-[46rem] list-decimal flex-col gap-2 pl-5 text-body text-ink-secondary">
           <li>
-            Ask the AiMY UI owner for the token and set it in your environment as AIMY_REGISTRY_TOKEN. Never commit it.
-          </li>
-          <li>
-            For the package and the tokens, add the two lines from{" "}
+            For the package and the tokens, add the line from{" "}
             <Link className="text-ink-action underline" href="/">
               Install and start
             </Link>{" "}
@@ -50,7 +47,6 @@ export default function Adopt() {
           <li>
             For copying components in, add the @aimy registry to <Code>components.json</Code> (also on that page).
           </li>
-          <li>In CI, set the same variable as a secret, so installs work there too.</li>
         </ol>
       </Section>
 

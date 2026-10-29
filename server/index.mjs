@@ -12,6 +12,10 @@
 // the environment is used if the app client has one. OIDC_* variables override
 // the file. /r and /npm keep the Bearer token, because a terminal can't sign in.
 //
+// Open to anyone: server/access.json { "public": true } (or AIMY_PUBLIC=true,
+// which wins either way) drops both locks and the sign-in. Set it to false and
+// the locks above come back as they were.
+//
 // The build bakes the Cloudflare address into a few files (npm tarball URLs,
 // the registry index, the install commands on the docs). They are rewritten to
 // the address the request came in on, so one build serves on either host.
@@ -28,6 +32,14 @@ const PORT = Number(process.env.PORT ?? 3000)
 const BAKED = "https://aimy-ui-lib.aimy.flairstech.com"
 const COOKIE = "aimy_ui"
 const YEAR = 60 * 60 * 24 * 365
+
+let access = {}
+try {
+  access = JSON.parse(readFileSync(new URL("./access.json", import.meta.url), "utf8"))
+} catch {
+  // No access.json: locked.
+}
+const OPEN = process.env.AIMY_PUBLIC ? process.env.AIMY_PUBLIC === "true" : access.public === true
 
 let ssoFile = {}
 try {
@@ -85,7 +97,8 @@ try {
 const sha256 = (s) => createHash("sha256").update(s).digest()
 
 if (!TOKEN && !TOKEN_HASH) console.warn("No REGISTRY_TOKEN and no token.sha256: every request will be refused.")
-console.log(SSO ? `Company sign-in on, through ${ISSUER}` : "Company sign-in off: the docs take the token.")
+if (OPEN) console.log("Open to anyone: no token, no sign-in.")
+else console.log(SSO ? `Company sign-in on, through ${ISSUER}` : "Company sign-in off: the docs take the token.")
 
 function same(given) {
   if (!given) return false
@@ -403,6 +416,19 @@ async function handle(req, res) {
   }
 
   if (pathname === "/healthz") return send(res, 200, "ok")
+  if (pathname === "/robots.txt") {
+    return send(res, 200, "User-agent: *\nDisallow: /\n", { "Content-Type": "text/plain; charset=utf-8" })
+  }
+
+  if (OPEN) {
+    // Open to anyone: no sign-in pages, no locks.
+    if (pathname === "/login" || pathname.startsWith("/auth/")) {
+      res.writeHead(302, { Location: safe(url.searchParams.get("next") ?? "/") })
+      return res.end()
+    }
+    if (pathname.startsWith("/npm/")) return npm(req, res, pathname)
+    return serveStatic(req, res, pathname, url)
+  }
 
   if (pathname === "/auth/logout") {
     res.writeHead(303, {
@@ -459,7 +485,10 @@ async function handle(req, res) {
     res.writeHead(302, { Location: `${to}?next=${encodeURIComponent(url.pathname + url.search)}` })
     return res.end()
   }
+  return serveStatic(req, res, pathname, url)
+}
 
+async function serveStatic(req, res, pathname, url) {
   if (req.method !== "GET" && req.method !== "HEAD") return send(res, 405, "Method not allowed")
   const found = await locate(pathname)
   if (found.redirect) {
@@ -472,6 +501,8 @@ async function handle(req, res) {
 }
 
 createServer((req, res) => {
+  // Open or locked, the library stays out of search engines.
+  res.setHeader("X-Robots-Tag", "noindex, nofollow")
   handle(req, res).catch((error) => {
     console.error(error)
     if (!res.headersSent) send(res, 500, "Server error")

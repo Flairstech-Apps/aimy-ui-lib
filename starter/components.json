@@ -19,9 +19,6 @@
     "hooks": "@/hooks"
   },
   "registries": {
-    "@aimy": {
-      "url": "https://aimy-ui-lib.aimy.flairstech.com/r/{name}.json",
-      "headers": { "Authorization": "Bearer ${AIMY_REGISTRY_TOKEN}" }
-    }
+    "@aimy": "https://aimy-ui-lib.aimy.flairstech.com/r/{name}.json"
   }
 }

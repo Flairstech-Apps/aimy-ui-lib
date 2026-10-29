@@ -88,7 +88,7 @@ const llms = `# AiMY UI
 
 > The component library for AiMY products at FlairsTech: React and TypeScript, Tailwind v4 tokens, installed with shadcn from a private registry or imported from @flairstech-aimy/ui. Every component documents what AiMY Sales and Knowledge already draw.
 
-Install: \`npx shadcn@latest add @aimy/<name>\` with AIMY_REGISTRY_TOKEN set. Registry items: ${SITE}/r/<name>.json. Rules for agents: ${SITE}/AGENTS.md.
+Install: \`npx shadcn@latest add @aimy/<name>\`. Registry items: ${SITE}/r/<name>.json. Rules for agents: ${SITE}/AGENTS.md.
 
 ${index.join("\n").replace(/^### /gm, "## ").trim()}
 `
