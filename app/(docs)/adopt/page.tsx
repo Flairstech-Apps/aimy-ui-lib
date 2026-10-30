@@ -56,8 +56,8 @@ export default function Adopt() {
       >
         <CodeBlock>npx tiged --mode=git https://github.com/Flairstech-Apps/aimy-ui-lib/starter my-product</CodeBlock>
         <p data-ai="p" className="mt-3 max-w-[46rem] text-body text-ink-secondary">
-          That is Vite. For Next.js (App Router), copy <Code>starter-next</Code> the same way. Both use your own GitHub
-          login for the private repo. Then rename the product and the person at the top of the screen file, and replace{" "}
+          That is Vite. For Next.js (App Router), copy <Code>starter-next</Code> the same way. The repo is public, so no
+          GitHub login is needed. Then rename the product and the person at the top of the screen file, and replace{" "}
           <Code>answer()</Code> in <Code>src/conversation.tsx</Code> with your backend&apos;s stream.
         </p>
       </Section>

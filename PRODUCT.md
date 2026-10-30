@@ -32,7 +32,7 @@ A record of a system that already exists, made installable. Where Sales and Know
 
 ## Operating Context
 
-Internal to FlairsTech. The repo (`Flairstech-AIMY/aimy-ui-lib`) is private, the docs, registry and packages are open on Coolify (the owner chose this on 29 Oct 2026; `server/access.json` turns the locks back on). Reference viewport is 1536px; dark theme is the default, light is designed rather than inverted.
+Internal to FlairsTech. The repo is public at `Flairstech-Apps/aimy-ui-lib` since 30 Oct 2026 (the `Flairstech-AIMY/aimy-ui-lib` copy stays private), the docs, registry and packages are open on Coolify (the owner chose this on 29 Oct 2026; `server/access.json` turns the locks back on). Reference viewport is 1536px; dark theme is the default, light is designed rather than inverted.
 
 ## Capabilities and Constraints
 

@@ -63,7 +63,7 @@ export default function Start() {
 
       <Section
         title="Start a new AiMY product"
-        lead="Copies a starter already in the AiMY shell, with the theme, fonts and agent rules installed. It needs read access to the Flairstech-Apps repo on GitHub."
+        lead="Copies a starter already in the AiMY shell, with the theme, fonts and agent rules installed."
       >
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-2">
