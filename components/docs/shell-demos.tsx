@@ -167,6 +167,34 @@ export function AppShellDemo() {
   )
 }
 
+/** The bar on its own, in a shell with no rail, at the same four widths. */
+export function TopnavDemo() {
+  const [w, setW] = useState("100%")
+  return (
+    <div className="flex flex-col gap-4">
+      <Segmented label="Bar width" options={WIDTHS} value={w} onValueChange={setW} />
+      <div
+        className="overflow-hidden rounded-xl border border-edge"
+        style={{ width: w, maxWidth: "100%", ["--shell-h" as string]: "9rem" }}
+      >
+        <AppShell
+          topnav={
+            <Topnav
+              logo={<AimyMark variant="lockup" title="AiMY Sales" className="h-7" />}
+              products={PRODUCTS}
+              actions={<ShellBar />}
+            />
+          }
+        >
+          <Page>
+            <p className="text-meta text-ink-secondary">The page starts under the bar.</p>
+          </Page>
+        </AppShell>
+      </div>
+    </div>
+  )
+}
+
 export function RailDoorDemo() {
   return (
     <div className="flex flex-wrap items-start gap-6">

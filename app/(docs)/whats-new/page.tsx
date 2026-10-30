@@ -13,6 +13,7 @@ const RELEASES: { version: string; date: string; summary: string; changes: strin
       "The AiMY UI MCP server at aimy-ui-lib.aimy.flairstech.com/mcp: search the components, take one with its code and install commands, read the rules.",
       "Three skills beside aimy-ui: aimy-ui-build (a screen from a brief), aimy-ui-review (check a screen against the rules) and aimy-ui-upgrade (take a new release).",
       "A new page, Tools for AI agents, says how to connect Claude Code, Copilot and Cursor.",
+      "The docs have search: the box in the bar, or Ctrl+K (⌘K on a Mac) from any page. Top navigation has its own page under Shell.",
     ],
     action: "To get the skills in an existing app, run the init command again with --overwrite.",
   },

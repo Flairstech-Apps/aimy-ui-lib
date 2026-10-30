@@ -1,6 +1,7 @@
 import { ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { PageNav, Toc } from "@/components/docs/page-chrome"
+import { DocsSearch } from "@/components/docs/search"
 import { Sidebar } from "@/components/docs/sidebar"
 import ui from "@/package/ui/package.json"
 import { AimyMark } from "@/registry/aimy/brand/aimy-mark"
@@ -15,6 +16,9 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
           <AimyMark variant="lockup" title="" className="h-6" />
           <span className="rounded-sm bg-w07 px-2 py-0.5 text-2xs font-semibold text-ink-secondary">UI</span>
         </Link>
+        <div className="ml-2 canvas:ml-6">
+          <DocsSearch />
+        </div>
         <span className="ml-auto" />
         <Link
           href="/whats-new/"

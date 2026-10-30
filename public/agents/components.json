@@ -231,6 +231,13 @@
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/app-shell/"
   },
   {
+    "name": "topnav",
+    "title": "Top navigation",
+    "group": "Shell",
+    "description": "The bar: Knowledge's markup with Sales' values. Mark, products in a centred pill strip (current in the accent's ink and bolder; not-yet-open ones shown and named), the right-hand controls. Below 1120 the account drops its name, below 1040 a rail toggle appears, below 900 the strip becomes a chevron menu. UserMenu is the account pill and its menu.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/topnav/"
+  },
+  {
     "name": "notification-center",
     "title": "Notification center",
     "group": "Shell",
@@ -682,12 +689,6 @@
     "title": "MemoryList",
     "group": "Also in the registry",
     "description": "Everything AiMY remembers about a person or account, with where each came from; forget one in a click with Undo, or all of it after one inline confirm."
-  },
-  {
-    "name": "topnav",
-    "title": "Topnav",
-    "group": "Also in the registry",
-    "description": "The bar: Knowledge's markup with Sales' values. Mark, products in a centred pill strip (current in the accent's ink and bolder; not-yet-open ones shown and named), the right-hand controls. Below 1120 the account drops its name, below 1040 a rail toggle appears, below 900 the strip becomes a chevron menu. UserMenu is the account pill and its menu."
   },
   {
     "name": "rail",

@@ -105,6 +105,7 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 ### Shell
 
 - **App shell** (`@aimy/app-shell`): The frame every AiMY product sits in: topnav, rail, page. https://aimy-ui-lib.aimy.flairstech.com/components/app-shell/
+- **Top navigation** (`@aimy/topnav`): The bar: Knowledge's markup with Sales' values. https://aimy-ui-lib.aimy.flairstech.com/components/topnav/
 - **Rail doors**: https://aimy-ui-lib.aimy.flairstech.com/components/rail-door/
 - **Notification center** (`@aimy/notification-center`): The bell and Sales' panel: Needs you with the unread count and Mark all read; a row per thing with a severity dot beside its type in words, when, one sentence and one action; a question for AiMY at the foot. https://aimy-ui-lib.aimy.flairstech.com/components/notification-center/
 - **Diary** (`@aimy/diary`): Sales' diary: the month (count, Today, the months either side; a Monday-first grid with up to three dots a day by kind, today marked) and the chosen day beside it (hour or all day, kind in words, who, what, who set the time), add one, and the next three. https://aimy-ui-lib.aimy.flairstech.com/components/diary/
@@ -204,5 +205,4 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 - **ConflictPair** (`@aimy/conflict-pair`): Two sources that disagree, side by side, each with trust state, what it says, how it is used and 'Make this the one' (a review action into ChangeReview).
 - **MemoryPanel** (`@aimy/memory-panel`): What AiMY carries into this conversation from an earlier thread (Knowledge's memory panel), with Answer without it always present, and each line forgettable with Undo.
 - **MemoryList** (`@aimy/memory-list`): Everything AiMY remembers about a person or account, with where each came from; forget one in a click with Undo, or all of it after one inline confirm.
-- **Topnav** (`@aimy/topnav`): The bar: Knowledge's markup with Sales' values.
 - **Rail** (`@aimy/rail`): Sales' left column of standing facts, Knowledge's drawer below 1040 (scrim, Escape, focus in and back).
