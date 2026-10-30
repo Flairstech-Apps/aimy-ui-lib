@@ -11,7 +11,7 @@ const RELEASES: { version: string; date: string; summary: string; changes: strin
     summary: "The shadcn commands work in a project with no .npmrc line.",
     changes: [
       "The theme asked npm for @flairstech-aimy/tokens by name, so a project without the .npmrc line looked for it on npmjs and failed with E404. The theme now names the package's file on this site.",
-      "package.json records the tokens package by that address. To take newer versions with pnpm up, add the .npmrc line.",
+      "package.json records the tokens package by that address, pinned to one version. The aimy-ui-upgrade skill turns it back into a version range: it adds the .npmrc line and installs the package again by name.",
     ],
     action: "If init failed with E404 on @flairstech-aimy/tokens, run the same command again.",
   },
