@@ -46,7 +46,8 @@ export default function Start() {
 
       <Section title="Install" lead="Anyone can install, on any machine and in CI.">
         <Way title="Point npm at the registry" code={[npmrc]}>
-          One line in your project&apos;s <Code>.npmrc</Code>. The theme and the npm package come from this site.
+          One line in your project&apos;s <Code>.npmrc</Code>, for installing the npm packages by name. The shadcn
+          commands below work without it.
         </Way>
         <Way title="Copy components in" code={[registries, "npx shadcn@latest add @aimy/init"]}>
           For apps on Tailwind v4. Add the registry to <Code>components.json</Code>; init brings the theme, the toast

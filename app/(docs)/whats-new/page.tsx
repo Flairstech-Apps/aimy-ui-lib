@@ -6,6 +6,16 @@ export const metadata: Metadata = { title: "What's new" }
 // Newest first. Each entry says what changed and whether anyone has to do anything.
 const RELEASES: { version: string; date: string; summary: string; changes: string[]; action?: string }[] = [
   {
+    version: "Fix",
+    date: "30 Oct 2026",
+    summary: "The shadcn commands work in a project with no .npmrc line.",
+    changes: [
+      "The theme asked npm for @flairstech-aimy/tokens by name, so a project without the .npmrc line looked for it on npmjs and failed with E404. The theme now names the package's file on this site.",
+      "package.json records the tokens package by that address. To take newer versions with pnpm up, add the .npmrc line.",
+    ],
+    action: "If init failed with E404 on @flairstech-aimy/tokens, run the same command again.",
+  },
+  {
     version: "1.1.0",
     date: "30 Oct 2026",
     summary: "QA's navigation and scroll dot, in the npm package and the registry.",

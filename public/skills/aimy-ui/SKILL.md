@@ -13,7 +13,7 @@ Docs, with every component's preview, rules and source notes: https://aimy-ui-li
 
 ## Installing
 
-Installing needs no token. The project's `.npmrc` names the registry for `@flairstech-aimy` packages.
+Installing needs no token. The shadcn commands take everything from the site, including the tokens package. Installing `@flairstech-aimy` packages by name needs one line in the project's `.npmrc`: `@flairstech-aimy:registry=https://aimy-ui-lib.aimy.flairstech.com/npm/`.
 
 - Copy a component into the project (the shadcn way): `npx shadcn@latest add @aimy/<name>`. The project's `components.json` must list the `@aimy` registry.
 - Or import from the package: `import { Button } from "@flairstech-aimy/ui"` and `import "@flairstech-aimy/ui/styles.css"`.
