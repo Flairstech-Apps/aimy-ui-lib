@@ -20,6 +20,8 @@
 @import "./records.css";
 @import "./charts.css";
 @import "./shell.css";
+@import "./sidenav.css";
+@import "./scroll-dot.css";
 @import "./diary.css";
 @import "./document.css";
 @import "./base.css";

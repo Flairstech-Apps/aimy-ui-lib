@@ -85,6 +85,8 @@ export const NAV: NavGroup[] = [
     items: [
       { href: "/components/app-shell/", label: "App shell" },
       { href: "/components/topnav/", label: "Top navigation" },
+      { href: "/components/side-nav/", label: "Side navigation" },
+      { href: "/components/scroll-dot/", label: "Scroll dot" },
       { href: "/components/rail-door/", label: "Rail doors" },
       { href: "/components/notification-center/", label: "Notification center" },
       { href: "/components/diary/", label: "Diary" },

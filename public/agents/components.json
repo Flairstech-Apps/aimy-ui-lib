@@ -238,6 +238,20 @@
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/topnav/"
   },
   {
+    "name": "side-nav",
+    "title": "Side navigation",
+    "group": "Shell",
+    "description": "QA's left navigation between pages, in two forms: open (272px), each page a section with its headline figures and the current page first in an accent card that says You're here; collapsed (64px), icon squares with count badges and tooltips. Remembers the choice; below 1100px of the shell it stays collapsed and opens as a drawer over a scrim. Goes in AppShell's nav slot.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/side-nav/"
+  },
+  {
+    "name": "scroll-dot",
+    "title": "Scroll dot",
+    "group": "Shell",
+    "description": "QA's scroll indicator, opt-in per scrolling area: a translucent accent dot in place of the native bar that trails a flame sized by scroll speed and lands with a squash when the scroll stops. Drag it to scroll; optionally click the rail to jump, and a Latest pill for threads.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/scroll-dot/"
+  },
+  {
     "name": "notification-center",
     "title": "Notification center",
     "group": "Shell",

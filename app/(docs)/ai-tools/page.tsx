@@ -97,6 +97,88 @@ export default function AiTools() {
         </p>
       </Section>
 
+      <Section
+        title="How to use them"
+        lead="Once both are in, ask in plain words. The agent picks the skill that fits and calls the MCP server for the components it needs."
+      >
+        <div className="flex max-w-[46rem] flex-col gap-6">
+          <div>
+            <h3 data-ai="h3" className="text-lg font-semibold text-ink">
+              Check the server is connected
+            </h3>
+            <p data-ai="p" className="mt-1.5 text-body text-ink-secondary">
+              In Claude Code, type <Code>/mcp</Code>: aimy-ui should say connected. In VS Code, open the MCP servers
+              list from the Command Palette (MCP: List Servers) and start aimy-ui if it is stopped. In Cursor, it shows
+              under Settings, then MCP, with a green dot.
+            </p>
+          </div>
+          <div>
+            <h3 data-ai="h3" className="text-lg font-semibold text-ink">
+              What to ask
+            </h3>
+            <ul data-ai="li" className="mt-2 flex list-disc flex-col gap-2 pl-5 text-body text-ink-secondary">
+              <li>
+                <b className="text-ink">To build:</b> &quot;Build the reviews page from this screenshot with AiMY
+                UI.&quot; The agent uses aimy-ui-build: it lists the parts, finds each one with{" "}
+                <Code>search_components</Code>, takes the code with <Code>get_component</Code>, and stops to tell you if
+                a part is missing instead of inventing one.
+              </li>
+              <li>
+                <b className="text-ink">To review:</b> &quot;Review my changes against AiMY&apos;s rules.&quot; It uses
+                aimy-ui-review and lists each break with the file, what a person would notice, and the fix. It only
+                changes code if you ask.
+              </li>
+              <li>
+                <b className="text-ink">To upgrade:</b> &quot;Upgrade AiMY UI to the latest release.&quot; It uses
+                aimy-ui-upgrade: packages first, then each copied component, putting back your own edits.
+              </li>
+              <li>
+                <b className="text-ink">To find a part:</b> &quot;Which AiMY component shows a change AiMY
+                proposes?&quot; It searches the library and answers with the component and its page.
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 data-ai="h3" className="text-lg font-semibold text-ink">
+              Call a skill by name
+            </h3>
+            <p data-ai="p" className="mt-1.5 text-body text-ink-secondary">
+              When you want one skill and no guessing:
+            </p>
+            <ul data-ai="li" className="mt-2 flex list-disc flex-col gap-2 pl-5 text-body text-ink-secondary">
+              <li>
+                Claude Code, with the skills in your project: <Code>/aimy-ui-review</Code>, <Code>/aimy-ui-build</Code>{" "}
+                or <Code>/aimy-ui-upgrade</Code>, followed by what it is for.
+              </li>
+              <li>
+                Claude Code, from the MCP server: <Code>/mcp__aimy-ui__aimy-ui-review src/App.tsx</Code>. The text after
+                the name is what to review, or for build, what to build.
+              </li>
+              <li>
+                VS Code with Copilot, in agent mode: type <Code>/</Code> and choose the aimy-ui prompt, such as{" "}
+                <Code>/mcp.aimy-ui.aimy-ui-review</Code>.
+              </li>
+              <li>
+                Cursor, in agent mode: say which one, such as &quot;Use the aimy-ui-review skill on my changes&quot;. It
+                reads the skill through <Code>get_skill</Code>.
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 data-ai="h3" className="text-lg font-semibold text-ink">
+              What a review looks like
+            </h3>
+            <CodeBlock
+              what="the example review"
+              wrap
+            >{`- No muted text, at src/Reviews.tsx:42: the "Disputed" state is shown by fading the row to 50%, so people with low vision miss it. Fix: keep the row's ink and add a StatusPill that says "Disputed".
+- AI never applies a change silently, at src/Reviews.tsx:88: the AI summary is written straight into the notes. Fix: show it in a Suggestion with Accept, Edit and Reject.
+
+Not checked: motion and focus in a real browser.`}</CodeBlock>
+          </div>
+        </div>
+      </Section>
+
       <Section title="For agents that read the web">
         <ul data-ai="li" className="flex max-w-[46rem] list-disc flex-col gap-2 pl-5 text-body text-ink-secondary">
           <li>

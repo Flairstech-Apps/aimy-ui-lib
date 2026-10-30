@@ -26,6 +26,8 @@
     "./records.css": "./records.css",
     "./charts.css": "./charts.css",
     "./shell.css": "./shell.css",
+    "./sidenav.css": "./sidenav.css",
+    "./scroll-dot.css": "./scroll-dot.css",
     "./diary.css": "./diary.css",
     "./document.css": "./document.css"
   },

@@ -24,6 +24,8 @@ export function useShell() {
 
 type AppShellProps = {
   topnav: React.ReactNode
+  /** Left navigation between pages (SideNav), before the rail. It brings its own collapse and drawer. */
+  nav?: React.ReactNode
   rail?: React.ReactNode
   /** The rail's width as a column, e.g. "17rem". 20rem (320px) by default. */
   railWidth?: string
@@ -31,7 +33,7 @@ type AppShellProps = {
   children: React.ReactNode
 }
 
-export function AppShell({ topnav, rail, railWidth, className, children }: AppShellProps) {
+export function AppShell({ topnav, nav, rail, railWidth, className, children }: AppShellProps) {
   const railId = useId()
   const [railOpen, setRailOpen] = useState(false)
   const value = useMemo(() => ({ railOpen, setRailOpen, hasRail: !!rail, railId }), [railOpen, rail, railId])
@@ -52,6 +54,7 @@ export function AppShell({ topnav, rail, railWidth, className, children }: AppSh
       >
         {topnav}
         <div className="app-shell-body">
+          {nav}
           {rail}
           <main className="app-main">{children}</main>
         </div>

@@ -1994,6 +1994,45 @@
       ]
     },
     {
+      "name": "side-nav",
+      "type": "registry:component",
+      "title": "Side navigation",
+      "description": "QA's left navigation between pages, in two forms: open (272px), each page a section with its headline figures and the current page first in an accent card that says You're here; collapsed (64px), icon squares with count badges and tooltips. Remembers the choice; below 1100px of the shell it stays collapsed and opens as a drawer over a scrim. Goes in AppShell's nav slot.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark",
+        "@aimy/tooltip",
+        "@aimy/app-shell"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/side-nav.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "scroll-dot",
+      "type": "registry:component",
+      "title": "Scroll dot",
+      "description": "QA's scroll indicator, opt-in per scrolling area: a translucent accent dot in place of the native bar that trails a flame sized by scroll speed and lands with a squash when the scroll stops. Drag it to scroll; optionally click the rail to jump, and a Latest pill for threads.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/scroll-dot.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "rail",
       "type": "registry:component",
       "title": "Rail",
