@@ -41,24 +41,25 @@ export default function Start() {
     <>
       <PageHeader
         title="Install and start"
-        lead="Four ways in, from one line in .npmrc to copying components into your app. No sign-in and no token."
+        lead="Three ways in, from copying components into your app to plain CSS variables. No sign-in and no token."
       />
 
       <Section title="Install" lead="Anyone can install, on any machine and in CI.">
-        <Way title="Point npm at the registry" code={[npmrc]}>
-          One line in your project&apos;s <Code>.npmrc</Code>, for installing the npm packages by name. The shadcn
-          commands below work without it.
-        </Way>
         <Way title="Copy components in" code={[registries, "npx shadcn@latest add @aimy/init"]}>
           For apps on Tailwind v4. Add the registry to <Code>components.json</Code>; init brings the theme, the toast
           and the rules for agents. Then add components by name. The copied code is yours.
         </Way>
-        <Way title="Or import the package" code={["npm install @flairstech-aimy/ui @flairstech-aimy/tokens"]}>
-          For apps without Tailwind, or when you would rather import than copy. Versioned, so you choose when to
+        <Way
+          title="Or import the package"
+          code={[npmrc, "npm install @flairstech-aimy/ui @flairstech-aimy/tokens"]}
+        >
+          For apps without Tailwind, or when you would rather import than copy. Add the line to your project&apos;s{" "}
+          <Code>.npmrc</Code> first, so npm looks for the packages on this site. Versioned, so you choose when to
           upgrade.
         </Way>
         <Way title="Tokens only" code={[`@import "@flairstech-aimy/tokens";`]}>
-          Colour, type, spacing and motion as plain CSS variables. Works in any page, React or not.
+          Colour, type, spacing and motion as plain CSS variables. Works in any page, React or not. Install{" "}
+          <Code>@flairstech-aimy/tokens</Code> the same way as the package.
         </Way>
       </Section>
 
