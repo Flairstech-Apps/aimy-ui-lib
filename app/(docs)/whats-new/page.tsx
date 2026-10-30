@@ -6,6 +6,18 @@ export const metadata: Metadata = { title: "What's new" }
 // Newest first. Each entry says what changed and whether anyone has to do anything.
 const RELEASES: { version: string; date: string; summary: string; changes: string[]; action?: string }[] = [
   {
+    version: "1.1.0",
+    date: "30 Oct 2026",
+    summary: "QA's navigation and scroll dot, in the npm package and the registry.",
+    changes: [
+      "SideNav: QA's left navigation, open with each page's figures or collapsed to icons with counts, and a drawer when narrow. It goes in AppShell's new nav slot.",
+      "ScrollDot: QA's scroll indicator, turned on per scrolling area. The rest of the page keeps the library's scrollbar.",
+      "The tokens add sidenav.css and scroll-dot.css, imported by index.css and tailwind.css as before.",
+    ],
+    action:
+      "Take it with pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest. Nothing changes for screens you already have.",
+  },
+  {
     version: "Agents",
     date: "30 Oct 2026",
     summary: "Tools for AI agents: an MCP server and three task skills.",
