@@ -7,6 +7,7 @@ export const NAV: NavGroup[] = [
     items: [
       { href: "/start/", label: "Install and start" },
       { href: "/adopt/", label: "How to adopt" },
+      { href: "/ai-tools/", label: "Tools for AI agents" },
       { href: "/whats-new/", label: "What's new" },
     ],
   },

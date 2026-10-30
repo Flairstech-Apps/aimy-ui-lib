@@ -15,6 +15,7 @@ export const metadata: Metadata = { title: { absolute: "AiMY UI: the AI-native i
 
 const COMPONENTS = registry.items.filter((i) => i.type === "registry:component").length
 const INIT = "npx shadcn@latest add https://aimy-ui-lib.aimy.flairstech.com/r/init.json"
+const MCP = "claude mcp add --transport http aimy-ui https://aimy-ui-lib.aimy.flairstech.com/mcp"
 
 const LINKS = [
   { href: "/start/", label: "Docs" },
@@ -285,21 +286,28 @@ export default function Landing() {
           <div className="mx-auto grid max-w-[80rem] items-center gap-12 px-5 py-28 column:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
             <Heading
               title="Your AI agent knows the rules too"
-              lead="The install command adds AGENTS.md and the aimy-ui skill, so Claude Code and Copilot build the AiMY way."
+              lead="An MCP server that knows every component, and skills for the common jobs, so Claude Code, Copilot and Cursor build the AiMY way."
             />
             <Reveal>
               <Line i={2}>
-                <ul className="flex flex-col gap-4 text-body text-ink-secondary">
+                <CodeBlock what="the MCP command" wrap>
+                  {MCP}
+                </CodeBlock>
+              </Line>
+              <Line i={3}>
+                <ul className="mt-6 flex flex-col gap-4 text-body text-ink-secondary">
                   <li>
-                    <span className="font-mono text-ink">AGENTS.md</span> and the aimy-ui skill: the doctrine, the
-                    writing rules, and which component to use for what.
+                    <span className="text-ink">The MCP server</span> finds components by what a screen needs and hands
+                    over their code and install commands.
                   </li>
                   <li>
-                    <span className="font-mono text-ink">/llms.txt</span>: every component and its page, for agents that
-                    read the web.
+                    <span className="text-ink">The skills</span>, added by the install command: build a screen from a
+                    brief, review one against the rules, take a new release.
                   </li>
                   <li>
-                    <span className="text-ink">Copy for AI</span> on every docs page, as clean markdown.
+                    <Link href="/ai-tools/" className="font-semibold text-ink-action">
+                      Set up your agent
+                    </Link>
                   </li>
                 </ul>
               </Line>

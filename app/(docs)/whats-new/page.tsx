@@ -6,6 +6,17 @@ export const metadata: Metadata = { title: "What's new" }
 // Newest first. Each entry says what changed and whether anyone has to do anything.
 const RELEASES: { version: string; date: string; summary: string; changes: string[]; action?: string }[] = [
   {
+    version: "Agents",
+    date: "30 Oct 2026",
+    summary: "Tools for AI agents: an MCP server and three task skills.",
+    changes: [
+      "The AiMY UI MCP server at aimy-ui-lib.aimy.flairstech.com/mcp: search the components, take one with its code and install commands, read the rules.",
+      "Three skills beside aimy-ui: aimy-ui-build (a screen from a brief), aimy-ui-review (check a screen against the rules) and aimy-ui-upgrade (take a new release).",
+      "A new page, Tools for AI agents, says how to connect Claude Code, Copilot and Cursor.",
+    ],
+    action: "To get the skills in an existing app, run the init command again with --overwrite.",
+  },
+  {
     version: "Site",
     date: "29 Oct 2026",
     summary: "The docs moved to Coolify and are open: no sign-in and no token.",
@@ -60,7 +71,16 @@ export default function WhatsNew() {
       </Section>
 
       {RELEASES.map((r) => (
-        <Section key={r.version} title={r.version === "Site" ? `The site, ${r.date}` : `${r.version}, ${r.date}`}>
+        <Section
+          key={r.version}
+          title={
+            r.version === "Site"
+              ? `The site, ${r.date}`
+              : r.version === "Agents"
+                ? `Tools for agents, ${r.date}`
+                : `${r.version}, ${r.date}`
+          }
+        >
           <p data-ai="p" className="max-w-[46rem] text-body text-ink">
             {r.summary}
           </p>

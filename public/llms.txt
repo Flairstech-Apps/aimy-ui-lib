@@ -1,8 +1,8 @@
 # AiMY UI
 
-> The component library for AiMY products at FlairsTech: React and TypeScript, Tailwind v4 tokens, installed with shadcn from a private registry or imported from @flairstech-aimy/ui. Every component documents what AiMY Sales and Knowledge already draw.
+> The AI-native component library for AiMY products at FlairsTech: React and TypeScript, Tailwind v4 tokens, copied in with shadcn or imported from @flairstech-aimy/ui. Every component documents what AiMY Sales and Knowledge already draw.
 
-Install: `npx shadcn@latest add @aimy/<name>`. Registry items: https://aimy-ui-lib.aimy.flairstech.com/r/<name>.json. Rules for agents: https://aimy-ui-lib.aimy.flairstech.com/AGENTS.md.
+Install by address, with no setup: `npx shadcn@latest add https://aimy-ui-lib.aimy.flairstech.com/r/<name>.json`. Rules for agents: https://aimy-ui-lib.aimy.flairstech.com/AGENTS.md. MCP server: https://aimy-ui-lib.aimy.flairstech.com/mcp. Skills: https://aimy-ui-lib.aimy.flairstech.com/skills/aimy-ui/SKILL.md, https://aimy-ui-lib.aimy.flairstech.com/skills/aimy-ui-build/SKILL.md, https://aimy-ui-lib.aimy.flairstech.com/skills/aimy-ui-review/SKILL.md, https://aimy-ui-lib.aimy.flairstech.com/skills/aimy-ui-upgrade/SKILL.md.
 
 ## Components
 

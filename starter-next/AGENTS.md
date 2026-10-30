@@ -16,6 +16,11 @@ Installing needs no token. The project's `.npmrc` names the registry for `@flair
 - Or import from the package: `import { Button } from "@flairstech-aimy/ui"` and `import "@flairstech-aimy/ui/styles.css"`.
 - Tokens only (any HTML): `@flairstech-aimy/tokens`.
 
+## Tools for agents
+
+- The AiMY UI MCP server: `claude mcp add --transport http aimy-ui https://aimy-ui-lib.aimy.flairstech.com/mcp`. It searches the components, returns a component's code and install commands, and gives these rules.
+- The skills, installed with the rules by `npx shadcn@latest add https://aimy-ui-lib.aimy.flairstech.com/r/init.json`: `aimy-ui` (these rules and the component index), `aimy-ui-build` (build a screen from a brief), `aimy-ui-review` (check a screen against these rules) and `aimy-ui-upgrade` (take a new release without losing the app's edits).
+
 ## The rules every screen follows
 
 Doctrine, from the AiMY Knowledge-to-Action doctrine and the products:

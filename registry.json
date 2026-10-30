@@ -34,7 +34,7 @@
       "name": "init",
       "type": "registry:item",
       "title": "Init",
-      "description": "Starts AiMY UI in an existing React app in one command: the theme and fonts, cn, the theme toggle, toast with undo, and the rules for AI agents (AGENTS.md and the aimy-ui Claude skill), so the first screen an agent builds already follows AiMY's doctrine.",
+      "description": "Starts AiMY UI in an existing React app in one command: the theme and fonts, cn, the theme toggle, toast with undo, and the rules for AI agents (AGENTS.md, the aimy-ui Claude skill, and the build, review and upgrade skills), so the first screen an agent builds already follows AiMY's doctrine.",
       "dependencies": [],
       "registryDependencies": [
         "@aimy/theme",
@@ -52,6 +52,21 @@
           "path": "starter/.claude/skills/aimy-ui/SKILL.md",
           "type": "registry:file",
           "target": "~/.claude/skills/aimy-ui/SKILL.md"
+        },
+        {
+          "path": "starter/.claude/skills/aimy-ui-build/SKILL.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/aimy-ui-build/SKILL.md"
+        },
+        {
+          "path": "starter/.claude/skills/aimy-ui-review/SKILL.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/aimy-ui-review/SKILL.md"
+        },
+        {
+          "path": "starter/.claude/skills/aimy-ui-upgrade/SKILL.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/aimy-ui-upgrade/SKILL.md"
         }
       ]
     },

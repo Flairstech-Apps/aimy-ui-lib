@@ -25,12 +25,21 @@ import { readFile, stat } from "node:fs/promises"
 import { createReadStream, readFileSync } from "node:fs"
 import { extname, join, normalize, resolve, sep } from "node:path"
 import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto"
+import { handleMcp } from "./mcp.mjs"
 
 const ROOT = resolve(process.env.OUT_DIR ?? "out")
 const TOKEN = process.env.REGISTRY_TOKEN ?? ""
 const PORT = Number(process.env.PORT ?? 3000)
 const BAKED = "https://aimy-ui-lib.aimy.flairstech.com"
 const COOKIE = "aimy_ui"
+// The released version, from the npm store in the build, for the MCP server's name card.
+let VERSION = "1.0.0"
+try {
+  const meta = JSON.parse(readFileSync(join(ROOT, "npm/@flairstech-aimy/ui/index.json"), "utf8"))
+  VERSION = meta["dist-tags"]?.latest ?? VERSION
+} catch {
+  // No npm store in this build: keep the default.
+}
 const YEAR = 60 * 60 * 24 * 365
 
 let access = {}
@@ -418,6 +427,20 @@ async function handle(req, res) {
   if (pathname === "/healthz") return send(res, 200, "ok")
   if (pathname === "/robots.txt") {
     return send(res, 200, "User-agent: *\nDisallow: /\n", { "Content-Type": "text/plain; charset=utf-8" })
+  }
+
+  // The MCP server: open while the site is, otherwise behind the same Bearer token as /r.
+  if (pathname === "/mcp") {
+    if (!OPEN && req.method !== "OPTIONS" && !same(bearer(req))) {
+      return json(res, 401, { error: "This MCP server needs the library token as a Bearer header." })
+    }
+    return handleMcp(req, res, {
+      root: ROOT,
+      origin: origin(req),
+      baked: BAKED,
+      version: VERSION,
+      body: () => body(req, 65536),
+    })
   }
 
   if (OPEN) {

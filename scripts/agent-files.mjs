@@ -8,10 +8,13 @@
 //   starter/.claude/skills/aimy-ui/SKILL.md   the same as a Claude skill
 //   starter-next/…                             both again, in the Next.js starter
 //   public/llms.txt                           the docs site's index for agents
+//   …/.claude/skills/aimy-ui-*/SKILL.md       the task skills (agents/skills/*.md), in both starters
+//   public/skills/<name>/SKILL.md             every skill, served for init and the MCP server
+//   public/agents/components.json             every component with its group and docs page, for the MCP server
 //
 // Run by `pnpm build`; `node scripts/agent-files.mjs --check` fails if any is stale.
 
-import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs"
+import { mkdirSync, readFileSync, readdirSync, writeFileSync, existsSync } from "node:fs"
 import path from "node:path"
 
 const ROOT = path.resolve(import.meta.dirname, "..")
@@ -53,11 +56,43 @@ for (const g of groups) {
   index.push("")
 }
 const others = registry.items.filter((i) => !listed.has(i.name) && i.type === "registry:component")
+
+// The same, as data: every component with its group and docs page.
+const components = []
+for (const g of groups) {
+  if (g.label === "Start here" || g.label === "Foundations") continue
+  for (const it of g.items) {
+    const name = it.href.replace(/^\/components\//, "").replace(/\/$/, "")
+    const item = byName.get(name)
+    if (item)
+      components.push({ name, title: it.label, group: g.label, description: item.description, docs: SITE + it.href })
+  }
+}
+for (const i of others) {
+  components.push({ name: i.name, title: i.title, group: "Also in the registry", description: i.description })
+}
+
 if (others.length) {
   index.push("### Also in the registry", "")
   for (const i of others) index.push(`- **${i.title}** (\`@aimy/${i.name}\`): ${firstSentence(i.description)}`)
   index.push("")
 }
+
+// The task skills: agents/skills/<name>.md, with {{SITE}} and {{INDEX}} filled in.
+const SKILLS = readdirSync(path.join(ROOT, "agents/skills"))
+  .filter((f) => f.endsWith(".md"))
+  .sort()
+  .map((f) => {
+    const src = read(`agents/skills/${f}`)
+    const m = src.match(/^(---\n[\s\S]*?\n---\n)([\s\S]*)$/)
+    if (!m) throw new Error(`agents/skills/${f} needs front matter`)
+    const name = m[1].match(/^name: (.+)$/m)?.[1]
+    const note = `<!-- Written by scripts/agent-files.mjs from agents/skills/${f}. Edit that, not this. -->`
+    const text = `${m[1]}\n${note}\n${m[2]}`
+      .replaceAll("{{SITE}}", SITE)
+      .replaceAll("{{INDEX}}", index.join("\n").trim())
+    return { name, text }
+  })
 
 const rules = read("agents/rules.md").trim()
 const header = `<!-- Written by scripts/agent-files.mjs from agents/rules.md and registry.json. Edit those, not this. -->`
@@ -86,9 +121,9 @@ ${index.join("\n").trim()}
 `
 const llms = `# AiMY UI
 
-> The component library for AiMY products at FlairsTech: React and TypeScript, Tailwind v4 tokens, installed with shadcn from a private registry or imported from @flairstech-aimy/ui. Every component documents what AiMY Sales and Knowledge already draw.
+> The AI-native component library for AiMY products at FlairsTech: React and TypeScript, Tailwind v4 tokens, copied in with shadcn or imported from @flairstech-aimy/ui. Every component documents what AiMY Sales and Knowledge already draw.
 
-Install: \`npx shadcn@latest add @aimy/<name>\`. Registry items: ${SITE}/r/<name>.json. Rules for agents: ${SITE}/AGENTS.md.
+Install by address, with no setup: \`npx shadcn@latest add ${SITE}/r/<name>.json\`. Rules for agents: ${SITE}/AGENTS.md. MCP server: ${SITE}/mcp. Skills: ${["aimy-ui", ...SKILLS.map((k) => k.name)].map((n) => `${SITE}/skills/${n}/SKILL.md`).join(", ")}.
 
 ${index.join("\n").replace(/^### /gm, "## ").trim()}
 `
@@ -102,6 +137,14 @@ const out = {
   "public/llms.txt": llms,
   "public/AGENTS.md": agents,
 }
+out["public/agents/components.json"] = JSON.stringify(components, null, 2) + "\n"
+out["public/skills/aimy-ui/SKILL.md"] = skill
+for (const k of SKILLS) {
+  out[`starter/.claude/skills/${k.name}/SKILL.md`] = k.text
+  out[`starter-next/.claude/skills/${k.name}/SKILL.md`] = k.text
+  out[`public/skills/${k.name}/SKILL.md`] = k.text
+}
+
 const check = process.argv.includes("--check")
 let stale = 0
 for (const [p, text] of Object.entries(out)) {
