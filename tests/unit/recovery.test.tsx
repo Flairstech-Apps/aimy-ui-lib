@@ -5,7 +5,7 @@ import { Field } from "@/registry/aimy/ui/field"
 import { Input } from "@/registry/aimy/ui/input"
 import { ErrorSummary, RecoveryState, RecoveryStatus } from "@/registry/aimy/ui/recovery"
 import { toast, Toaster } from "@/registry/aimy/ui/toast"
-import { classifyError } from "@/registry/aimy/lib/recovery"
+import { classifyError } from "@/registry/aimy/lib/recovery-kinds"
 import { a11yViolations } from "../a11y"
 
 describe("classifyError", () => {

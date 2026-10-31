@@ -31,8 +31,8 @@
       "@/lib/ai-types": [
         "../../registry/aimy/lib/ai-types.ts"
       ],
-      "@/lib/recovery": [
-        "../../registry/aimy/lib/recovery.ts"
+      "@/lib/recovery-kinds": [
+        "../../registry/aimy/lib/recovery-kinds.ts"
       ]
     }
   },

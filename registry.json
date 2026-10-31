@@ -849,7 +849,7 @@
           "type": "registry:component"
         },
         {
-          "path": "registry/aimy/lib/recovery.ts",
+          "path": "registry/aimy/lib/recovery-kinds.ts",
           "type": "registry:lib"
         }
       ]

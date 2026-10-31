@@ -25,7 +25,7 @@ import { useEffect, useId, useRef, useState } from "react"
 import { Button } from "@/components/button"
 import { CopyButton } from "@/components/copy-button"
 import { Dialog, DialogContent } from "@/components/dialog"
-import { RECOVERY_COPY, retryingCopy, type RecoveryKind, type RecoveryTone } from "@/lib/recovery"
+import { RECOVERY_COPY, retryingCopy, type RecoveryKind, type RecoveryTone } from "@/lib/recovery-kinds"
 import { cn } from "@/lib/utils"
 
 // Error and recovery states, AIMY-2979. One component for every failure the

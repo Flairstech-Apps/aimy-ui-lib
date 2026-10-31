@@ -8,7 +8,7 @@ import { Field } from "@/registry/aimy/ui/field"
 import { Input } from "@/registry/aimy/ui/input"
 import { ErrorSummary, RecoveryDialog, RecoveryState, RecoveryStatus } from "@/registry/aimy/ui/recovery"
 import { toast } from "@/registry/aimy/ui/toast"
-import { RECOVERY_COPY, type RecoveryKind } from "@/registry/aimy/lib/recovery"
+import { RECOVERY_COPY, type RecoveryKind } from "@/registry/aimy/lib/recovery-kinds"
 
 const box = "rounded-xl border border-edge bg-card"
 
