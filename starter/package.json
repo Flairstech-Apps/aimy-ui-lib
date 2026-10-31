@@ -11,7 +11,7 @@
     "aimy:add": "shadcn add"
   },
   "dependencies": {
-    "@flairstech-aimy/tokens": "1.1.0",
+    "@flairstech-aimy/tokens": "1.2.0",
     "clsx": "2.1.1",
     "lucide-react": "1.62.0",
     "react": "19.3.1",

@@ -6,6 +6,20 @@ export const metadata: Metadata = { title: "What's new" }
 // Newest first. Each entry says what changed and whether anyone has to do anything.
 const RELEASES: { version: string; date: string; summary: string; changes: string[]; action?: string }[] = [
   {
+    version: "1.2.0",
+    date: "31 Oct 2026",
+    summary: "Errors and recovery (AIMY-2979): one way to show every failure, from a whole-window sign-in to a failed save.",
+    changes: [
+      "RecoveryState covers session, permission, workspace, offline, connection, timeout, uncertain, service, maintenance, rate limit, missing, deleted, expired, validation, save, upload, file size and type, conflict and failed loads, as the whole window, a blocking page, a section, a widget, an inline note or a banner.",
+      "It retries calmly with Attempt 2 of 3, then shows the failure with its recovery; a rate limit counts down; a support reference can be copied.",
+      "classifyError turns an Axios error, a fetch failure, an OIDC error or a status into the right kind, with Retry-After and the correlation ID. The codes never reach the screen.",
+      "RecoveryStatus for background retries, ErrorSummary for forms, RecoveryDialog for a decision, and a red toast (tone err) for a failed action.",
+      "Field takes an id, so the summary can link to it. The rail toggle's icon is centred again at narrow widths.",
+    ],
+    action:
+      "Take it with pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest, or add the component with npx shadcn@latest add @aimy/recovery. Nothing changes for screens you already have.",
+  },
+  {
     version: "Fix",
     date: "30 Oct 2026",
     summary: "The shadcn commands work in a project with no .npmrc line.",
