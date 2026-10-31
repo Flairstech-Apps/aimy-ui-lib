@@ -1,5 +1,6 @@
 "use client"
 
+import { CircleAlert } from "lucide-react"
 import { useEffect, useRef, useState, useSyncExternalStore } from "react"
 import { AimyMark } from "@/components/aimy-mark"
 import { cn } from "@/lib/utils"
@@ -14,7 +15,12 @@ import { cn } from "@/lib/utils"
 //
 //   toast("Assigned to Lina", { onUndo: () => assign(was) })
 //   toast("Link copied")
+//   toast("We couldn't export the report", { tone: "err", sub: "Nothing changed.", action: { label: "Try again", onClick: exportIt } })
 //   <Toaster />  (once, at the root of the app)
+//
+// tone "err" is for an action that failed (AIMY-2979): the alert icon on a
+// red tile instead of the mark, a red edge and bar, announced at once, and
+// 8s to read it. Say what failed and what is safe; offer the recovery.
 
 type ToastInput = {
   /** A second line: what it means or what happens next. */
@@ -22,11 +28,15 @@ type ToastInput = {
   /** Shows Undo. Restore the state you captured before the action. */
   onUndo?: () => void
   undoLabel?: string
+  /** err: an action failed. */
+  tone?: "err"
+  /** The recovery, in place of Undo: Try again, Try saving again. */
+  action?: { label: string; onClick: () => void }
 }
 
 type ToastItem = ToastInput & { id: number; title: string }
 
-const life = (t: ToastItem) => (t.onUndo ? 6000 : 4000)
+const life = (t: ToastItem) => (t.tone === "err" ? 8000 : t.onUndo || t.action ? 6000 : 4000)
 
 let current: ToastItem | null = null
 let seq = 0
@@ -99,15 +109,10 @@ export function Toaster({ offset = "1.5rem" }: ToasterProps) {
     if (!open && !current) setShown(null)
   }
 
-  return (
-    <div
-      data-slot="toaster"
-      role="status"
-      aria-live="polite"
-      className="pointer-events-none fixed inset-x-0 z-(--z-toast) flex justify-center px-4"
-      style={{ bottom: offset }}
-    >
-      {shown ? (
+  const err = shown?.tone === "err"
+  const press = shown?.action ?? (shown?.onUndo ? { label: shown.undoLabel ?? "Undo", onClick: shown.onUndo } : undefined)
+
+  const card = shown ? (
         <div
           key={shown.id}
           onTransitionEnd={(e) => e.target === e.currentTarget && onClosed()}
@@ -117,42 +122,63 @@ export function Toaster({ offset = "1.5rem" }: ToasterProps) {
           onBlur={() => setPaused(false)}
           className={cn(
             "t-toast pointer-events-auto relative flex max-w-[22.5rem] min-w-[16.5rem] items-center gap-2.5 overflow-hidden",
-            "rounded-xl border border-w10 bg-raised px-3.5 py-2.5 shadow-lg",
+            "rounded-xl border bg-raised px-3.5 py-2.5 shadow-lg",
+            err ? "border-err-border" : "border-w10",
             open && "is-open"
           )}
         >
-          <span className="grid size-[1.625rem] shrink-0 place-items-center rounded-md border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]">
-            <AimyMark title="" className="size-3.5" />
-          </span>
+          {err ? (
+            <span className="grid size-[1.625rem] shrink-0 place-items-center rounded-md border border-err-border bg-err-bg text-err-text">
+              <CircleAlert aria-hidden="true" strokeWidth={2} className="size-3.5" />
+            </span>
+          ) : (
+            <span className="grid size-[1.625rem] shrink-0 place-items-center rounded-md border border-[color-mix(in_srgb,var(--accent)_20%,transparent)] bg-[color-mix(in_srgb,var(--accent)_10%,transparent)]">
+              <AimyMark title="" className="size-3.5" />
+            </span>
+          )}
           <span className="flex min-w-0 flex-1 flex-col gap-0.5">
             <span className="text-xs leading-snug font-bold text-ink">{shown.title}</span>
             {shown.sub ? <span className="text-xs leading-snug text-ink-secondary">{shown.sub}</span> : null}
           </span>
-          {shown.onUndo ? (
+          {press ? (
             <>
               <span aria-hidden="true" className="h-6 w-px shrink-0 bg-hairline" />
               <button
                 type="button"
                 onClick={() => {
-                  const undo = shown.onUndo
                   toast.dismiss()
-                  undo?.()
+                  press.onClick()
                 }}
-                className="min-h-6 shrink-0 rounded-sm text-xs font-bold text-ai-ink transition-[color] duration-(--t-fast) ease-out hover:text-ink"
+                className={cn(
+                  "min-h-6 shrink-0 rounded-sm text-xs font-bold transition-[color] duration-(--t-fast) ease-out hover:text-ink",
+                  err ? "text-err-text" : "text-ai-ink"
+                )}
               >
-                {shown.undoLabel ?? "Undo"}
+                {press.label}
               </button>
             </>
           ) : null}
           <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[2.5px]">
             <span
               key={`${shown.id}-bar`}
-              className="aimy-countdown block h-full origin-left bg-[image:var(--ai)]"
+              className={cn("aimy-countdown block h-full origin-left", err ? "bg-err" : "bg-[image:var(--ai)]")}
               style={{ animationDuration: `${life(shown)}ms`, animationPlayState: paused || !open ? "paused" : "running" }}
             />
           </span>
         </div>
-      ) : null}
-    </div>
+      ) : null
+
+  // Two live regions that are always there, so either announces reliably:
+  // a polite one for confirmations, an assertive one for failures.
+  const region = "pointer-events-none fixed inset-x-0 z-(--z-toast) flex justify-center px-4"
+  return (
+    <>
+      <div data-slot="toaster" role="status" aria-live="polite" className={region} style={{ bottom: offset }}>
+        {err ? null : card}
+      </div>
+      <div data-slot="toaster-alert" role="alert" className={region} style={{ bottom: offset }}>
+        {err ? card : null}
+      </div>
+    </>
   )
 }

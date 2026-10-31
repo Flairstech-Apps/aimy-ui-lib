@@ -21,6 +21,7 @@ export default function Page() {
       <Section title="Rules">
         <div className="flex flex-col gap-3">
           <DoDont doText="Count what's there and name the fix: 134 contacts, none matching. Clear filters." dontText="Write No data." />
+          <DoDont doText="For a session, access, connection or any other failure, use RecoveryState (Errors and recovery)." dontText="Show an empty state when the load failed." />
         </div>
       </Section>
       <Source>

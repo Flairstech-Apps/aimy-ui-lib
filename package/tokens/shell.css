@@ -130,7 +130,8 @@
   .topnav-user { padding: 0.25rem; }
 }
 @container shell (max-width: 1040px) {
-  .rail-toggle { display: inline-flex; margin-right: 0.5rem; }
+  /* inline-grid, as IconButton draws it, so the icon stays centred. */
+  .rail-toggle { display: inline-grid; margin-right: 0.5rem; }
 }
 @container shell (max-width: 900px) {
   .app-topnav { padding: 0 0.75rem; gap: 0.5rem; }

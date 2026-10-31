@@ -43,12 +43,15 @@ type FieldProps = {
   error?: string
   /** Adds "Optional" after the label. Required is the default and needs no mark. */
   optional?: boolean
+  /** The control's id, so an ErrorSummary can link to it. Generated when left out. */
+  id?: string
   className?: string
   children: React.ReactNode
 }
 
-export function Field({ label, help, error, optional, className, children }: FieldProps) {
-  const id = useId()
+export function Field({ label, help, error, optional, id: given, className, children }: FieldProps) {
+  const auto = useId()
+  const id = given ?? auto
   const helpId = `${id}-help`
   const errorId = `${id}-error`
   const describedBy = error ? errorId : help ? helpId : undefined

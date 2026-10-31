@@ -50,6 +50,15 @@ Writing:
 - A verb on every button that names the action; never "Open" or "Learn more" when the real action has a name.
 - Errors say what happened and what to do next.
 
+Errors and recovery (AIMY-2979):
+
+- Classify every failed request once with `classifyError` and show the matching `RecoveryState`. HTTP codes and raw messages are for logs; they never reach the screen.
+- Keep what still works: one failed widget or section never blocks or redirects the page, and a failed save keeps what was typed. Use `display="screen"` only when the app can't draw its shell, and `display="page"` only when nothing on the screen works without what failed.
+- Retry at most three times with `status="retrying"`, then show the failed state with its recovery. Never retry forever.
+- Tell permission, session and connection apart. Say offline only when the browser confirms it.
+- A request that creates, updates, deletes, sends or pays and then times out is `uncertain`: ask people to check, never offer a blind retry.
+- An empty result is an `EmptyState`, never a failure; a failed load is never an empty state.
+
 Never:
 
 - Never use a native `<select>`, an inline `onclick` string, a coloured left-edge stripe, gradient text, or a pulsing decorative dot.
@@ -101,6 +110,7 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 - **Sheet** (`@aimy/sheet`): A panel that slides in from the side over the page, with a scrim: the rail as a drawer below the rail rung, settings and connection sheets. https://aimy-ui-lib.aimy.flairstech.com/components/sheet/
 - **Notice** (`@aimy/notice`): A notice in the page: neutral, info, ok, warn or err. https://aimy-ui-lib.aimy.flairstech.com/components/notice/
 - **Empty and error states** (`@aimy/empty-state`): EmptyState: why there is nothing here and the way forward (Clear filters, New document), with an icon tile and an optional fine line; dashed or plain. https://aimy-ui-lib.aimy.flairstech.com/components/empty-state/
+- **Errors and recovery** (`@aimy/recovery`): AIMY-2979's error and recovery patterns. https://aimy-ui-lib.aimy.flairstech.com/components/recovery/
 - **Skeleton** (`@aimy/skeleton`): Placeholders shaped like what is coming, pulsing while loading; Reveal cross-fades from the skeleton to the content when loading ends (transitions.dev skeleton reveal, 14). https://aimy-ui-lib.aimy.flairstech.com/components/skeleton/
 - **Progress** (`@aimy/progress`): How much is done or used: thin (3px) for work in progress, meter (6px) or large (8px) for usage. https://aimy-ui-lib.aimy.flairstech.com/components/progress/
 - **Notification bell** (`@aimy/notification-bell`): The topbar bell with its micro-interactions: the count slides on and pops (transitions.dev 03); a new ping rocks the bell from its top, three swings in 600ms, and drops one line under it saying what finished, gone after 1.4s (Knowledge's ring and tip). https://aimy-ui-lib.aimy.flairstech.com/components/notification-bell/

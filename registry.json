@@ -370,7 +370,7 @@
       "name": "field",
       "type": "registry:component",
       "title": "Field",
-      "description": "Wraps a form control with its label above and help or an error below, and wires them up: the control gets the id, aria-describedby and aria-invalid. A new error makes the control shake once (transitions.dev 12); the message stays until fixed. Never use a placeholder as a label.",
+      "description": "Wraps a form control with its label above and help or an error below, and wires them up: the control gets the id, aria-describedby and aria-invalid. A new error makes the control shake once (transitions.dev 12); the message stays until fixed. Never use a placeholder as a label. Pass id to link an ErrorSummary to the control.",
       "dependencies": [],
       "registryDependencies": [
         "@aimy/theme",
@@ -732,7 +732,7 @@
       "name": "toast",
       "type": "registry:component",
       "title": "toast() and Toaster",
-      "description": "The confirmation every action ends with: act at once, then toast what happened with Undo. toast(title, { sub, onUndo }). One at a time; 6s with Undo, 4s without; waits while hovered or focused; announced politely. Render <Toaster /> once at the root (offset lifts it above a composer bar). Rises and leaves with transitions.dev toast (22).",
+      "description": "The confirmation every action ends with: act at once, then toast what happened with Undo. toast(title, { sub, onUndo }). One at a time; 6s with Undo, 4s without; waits while hovered or focused; announced politely. Render <Toaster /> once at the root (offset lifts it above a composer bar). Rises and leaves with transitions.dev toast (22). tone err for a failed action: the alert icon on a red tile, announced at once, 8s, with an action such as Try again.",
       "dependencies": [],
       "registryDependencies": [
         "@aimy/theme",
@@ -825,6 +825,32 @@
         {
           "path": "registry/aimy/ui/empty-state.tsx",
           "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "recovery",
+      "type": "registry:component",
+      "title": "Error and recovery states",
+      "description": "AIMY-2979's error and recovery patterns. RecoveryState: one component for session, permission, workspace, offline, connection, timeout, uncertain, service, maintenance, rate-limit, missing, deleted, expired, validation, save, upload, file-too-large, file-type, conflict, load and action, shown as a blocking page, a section or widget that keeps the rest of the page usable, an inline note or a persistent banner; retrying with Attempt 2 of 3, or failed with the recovery; Retry-After countdown; support reference. RecoveryStatus for background retries, ErrorSummary for forms (links to fields, takes focus), RecoveryDialog for a decision. classifyError maps HTTP status, OIDC and network codes to a kind; the codes never reach the screen.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/button",
+        "@aimy/copy-button",
+        "@aimy/dialog"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/recovery.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/aimy/lib/recovery.ts",
+          "type": "registry:lib"
         }
       ]
     },

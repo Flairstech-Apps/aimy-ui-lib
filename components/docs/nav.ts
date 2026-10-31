@@ -75,6 +75,7 @@ export const NAV: NavGroup[] = [
       { href: "/components/sheet/", label: "Sheet" },
       { href: "/components/notice/", label: "Notice" },
       { href: "/components/empty-state/", label: "Empty and error states" },
+      { href: "/components/recovery/", label: "Errors and recovery" },
       { href: "/components/skeleton/", label: "Skeleton" },
       { href: "/components/progress/", label: "Progress" },
       { href: "/components/notification-bell/", label: "Notification bell" },

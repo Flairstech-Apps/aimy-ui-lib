@@ -30,6 +30,9 @@
       ],
       "@/lib/ai-types": [
         "../../registry/aimy/lib/ai-types.ts"
+      ],
+      "@/lib/recovery": [
+        "../../registry/aimy/lib/recovery.ts"
       ]
     }
   },

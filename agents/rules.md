@@ -43,6 +43,15 @@ Writing:
 - A verb on every button that names the action; never "Open" or "Learn more" when the real action has a name.
 - Errors say what happened and what to do next.
 
+Errors and recovery (AIMY-2979):
+
+- Classify every failed request once with `classifyError` and show the matching `RecoveryState`. HTTP codes and raw messages are for logs; they never reach the screen.
+- Keep what still works: one failed widget or section never blocks or redirects the page, and a failed save keeps what was typed. Use `display="screen"` only when the app can't draw its shell, and `display="page"` only when nothing on the screen works without what failed.
+- Retry at most three times with `status="retrying"`, then show the failed state with its recovery. Never retry forever.
+- Tell permission, session and connection apart. Say offline only when the browser confirms it.
+- A request that creates, updates, deletes, sends or pays and then times out is `uncertain`: ask people to check, never offer a blind retry.
+- An empty result is an `EmptyState`, never a failure; a failed load is never an empty state.
+
 Never:
 
 - Never use a native `<select>`, an inline `onclick` string, a coloured left-edge stripe, gradient text, or a pulsing decorative dot.

@@ -16,12 +16,13 @@ export default function Page() {
       </Section>
       <Install name="toast" exports="toast, Toaster" />
       <Section title="Use it">
-        <CodeBlock>{"// once, at the root\n<Toaster />\n\n// after any reversible action\nconst was = contact.owner\nassign(contact, \"Lina\")\ntoast(\"Assigned to Lina\", { onUndo: () => assign(contact, was) })"}</CodeBlock>
+        <CodeBlock>{"// once, at the root\n<Toaster />\n\n// after any reversible action\nconst was = contact.owner\nassign(contact, \"Lina\")\ntoast(\"Assigned to Lina\", { onUndo: () => assign(contact, was) })\n\n// when a one-off action failed: red, announced at once, with the recovery\ntoast(\"We couldn't export the report\", { tone: \"err\", sub: \"Nothing changed.\", action: { label: \"Try again\", onClick: exportIt } })"}</CodeBlock>
       </Section>
       <Section title="Rules">
         <div className="flex flex-col gap-3">
           <DoDont doText="Act, then toast with Undo, for anything reversible." dontText="Ask Are you sure? before something Undo can take back." />
           <DoDont doText="Write what happened: Assigned to Lina." dontText="Write Success! or Action completed." />
+          <DoDont doText="When an action failed, say so with tone err and offer the recovery: Try again." dontText="Use a toast for a failure that blocks the page; use RecoveryState." />
         </div>
       </Section>
       <Source>
