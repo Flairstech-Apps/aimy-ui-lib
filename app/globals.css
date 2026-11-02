@@ -124,6 +124,57 @@
   .haze { animation: none; }
 }
 
+/* Quiet: the sections after the hero. Low strength, still, and faded at the
+   top and bottom so each one melts into its hairlines. */
+.haze[data-quiet] {
+  animation: none;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 24%, #000 76%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 24%, #000 76%, transparent);
+}
+/* Light that comes from an edge keeps that edge. */
+.haze[data-quiet][data-glow="bottom"] {
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 40%);
+  mask-image: linear-gradient(180deg, transparent, #000 40%);
+}
+.haze[data-quiet][data-glow="top"] {
+  -webkit-mask-image: linear-gradient(0deg, transparent, #000 40%);
+  mask-image: linear-gradient(0deg, transparent, #000 40%);
+}
+.haze[data-quiet] .haze-ribs { opacity: 0.3; }
+.haze[data-quiet] .haze-grain { opacity: calc(var(--haze-grain) * 0.7); }
+[data-theme="light"] .haze[data-quiet] .haze-ribs { opacity: 0.4; }
+
+/* Where each section's light sits. */
+.haze[data-glow="band"] {
+  --haze: radial-gradient(22% 140% at 50% 50%, var(--haze-violet), transparent 72%),
+    radial-gradient(18% 120% at 16% 50%, var(--haze-blue), transparent 72%),
+    radial-gradient(18% 120% at 84% 50%, var(--haze-blue), transparent 72%);
+}
+.haze[data-glow="pool"] {
+  --haze: radial-gradient(34% 40% at 14% 74%, var(--haze-violet), transparent 72%),
+    radial-gradient(26% 32% at 40% 82%, var(--haze-blue), transparent 72%),
+    radial-gradient(20% 30% at 90% 10%, var(--haze-violet), transparent 72%);
+}
+.haze[data-glow="top"] {
+  --haze: radial-gradient(34% 44% at 50% 0%, var(--haze-blue), transparent 72%),
+    radial-gradient(22% 34% at 32% 8%, var(--haze-violet), transparent 72%),
+    radial-gradient(22% 34% at 68% 8%, var(--haze-violet), transparent 72%);
+}
+.haze[data-glow="sides"] {
+  --haze: radial-gradient(22% 54% at 0% 55%, var(--haze-violet), transparent 72%),
+    radial-gradient(22% 54% at 100% 45%, var(--haze-blue), transparent 72%);
+}
+.haze[data-glow="ai"] {
+  --haze: radial-gradient(30% 56% at 84% 46%, var(--ai-ink), transparent 72%),
+    radial-gradient(24% 40% at 66% 78%, var(--haze-blue), transparent 72%),
+    radial-gradient(18% 30% at 96% 12%, var(--haze-violet), transparent 72%);
+}
+.haze[data-glow="bottom"] {
+  --haze: radial-gradient(40% 60% at 50% 104%, var(--haze-violet), transparent 72%),
+    radial-gradient(26% 46% at 24% 100%, var(--haze-blue), transparent 72%),
+    radial-gradient(26% 46% at 76% 100%, var(--haze-blue), transparent 72%);
+}
+
 /* The landing page's floating pill nav: frosted glass over the page, a light
    inner edge on top, and a solid fallback for anyone who asks for less
    transparency. */
