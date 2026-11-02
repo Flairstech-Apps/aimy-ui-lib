@@ -178,17 +178,16 @@ export default function Landing() {
         {/* What it is, in real numbers. */}
         <section className="relative overflow-hidden border-y border-hairline">
           <Backdrop kind="dots" />
-          <Reveal className="relative mx-auto grid max-w-[80rem] grid-cols-2 px-5 column:grid-cols-4">
+          <Reveal className="relative mx-auto grid max-w-[80rem] px-5 phone:grid-cols-3">
             {[
               [String(COMPONENTS), "components, each with its rules"],
-              ["2", "products it comes from: Sales and Knowledge"],
               ["AA", "WCAG 2.2, in the dark and the light theme"],
               [ui.version, "the stable release, versioned from here"],
             ].map(([n, words], i) => (
               <Line
                 key={words}
                 i={i}
-                className="border-hairline px-1 py-8 odd:border-r column:border-r column:px-6 column:first:pl-0 column:last:border-r-0"
+                className="border-hairline px-1 py-8 max-phone:border-b max-phone:last:border-b-0 phone:border-r phone:px-6 phone:first:pl-0 phone:last:border-r-0"
               >
                 <p className="text-4xl font-semibold tracking-tight text-ink">{n}</p>
                 <p className="mt-2 text-meta text-ink-secondary">{words}</p>
