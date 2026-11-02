@@ -3,28 +3,14 @@
 // Purple Haze; this is drawn in CSS so it follows the theme and needs no
 // image or WebGL. Each rib shows the same glow, shifted and stretched a
 // little, which reads as glass bending the light. Styles live in
-// app/globals.css (.haze).
-//
-// The hero's is full strength and drifts slowly (standing still under
-// reduced motion). Every other section takes a quiet one: the same glass at
-// low strength, its edges fading into the section's hairlines, its light in
-// its own place, and still, so the page draws cheaply.
-//
-//   <Haze />                         the hero
-//   <Haze quiet glow="bottom" />     a section
-
-export type HazeGlow = "hero" | "band" | "pool" | "top" | "sides" | "ai" | "bottom"
+// app/globals.css (.haze). The glow drifts slowly and stands still under
+// reduced motion. The other sections have their own grounds (backdrop.tsx).
 
 const RIBS = 26
 
-export function Haze({ glow = "hero", quiet = false }: { glow?: HazeGlow; quiet?: boolean }) {
+export function Haze() {
   return (
-    <div
-      aria-hidden="true"
-      data-glow={glow}
-      data-quiet={quiet || undefined}
-      className="haze pointer-events-none absolute inset-0"
-    >
+    <div aria-hidden="true" className="haze pointer-events-none absolute inset-0">
       <div className="haze-ribs" style={{ "--n": RIBS } as React.CSSProperties}>
         {Array.from({ length: RIBS }, (_, i) => {
           // Where this rib looks into the glow: its own slice, nudged sideways
@@ -43,7 +29,7 @@ export function Haze({ glow = "hero", quiet = false }: { glow?: HazeGlow; quiet?
         })}
       </div>
       <div className="haze-grain" />
-      {quiet ? null : <div className="haze-fade" />}
+      <div className="haze-fade" />
     </div>
   )
 }

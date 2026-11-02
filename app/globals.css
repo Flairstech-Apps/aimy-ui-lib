@@ -124,55 +124,88 @@
   .haze { animation: none; }
 }
 
-/* Quiet: the sections after the hero. Low strength, still, and faded at the
-   top and bottom so each one melts into its hairlines. */
-.haze[data-quiet] {
-  animation: none;
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 24%, #000 76%, transparent);
-  mask-image: linear-gradient(180deg, transparent, #000 24%, #000 76%, transparent);
+/* Each landing section's own ground (components/landing/backdrop.tsx).
+   Faint on purpose: the section's content carries it, the ground only hints. */
+.backdrop {
+  --bd-ink: color-mix(in oklab, var(--ink-primary) 16%, transparent);
+  --bd-line: color-mix(in oklab, var(--ink-primary) 9%, transparent);
 }
-/* Light that comes from an edge keeps that edge. */
-.haze[data-quiet][data-glow="bottom"] {
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 40%);
-  mask-image: linear-gradient(180deg, transparent, #000 40%);
+[data-theme="light"] .backdrop {
+  --bd-ink: color-mix(in oklab, var(--ink-primary) 13%, transparent);
+  --bd-line: color-mix(in oklab, var(--ink-primary) 8%, transparent);
 }
-.haze[data-quiet][data-glow="top"] {
-  -webkit-mask-image: linear-gradient(0deg, transparent, #000 40%);
-  mask-image: linear-gradient(0deg, transparent, #000 40%);
+/* The numbers: a dot grid, strongest in the middle. */
+.backdrop[data-kind="dots"] {
+  background-image: radial-gradient(var(--bd-ink) 1px, transparent 1.5px);
+  background-size: 1.375rem 1.375rem;
+  background-position: center;
+  -webkit-mask-image: radial-gradient(55% 140% at 50% 50%, #000, transparent 78%);
+  mask-image: radial-gradient(55% 140% at 50% 50%, #000, transparent 78%);
 }
-.haze[data-quiet] .haze-ribs { opacity: 0.3; }
-.haze[data-quiet] .haze-grain { opacity: calc(var(--haze-grain) * 0.7); }
-[data-theme="light"] .haze[data-quiet] .haze-ribs { opacity: 0.4; }
-
-/* Where each section's light sits. */
-.haze[data-glow="band"] {
-  --haze: radial-gradient(22% 140% at 50% 50%, var(--haze-violet), transparent 72%),
-    radial-gradient(18% 120% at 16% 50%, var(--haze-blue), transparent 72%),
-    radial-gradient(18% 120% at 84% 50%, var(--haze-blue), transparent 72%);
+/* The AI moments: soft light, no edges. */
+.backdrop[data-kind="aurora"] {
+  background:
+    radial-gradient(38% 34% at 12% 78%, color-mix(in oklab, var(--accent) 13%, transparent), transparent 72%),
+    radial-gradient(30% 30% at 88% 22%, color-mix(in oklab, var(--brand) 11%, transparent), transparent 72%),
+    radial-gradient(26% 24% at 58% 96%, color-mix(in oklab, var(--ai-ink) 8%, transparent), transparent 72%);
 }
-.haze[data-glow="pool"] {
-  --haze: radial-gradient(34% 40% at 14% 74%, var(--haze-violet), transparent 72%),
-    radial-gradient(26% 32% at 40% 82%, var(--haze-blue), transparent 72%),
-    radial-gradient(20% 30% at 90% 10%, var(--haze-violet), transparent 72%);
+/* The ways in: a blueprint grid falling from the top. */
+.backdrop[data-kind="grid"] {
+  background-image:
+    linear-gradient(to right, var(--bd-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--bd-line) 1px, transparent 1px);
+  background-size: 3rem 3rem;
+  background-position: center top;
+  -webkit-mask-image: radial-gradient(60% 70% at 50% 0%, #000, transparent 80%);
+  mask-image: radial-gradient(60% 70% at 50% 0%, #000, transparent 80%);
 }
-.haze[data-glow="top"] {
-  --haze: radial-gradient(34% 44% at 50% 0%, var(--haze-blue), transparent 72%),
-    radial-gradient(22% 34% at 32% 8%, var(--haze-violet), transparent 72%),
-    radial-gradient(22% 34% at 68% 8%, var(--haze-violet), transparent 72%);
+/* The themes: a dark half and a light half, meeting softly behind the pair. */
+.backdrop[data-kind="split"] {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, #000 16%, transparent) 0%,
+    color-mix(in oklab, #000 10%, transparent) 44%,
+    color-mix(in oklab, #fff 3%, transparent) 56%,
+    color-mix(in oklab, #fff 5%, transparent) 100%
+  );
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 20%, #000 80%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 20%, #000 80%, transparent);
 }
-.haze[data-glow="sides"] {
-  --haze: radial-gradient(22% 54% at 0% 55%, var(--haze-violet), transparent 72%),
-    radial-gradient(22% 54% at 100% 45%, var(--haze-blue), transparent 72%);
+[data-theme="light"] .backdrop[data-kind="split"] {
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklab, #0f1215 7%, transparent) 0%,
+    color-mix(in oklab, #0f1215 4%, transparent) 44%,
+    color-mix(in oklab, #fff 30%, transparent) 56%,
+    color-mix(in oklab, #fff 50%, transparent) 100%
+  );
 }
-.haze[data-glow="ai"] {
-  --haze: radial-gradient(30% 56% at 84% 46%, var(--ai-ink), transparent 72%),
-    radial-gradient(24% 40% at 66% 78%, var(--haze-blue), transparent 72%),
-    radial-gradient(18% 30% at 96% 12%, var(--haze-violet), transparent 72%);
+/* The agents: rings spreading from the MCP command. */
+.backdrop[data-kind="rings"] {
+  background: repeating-radial-gradient(
+    circle at 76% 42%,
+    transparent 0 2.75rem,
+    color-mix(in oklab, var(--ai-ink) 16%, transparent) 2.75rem calc(2.75rem + 1px)
+  );
+  -webkit-mask-image: radial-gradient(36% 70% at 76% 42%, #000, transparent 85%);
+  mask-image: radial-gradient(36% 70% at 76% 42%, #000, transparent 85%);
 }
-.haze[data-glow="bottom"] {
-  --haze: radial-gradient(40% 60% at 50% 104%, var(--haze-violet), transparent 72%),
-    radial-gradient(26% 46% at 24% 100%, var(--haze-blue), transparent 72%),
-    radial-gradient(26% 46% at 76% 100%, var(--haze-blue), transparent 72%);
+@media (max-width: 56.25rem) {
+  .backdrop[data-kind="rings"] {
+    background: repeating-radial-gradient(
+      circle at 50% 70%,
+      transparent 0 2.75rem,
+      color-mix(in oklab, var(--ai-ink) 16%, transparent) 2.75rem calc(2.75rem + 1px)
+    );
+    -webkit-mask-image: radial-gradient(70% 45% at 50% 70%, #000, transparent 85%);
+    mask-image: radial-gradient(70% 45% at 50% 70%, #000, transparent 85%);
+  }
+}
+/* The start: a lit horizon rising from the bottom, the page's last light. */
+.backdrop[data-kind="horizon"] {
+  background:
+    radial-gradient(90% 70% at 50% 135%, transparent 62%, color-mix(in oklab, var(--brand) 40%, transparent) 63%, color-mix(in oklab, var(--accent) 12%, transparent) 65.5%, transparent 72%),
+    radial-gradient(60% 40% at 50% 100%, color-mix(in oklab, var(--brand) 12%, transparent), transparent 75%);
 }
 
 /* The landing page's floating pill nav: frosted glass over the page, a light
