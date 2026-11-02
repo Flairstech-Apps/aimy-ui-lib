@@ -43,6 +43,87 @@
   }
 }
 
+/* The hero's ribbed glass (components/landing/haze.tsx). The glow is one
+   gradient stack; every rib paints a slice of it. --haze-x drifts the light. */
+@property --haze-x {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 0%;
+}
+.haze {
+  --haze-x: 0%;
+  --haze-violet: var(--accent);
+  --haze-blue: var(--brand);
+  --haze-light: color-mix(in oklab, #c9b8ff 55%, transparent);
+  --haze-edge: rgb(255 255 255 / 0.08);
+  --haze-shade: rgb(0 0 0 / 0.28);
+  --haze-grain: 0.2;
+  --haze: radial-gradient(22% 30% at calc(94% - var(--haze-x)) 12%, var(--haze-light), transparent 72%),
+    radial-gradient(34% 46% at calc(64% + var(--haze-x)) 20%, var(--haze-violet), transparent 74%),
+    radial-gradient(30% 48% at calc(90% - var(--haze-x)) 64%, var(--haze-blue), transparent 74%),
+    radial-gradient(28% 36% at calc(54% - var(--haze-x)) 92%, var(--haze-violet), transparent 74%);
+  animation: haze-drift 22s ease-in-out infinite alternate;
+}
+[data-theme="light"] .haze {
+  --haze-violet: color-mix(in oklab, var(--accent) 38%, transparent);
+  --haze-blue: color-mix(in oklab, var(--brand) 34%, transparent);
+  --haze-light: color-mix(in oklab, #ffffff 70%, transparent);
+  --haze-edge: rgb(255 255 255 / 0.55);
+  --haze-shade: rgb(16 24 40 / 0.07);
+  --haze-grain: 0.12;
+}
+@keyframes haze-drift {
+  to { --haze-x: 7%; }
+}
+.haze-ribs {
+  position: absolute;
+  inset: 0;
+  display: flex;
+}
+.haze-rib {
+  flex: 1;
+  background-image: var(--haze);
+  background-repeat: no-repeat;
+}
+/* Each rib's lit edge and shaded edge, one period per rib. */
+.haze-ribs::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--haze-edge) 0,
+    transparent calc(100% / var(--n) * 0.18),
+    transparent calc(100% / var(--n) * 0.6),
+    var(--haze-shade) calc(100% / var(--n))
+  );
+}
+.haze-grain {
+  position: absolute;
+  inset: 0;
+  opacity: var(--haze-grain);
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+/* The words sit on the page ground: a scrim from the left (from the top on a
+   phone, where the words come first), and the glass fades into the next section. */
+.haze-fade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, transparent 62%, var(--body-bg) 100%),
+    linear-gradient(90deg, var(--body-bg) 14%, color-mix(in oklab, var(--body-bg) 60%, transparent) 38%, transparent 56%);
+}
+@media (max-width: 56.25rem) {
+  .haze-fade {
+    background:
+      linear-gradient(180deg, color-mix(in oklab, var(--body-bg) 70%, transparent) 0%, color-mix(in oklab, var(--body-bg) 35%, transparent) 50%, var(--body-bg) 100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .haze { animation: none; }
+}
+
 /* The landing page's floating pill nav: frosted glass over the page, a light
    inner edge on top, and a solid fallback for anyone who asks for less
    transparency. */

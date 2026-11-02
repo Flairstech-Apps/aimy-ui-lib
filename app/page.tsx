@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { CodeBlock, ThemePair } from "@/components/docs/page"
 import { AgentLoop, ConversationCard, GroundedCard, LiveProposal, VoicePanel, Ways } from "@/components/landing/live"
+import { Haze } from "@/components/landing/haze"
 import { Line, Reveal } from "@/components/landing/reveal"
 import ui from "@/package/ui/package.json"
 import registry from "@/registry.json"
@@ -133,10 +134,7 @@ export default function Landing() {
       <main>
         {/* Hero: the promise, the way in, and AiMY's voice working beside it. */}
         <section className="relative overflow-hidden">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(52rem_34rem_at_78%_30%,color-mix(in_oklab,var(--accent)_16%,transparent),transparent_70%),radial-gradient(48rem_30rem_at_12%_0%,color-mix(in_oklab,var(--brand)_14%,transparent),transparent_70%)]"
-          />
+          <Haze />
           <div className="relative mx-auto grid max-w-[80rem] items-center gap-12 px-5 pt-32 pb-20 column:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] column:pt-36 column:pb-24">
             <Reveal>
               <Line>
