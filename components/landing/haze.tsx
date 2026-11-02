@@ -13,9 +13,11 @@ export function Haze() {
       <div className="haze-ribs" style={{ "--n": RIBS } as React.CSSProperties}>
         {Array.from({ length: RIBS }, (_, i) => {
           // Where this rib looks into the glow: its own slice, nudged sideways
-          // and stretched up or down, so neighbouring ribs disagree slightly.
+          // and stretched, so neighbouring ribs disagree slightly. Never less
+          // than the rib's height (100% to 128%), or the bare page shows
+          // through at its top and bottom as dark blocks.
           const x = ((i + 0.45 * Math.sin(i * 1.7)) / (RIBS - 1)) * 100
-          const h = 100 + 14 * Math.cos(i * 0.9)
+          const h = 114 + 14 * Math.cos(i * 0.9)
           return (
             <span
               key={i}
