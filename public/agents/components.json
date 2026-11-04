@@ -385,6 +385,48 @@
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/leaderboard/"
   },
   {
+    "name": "widget-frame",
+    "title": "Widget frame",
+    "group": "Chat widgets",
+    "description": "What every widget in a chat reply sits in: a head that names the result and counts or orders it, with Open in the canvas and Download; the result; and a foot that opens the rest in the canvas instead of a paginator.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/widget-frame/"
+  },
+  {
+    "name": "candidate-card",
+    "title": "Candidate card",
+    "group": "Chat widgets",
+    "description": "One candidate in a grid of cards: name, role, the Fit badge, company and location, two skills and how many more, then View profile, Email and Start outreach. CandidateCards lays them two across while there is room, one below.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/candidate-card/"
+  },
+  {
+    "name": "candidate-profile",
+    "title": "Candidate profile",
+    "group": "Chat widgets",
+    "description": "One candidate in full inside a reply: header with the Fit badge, contact facts, About in three lines with Read all, work experience two jobs deep with Show all, skills, and Start outreach, Download CV, Add note.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/candidate-profile/"
+  },
+  {
+    "name": "chat-table",
+    "title": "Chat table",
+    "group": "Chat widgets",
+    "description": "A tool's table in a chat reply: the DataTable with sentence-case headers and three-state sorting, placeholder rows while the tool runs, and the rows form instead of sideways scrolling when the widget is narrow. wrapCell wraps long text.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/chat-table/"
+  },
+  {
+    "name": "ranked-list",
+    "title": "Ranked list",
+    "group": "Chat widgets",
+    "description": "Results best first, one per row, each with its reason in two lines and the Fit badge; the row opens the result. For matched positions and any ranking that needs its why.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/ranked-list/"
+  },
+  {
+    "name": "upload-results",
+    "title": "Upload results",
+    "group": "Chat widgets",
+    "description": "A batch counted by status (Added, Added with warnings, Not added), each a number, an icon and a word, filtering the rows below; it opens on what needs a person, and each row has its fix: Open, See warnings, Upload again.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/upload-results/"
+  },
+  {
     "name": "composer",
     "title": "Composer",
     "group": "AI: conversation",

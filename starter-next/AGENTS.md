@@ -47,6 +47,11 @@ Writing:
 - A verb on every button that names the action; never "Open" or "Learn more" when the real action has a name.
 - Errors say what happened and what to do next.
 
+Results inside a chat reply:
+
+- Every result AiMY draws in a reply sits in a `WidgetFrame`: its name in sentence case, a count or order, Open in the canvas, and a foot that opens the rest. No paginator and no sideways scrolling in a reply.
+- People are `CandidateCards`; one person in full is `CandidateProfile`; a ranking whose reason matters is `RankedList`; a tool's table is `ChatTable`; a batch is `UploadResults`. Every score is the Fit badge (`Score`).
+
 Errors and recovery (AIMY-2979):
 
 - Classify every failed request once with `classifyError` and show the matching `RecoveryState`. HTTP codes and raw messages are for logs; they never reach the screen.
@@ -146,6 +151,15 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 - **Donut** (`@aimy/donut`): QA's pass/borderline/fail ring: contiguous arcs from twelve o'clock; pointing at a part or its key row (or focusing the row) thickens it with a glow, dims the rest and says it in the centre in its ink. https://aimy-ui-lib.aimy.flairstech.com/components/donut/
 - **Heatmap** (`@aimy/heatmap`): QA's goal-by-week grid: a row per goal, a column per period, each cell its score tinted by band, a coaching dot with its note, 'none' where there is no score. https://aimy-ui-lib.aimy.flairstech.com/components/heatmap/
 - **Leaderboard** (`@aimy/leaderboard`): QA's achievers list: ranked, no bars; a rank badge in medal inks for the first three, the name, and each measure labelled and right-aligned. https://aimy-ui-lib.aimy.flairstech.com/components/leaderboard/
+
+### Chat widgets
+
+- **Widget frame** (`@aimy/widget-frame`): What every widget in a chat reply sits in: a head that names the result and counts or orders it, with Open in the canvas and Download; the result; and a foot that opens the rest in the canvas instead of a paginator. https://aimy-ui-lib.aimy.flairstech.com/components/widget-frame/
+- **Candidate card** (`@aimy/candidate-card`): One candidate in a grid of cards: name, role, the Fit badge, company and location, two skills and how many more, then View profile, Email and Start outreach. https://aimy-ui-lib.aimy.flairstech.com/components/candidate-card/
+- **Candidate profile** (`@aimy/candidate-profile`): One candidate in full inside a reply: header with the Fit badge, contact facts, About in three lines with Read all, work experience two jobs deep with Show all, skills, and Start outreach, Download CV, Add note. https://aimy-ui-lib.aimy.flairstech.com/components/candidate-profile/
+- **Chat table** (`@aimy/chat-table`): A tool's table in a chat reply: the DataTable with sentence-case headers and three-state sorting, placeholder rows while the tool runs, and the rows form instead of sideways scrolling when the widget is narrow. https://aimy-ui-lib.aimy.flairstech.com/components/chat-table/
+- **Ranked list** (`@aimy/ranked-list`): Results best first, one per row, each with its reason in two lines and the Fit badge; the row opens the result. https://aimy-ui-lib.aimy.flairstech.com/components/ranked-list/
+- **Upload results** (`@aimy/upload-results`): A batch counted by status (Added, Added with warnings, Not added), each a number, an icon and a word, filtering the rows below; it opens on what needs a person, and each row has its fix: Open, See warnings, Upload again. https://aimy-ui-lib.aimy.flairstech.com/components/upload-results/
 
 ### AI: conversation
 

@@ -43,6 +43,11 @@ Writing:
 - A verb on every button that names the action; never "Open" or "Learn more" when the real action has a name.
 - Errors say what happened and what to do next.
 
+Results inside a chat reply:
+
+- Every result AiMY draws in a reply sits in a `WidgetFrame`: its name in sentence case, a count or order, Open in the canvas, and a foot that opens the rest. No paginator and no sideways scrolling in a reply.
+- People are `CandidateCards`; one person in full is `CandidateProfile`; a ranking whose reason matters is `RankedList`; a tool's table is `ChatTable`; a batch is `UploadResults`. Every score is the Fit badge (`Score`).
+
 Errors and recovery (AIMY-2979):
 
 - Classify every failed request once with `classifyError` and show the matching `RecoveryState`. HTTP codes and raw messages are for logs; they never reach the screen.

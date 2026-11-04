@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Installs the tokens package straight from this site, so it needs no .npmrc line.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^1.2.0"
+        "@flairstech-aimy/tokens@^1.3.0"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^1.2.0"
+        "@flairstech-aimy/tokens@^1.3.0"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -1798,6 +1798,135 @@
       "files": [
         {
           "path": "registry/aimy/ui/data-table.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "widget-frame",
+      "type": "registry:component",
+      "title": "Widget frame",
+      "description": "What every widget in a chat reply sits in: a head that names the result and counts or orders it, with Open in the canvas and Download; the result; and a foot that opens the rest in the canvas instead of a paginator.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/button",
+        "@aimy/icon-button"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/widget-frame.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "candidate-card",
+      "type": "registry:component",
+      "title": "Candidate card",
+      "description": "One candidate in a grid of cards: name, role, the Fit badge, company and location, two skills and how many more, then View profile, Email and Start outreach. CandidateCards lays them two across while there is room, one below.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/avatar",
+        "@aimy/button",
+        "@aimy/icon-button",
+        "@aimy/score",
+        "@aimy/tag"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/candidate-card.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "candidate-profile",
+      "type": "registry:component",
+      "title": "Candidate profile",
+      "description": "One candidate in full inside a reply: header with the Fit badge, contact facts, About in three lines with Read all, work experience two jobs deep with Show all, skills, and Start outreach, Download CV, Add note.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/avatar",
+        "@aimy/button",
+        "@aimy/score",
+        "@aimy/tag"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/candidate-profile.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "chat-table",
+      "type": "registry:component",
+      "title": "Chat table",
+      "description": "A tool's table in a chat reply: the DataTable with sentence-case headers and three-state sorting, placeholder rows while the tool runs, and the rows form instead of sideways scrolling when the widget is narrow. wrapCell wraps long text.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/data-table",
+        "@aimy/skeleton"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/chat-table.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "ranked-list",
+      "type": "registry:component",
+      "title": "Ranked list",
+      "description": "Results best first, one per row, each with its reason in two lines and the Fit badge; the row opens the result. For matched positions and any ranking that needs its why.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/score"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/ranked-list.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "upload-results",
+      "type": "registry:component",
+      "title": "Upload results",
+      "description": "A batch counted by status (Added, Added with warnings, Not added), each a number, an icon and a word, filtering the rows below; it opens on what needs a person, and each row has its fix: Open, See warnings, Upload again.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/button"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/upload-results.tsx",
           "type": "registry:component"
         }
       ]

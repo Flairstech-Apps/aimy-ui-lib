@@ -4,6 +4,9 @@
 /* The docs render the library's own source, so Tailwind scans it too. */
 @source "../registry";
 @source "../components";
+/* The lab is gitignored (real data), and Tailwind skips gitignored files
+   unless they are named here. It exists on the dev machine only. */
+@source "../components/lab";
 
 /* The landing page's entrance: transitions.dev texts reveal (18), verbatim,
    with the line delay read from --i so any number of lines can stagger. */

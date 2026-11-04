@@ -9,7 +9,13 @@ import { NAV } from "./nav"
 export function Sidebar() {
   const path = usePathname()
   const ref = useRef<HTMLElement>(null)
-  const here = (href: string) => (href === "/" ? path === "/" : path.startsWith(href.replace(/\/$/, "")))
+  const under = (href: string) => (href === "/" ? path === "/" : path.startsWith(href.replace(/\/$/, "")))
+  // The deepest match is the page: an overview at /lab/chat-widgets/ is not
+  // also current on /lab/chat-widgets/frame/.
+  const current = NAV.flatMap((g) => g.items.map((i) => i.href))
+    .filter(under)
+    .sort((a, b) => b.length - a.length)[0]
+  const here = (href: string) => href === current
 
   // A page deep in the list opens with its own link in view.
   useEffect(() => {

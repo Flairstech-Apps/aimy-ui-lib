@@ -15,3 +15,8 @@ dist/
 *.tgz
 public/npm/
 !npm-store/**/*.tgz
+
+# Lab pages that hold real production data (people's names, emails, phones).
+# They stay on this machine: the repo is public.
+/app/(docs)/lab/
+/components/lab/

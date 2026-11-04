@@ -104,6 +104,15 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 - **Heatmap** (`@aimy/heatmap`): QA's goal-by-week grid: a row per goal, a column per period, each cell its score tinted by band, a coaching dot with its note, 'none' where there is no score. https://aimy-ui-lib.aimy.flairstech.com/components/heatmap/
 - **Leaderboard** (`@aimy/leaderboard`): QA's achievers list: ranked, no bars; a rank badge in medal inks for the first three, the name, and each measure labelled and right-aligned. https://aimy-ui-lib.aimy.flairstech.com/components/leaderboard/
 
+### Chat widgets
+
+- **Widget frame** (`@aimy/widget-frame`): What every widget in a chat reply sits in: a head that names the result and counts or orders it, with Open in the canvas and Download; the result; and a foot that opens the rest in the canvas instead of a paginator. https://aimy-ui-lib.aimy.flairstech.com/components/widget-frame/
+- **Candidate card** (`@aimy/candidate-card`): One candidate in a grid of cards: name, role, the Fit badge, company and location, two skills and how many more, then View profile, Email and Start outreach. https://aimy-ui-lib.aimy.flairstech.com/components/candidate-card/
+- **Candidate profile** (`@aimy/candidate-profile`): One candidate in full inside a reply: header with the Fit badge, contact facts, About in three lines with Read all, work experience two jobs deep with Show all, skills, and Start outreach, Download CV, Add note. https://aimy-ui-lib.aimy.flairstech.com/components/candidate-profile/
+- **Chat table** (`@aimy/chat-table`): A tool's table in a chat reply: the DataTable with sentence-case headers and three-state sorting, placeholder rows while the tool runs, and the rows form instead of sideways scrolling when the widget is narrow. https://aimy-ui-lib.aimy.flairstech.com/components/chat-table/
+- **Ranked list** (`@aimy/ranked-list`): Results best first, one per row, each with its reason in two lines and the Fit badge; the row opens the result. https://aimy-ui-lib.aimy.flairstech.com/components/ranked-list/
+- **Upload results** (`@aimy/upload-results`): A batch counted by status (Added, Added with warnings, Not added), each a number, an icon and a word, filtering the rows below; it opens on what needs a person, and each row has its fix: Open, See warnings, Upload again. https://aimy-ui-lib.aimy.flairstech.com/components/upload-results/
+
 ### AI: conversation
 
 - **Composer** (`@aimy/composer`): Where a person asks AiMY, as the products' voice.js arranges it. https://aimy-ui-lib.aimy.flairstech.com/components/composer/

@@ -6,6 +6,20 @@ export const metadata: Metadata = { title: "What's new" }
 // Newest first. Each entry says what changed and whether anyone has to do anything.
 const RELEASES: { version: string; date: string; summary: string; changes: string[]; action?: string }[] = [
   {
+    version: "1.3.0",
+    date: "4 Nov 2026",
+    summary: "Chat widgets: one standard for the results AiMY draws inside a chat reply.",
+    changes: [
+      "WidgetFrame: what every result in a reply sits in. Its name and count, Open in the canvas and Download, and a foot that opens the rest instead of a paginator.",
+      "CandidateCard and CandidateCards: people two across, with the Fit badge, company, location, two skills and how many more, and View profile, Email, Start outreach.",
+      "CandidateProfile: one person in full inside the reply, About and experience opening in place.",
+      "ChatTable: a tool's table, sortable, with loading rows; when the reply is narrow it changes form instead of scrolling sideways. RankedList: results best first with each reason in view. UploadResults: a batch counted by status, opening on what needs a person.",
+      "Fixed: in the DataTable's narrow rows form, a long value in any cell after the first spilled out of its row.",
+    ],
+    action:
+      "Take it with pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest, or add a widget with npx shadcn@latest add @aimy/chat-table (and the others by name). Nothing changes for screens you already have.",
+  },
+  {
     version: "1.2.0",
     date: "31 Oct 2026",
     summary: "Errors and recovery (AIMY-2979): one way to show every failure, from a whole-window sign-in to a failed save.",

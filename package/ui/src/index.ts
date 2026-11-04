@@ -206,3 +206,9 @@ export {
   applyFormat,
   type Format,
 } from "../../../registry/aimy/ui/doc-editor"
+export { WidgetFrame } from "../../../registry/aimy/ui/widget-frame"
+export { CandidateCard, CandidateCards, type Candidate } from "../../../registry/aimy/ui/candidate-card"
+export { CandidateProfile, type ExperienceItem } from "../../../registry/aimy/ui/candidate-profile"
+export { ChatTable, wrapCell } from "../../../registry/aimy/ui/chat-table"
+export { RankedList, type RankedItem } from "../../../registry/aimy/ui/ranked-list"
+export { UploadResults, type UploadItem, type UploadStatus } from "../../../registry/aimy/ui/upload-results"

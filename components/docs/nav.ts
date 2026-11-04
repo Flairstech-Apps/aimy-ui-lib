@@ -1,7 +1,9 @@
+import { LAB_NAV } from "./lab-nav"
+
 export type NavItem = { href: string; label: string }
 export type NavGroup = { label: string; items: NavItem[] }
 
-export const NAV: NavGroup[] = [
+const LIBRARY: NavGroup[] = [
   {
     label: "Start here",
     items: [
@@ -125,6 +127,17 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
+    label: "Chat widgets",
+    items: [
+      { href: "/components/widget-frame/", label: "Widget frame" },
+      { href: "/components/candidate-card/", label: "Candidate card" },
+      { href: "/components/candidate-profile/", label: "Candidate profile" },
+      { href: "/components/chat-table/", label: "Chat table" },
+      { href: "/components/ranked-list/", label: "Ranked list" },
+      { href: "/components/upload-results/", label: "Upload results" },
+    ],
+  },
+  {
     label: "AI: conversation",
     items: [
       { href: "/components/composer/", label: "Composer" },
@@ -187,3 +200,7 @@ export const NAV: NavGroup[] = [
     ],
   },
 ]
+
+// Lab groups show on the dev server only; the production build never sees
+// them, like the lab pages themselves (next.config.ts).
+export const NAV: NavGroup[] = process.env.NODE_ENV === "development" ? [...LIBRARY, ...LAB_NAV] : LIBRARY
