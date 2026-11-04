@@ -2,16 +2,17 @@
 
 import { CornerDownLeft, Search } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { useEffect, useId, useMemo, useRef, useState } from "react"
+import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore } from "react"
 import { cn } from "@/lib/utils"
 import { Dialog, DialogContent } from "@/registry/aimy/ui/dialog"
-import { Kbd } from "@/registry/aimy/ui/kbd"
 import { NAV } from "./nav"
 
 type Entry = { href: string; label: string; group: string; words: string }
 type Component = { name: string; description?: string; docs?: string }
 
-const firstSentence = (s = "") => (s.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? s).trim()
+const noSubscribe = () => () => {}
+
+const firstSentence =(s = "") => (s.match(/^.*?[.!?](?=\s|$)/)?.[0] ?? s).trim()
 
 // Every page in the sidebar; component pages gain their description once it loads.
 const PAGES: Entry[] = NAV.flatMap((g) =>
@@ -56,6 +57,12 @@ export function DocsSearch() {
   const router = useRouter()
   const listId = useId()
   const results = useMemo(() => rank(entries, query), [entries, query])
+  // The static page renders Ctrl; a Mac swaps in ⌘ once it loads.
+  const mac = useSyncExternalStore(
+    noSubscribe,
+    () => /Mac|iPhone|iPad/.test(navigator.userAgent),
+    () => false
+  )
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -102,15 +109,21 @@ export function DocsSearch() {
         if (!o) setQuery("")
       }}
     >
+      {/* A field you can type into at a glance: a quiet well, the words, and the shortcut as one key chip
+          inset at the end (two separate caps read as two buttons). */}
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex h-9 items-center gap-2 rounded-lg border border-edge bg-card px-2.5 text-xs text-ink-secondary transition-[border-color,color] duration-(--t-fast) ease-out hover:border-edge-hover hover:text-ink canvas:w-64"
         aria-label="Search the docs"
+        aria-keyshortcuts="Control+K Meta+K"
+        className="flex h-9 items-center gap-2.5 rounded-lg border border-edge bg-w03 px-2.5 text-xs text-ink-secondary transition-[border-color,background-color,color] duration-(--t-fast) ease-out hover:border-edge-hover hover:bg-w05 hover:text-ink canvas:w-72 canvas:pr-1.5 canvas:pl-3"
       >
         <Search aria-hidden="true" strokeWidth={2} className="size-4 shrink-0" />
         <span className="hidden flex-1 text-left canvas:inline">Search the docs</span>
-        <Kbd keys={["Ctrl", "K"]} className="hidden canvas:inline-flex" />
+        <kbd className="hidden h-6 items-center gap-1 rounded-md border border-hairline bg-w05 px-2 font-sans text-2xs font-semibold text-ink canvas:inline-flex">
+          <span>{mac ? "⌘" : "Ctrl"}</span>
+          <span>K</span>
+        </kbd>
       </button>
       <DialogContent title="Search the docs" size="wide">
         <div className="flex flex-col gap-3">
