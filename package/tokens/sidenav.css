@@ -173,3 +173,95 @@ a.snav-section-head:focus-visible::after { outline: 0.125rem solid var(--brand);
 [data-theme="light"] .snav-badge {
   background: rgba(var(--accent-rgb), 0.12); color: color-mix(in srgb, var(--accent) 80%, #000);
 }
+
+/*
+ * SideNav variant="sales", the default: Sales' tabs in the rail (railNav in
+ * bdr.js, bdr.css 111, Sales d24d176). One card at the top of the Rail, a row
+ * per page; the one you are on is the tinted block (QA's current section) and
+ * opens to hold AiMY's reading of that page. Changing page closes the old
+ * reading while the new one opens: grid rows 0fr to 1fr, 250ms, the tint
+ * crossfading with it. Classes are snav-tab* so they never meet the Rail's.
+ */
+.snav-tabs > ul {
+  display: flex; flex-direction: column; gap: 0.125rem; margin: 0; padding: 0.375rem; list-style: none;
+  border: 0.0625rem solid var(--card-border); border-radius: var(--r-2xl);
+  background: var(--card-bg);
+  box-shadow: var(--shadow-sm), inset 0 0.0625rem 0 rgba(255, 255, 255, 0.045);
+}
+.snav-tab { position: relative; isolation: isolate; border-radius: var(--r-xl); }
+.snav-tab::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(var(--accent-rgb), 0.24), transparent 70%),
+    linear-gradient(120deg, rgba(var(--accent-rgb), 0.13), rgba(0, 102, 255, 0.05));
+  box-shadow: inset 0 0 0 0.0625rem rgba(var(--accent-rgb), 0.42);
+  opacity: 0; transition: opacity var(--t-fast) var(--ease-out);
+  pointer-events: none;
+}
+.snav-tab.is-on::before { opacity: 1; }
+.snav-tab-link {
+  display: flex; align-items: center; gap: 0.625rem; min-height: 2.5rem;
+  padding: 0.5rem 0.75rem; border-radius: var(--r-pill); text-decoration: none;
+  font-family: var(--font-display); font-size: var(--fs-sm); font-weight: var(--fw-semibold);
+  color: var(--d100);
+  transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
+}
+.snav-tab-icon { display: inline-flex; flex: none; color: var(--d200); }
+.snav-tab-icon svg { width: 1rem; height: 1rem; }
+.snav-tab-name { flex: 1; min-width: 0; }
+.snav-tab-n {
+  font-size: var(--fs-xs); font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums; color: var(--d200);
+}
+.snav-tab:not(.is-on) .snav-tab-link:hover {
+  background: color-mix(in srgb, var(--d50) 6%, transparent); color: var(--d50);
+}
+.snav-tab.is-on .snav-tab-link { color: var(--d50); font-weight: var(--fw-bold); }
+.snav-tab.is-on .snav-tab-icon, .snav-tab.is-on .snav-tab-n { color: var(--accent-text); }
+.snav-tab-link:focus-visible { outline: 0.125rem solid var(--brand); outline-offset: -0.125rem; }
+/* Padding on the body, never on the track, or the shut row keeps a strip. */
+.snav-tab-read {
+  display: grid; grid-template-rows: 0fr; opacity: 0;
+  transition: grid-template-rows var(--t-fast) var(--ease-out), opacity var(--t-fast) var(--ease-out);
+}
+.snav-tab.is-on .snav-tab-read { grid-template-rows: 1fr; opacity: 1; }
+.snav-tab-read-in { min-height: 0; overflow: hidden; }
+.snav-tab-body { padding: 0.125rem 0.75rem 0.75rem; }
+
+/* SideNavRead: Sales' railReadHtml. The state in its tone, a sentence at the
+   rail's measure, the figures as pills, and one way in across the card. */
+.snav-read-state {
+  margin: 0 0 0.5rem; font-size: var(--fs-xs); font-weight: var(--fw-bold);
+  letter-spacing: 0.05em; text-transform: uppercase; color: var(--warn-text);
+}
+.snav-read-state[data-tone="err"] { color: var(--err-text); }
+.snav-read-state[data-tone="ok"] { color: var(--ok-text); }
+.snav-read-text {
+  margin: 0 0 0.75rem; font-size: var(--fs-xs); font-weight: var(--fw-medium);
+  line-height: var(--lh-base); color: var(--d100);
+}
+.snav-read-text b { font-weight: var(--fw-semibold); color: var(--d50); }
+.snav-read-evidence { display: flex; flex-wrap: wrap; gap: 0.3125rem; margin: 0 0 0.75rem; padding: 0; list-style: none; }
+.snav-read-pill {
+  display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.1875rem 0.5rem;
+  border: 0.0625rem solid var(--w08); border-radius: var(--r-pill); background: var(--w04);
+  font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--ink-secondary);
+}
+.snav-read-val { font-weight: var(--fw-bold); color: var(--d50); }
+.snav-read-act {
+  display: inline-flex; align-items: center; justify-content: center; width: 100%; height: 1.75rem;
+  padding: 0 0.75rem; border: 0.0625rem solid var(--w10); border-radius: var(--r-pill);
+  background: var(--w05); font-family: inherit; font-size: var(--fs-xs); font-weight: var(--fw-semibold);
+  color: var(--d100); cursor: pointer;
+  transition: transform var(--t-press) var(--ease-out), background-color var(--t-fast), color var(--t-fast);
+}
+.snav-read-act:hover { background: var(--w08); color: var(--d50); }
+.snav-read-act:active { transform: scale(0.97); }
+.snav-read-act:focus-visible { outline: 0.125rem solid var(--brand); outline-offset: 0.125rem; }
+@media (prefers-reduced-motion: reduce) {
+  .snav-tab::before, .snav-tab-link, .snav-tab-read, .snav-read-act { transition: none; }
+}
+[data-theme="light"] .snav-tabs > ul { box-shadow: var(--shadow-sm); }
+[data-theme="light"] .snav-tab::before {
+  background: linear-gradient(120deg, rgba(var(--accent-rgb), 0.12), rgba(0, 102, 255, 0.05));
+}

@@ -43,6 +43,11 @@ Writing:
 - A verb on every button that names the action; never "Open" or "Learn more" when the real action has a name.
 - Errors say what happened and what to do next.
 
+Moving between pages:
+
+- A product with a few pages (four or five) uses `SideNav`, Sales' tabs, as the first card of the `Rail`: a row per page with its count, and the current page holding AiMY's reading of it (`SideNavRead`). Most AiMY products are this.
+- A product with many pages and nested flows uses `SideNav variant="qa"` in AppShell's `nav` slot: each page with its headline figures, collapsing to icons. Only QA uses it today. Never use it for a handful of pages, and never put both forms in one product.
+
 Results inside a chat reply:
 
 - Every result AiMY draws in a reply sits in a `WidgetFrame`: its name in sentence case, a count or order, Open in the canvas, and a foot that opens the rest. No paginator and no sideways scrolling in a reply.

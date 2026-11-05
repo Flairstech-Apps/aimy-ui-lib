@@ -1,13 +1,14 @@
 "use client"
 
-import { Database, LayoutGrid, Settings, Settings2, Table, User } from "lucide-react"
+import { Database, Flag, LayoutGrid, List, Settings, Settings2, Sun, Table, User, Users } from "lucide-react"
 import { useState } from "react"
 import { AimyMark } from "@/registry/aimy/brand/aimy-mark"
 import { AppShell, Page, PageHead } from "@/registry/aimy/ui/app-shell"
 import { Message } from "@/registry/aimy/ui/message"
 import { ScrollDot } from "@/registry/aimy/ui/scroll-dot"
 import { Segmented } from "@/registry/aimy/ui/segmented"
-import { SideNav, type SideNavPage } from "@/registry/aimy/ui/side-nav"
+import { Rail, RailDoor, RailDoors, RailLink } from "@/registry/aimy/ui/rail"
+import { SideNav, SideNavRead, type SideNavPage } from "@/registry/aimy/ui/side-nav"
 import { StatTile, StatTiles } from "@/registry/aimy/ui/stat-tile"
 import { toast } from "@/registry/aimy/ui/toast"
 import { Topnav } from "@/registry/aimy/ui/topnav"
@@ -58,7 +59,7 @@ const WIDTHS = [
   { value: "390px", label: "390" },
 ]
 
-export function SideNavDemo() {
+export function QaSideNavDemo() {
   const [w, setW] = useState("100%")
   return (
     <div className="flex flex-col gap-4">
@@ -77,6 +78,7 @@ export function SideNavDemo() {
           }
           nav={
             <SideNav
+              variant="qa"
               pages={PAGES}
               summary="6 insights"
               count={6}
@@ -96,6 +98,120 @@ export function SideNavDemo() {
             </StatTiles>
           </Page>
         </AppShell>
+      </div>
+    </div>
+  )
+}
+
+const SALES_PRODUCTS = [
+  { label: "Knowledge", onSelect: () => toast("Opens Knowledge") },
+  { label: "Sales", current: true },
+  { label: "QA", onSelect: () => toast("Opens QA") },
+]
+
+// Sales' four tabs for a desk with a book, each with the reading AiMY gives on it (tabRead in bdr.js).
+const SALES_TABS = [
+  {
+    id: "today",
+    label: "Today",
+    icon: <Sun strokeWidth={2} />,
+    read: (
+      <SideNavRead state="staged" action={{ label: "Show the 5", onClick: () => toast("Opens the 5 callbacks") }}>
+        <b>5 people</b> asked to be called back, across your 9 campaigns.
+      </SideNavRead>
+    ),
+  },
+  {
+    id: "contacts",
+    label: "Contacts",
+    badge: 109,
+    icon: <Users strokeWidth={2} />,
+    read: (
+      <SideNavRead state="staged" evidence={[{ val: 14, cap: "steps due this week" }]}>
+        <b>3 contacts</b> have a next step past its date, out of the <b>109</b> here.
+      </SideNavRead>
+    ),
+  },
+  {
+    id: "campaigns",
+    label: "Campaigns",
+    badge: 9,
+    icon: <Flag strokeWidth={2} />,
+    read: (
+      <SideNavRead
+        state="detected"
+        tone="ok"
+        evidence={[
+          { val: 1, cap: "request waiting" },
+          { val: 2, cap: "drafts" },
+        ]}
+      >
+        <b>2 campaigns</b> close in the next two weeks, out of the <b>9</b> running.
+      </SideNavRead>
+    ),
+  },
+  {
+    id: "lists",
+    label: "Lists",
+    badge: 11,
+    icon: <List strokeWidth={2} />,
+    read: (
+      <SideNavRead state="staged" evidence={[{ val: 6, cap: "people with no number" }]}>
+        <b>1 list</b> is on no campaign, so nobody on it is called yet.
+      </SideNavRead>
+    ),
+  },
+]
+
+/**
+ * Sales' tabs at the top of the rail: click one and its reading opens while the last one shuts.
+ * The docs column is narrower than the shell's 1040px rung, where an AppShell turns its rail into a
+ * drawer, so the frame draws the rail as the column Sales shows on a laptop.
+ */
+export function SideNavDemo() {
+  const [on, setOn] = useState("today")
+  const pages: SideNavPage[] = SALES_TABS.map((t) => ({ ...t, href: `#${t.id}`, current: t.id === on }))
+  const here = SALES_TABS.find((t) => t.id === on)!
+  return (
+    <div
+      className="flex flex-col overflow-hidden rounded-xl border border-edge text-ink"
+      style={{ height: "38rem", background: "var(--body-bg)", ["--rail-w" as string]: "20rem" }}
+    >
+      <Topnav
+        logo={<AimyMark variant="lockup" title="AiMY Sales" className="h-7" />}
+        products={SALES_PRODUCTS}
+        actions={<ShellBar />}
+      />
+      <div className="flex min-h-0 flex-1">
+        <Rail
+          foot={
+            <RailLink icon={<Settings aria-hidden="true" />} onClick={() => toast("Opens the console")}>
+              Console
+            </RailLink>
+          }
+        >
+          <SideNav pages={pages} label="Sales pages" onNavigate={(href) => setOn(href.slice(1))} />
+          <RailDoors>
+            <RailDoor
+              cap="Diary"
+              clock
+              fig="10:30"
+              who="Dana Whitfield"
+              kind="Demo"
+              go="Open the diary"
+              onClick={() => toast("Opens the diary")}
+            />
+          </RailDoors>
+        </Rail>
+        <div className="app-main">
+          <Page>
+            <PageHead title={here.label} stamp="Read 09:12" />
+            <StatTiles>
+              <StatTile label="Callable" value="107" sub="38 you can call now" />
+              <StatTile label="Callbacks" value="5" tone="warn" sub="all past the day they asked for" />
+            </StatTiles>
+          </Page>
+        </div>
       </div>
     </div>
   )

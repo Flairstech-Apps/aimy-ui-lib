@@ -24,7 +24,7 @@ export function useShell() {
 
 type AppShellProps = {
   topnav: React.ReactNode
-  /** Left navigation between pages (SideNav), before the rail. It brings its own collapse and drawer. */
+  /** QA's left navigation (SideNav variant="qa"), before the rail, for many pages and nested flows. It brings its own collapse and drawer. Sales' tabs, the default SideNav, go in the rail instead. */
   nav?: React.ReactNode
   rail?: React.ReactNode
   /** The rail's width as a column, e.g. "17rem". 20rem (320px) by default. */

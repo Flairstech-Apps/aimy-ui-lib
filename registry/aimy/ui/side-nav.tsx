@@ -3,10 +3,28 @@
 import { ChevronRight, PanelLeft } from "lucide-react"
 import { useCallback, useEffect, useId, useRef, useState, useSyncExternalStore } from "react"
 import { AimyMark } from "@/components/aimy-mark"
+import { useShell } from "@/components/app-shell"
 import { Tooltip } from "@/components/tooltip"
+import { workStateLabel } from "@/components/work-state"
+import type { WorkStateValue } from "@/lib/ai-types"
 import { cn } from "@/lib/utils"
 
-// QA's left navigation (aimy-rail.js and aimy-rail.css), in two forms. Open,
+// The pages of a product, in two forms (Nour, 5 Nov: Sales' is the main one).
+//
+// variant="sales", the default: Sales' tabs (railNav in bdr.js, bdr.css 111),
+// for a product with a few pages. One card at the top of the Rail, a row per
+// page with its icon, name and count; the page you are on is the tinted block,
+// and it opens to hold AiMY's reading of that page (SideNavRead). Changing page
+// closes the old reading while the new one opens. It needs no narrow form of
+// its own: the Rail it sits in becomes the drawer.
+//
+//   <Rail>
+//     <SideNav pages={pages} />   // the current page's `read` is a <SideNavRead>
+//     <RailDoors>…</RailDoors>
+//   </Rail>
+//
+// variant="qa": QA's left navigation (aimy-rail.js and aimy-rail.css), for a
+// product with many pages and nested flows. Its own column, in two forms. Open,
 // 272px: each page is a section with its headline figures, the current page
 // first in an accent card that says "You're here". Collapsed, 64px: the pages
 // as icon squares with count badges and tooltips, the current one first. The
@@ -15,7 +33,7 @@ import { cn } from "@/lib/utils"
 // it brings the open form in as a drawer over a scrim: Escape, the scrim or a
 // link closes it, and focus goes back to where it was.
 //
-//   <AppShell topnav={…} nav={<SideNav title="AiMY" summary="6 insights" pages={pages} />}>
+//   <AppShell topnav={…} nav={<SideNav variant="qa" title="AiMY" summary="6 insights" pages={pages} />}>
 
 export type SideNavFinding = {
   /** The figure, as it should read: "29", "4/6". */
@@ -37,28 +55,33 @@ export type SideNavPage = {
   /** A Lucide icon, 24 grid at stroke 2. */
   icon: React.ReactNode
   current?: boolean
-  /** The count on the collapsed icon. */
+  /** The page's count: at the end of its row (sales), on the collapsed icon (qa). */
   badge?: React.ReactNode
-  /** The collapsed icon's tooltip after the page name: "29 points below target". */
+  /** qa: the collapsed icon's tooltip after the page name: "29 points below target". */
   tip?: string
+  /** qa: the page's headline figures, under its name. */
   findings?: SideNavFinding[]
+  /** sales: AiMY's reading of the page, shown under it while you are on it. A SideNavRead. */
+  read?: React.ReactNode
 }
 
 type SideNavProps = {
+  /** sales (the default) for a few pages, in the Rail; qa for many pages and nested flows, in its own column. */
+  variant?: "sales" | "qa"
   pages: SideNavPage[]
-  /** The head's title, in the AI ink beside the mark: "AiMY". */
+  /** qa: the head's title, in the AI ink beside the mark: "AiMY". */
   title?: string
-  /** On the right of the head: "6 insights". */
+  /** qa: on the right of the head: "6 insights". */
   summary?: string
-  /** On the mark's button when collapsed: the number of insights. */
+  /** qa: on the mark's button when collapsed: the number of insights. */
   count?: React.ReactNode
   /** The navigation's name for screen readers. */
   label?: string
-  /** Where the open or collapsed choice is kept. */
+  /** qa: where the open or collapsed choice is kept. */
   storageKey?: string
   /** Called instead of following href, for an app's own router. */
   onNavigate?: (href: string) => void
-  /** The shell width, in px, below which it stays collapsed and opens as a drawer. 1100, QA's. */
+  /** qa: the shell width, in px, below which it stays collapsed and opens as a drawer. 1100, QA's. */
   breakpoint?: number
   className?: string
 }
@@ -119,7 +142,97 @@ function usePref(key: string) {
   return [pref, save] as const
 }
 
-export function SideNav({
+export function SideNav({ variant = "sales", ...props }: SideNavProps) {
+  return variant === "qa" ? <QaSideNav {...props} /> : <SalesSideNav {...props} />
+}
+
+/** Sales: a card of tabs, the current one holding AiMY's reading of the page. */
+function SalesSideNav({ pages, label = "Pages", onNavigate, className }: Omit<SideNavProps, "variant">) {
+  const { setRailOpen } = useShell()
+  const follow = (href: string) => (e: React.MouseEvent) => {
+    // Every row in the drawer is a way out of it (Sales: railOpen(false) on every move).
+    setRailOpen(false)
+    if (!onNavigate || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return
+    e.preventDefault()
+    onNavigate(href)
+  }
+  return (
+    <nav aria-label={label} data-slot="side-nav" data-variant="sales" className={cn("snav-tabs", className)}>
+      <ul>
+        {pages.map((p) => (
+          <li key={p.id} className={cn("snav-tab", p.current && "is-on")}>
+            <a
+              className="snav-tab-link"
+              href={p.href}
+              aria-current={p.current ? "page" : undefined}
+              onClick={follow(p.href)}
+            >
+              <span className="snav-tab-icon" aria-hidden="true">
+                {p.icon}
+              </span>
+              <span className="snav-tab-name">{p.label}</span>
+              {/* The space keeps "Lists 11" two words for a screen reader; the flex row draws none. */}
+              {p.badge != null ? <> <span className="snav-tab-n">{p.badge}</span></> : null}
+            </a>
+            {/* Every reading stays in the page, shut unless you are on it, so a change of page
+                closes one while the next opens (grid rows 0fr to 1fr) instead of jumping. */}
+            {p.read ? (
+              <div className="snav-tab-read" inert={!p.current}>
+                <div className="snav-tab-read-in">
+                  <div className="snav-tab-body">{p.read}</div>
+                </div>
+              </div>
+            ) : null}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+type SideNavReadProps = {
+  /** Where the reading stands; its words are the work state's ("Awaiting you"). */
+  state: WorkStateValue
+  /** Says the state more specifically, as Sales does: "Reading". */
+  label?: string
+  /** The state's tone, as Sales paints it. */
+  tone?: "err" | "warn" | "ok"
+  /** Figures that back the sentence: { val: 4, cap: "steps due this week" }. */
+  evidence?: { val: React.ReactNode; cap: string }[]
+  /** The one way in, under the sentence: "Show the 5". */
+  action?: { label: string; onClick: () => void }
+  /** The sentence. Bold the numbers that matter with <b>. */
+  children: React.ReactNode
+}
+
+/** AiMY's reading of the page you are on (Sales' railReadHtml): its state, a sentence, the figures and a way in. */
+export function SideNavRead({ state, label, tone = "warn", evidence, action, children }: SideNavReadProps) {
+  return (
+    <>
+      <p className="snav-read-state" data-tone={tone}>
+        {label ?? workStateLabel(state)}
+      </p>
+      <p className="snav-read-text">{children}</p>
+      {evidence?.length ? (
+        <ul className="snav-read-evidence">
+          {evidence.map((e) => (
+            <li key={e.cap} className="snav-read-pill">
+              <span className="snav-read-val">{e.val}</span> {e.cap}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {action ? (
+        <button type="button" className="snav-read-act" onClick={action.onClick}>
+          {action.label}
+        </button>
+      ) : null}
+    </>
+  )
+}
+
+/** QA: its own column, open with each page's figures or collapsed to icons, a drawer when narrow. */
+function QaSideNav({
   pages,
   title = "AiMY",
   summary,
@@ -129,7 +242,7 @@ export function SideNav({
   onNavigate,
   breakpoint = 1100,
   className,
-}: SideNavProps) {
+}: Omit<SideNavProps, "variant">) {
   const ref = useRef<HTMLElement>(null)
   const narrow = useNarrow(ref, breakpoint)
   const [pref, save] = usePref(storageKey)
@@ -270,6 +383,7 @@ export function SideNav({
         ref={ref}
         aria-label={label}
         data-slot="side-nav"
+        data-variant="qa"
         data-rail={mode}
         data-narrow={narrow || undefined}
         className={cn("snav", entering && "is-entering", className)}

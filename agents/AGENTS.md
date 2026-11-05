@@ -47,6 +47,11 @@ Writing:
 - A verb on every button that names the action; never "Open" or "Learn more" when the real action has a name.
 - Errors say what happened and what to do next.
 
+Moving between pages:
+
+- A product with a few pages (four or five) uses `SideNav`, Sales' tabs, as the first card of the `Rail`: a row per page with its count, and the current page holding AiMY's reading of it (`SideNavRead`). Most AiMY products are this.
+- A product with many pages and nested flows uses `SideNav variant="qa"` in AppShell's `nav` slot: each page with its headline figures, collapsing to icons. Only QA uses it today. Never use it for a handful of pages, and never put both forms in one product.
+
 Results inside a chat reply:
 
 - Every result AiMY draws in a reply sits in a `WidgetFrame`: its name in sentence case, a count or order, Open in the canvas, and a foot that opens the rest. No paginator and no sideways scrolling in a reply.
@@ -121,7 +126,7 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 
 - **App shell** (`@aimy/app-shell`): The frame every AiMY product sits in: topnav, rail, page. https://aimy-ui-lib.aimy.flairstech.com/components/app-shell/
 - **Top navigation** (`@aimy/topnav`): The bar: Knowledge's markup with Sales' values. https://aimy-ui-lib.aimy.flairstech.com/components/topnav/
-- **Side navigation** (`@aimy/side-nav`): QA's left navigation between pages, in two forms: open (272px), each page a section with its headline figures and the current page first in an accent card that says You're here; collapsed (64px), icon squares with count badges and tooltips. https://aimy-ui-lib.aimy.flairstech.com/components/side-nav/
+- **Side navigation** (`@aimy/side-nav`): The pages of a product down the left, in two forms. https://aimy-ui-lib.aimy.flairstech.com/components/side-nav/
 - **Scroll dot** (`@aimy/scroll-dot`): QA's scroll indicator, opt-in per scrolling area: a translucent accent dot in place of the native bar that trails a flame sized by scroll speed and lands with a squash when the scroll stops. https://aimy-ui-lib.aimy.flairstech.com/components/scroll-dot/
 - **Rail doors**: https://aimy-ui-lib.aimy.flairstech.com/components/rail-door/
 - **Notification center** (`@aimy/notification-center`): The bell and Sales' panel: Needs you with the unread count and Mark all read; a row per thing with a severity dot beside its type in words, when, one sentence and one action; a question for AiMY at the foot. https://aimy-ui-lib.aimy.flairstech.com/components/notification-center/
