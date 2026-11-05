@@ -70,6 +70,13 @@
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/avatar/"
   },
   {
+    "name": "face-stack",
+    "title": "Face stack",
+    "group": "Components",
+    "description": "Sales' face stack: faces over each other as one group, the first on top, each ringed in the ground colour, the rest past four as one more circle with the count. Faces only for the people on a card; with menu, a chip with a chevron that opens the whole set named with their jobs (a menu when each name opens the person, a list to read otherwise).",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/face-stack/"
+  },
+  {
     "name": "field",
     "title": "Field and text inputs",
     "group": "Forms",

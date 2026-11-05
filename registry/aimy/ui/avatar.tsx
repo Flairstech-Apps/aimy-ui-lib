@@ -22,6 +22,7 @@ type Size = keyof typeof SIZES
 type AvatarProps = {
   /** The person's name: used for the initials and the accessible name. */
   name: string
+  /** The person's photo. Without one, or when it fails to load, their initials. */
   src?: string
   size?: Size
   className?: string
@@ -49,7 +50,17 @@ export function Avatar({ name, src, size = "md", className }: AvatarProps) {
     >
       {showPhoto ? (
         <>
-          <img src={src} alt="" className="absolute inset-0 size-full object-cover" onError={() => setBroken(true)} />
+          {/* A photo that failed before the page came alive fired its error with nobody listening,
+              so the ref checks it once on mount; onError covers the rest. */}
+          <img
+            ref={(img) => {
+              if (img?.complete && img.naturalWidth === 0) setBroken(true)
+            }}
+            src={src}
+            alt=""
+            className="absolute inset-0 size-full object-cover"
+            onError={() => setBroken(true)}
+          />
           <span aria-hidden="true" className="absolute inset-0 rounded-pill shadow-[inset_0_0_0_1px_var(--w16)]" />
         </>
       ) : (

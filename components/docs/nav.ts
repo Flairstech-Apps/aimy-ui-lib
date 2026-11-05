@@ -43,6 +43,7 @@ const LIBRARY: NavGroup[] = [
       { href: "/components/kbd/", label: "Kbd" },
       { href: "/components/divider/", label: "Divider" },
       { href: "/components/avatar/", label: "Avatar" },
+      { href: "/components/face-stack/", label: "Face stack" },
     ],
   },
   {

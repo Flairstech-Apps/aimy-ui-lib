@@ -367,6 +367,28 @@
       ]
     },
     {
+      "name": "face-stack",
+      "type": "registry:component",
+      "title": "Face stack",
+      "description": "Sales' face stack: faces over each other as one group, the first on top, each ringed in the ground colour, the rest past four as one more circle with the count. Faces only for the people on a card; with menu, a chip with a chevron that opens the whole set named with their jobs (a menu when each name opens the person, a list to read otherwise).",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/avatar",
+        "@aimy/menu",
+        "@aimy/popover"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/face-stack.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "field",
       "type": "registry:component",
       "title": "Field",

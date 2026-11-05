@@ -92,6 +92,7 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 - **Kbd** (`@aimy/kbd`): Key caps for a keyboard shortcut: <Kbd keys={["Ctrl", "K"]} />. https://aimy-ui-lib.aimy.flairstech.com/components/kbd/
 - **Divider** (`@aimy/divider`): A 1px rule in the edge colour, horizontal or vertical. https://aimy-ui-lib.aimy.flairstech.com/components/divider/
 - **Avatar** (`@aimy/avatar`): A person as their photo (with the face ring) or initials on the avatar gradient; AiMY as its mark on the AiMY tile, so AiMY is never shown with a person's face. https://aimy-ui-lib.aimy.flairstech.com/components/avatar/
+- **Face stack** (`@aimy/face-stack`): Sales' face stack: faces over each other as one group, the first on top, each ringed in the ground colour, the rest past four as one more circle with the count. https://aimy-ui-lib.aimy.flairstech.com/components/face-stack/
 
 ### Forms
 

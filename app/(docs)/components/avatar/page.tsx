@@ -10,7 +10,7 @@ const TEAM = [{ name: "Engy Hassan" }, { name: "Lina Farouk" }, { name: "Sherif 
 export default function AvatarPage() {
   return (
     <>
-      <PageHeader title="Avatar" lead="People and AiMY, told apart at a glance: a person is a face or initials in a circle; AiMY is its mark on its tile." />
+      <PageHeader title="Avatar" lead="People and AiMY, told apart at a glance: a person is their photo, or their initials when there is none, in a circle; AiMY is its mark on its tile." />
       <Section title="People and AiMY">
         <ThemePair>
           <div className="flex flex-col gap-5">
@@ -19,6 +19,12 @@ export default function AvatarPage() {
               <Avatar name="Engy Hassan" size="sm" />
               <Avatar name="Engy Hassan" />
               <Avatar name="Engy Hassan" size="lg" />
+            </Row>
+            <Row label="with a photo (src), and initials when it has none or it fails">
+              <Avatar name="Lina Farouk" src="https://randomuser.me/api/portraits/women/44.jpg" size="sm" />
+              <Avatar name="Sherif Adel" src="https://randomuser.me/api/portraits/men/32.jpg" />
+              <Avatar name="Mona Kamal" src="https://randomuser.me/api/portraits/women/68.jpg" size="lg" />
+              <Avatar name="Rami Saleh" src="/no-such-photo.jpg" size="lg" />
             </Row>
             <Row label="AiMY">
               <AimyAvatar size="sm" />
