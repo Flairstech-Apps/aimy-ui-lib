@@ -21,7 +21,7 @@ export default function Page() {
       <Section title="Use it">
         <CodeBlock>
           {
-            '<RailDoors>\n  <RailDoor cap="Today" clock fig="10:30" who="Dana Whitfield" kind="Demo" go="Open the diary" onClick={openDiary} />\n  <RailDoor cap="Financials" fig="€182k" of="gained" bar={{ value: 182, target: 300 }}\n    say={<>€11k behind, and <RailDoorMiss>3 calls missed</RailDoorMiss>.</>} go="Open the report" onClick={openReport} />\n</RailDoors>'
+            '<RailDoors>\n  <RailDoor cap="Diary" clock fig="10:30" who="Dana Whitfield" kind="Demo" go="Open" onClick={openDiary} />\n  <RailDoor cap="Financials" fig="€182k" of="gained" bar={{ value: 182, target: 300 }}\n    say={<>€11k behind, and <RailDoorMiss>3 calls missed</RailDoorMiss>.</>} go="Open the report" onClick={openReport} />\n</RailDoors>'
           }
         </CodeBlock>
       </Section>

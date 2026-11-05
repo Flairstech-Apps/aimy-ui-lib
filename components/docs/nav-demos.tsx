@@ -198,7 +198,7 @@ export function SideNavDemo() {
               fig="10:30"
               who="Dana Whitfield"
               kind="Demo"
-              go="Open the diary"
+              go="Open"
               onClick={() => toast("Opens the diary")}
             />
           </RailDoors>

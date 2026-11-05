@@ -75,10 +75,10 @@ export function App() {
           >
             <RailDoors>
               <RailDoor
-                cap="Today"
+                cap="Diary"
                 fig="Nothing is in the diary"
                 say="A standing fact goes here, with the page it opens."
-                go="Open the diary"
+                go="Open"
                 onClick={() => toast("The diary goes here")}
               />
             </RailDoors>

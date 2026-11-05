@@ -47,7 +47,7 @@ Accessibility (WCAG 2.2 AA in both themes):
 Writing:
 
 - Plain English. Say "call", never "ring"; "contacts", never "board" or "book". No sales slang.
-- A verb on every button that names the action; never "Open" or "Learn more" when the real action has a name.
+- A verb on every button that names the action; never "Open" or "Learn more" when the real action has a name. A card captioned with the page it opens says "Open": the diary door is captioned Diary, so its link is Open.
 - Errors say what happened and what to do next.
 
 Moving between pages:

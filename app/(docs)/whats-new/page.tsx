@@ -14,6 +14,7 @@ const RELEASES: { version: string; date: string; summary: string; changes: strin
       "QA's column, open with each page's figures or collapsed to icons, is SideNav variant=\"qa\". Use Sales' tabs for a product with a few pages and QA's for many pages and nested flows; the Side navigation page and the rules for agents say so.",
       "FaceStack: a group of people as one object, the first face on top and the rest counted; as a door, a chip that opens the whole set, named with their jobs.",
       "Fixed: an Avatar whose photo failed before the page came alive showed the browser's broken image instead of the person's initials.",
+      "The diary door, as Sales now draws it: captioned Diary instead of Today, and its link says Open, since the caption already names the page. The examples, the starters and the rules for agents say so; the Financials door keeps Open the report.",
     ],
     action:
       "QA: add variant=\"qa\" to SideNav before you update, or your navigation turns into Sales' tabs. Everyone: pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest, or npx shadcn@latest add @aimy/side-nav @aimy/avatar --overwrite and npx shadcn@latest add @aimy/face-stack. Copied components need the tokens at 1.4.0 for the tabs' styles.",

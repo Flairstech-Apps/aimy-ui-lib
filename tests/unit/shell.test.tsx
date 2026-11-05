@@ -31,7 +31,7 @@ function Shell({ onDiary = () => {} }: { onDiary?: () => void }) {
       rail={
         <Rail foot={<RailLink href="/console">Console</RailLink>}>
           <RailDoors>
-            <RailDoor cap="Today" fig="10:30" who="Dana" go="Open the diary" onClick={onDiary} />
+            <RailDoor cap="Diary" fig="10:30" who="Dana" go="Open" onClick={onDiary} />
           </RailDoors>
         </Rail>
       }
@@ -71,7 +71,7 @@ describe("AppShell, Topnav, Rail", () => {
   it("a door is one button that opens its page", async () => {
     const open = vi.fn()
     render(<Shell onDiary={open} />)
-    await userEvent.click(screen.getByRole("button", { name: /Today 10:30 Dana Open the diary/ }))
+    await userEvent.click(screen.getByRole("button", { name: /Diary 10:30 Dana Open/ }))
     expect(open).toHaveBeenCalledOnce()
   })
 

@@ -93,12 +93,12 @@ export function ShellRail() {
       </Brief>
       <RailDoors>
         <RailDoor
-          cap="Today"
+          cap="Diary"
           clock
           fig="10:30"
           who="Dana Whitfield"
           kind="Demo"
-          go="Open the diary"
+          go="Open"
           onClick={go("the diary")}
         />
         <RailDoor
@@ -201,9 +201,9 @@ export function RailDoorDemo() {
       <div className="w-[20rem]">
         <RailDoors>
           <RailDoor
-            cap="Today"
+            cap="Diary"
             fig="Nothing is in the diary"
-            go="Open the diary"
+            go="Open"
             onClick={go("the diary")}
             say="5 things in the fortnight ahead"
           />

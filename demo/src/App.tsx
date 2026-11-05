@@ -211,12 +211,12 @@ export function App() {
           >
             <RailDoors>
               <RailDoor
-                cap="Today"
+                cap="Diary"
                 clock
                 fig="10:30"
                 who="Dana Whitfield"
                 kind="Demo"
-                go="Open the diary"
+                go="Open"
                 onClick={() => setTab("diary")}
               />
               <RailDoor

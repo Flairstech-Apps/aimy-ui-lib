@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils"
 //
 //   <Rail foot={<RailLink icon={<Settings />} href="/console">Console</RailLink>}>
 //     <RailDoors>
-//       <RailDoor cap="Today" fig="10:30" who="Dana Whitfield" kind="Demo" go="Open the diary" onClick={…} />
+//       <RailDoor cap="Diary" fig="10:30" who="Dana Whitfield" kind="Demo" go="Open" onClick={…} />
 //       <RailDoor cap="Financials" fig="€182k" of="gained" bar={{ value: 182, target: 300 }} say="61% reached" go="Open the report" onClick={…} />
 //     </RailDoors>
 //   </Rail>
@@ -111,7 +111,7 @@ type RailDoorProps = {
   bar?: { value: number; open?: number; target: number }
   /** One sentence, which may hold a part in the error ink (RailDoorMiss). */
   say?: React.ReactNode
-  /** Where it opens, in words: "Open the diary". */
+  /** Where it opens: "Open" when the caption already names the page (Diary), otherwise in words: "Open the report". */
   go: string
   onClick: () => void
 }
