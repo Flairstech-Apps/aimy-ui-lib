@@ -77,6 +77,13 @@
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/face-stack/"
   },
   {
+    "name": "call-recording",
+    "title": "Call recording",
+    "group": "Components",
+    "description": "Sales' recording strip from the call log: the recording of a call, or the message left on a missed one, as a voice note. Play, a waveform of 28 bars seeded by the call's id, and the time left counting down; one plays at a time across the page. It hangs under its call's row, at most 340px wide. No transcript in the strip.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/call-recording/"
+  },
+  {
     "name": "field",
     "title": "Field and text inputs",
     "group": "Forms",

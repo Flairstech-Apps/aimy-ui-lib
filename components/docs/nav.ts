@@ -44,6 +44,7 @@ const LIBRARY: NavGroup[] = [
       { href: "/components/divider/", label: "Divider" },
       { href: "/components/avatar/", label: "Avatar" },
       { href: "/components/face-stack/", label: "Face stack" },
+      { href: "/components/call-recording/", label: "Call recording" },
     ],
   },
   {

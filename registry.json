@@ -389,6 +389,25 @@
       ]
     },
     {
+      "name": "call-recording",
+      "type": "registry:component",
+      "title": "Call recording",
+      "description": "Sales' recording strip from the call log: the recording of a call, or the message left on a missed one, as a voice note. Play, a waveform of 28 bars seeded by the call's id, and the time left counting down; one plays at a time across the page. It hangs under its call's row, at most 340px wide. No transcript in the strip.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/call-recording.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "field",
       "type": "registry:component",
       "title": "Field",
