@@ -7,6 +7,14 @@ import {
   HeroFloat,
   HeroThread,
 } from "@/components/landing/variants"
+import {
+  FooterRelease,
+  FooterSetup,
+  FooterSignoff,
+  HeroCanvas,
+  HeroHorizon,
+  HeroShelf,
+} from "@/components/landing/variants-more"
 import registry from "@/registry.json"
 
 // Dev-only (page.lab.tsx): hero and footer options for the landing page.
@@ -40,9 +48,15 @@ export default function LandingVariants() {
           <a href="#hero-a">Hero A</a>
           <a href="#hero-b">Hero B</a>
           <a href="#hero-c">Hero C</a>
+          <a href="#hero-c2">C2</a>
+          <a href="#hero-c3">C3</a>
+          <a href="#hero-c4">C4</a>
           <a href="#footer-a">Footer A</a>
           <a href="#footer-b">Footer B</a>
           <a href="#footer-c">Footer C</a>
+          <a href="#footer-d">Footer D</a>
+          <a href="#footer-e">Footer E</a>
+          <a href="#footer-f">Footer F</a>
         </nav>
       </header>
       <Variant
@@ -67,6 +81,27 @@ export default function LandingVariants() {
         <HeroFloat count={COUNT} />
       </Variant>
       <Variant
+        id="hero-c2"
+        title="Hero C2: Stage and canvas"
+        idea="C's orb and float bar on the left; the part opens on a canvas beside them, as Knowledge's canvas opens beside the chat."
+      >
+        <HeroCanvas count={COUNT} />
+      </Variant>
+      <Variant
+        id="hero-c3"
+        title="Hero C3: Horizon"
+        idea="The orb rises from the hero's foot like a sun and the float bar rests on it. Open the peek to lay the part out above."
+      >
+        <HeroHorizon count={COUNT} />
+      </Variant>
+      <Variant
+        id="hero-c4"
+        title="Hero C4: The bar and the shelf"
+        idea="C's bar with the parts it can find as tiles under it; the one AiMY names lights up and opens. A tile asks too."
+      >
+        <HeroShelf count={COUNT} />
+      </Variant>
+      <Variant
         id="footer-a"
         title="Footer A: The site map"
         idea="Mark and release on the left, four columns of where to go next."
@@ -86,6 +121,27 @@ export default function LandingVariants() {
         idea="The install command and the links, then the AiMY lockup set large and cropped by the page's edge."
       >
         <FooterStatement />
+      </Variant>
+      <Variant
+        id="footer-d"
+        title="Footer D: Get set up"
+        idea="The three ways in (your app, your agent, a new product) on one switch, each with its command."
+      >
+        <FooterSetup />
+      </Variant>
+      <Variant
+        id="footer-e"
+        title="Footer E: What's new"
+        idea="The latest release's parts as cards into their pages, beside the version and every release."
+      >
+        <FooterRelease />
+      </Variant>
+      <Variant
+        id="footer-f"
+        title="Footer F: The sign-off"
+        idea="A small resting orb and Ask AiMY that take you back to the float bar, then one row of links."
+      >
+        <FooterSignoff barId="hero-c" />
       </Variant>
     </main>
   )

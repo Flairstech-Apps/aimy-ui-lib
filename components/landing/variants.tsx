@@ -22,16 +22,16 @@ import { StreamingText } from "@/registry/aimy/ui/streaming-text"
 import { Suggestions } from "@/registry/aimy/ui/suggestions"
 import { ThinkingIndicator } from "@/registry/aimy/ui/thinking"
 
-const SITE = "https://aimy-ui-lib.aimy.flairstech.com"
-const INIT = `npx shadcn@latest add ${SITE}/r/init.json`
+export const SITE = "https://aimy-ui-lib.aimy.flairstech.com"
+export const INIT = `npx shadcn@latest add ${SITE}/r/init.json`
 const VERSION = "1.4.1"
 const RELEASED = "5 Nov 2026"
 
 /* ── The finder: a question in, the library part out ─────────────────────── */
 
-type Match = { item: string; name: string; href: string; answer: string; preview: () => React.ReactNode }
+export type Match = { item: string; name: string; href: string; answer: string; preview: () => React.ReactNode }
 
-const MATCHES: [RegExp, Match][] = [
+export const MATCHES: [RegExp, Match][] = [
   [
     /step|agent|progress|working/i,
     {
@@ -72,12 +72,12 @@ const CHAT: Match = {
   preview: () => <ConversationCard />,
 }
 
-const ASKS = ["Show an agent's steps", "Cite where an answer came from", "Propose a change to accept"]
+export const ASKS = ["Show an agent's steps", "Cite where an answer came from", "Propose a change to accept"]
 
 const find = (q: string) => MATCHES.find(([re]) => re.test(q))?.[1] ?? CHAT
 const install = (m: Match) => `npx shadcn@latest add ${SITE}/r/${m.item}.json`
 
-function useInView<T extends HTMLElement>() {
+export function useInView<T extends HTMLElement>() {
   const ref = useRef<T>(null)
   const [inView, setInView] = useState(false)
   useEffect(() => {
@@ -91,7 +91,7 @@ function useInView<T extends HTMLElement>() {
 }
 
 /** Ask, think, then speak while the answer streams; the orb follows the phase. */
-function useAsk() {
+export function useAsk() {
   const [phase, setPhase] = useState<VoicePhase>("listening")
   const [question, setQuestion] = useState("")
   const [shown, setShown] = useState("")
@@ -137,7 +137,7 @@ function useAsk() {
 }
 
 /** Plays the first ask once, when the block first comes into view. */
-function useFirstAsk(inView: boolean, ask: (q: string) => void, q: string) {
+export function useFirstAsk(inView: boolean, ask: (q: string) => void, q: string) {
   const played = useRef(false)
   useEffect(() => {
     if (!inView || played.current) return
@@ -153,7 +153,7 @@ const PHASE_WORDS: Partial<Record<VoicePhase, string>> = {
   speaking: "Speaking",
 }
 
-function Ctas({ center = false }: { center?: boolean }) {
+export function Ctas({ center = false }: { center?: boolean }) {
   return (
     <div className={`flex flex-wrap items-center gap-3 ${center ? "justify-center" : ""}`}>
       <Button asChild variant="brand" size="lg">
@@ -167,7 +167,7 @@ function Ctas({ center = false }: { center?: boolean }) {
 }
 
 /** What the finder hands back: the part, live, and the one command that installs it. */
-function Answer({ m }: { m: Match }) {
+export function Answer({ m }: { m: Match }) {
   return (
     <div className="grid gap-4 text-left canvas:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
       <div className="flex min-w-0 flex-col gap-3">
@@ -391,7 +391,7 @@ export function HeroFloat({ count }: { count: number }) {
 
 /* ── Footers ─────────────────────────────────────────────────────────────── */
 
-const COLUMNS: { title: string; links: [string, string][] }[] = [
+export const COLUMNS: { title: string; links: [string, string][] }[] = [
   {
     title: "Start",
     links: [
@@ -426,11 +426,11 @@ const COLUMNS: { title: string; links: [string, string][] }[] = [
   },
 ]
 
-const footLink =
+export const footLink =
   "rounded-sm text-meta text-ink-secondary underline-offset-4 transition-[color] duration-(--t-fast) ease-out hover:text-ink hover:underline"
 
 /** The version with what it means for you: when it came out, and where to read what changed. */
-function Release() {
+export function Release() {
   return (
     <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-meta text-ink-secondary">
       <span className="rounded-sm bg-w07 px-1.5 py-0.5 font-mono text-2xs text-ink">{VERSION}</span>
