@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useRef } from "react"
 import { cn } from "@/lib/utils"
+import { GroupIcon } from "./group-icon"
 import { NAV } from "./nav"
 
 export function Sidebar() {
@@ -30,19 +31,23 @@ export function Sidebar() {
   }, [path])
 
   return (
-    <nav ref={ref} aria-label="Documentation" className="flex flex-col gap-7 px-3 py-7">
+    <nav ref={ref} aria-label="Documentation" className="flex flex-col gap-6 px-3 py-7">
       {NAV.map((group) => (
         <div key={group.label} className="flex flex-col gap-0.5">
-          <p className="px-3 pb-2 text-xs font-semibold text-ink">{group.label}</p>
+          <p className="flex items-center gap-2 px-3 pb-2 text-xs font-semibold text-ink">
+            <GroupIcon group={group.label} className="text-ink-secondary" />
+            {group.label}
+          </p>
+          {/* Pages hang under the group's name, indented past its icon. */}
           {group.items.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               aria-current={here(item.href) ? "page" : undefined}
               className={cn(
-                "rounded-md px-3 py-1.5 text-xs text-ink-secondary transition-[background-color,color] duration-(--t-fast) ease-out",
+                "rounded-md py-1.5 pr-3 pl-8.5 text-xs text-ink-secondary transition-[background-color,color] duration-(--t-fast) ease-out",
                 "hover:bg-w05 hover:text-ink",
-                "aria-[current=page]:bg-w07 aria-[current=page]:font-semibold aria-[current=page]:text-ink"
+                "aria-[current=page]:bg-accent-dim aria-[current=page]:font-semibold aria-[current=page]:text-ink-action"
               )}
             >
               {item.label}

@@ -48,9 +48,20 @@ export function A11y({ items }: { items: string[] }) {
 
 /** A labelled row of examples. */
 export function Row({ label, children }: { label: string; children: React.ReactNode }) {
+  // "brand: the one primary" names a prop value, so the value reads as code and the rest as its meaning.
+  const m = /^([a-z]+): (.+)$/.exec(label)
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-2xs font-semibold text-ink-secondary">{label}</p>
+      <p className="flex flex-wrap items-baseline gap-x-2 gap-y-1 text-2xs font-semibold text-ink-secondary">
+        {m ? (
+          <>
+            <code className="rounded-xs bg-w07 px-1.5 py-0.5 font-mono text-[0.6875rem] font-medium text-ink">{m[1]}</code>
+            <span>{m[2]}</span>
+          </>
+        ) : (
+          label
+        )}
+      </p>
       <div className="flex flex-wrap items-center gap-3">{children}</div>
     </div>
   )

@@ -1,7 +1,8 @@
-import { Check, Hash, X } from "lucide-react"
+import { Check, FileCode2, Hash, Moon, SquareTerminal, Sun, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { CopyButton } from "@/registry/aimy/ui/copy-button"
 import { CopyForAi } from "./copy-for-ai"
+import { detect, Highlight, LANG_LABEL } from "./highlight"
 import { Crumb } from "./page-chrome"
 
 /** A section title as an anchor: "Sizes and states" becomes "sizes-and-states". */
@@ -16,13 +17,13 @@ export function PageHeader({ title, lead }: { title: string; lead: string }) {
   return (
     <header className="max-w-[48rem]">
       <Crumb />
-      <h1 data-ai="h1" className="text-4xl font-semibold tracking-tight text-ink">
+      <h1 data-ai="h1" className="text-[2.75rem] leading-[1.1] font-semibold tracking-[-0.025em] text-ink">
         {title}
       </h1>
-      <p data-ai="p" className="mt-4 text-lg text-ink-secondary [line-height:var(--lh-base)]">
+      <p data-ai="p" className="mt-5 text-lg text-ink-secondary [line-height:var(--lh-base)] [text-wrap:pretty]">
         {lead}
       </p>
-      <div className="mt-6">
+      <div className="mt-7">
         <CopyForAi />
       </div>
     </header>
@@ -32,7 +33,8 @@ export function PageHeader({ title, lead }: { title: string; lead: string }) {
 export function Section({ title, children, lead }: { title: string; lead?: string; children: React.ReactNode }) {
   const id = slug(title)
   return (
-    <section className="mt-16">
+    // Every section opens on a hairline, so the page reads as a run of distinct parts.
+    <section className="mt-14 border-t border-hairline pt-12">
       <h2
         id={id}
         data-ai="h2"
@@ -99,19 +101,25 @@ export function CodeBlock({
   what?: string
   wrap?: boolean
 }) {
+  const lang = detect(children)
+  const LangIcon = lang === "shell" ? SquareTerminal : FileCode2
   return (
     // Code sits on a dark ground in both themes, so its Copy button takes the dark theme too.
-    <div data-theme="dark" className="flex items-start rounded-lg border border-hairline bg-code">
+    <div data-theme="dark" className="overflow-hidden rounded-lg border border-hairline bg-code">
+      <div className="flex h-10 items-center gap-2 border-b border-hairline bg-w03 pr-1.5 pl-4">
+        <LangIcon aria-hidden="true" strokeWidth={2} className="size-3.5 text-ink-secondary" />
+        <span className="text-2xs font-semibold text-ink-secondary">{LANG_LABEL[lang]}</span>
+        <CopyButton value={children} what={what} className="ml-auto" />
+      </div>
       <pre
         data-ai="code"
         className={cn(
-          "min-w-0 flex-1 overflow-x-auto py-4 pr-3 pl-4 font-mono text-xs leading-relaxed text-[var(--syn-base)]",
+          "overflow-x-auto px-4 py-3.5 font-mono text-xs leading-relaxed text-[var(--syn-base)]",
           wrap && "break-all whitespace-pre-wrap"
         )}
       >
-        {children}
+        <Highlight code={children} lang={lang} />
       </pre>
-      <CopyButton value={children} what={what} className="m-2.5 shrink-0" />
     </div>
   )
 }
@@ -120,12 +128,19 @@ export function CodeBlock({
 export function ThemePair({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
     <div className="grid gap-4 column:grid-cols-2">
-      {(["dark", "light"] as const).map((t) => (
-        <div key={t} data-theme={t} className={cn("rounded-xl border border-hairline bg-body p-5 text-ink", className)}>
-          <p className="mb-4 text-2xs font-semibold text-ink-secondary">{t === "dark" ? "Dark" : "Light"}</p>
-          {children}
-        </div>
-      ))}
+      {(["dark", "light"] as const).map((t) => {
+        const ThemeIcon = t === "dark" ? Moon : Sun
+        return (
+          // Each frame is a small stage: the theme named in its bar, the component on a dotted ground.
+          <div key={t} data-theme={t} className="flex flex-col overflow-hidden rounded-xl border border-edge bg-body text-ink">
+            <p className="flex h-9 items-center gap-2 border-b border-hairline bg-w03 px-4 text-2xs font-semibold text-ink-secondary">
+              <ThemeIcon aria-hidden="true" strokeWidth={2} className="size-3.5" />
+              {t === "dark" ? "Dark" : "Light"}
+            </p>
+            <div className={cn("docs-stage flex-1 p-5", className)}>{children}</div>
+          </div>
+        )
+      })}
     </div>
   )
 }

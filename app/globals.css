@@ -230,3 +230,11 @@
     backdrop-filter: none;
   }
 }
+
+/* Docs preview stage (components/docs/page.tsx ThemePair): a quiet dot grid,
+   drawn in each frame's own theme, so the component reads as placed on a canvas. */
+.docs-stage {
+  background-image: radial-gradient(circle at 1px 1px, var(--w08) 1px, transparent 0);
+  background-size: 16px 16px;
+  background-position: -1px -1px;
+}

@@ -5,6 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
+import { GroupIcon } from "./group-icon"
 import { NAV } from "./nav"
 
 const FLAT = NAV.flatMap((group) => group.items.map((item) => ({ ...item, group: group.label })))
@@ -21,7 +22,12 @@ function useCurrent() {
 export function Crumb() {
   const { item } = useCurrent()
   if (!item) return null
-  return <p className="mb-3 text-xs font-semibold text-ink-secondary">{item.group}</p>
+  return (
+    <p className="mb-4 flex items-center gap-2 text-xs font-semibold text-ink-secondary">
+      <GroupIcon group={item.group} />
+      {item.group}
+    </p>
+  )
 }
 
 /** The previous and next page, in the sidebar's order. */
@@ -30,8 +36,9 @@ export function PageNav() {
   if (at < 0) return null
   const prev = FLAT[at - 1]
   const next = FLAT[at + 1]
+  // A linked card answers the pointer: it lifts 2px and its edge firms up.
   const card =
-    "group flex min-w-0 flex-col gap-1 rounded-lg border border-hairline p-4 transition-[border-color,background-color] duration-(--t-fast) ease-out hover:border-edge-hover hover:bg-w05"
+    "group flex min-w-0 flex-col gap-1 rounded-lg border border-edge bg-w02 p-4 transition-[border-color,background-color,translate] duration-(--t-fast) ease-out hover:-translate-y-0.5 hover:border-edge-hover hover:bg-w05 motion-reduce:hover:translate-y-0"
   return (
     <nav
       aria-label="Previous and next page"
@@ -102,16 +109,17 @@ export function Toc() {
 
   if (headings.length < 2) return null
   return (
-    <nav aria-label="On this page" className="flex flex-col gap-1">
-      <p className="mb-2 text-xs font-semibold text-ink">On this page</p>
+    <nav aria-label="On this page" className="flex flex-col gap-0.5">
+      <p className="mb-2 px-2.5 text-xs font-semibold text-ink">On this page</p>
+      {/* The section in view is a tinted block, as the sidebar marks the page: no coloured stripe. */}
       {headings.map((h) => (
         <a
           key={h.id}
           href={`#${h.id}`}
           aria-current={active === h.id ? "location" : undefined}
           className={cn(
-            "border-l-2 border-hairline py-1 pl-3 text-xs text-ink-secondary transition-[border-color,color] duration-(--t-fast) ease-out",
-            "hover:text-ink aria-[current=location]:border-ink-action aria-[current=location]:text-ink"
+            "rounded-md px-2.5 py-1 text-xs text-ink-secondary transition-[background-color,color] duration-(--t-fast) ease-out",
+            "hover:bg-w05 hover:text-ink aria-[current=location]:bg-accent-dim aria-[current=location]:font-semibold aria-[current=location]:text-ink-action"
           )}
         >
           {h.text}
