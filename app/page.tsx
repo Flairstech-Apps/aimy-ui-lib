@@ -2,10 +2,11 @@ import { ArrowRight, Menu } from "lucide-react"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { CodeBlock, ThemePair } from "@/components/docs/page"
-import { AgentLoop, ConversationCard, GroundedCard, LiveProposal, VoicePanel, Ways } from "@/components/landing/live"
+import { AskHero } from "@/components/landing/ask-hero"
+import { AgentLoop, ConversationCard, GroundedCard, LiveProposal, Ways } from "@/components/landing/live"
 import { Backdrop } from "@/components/landing/backdrop"
-import { Haze } from "@/components/landing/haze"
 import { Line, Reveal } from "@/components/landing/reveal"
+import { SiteFooter } from "@/components/landing/site-footer"
 import ui from "@/package/ui/package.json"
 import registry from "@/registry.json"
 import { AimyMark } from "@/registry/aimy/brand/aimy-mark"
@@ -16,7 +17,8 @@ import { ThemeToggle } from "@/registry/aimy/ui/theme-toggle"
 export const metadata: Metadata = { title: { absolute: "AiMY UI: the AI-native interface kit for AiMY products" } }
 
 const COMPONENTS = registry.items.filter((i) => i.type === "registry:component").length
-const INIT = "npx shadcn@latest add https://aimy-ui-lib.aimy.flairstech.com/r/init.json"
+// The release line the badge names: 1.4.1 reads as 1.4, the release its notes are filed under.
+const RELEASE = ui.version.split(".").slice(0, 2).join(".")
 const MCP = "claude mcp add --transport http aimy-ui https://aimy-ui-lib.aimy.flairstech.com/mcp"
 
 const LINKS = [
@@ -39,11 +41,24 @@ function SiteNav() {
           <span className="rounded-sm bg-w07 px-2 py-0.5 text-2xs font-semibold text-ink-secondary">UI</span>
         </Link>
         <nav aria-label="Site" className="hidden items-center gap-1 canvas:flex">
-          {LINKS.map((l) => (
+          {LINKS.filter((l) => l.href !== "/whats-new/").map((l) => (
             <Link key={l.href} href={l.href} className={navLink}>
               {l.label}
             </Link>
           ))}
+          {/* What's new is news, not a section: a badge naming the release it leads to. */}
+          <Link
+            href="/whats-new/"
+            className="group ml-2 inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent-dim py-1 pr-3 pl-1 text-xs font-semibold text-ink transition-[border-color,background-color] duration-(--t-fast) ease-out hover:border-accent hover:bg-accent/25"
+          >
+            <span className="rounded-full bg-accent px-2 py-0.5 text-2xs font-semibold text-on-brand">New</span>{" "}
+            What&apos;s new in {RELEASE}
+            <ArrowRight
+              aria-hidden="true"
+              strokeWidth={2}
+              className="size-3.5 transition-transform duration-(--t-fast) ease-out group-hover:translate-x-0.5"
+            />
+          </Link>
         </nav>
         <span className="ml-auto" />
         <div className="flex items-center gap-3">
@@ -60,7 +75,7 @@ function SiteNav() {
           >
             <Menu aria-hidden="true" strokeWidth={2} className="size-5" />
           </summary>
-          <nav aria-label="Site" className="nav-glass absolute top-14 right-0 flex w-52 flex-col rounded-2xl p-1.5">
+          <nav aria-label="Site" className="nav-glass nav-menu absolute top-14 right-0 flex w-52 flex-col rounded-2xl p-1.5">
             {LINKS.map((l) => (
               <Link key={l.href} href={l.href} className={navLink}>
                 {l.label}
@@ -133,47 +148,8 @@ export default function Landing() {
     <>
       <SiteNav />
       <main>
-        {/* Hero: the promise, the way in, and AiMY's voice working beside it. */}
-        <section className="relative overflow-hidden">
-          <Haze />
-          <div className="relative mx-auto grid max-w-[80rem] items-center gap-12 px-5 pt-32 pb-20 column:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] column:pt-36 column:pb-24">
-            <Reveal>
-              <Line>
-                <h1 className="max-w-[38rem] text-4xl font-semibold tracking-tight text-ink [line-height:var(--lh-tight)] column:text-5xl">
-                  The AI-native interface kit for AiMY products.
-                </h1>
-              </Line>
-              <Line i={1}>
-                <p className="mt-6 max-w-[34rem] text-lg text-ink-secondary [line-height:var(--lh-base)]">
-                  Voice, streamed answers, proposals you accept, agents that show their steps. {COMPONENTS} React
-                  components.
-                </p>
-              </Line>
-              <Line i={2}>
-                <div className="mt-8 flex flex-wrap items-center gap-3">
-                  <Button asChild variant="brand" size="lg">
-                    <Link href="/components/button/">Browse components</Link>
-                  </Button>
-                  <Button asChild size="lg">
-                    <Link href="/start/">Read the docs</Link>
-                  </Button>
-                </div>
-              </Line>
-              <Line i={3}>
-                <div className="mt-6 max-w-[40rem]">
-                  <CodeBlock what="the install command" wrap>
-                    {INIT}
-                  </CodeBlock>
-                </div>
-              </Line>
-            </Reveal>
-            <Reveal>
-              <Line i={2}>
-                <VoicePanel />
-              </Line>
-            </Reveal>
-          </div>
-        </section>
+        {/* Hero: ask the library for a part; the orb answers and the part appears (components/landing/ask-hero.tsx). */}
+        <AskHero count={COMPONENTS} />
 
         {/* What it is, in real numbers. */}
         <section className="relative overflow-hidden border-y border-hairline">
@@ -321,49 +297,9 @@ export default function Landing() {
             </Reveal>
           </div>
         </section>
-
-        {/* The way to start. */}
-        <section className="relative overflow-hidden border-t border-hairline">
-          <Backdrop kind="horizon" />
-          <div className="relative mx-auto max-w-[80rem] px-5 py-28">
-            <Heading
-              center
-              title="Start a new AiMY product"
-              lead="A starter already in the AiMY shell, with the theme, fonts and agent rules in place. Vite or Next.js."
-            />
-            <Reveal className="mx-auto mt-10 flex max-w-[56rem] flex-col items-center gap-8">
-              <Line i={2} className="w-full">
-                <CodeBlock>
-                  npx tiged --mode=git https://github.com/Flairstech-Apps/aimy-ui-lib/starter my-product
-                </CodeBlock>
-              </Line>
-              <Line i={3}>
-                <div className="flex flex-wrap justify-center gap-3">
-                  <Button asChild variant="brand" size="lg">
-                    <Link href="/components/button/">Browse components</Link>
-                  </Button>
-                  <Button asChild size="lg">
-                    <Link href="/adopt/">How to adopt</Link>
-                  </Button>
-                </div>
-              </Line>
-            </Reveal>
-          </div>
-        </section>
       </main>
 
-      <footer className="border-t border-hairline">
-        <div className="mx-auto flex max-w-[80rem] flex-wrap items-center gap-x-6 gap-y-3 px-5 py-8 text-meta text-ink-secondary">
-          <AimyMark title="AiMY" className="h-5" />
-          <span>AiMY UI, made at FlairsTech.</span>
-          <span className="ml-auto" />
-          {LINKS.map((l) => (
-            <Link key={l.href} href={l.href} className="rounded-sm hover:text-ink">
-              {l.label}
-            </Link>
-          ))}
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   )
 }

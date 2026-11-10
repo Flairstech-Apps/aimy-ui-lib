@@ -19,16 +19,20 @@ export type CanvasPart = { name: string; href: string; preview: React.ReactNode;
 /** A command on one line with its Copy, for heroes and canvases (not the docs' code block). */
 export function CommandLine({ command, what = "the command" }: { command: string; what?: string }) {
   return (
+    // On a phone it changes form: the command as an even block across the full width, Copy
+    // under it at the right. From the phone rung up it is one row, breaking only when the line
+    // runs out of room, and a pill once it fits on one line. Never clipped, never under Copy.
     <div
       data-theme="dark"
-      className="flex min-w-0 items-center gap-3 rounded-xl border border-edge bg-code py-1.5 pr-1.5 pl-4 column:rounded-pill"
+      className="flex min-w-0 flex-col gap-2 rounded-xl border border-edge bg-code p-3 text-left phone:flex-row phone:items-center phone:gap-3 phone:py-1.5 phone:pr-1.5 phone:pl-4 column:rounded-pill"
     >
-      <SquareTerminal aria-hidden="true" strokeWidth={2} className="size-4 shrink-0 text-ink-secondary" />
-      {/* Never clipped and never under Copy: it breaks only when the line runs out of room. */}
-      <code className="min-w-0 flex-1 py-1 font-mono text-xs text-[var(--syn-base)] [overflow-wrap:anywhere]">
-        {command}
-      </code>
-      <CopyButton value={command} what={what} className="shrink-0" />
+      <div className="flex min-w-0 flex-1 items-start gap-3 phone:items-center">
+        <SquareTerminal aria-hidden="true" strokeWidth={2} className="mt-1.5 size-4 shrink-0 text-ink-secondary phone:mt-0" />
+        <code className="min-w-0 flex-1 py-1 font-mono text-xs leading-relaxed break-all text-[var(--syn-base)] phone:break-normal phone:[overflow-wrap:anywhere]">
+          {command}
+        </code>
+      </div>
+      <CopyButton value={command} what={what} className="shrink-0 self-end phone:self-auto" />
     </div>
   )
 }

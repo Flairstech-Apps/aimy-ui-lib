@@ -37,6 +37,8 @@ type PeekProps = {
   actions?: React.ReactNode
   onOpenCanvas: () => void
   onDismiss: () => void
+  /** Start tucked away, as after closing the canvas it opened: the answer is a pull away. */
+  defaultTucked?: boolean
   className?: string
 }
 
@@ -47,9 +49,10 @@ export function Peek({
   actions,
   onOpenCanvas,
   onDismiss,
+  defaultTucked = false,
   className,
 }: PeekProps) {
-  const [shut, setShut] = useState(false)
+  const [shut, setShut] = useState(defaultTucked)
   const [clipped, setClipped] = useState(false)
   const [dragging, setDragging] = useState(false)
   const root = useRef<HTMLDivElement>(null)

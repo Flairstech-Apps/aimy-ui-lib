@@ -8,8 +8,7 @@ import { Fragment, useId } from "react"
 import { CommandLine } from "@/components/landing/answer-canvas"
 import { AimyMark } from "@/registry/aimy/brand/aimy-mark"
 import { Button } from "@/registry/aimy/ui/button"
-import { FloatDock, OrbHorizon } from "./variants-more"
-import { COLUMNS, footLink, Release, useAsk, useInView } from "./variants"
+import { COLUMNS, footLink, Release } from "./variants"
 
 const STARTER = "npx tiged --mode=git https://github.com/Flairstech-Apps/aimy-ui-lib/starter my-product"
 const LINKS = COLUMNS.flatMap((c) => c.links.slice(0, 2))
@@ -115,47 +114,5 @@ export function FooterArc() {
   )
 }
 
-/* Footer H: The orb horizon. The page ends where the hero began: the orb rising
-   behind the curve of a lit ground, the bar resting on the line, and the site's
-   links, release and maker in the ground below. */
-export function FooterHorizon() {
-  const [ref, inView] = useInView<HTMLElement>()
-  const a = useAsk()
-  return (
-    <footer ref={ref} className="relative overflow-hidden border-t border-hairline">
-      <div className="mx-auto max-w-[80rem] px-5 pt-20 text-center">
-        <h2 className="text-3xl font-semibold tracking-tight text-ink column:text-4xl">Ask before you build a lookalike.</h2>
-        <p className="mx-auto mt-3 max-w-[34rem] text-body text-ink-secondary">
-          If a part feels missing, it is probably here under another name. Describe it, and AiMY names the part.
-        </p>
-      </div>
-      <OrbHorizon
-        phase={a.phase}
-        level={a.phase === "listening" ? a.level : 0}
-        running={inView}
-        line="19rem"
-        orb="min(24rem, 80vw)"
-        dock={
-          <FloatDock
-            a={a}
-            onAsk={a.ask}
-            onOpen={() => {
-              if (a.match) window.location.assign(a.match.href)
-            }}
-          />
-        }
-      >
-        <div className="mx-auto flex max-w-[80rem] flex-col items-center gap-5 px-5 pb-10">
-          <DotLinks />
-          <div className="[&>p]:justify-center">
-            <Release />
-          </div>
-          <div className="mt-2 flex items-center gap-3 text-meta text-ink-secondary">
-            <AimyMark variant="lockup" title="AiMY" className="h-5" />
-            Made at FlairsTech.
-          </div>
-        </div>
-      </OrbHorizon>
-    </footer>
-  )
-}
+// Footer H is the landing's footer now (site-footer.tsx); the lab shows the same one.
+export { SiteFooter as FooterHorizon } from "./site-footer"

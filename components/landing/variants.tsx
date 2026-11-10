@@ -7,178 +7,27 @@
 
 import { ArrowRight, ArrowUpRight } from "lucide-react"
 import Link from "next/link"
-import { useCallback, useEffect, useRef, useState } from "react"
 import { CodeBlock } from "@/components/docs/page"
-import { AnswerCanvas } from "@/components/landing/answer-canvas"
 import { Haze } from "@/components/landing/haze"
-import { AgentLoop, ConversationCard, GroundedCard, LiveProposal } from "@/components/landing/live"
 import type { VoicePhase } from "@/registry/aimy/hooks/use-voice"
 import { AimyMark } from "@/registry/aimy/brand/aimy-mark"
-import { Button } from "@/registry/aimy/ui/button"
 import { Composer } from "@/registry/aimy/ui/composer"
 import { Message } from "@/registry/aimy/ui/message"
 import { Orb } from "@/registry/aimy/ui/orb"
-import { Peek } from "@/registry/aimy/ui/peek"
 import { StreamingText } from "@/registry/aimy/ui/streaming-text"
 import { Suggestions } from "@/registry/aimy/ui/suggestions"
 import { ThinkingIndicator } from "@/registry/aimy/ui/thinking"
+import { ASKS, Ctas, INIT, install, type Match, useAsk, useFirstAsk, useInView } from "./ask"
 
-export const SITE = "https://aimy-ui-lib.aimy.flairstech.com"
-export const INIT = `npx shadcn@latest add ${SITE}/r/init.json`
+export * from "./ask"
+
 const VERSION = "1.4.1"
 const RELEASED = "5 Nov 2026"
-
-/* ── The finder: a question in, the library part out ─────────────────────── */
-
-// follow: what a developer would ask next about the library once this part is
-// on screen. Each one is worded so the finder resolves it to another real part.
-export type Match = {
-  item: string
-  name: string
-  href: string
-  answer: string
-  follow: string[]
-  preview: () => React.ReactNode
-}
-
-export const MATCHES: [RegExp, Match][] = [
-  [
-    /step|agent|progress|working/i,
-    {
-      item: "agent-steps",
-      name: "Agent steps",
-      href: "/components/agent-steps/",
-      answer: "Agent steps. It lists each step AiMY takes with its time, keeps the running one live and stops on a failure.",
-      follow: ["How does the user accept what it drafted?", "Which part cites its sources?", "How do I stream the reply?"],
-      preview: () => <AgentLoop />,
-    },
-  ],
-  [
-    /cite|source|ground|where/i,
-    {
-      item: "citation",
-      name: "Citation",
-      href: "/components/citation/",
-      answer: "Citation and Source list. A chip in the sentence opens the source on hover or focus; the list says where each came from.",
-      follow: ["How do I show the steps behind it?", "Can the user accept an edit to the policy?", "How do I stream the answer?"],
-      preview: () => <GroundedCard />,
-    },
-  ],
-  [
-    /propos|accept|suggest|change|edit/i,
-    {
-      item: "suggestion",
-      name: "Suggestion",
-      href: "/components/suggestion/",
-      answer: "Suggestion. AiMY's change shows struck and inserted text; Accept applies it with Undo in a toast.",
-      follow: ["Which part shows how it was drafted, step by step?", "How do I cite the policy it changes?", "How do I stream the reply?"],
-      preview: () => <LiveProposal />,
-    },
-  ],
-]
-
-const CHAT: Match = {
-  item: "message",
-  name: "Message",
-  href: "/components/message/",
-  answer: "Message, with the Composer under it. Answers stream in word by word, and the speaker's side carries the corner.",
-  follow: ["Which part shows an agent's steps?", "How do I cite where an answer came from?", "What lets a user accept an edit?"],
-  preview: () => <ConversationCard />,
-}
-
-// Openers, asked the way a developer asks the library.
-export const ASKS = ["Which part shows an agent's steps?", "How do I cite where an answer came from?", "What lets a user accept an edit?"]
-
-const find = (q: string) => MATCHES.find(([re]) => re.test(q))?.[1] ?? CHAT
-export const install = (m: Match) => `npx shadcn@latest add ${SITE}/r/${m.item}.json`
-
-export function useInView<T extends HTMLElement>() {
-  const ref = useRef<T>(null)
-  const [inView, setInView] = useState(false)
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const io = new IntersectionObserver(([e]) => setInView(!!e?.isIntersecting), { threshold: 0.1 })
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
-  return [ref, inView] as const
-}
-
-/** Ask, think, then speak while the answer streams; the orb follows the phase. */
-export function useAsk() {
-  const [phase, setPhase] = useState<VoicePhase>("listening")
-  const [question, setQuestion] = useState("")
-  const [shown, setShown] = useState("")
-  const [match, setMatch] = useState<Match | null>(null)
-  const [level, setLevel] = useState(0)
-  const timers = useRef<number[]>([])
-  const clear = () => {
-    timers.current.forEach((t) => window.clearTimeout(t))
-    timers.current = []
-  }
-  const later = (ms: number, fn: () => void) => timers.current.push(window.setTimeout(fn, ms))
-
-  const ask = useCallback((q: string) => {
-    clear()
-    const m = find(q)
-    setQuestion(q)
-    setShown("")
-    setMatch(null)
-    setPhase("thinking")
-    const words = m.answer.split(" ")
-    later(1400, () => {
-      setPhase("speaking")
-      words.forEach((_, i) => later(i * 60, () => setShown(words.slice(0, i + 1).join(" "))))
-      later(words.length * 60 + 200, () => setMatch(m))
-      later(words.length * 60 + 900, () => setPhase("listening"))
-    })
-  }, [])
-
-  const stop = () => {
-    clear()
-    setPhase("listening")
-  }
-
-  useEffect(() => {
-    if (phase !== "listening") return
-    const t = window.setInterval(() => setLevel(0.15 + 0.35 * Math.abs(Math.sin(Date.now() / 650))), 140)
-    return () => window.clearInterval(t)
-  }, [phase])
-  useEffect(() => () => clear(), [])
-
-  const busy = phase === "thinking" || phase === "speaking"
-  return { phase, question, shown, match, level, ask, stop, busy }
-}
-
-/** Plays the first ask once, when the block first comes into view. */
-export function useFirstAsk(inView: boolean, ask: (q: string) => void, q: string) {
-  const played = useRef(false)
-  useEffect(() => {
-    if (!inView || played.current) return
-    played.current = true
-    const t = window.setTimeout(() => ask(q), 700)
-    return () => window.clearTimeout(t)
-  }, [inView, ask, q])
-}
 
 const PHASE_WORDS: Partial<Record<VoicePhase, string>> = {
   listening: "Listening",
   thinking: "Finding the part",
   speaking: "Speaking",
-}
-
-export function Ctas({ center = false }: { center?: boolean }) {
-  return (
-    <div className={`flex flex-wrap items-center gap-3 ${center ? "justify-center" : ""}`}>
-      <Button asChild variant="brand" size="lg">
-        <Link href="/components/button/">Browse components</Link>
-      </Button>
-      <Button asChild size="lg">
-        <Link href="/start/">Read the docs</Link>
-      </Button>
-    </div>
-  )
 }
 
 /** What the finder hands back: the part, live, and the one command that installs it. */
@@ -333,89 +182,7 @@ export function HeroThread({ count }: { count: number }) {
   )
 }
 
-/* ── Hero C: The product's own float bar ────────────────────────────────── */
-// The orb is the stage; the composer docks at the foot like Sales' float bar,
-// and the answer rises in the Peek. Opening the peek lays the part out beside the orb.
-
-export function HeroFloat({ count }: { count: number }) {
-  const [ref, inView] = useInView<HTMLElement>()
-  const a = useAsk()
-  const [open, setOpen] = useState(false)
-  const [gone, setGone] = useState(false)
-  useFirstAsk(inView, a.ask, ASKS[1]!)
-  // A new ask keeps an open canvas open: it shows the new part once found.
-  const ask = (q: string) => {
-    setGone(false)
-    a.ask(q)
-  }
-  const status = a.phase === "thinking" ? "thinking" : a.phase === "speaking" ? "streaming" : "answered"
-  return (
-    <section ref={ref} className="relative overflow-hidden">
-      <Haze />
-      <div className="relative mx-auto flex max-w-[80rem] flex-col px-5 pt-24 pb-12">
-        <div className="flex flex-col items-center text-center">
-          <h1 className="max-w-[48rem] text-4xl font-semibold tracking-tight text-ink [line-height:var(--lh-tight)] column:text-6xl">
-            The AI-native interface kit for AiMY products.
-          </h1>
-          <p className="mt-5 max-w-[36rem] text-lg text-ink-secondary [line-height:var(--lh-base)]">
-            {count} React components, the ones AiMY already ships. Ask the bar below for one.
-          </p>
-          <div className="mt-8">
-            <Ctas center />
-          </div>
-        </div>
-        {/* Dragging the peek up turns it into the canvas: the stage orb hands over to the small
-            one in the canvas head, so the part gets the whole width. */}
-        {open ? (
-          <div className="mx-auto mt-10 w-full max-w-[60rem]">
-            <AnswerCanvas
-              part={
-                a.match
-                  ? { name: a.match.name, href: a.match.href, preview: a.match.preview(), command: install(a.match) }
-                  : null
-              }
-              question={a.question}
-              answer={a.shown}
-              phase={a.phase}
-              onClose={() => setOpen(false)}
-            />
-          </div>
-        ) : (
-          <div className="mx-auto mt-10 size-56 column:size-72">
-            <Orb phase={a.phase} level={a.phase === "listening" ? a.level : 0} running={inView} />
-          </div>
-        )}
-        {/* The peek rises above the bar, so the dock leaves it room under the orb. */}
-        <div className={`relative mx-auto w-full max-w-[47.5rem] ${open ? "mt-6" : "mt-48"}`}>
-          {a.question && !gone && !open ? (
-            <Peek
-              status={status}
-              thinkingLabel={["Searching the library", "Reading its rules"]}
-              onOpenCanvas={() => setOpen(true)}
-              onDismiss={() => setGone(true)}
-              actions={a.match ? <Suggestions variant="follow" items={a.match.follow} onPick={ask} /> : null}
-            >
-              <StreamingText text={a.shown} streaming={a.phase === "speaking"} />
-            </Peek>
-          ) : null}
-          <Composer
-            placeholder="Ask AiMY for a part"
-            dictate={false}
-            generating={a.busy}
-            onStop={a.stop}
-            onSubmit={(q) => ask(q.trim() || ASKS[0]!)}
-            onVoice={() => ask(ASKS[0]!)}
-          />
-          <div className="mt-6">
-            <CodeBlock what="the install command" wrap>
-              {INIT}
-            </CodeBlock>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
+export { AskHero as HeroFloat } from "./ask-hero"
 
 /* ── Footers ─────────────────────────────────────────────────────────────── */
 

@@ -223,6 +223,11 @@
     inset 0 1px 0 color-mix(in oklab, var(--ink-primary) 10%, transparent),
     0 12px 40px -12px rgb(0 0 0 / 0.45);
 }
+/* The phone menu hangs inside the glass pill, and a blur inside a blur only sees the pill,
+   so the page's words showed through it. The menu is near solid instead. */
+.nav-glass.nav-menu {
+  background: color-mix(in oklab, var(--body-bg) 96%, transparent);
+}
 @media (prefers-reduced-transparency: reduce) {
   .nav-glass {
     background: var(--body-bg);
@@ -285,4 +290,73 @@
   box-shadow:
     0 -1px 16px color-mix(in oklab, var(--accent) 55%, transparent),
     0 -40px 120px -24px color-mix(in oklab, var(--brand) 45%, transparent);
+}
+
+/* Landing hero: the peek's pull hint (components/landing/ask-hero.tsx). When an answer
+   is in, the drawer rises twice, each time less, while its grip lights, so it reads as
+   something to pull up. `translate` leaves the peek's own drag transform alone. */
+@keyframes peek-nudge {
+  0%, 36%, 72%, 100% { translate: 0 0; }
+  18% { translate: 0 -10px; }
+  54% { translate: 0 -5px; }
+}
+@keyframes peek-grip-glow {
+  0%, 36%, 72%, 100% { width: 36px; background-color: var(--d400); }
+  18%, 54% { width: 48px; background-color: var(--accent-text); }
+}
+.peek-nudge {
+  animation: peek-nudge calc(var(--t-emphasis) * 2) var(--ease-smooth-out) var(--t-medium) 1 both;
+}
+.peek-nudge .aimy-peek-grip-bar {
+  animation: peek-grip-glow calc(var(--t-emphasis) * 2) var(--ease-in-out) var(--t-medium) 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .peek-nudge,
+  .peek-nudge .aimy-peek-grip-bar {
+    animation: none;
+  }
+}
+
+/* Landing hero: the canvas opening (components/landing/ask-hero.tsx). The orb stays behind
+   the canvas's glass and grows into a backdrop, the questions step aside, and the canvas
+   rises in. All on motion tokens; under reduced motion it simply swaps. */
+.hero-orb {
+  transition:
+    scale var(--t-emphasis) var(--ease-smooth-out),
+    opacity var(--t-emphasis) var(--ease-smooth-out);
+}
+.hero-orb[data-open] {
+  scale: 2.4;
+  opacity: 0.9;
+}
+.hero-aside {
+  transition:
+    opacity var(--t-medium) var(--ease-out),
+    translate var(--t-medium) var(--ease-out);
+}
+.hero-aside[data-away] {
+  opacity: 0;
+  pointer-events: none;
+}
+.hero-aside[data-away][data-side="left"] { translate: -16px 0; }
+.hero-aside[data-away][data-side="right"] { translate: 16px 0; }
+.hero-canvas {
+  transition:
+    opacity var(--t-slow) var(--ease-smooth-out),
+    translate var(--t-slow) var(--ease-smooth-out),
+    scale var(--t-slow) var(--ease-smooth-out);
+}
+@starting-style {
+  .hero-canvas {
+    opacity: 0;
+    translate: 0 24px;
+    scale: 0.98;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb,
+  .hero-aside,
+  .hero-canvas {
+    transition: none;
+  }
 }
