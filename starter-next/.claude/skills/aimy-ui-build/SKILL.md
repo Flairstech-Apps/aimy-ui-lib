@@ -41,7 +41,7 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 
 ### Forms
 
-- **Field and text inputs** (`@aimy/field`): Wraps a form control with its label above and help or an error below, and wires them up: the control gets the id, aria-describedby and aria-invalid. https://aimy-ui-lib.aimy.flairstech.com/components/field/
+- **Inputs** (`@aimy/field`): Wraps a form control with its label above and help or an error below, and wires them up: the control gets the id, aria-describedby and aria-invalid. https://aimy-ui-lib.aimy.flairstech.com/components/field/
 - **Search field** (`@aimy/search-field`): Find-as-you-type with a search icon, a clear button that appears only when there is text, and Escape to clear. https://aimy-ui-lib.aimy.flairstech.com/components/search-field/
 - **Select** (`@aimy/select`): The only select control; never a native <select>. https://aimy-ui-lib.aimy.flairstech.com/components/select/
 - **Checkbox** (`@aimy/checkbox`): A 17px box: brand fill and a white tick when on, a dash for some (checked="indeterminate"). https://aimy-ui-lib.aimy.flairstech.com/components/checkbox/
@@ -50,23 +50,23 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 - **Copy button** (`@aimy/copy-button`): Copies a value and says so in words: Copy, then Copied for 1.4s (or Press Ctrl+C if the browser refuses), announced to screen readers. https://aimy-ui-lib.aimy.flairstech.com/components/copy-button/
 - **Date picker** (`@aimy/date-picker`): A date or range filter: a pill like Select that opens quick choices and the Calendar. https://aimy-ui-lib.aimy.flairstech.com/components/date-picker/
 
-### Containers and navigation
+### Containers & navigation
 
 - **Card** (`@aimy/card`): The record card both products draw: an article with CardHead (a state Tag and CardType), CardTitle (a real button or link whose hit area covers the card), CardSummary, CardFacts, CardBody and CardFoot (stay clickable on their own). https://aimy-ui-lib.aimy.flairstech.com/components/card/
 - **Tabs** (`@aimy/tabs`): A real tablist with arrow keys. https://aimy-ui-lib.aimy.flairstech.com/components/tabs/
 - **Menu** (`@aimy/menu`): A menu of actions or choices from a control: MenuItem (acts and closes; danger for destructive), MenuRadioGroup and MenuRadioItem (one answer), MenuCheckboxItem (several answers; stays open), MenuLabel, MenuSeparator, MenuSearch (filters long lists). https://aimy-ui-lib.aimy.flairstech.com/components/menu/
-- **Tooltip and popover** (`@aimy/tooltip`): A short hint on hover or keyboard focus, after 80ms (transitions.dev tooltip, 17). https://aimy-ui-lib.aimy.flairstech.com/components/tooltip/
+- **Tooltip & popover** (`@aimy/tooltip`): A short hint on hover or keyboard focus, after 80ms (transitions.dev tooltip, 17). https://aimy-ui-lib.aimy.flairstech.com/components/tooltip/
 - **Disclosure** (`@aimy/disclosure`): Show or hide one section in place: a header with an optional count and a chevron, the body sliding open with transitions.dev accordion (21). https://aimy-ui-lib.aimy.flairstech.com/components/disclosure/
 - **Pager** (`@aimy/pager`): Paging in words: 1–15 of 134 contacts, page 1 of 9, with Back and Next text actions that say how many. https://aimy-ui-lib.aimy.flairstech.com/components/pager/
 
-### Feedback and overlays
+### Feedback & overlays
 
 - **Toast** (`@aimy/toast`): The confirmation every action ends with: act at once, then toast what happened with Undo. https://aimy-ui-lib.aimy.flairstech.com/components/toast/
 - **Dialog** (`@aimy/dialog`): Dialog: for ordered forms and changes with consequences, never to confirm what Undo can take back. https://aimy-ui-lib.aimy.flairstech.com/components/dialog/
 - **Sheet** (`@aimy/sheet`): A panel that slides in from the side over the page, with a scrim: the rail as a drawer below the rail rung, settings and connection sheets. https://aimy-ui-lib.aimy.flairstech.com/components/sheet/
 - **Notice** (`@aimy/notice`): A notice in the page: neutral, info, ok, warn or err. https://aimy-ui-lib.aimy.flairstech.com/components/notice/
-- **Empty and error states** (`@aimy/empty-state`): EmptyState: why there is nothing here and the way forward (Clear filters, New document), with an icon tile and an optional fine line; dashed or plain. https://aimy-ui-lib.aimy.flairstech.com/components/empty-state/
-- **Errors and recovery** (`@aimy/recovery`): AIMY-2979's error and recovery patterns. https://aimy-ui-lib.aimy.flairstech.com/components/recovery/
+- **Empty & error states** (`@aimy/empty-state`): EmptyState: why there is nothing here and the way forward (Clear filters, New document), with an icon tile and an optional fine line; dashed or plain. https://aimy-ui-lib.aimy.flairstech.com/components/empty-state/
+- **Recovery** (`@aimy/recovery`): AIMY-2979's error and recovery patterns. https://aimy-ui-lib.aimy.flairstech.com/components/recovery/
 - **Skeleton** (`@aimy/skeleton`): Placeholders shaped like what is coming, pulsing while loading; Reveal cross-fades from the skeleton to the content when loading ends (transitions.dev skeleton reveal, 14). https://aimy-ui-lib.aimy.flairstech.com/components/skeleton/
 - **Progress** (`@aimy/progress`): How much is done or used: thin (3px) for work in progress, meter (6px) or large (8px) for usage. https://aimy-ui-lib.aimy.flairstech.com/components/progress/
 - **Notification bell** (`@aimy/notification-bell`): The topbar bell with its micro-interactions: the count slides on and pops (transitions.dev 03); a new ping rocks the bell from its top, three swings in 600ms, and drops one line under it saying what finished, gone after 1.4s (Knowledge's ring and tip). https://aimy-ui-lib.aimy.flairstech.com/components/notification-bell/
@@ -127,15 +127,15 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 - **Canvas** (`@aimy/canvas`): The AiMY canvas: glass over the page from under the topbar, with 'Based on' (what the conversation is about), a chats column that becomes a drawer below 900px, the thread (a polite live log) and the canvas Composer. https://aimy-ui-lib.aimy.flairstech.com/components/canvas/
 - **Peek** (`@aimy/peek`): AiMY's answer in a card that rises out of the float bar (Sales' .b-peek, Knowledge's .aimy-peek): thinks, then answers; three lines then a fade; press to open the canvas; one-click questions under it. https://aimy-ui-lib.aimy.flairstech.com/components/peek/
 
-### AI: grounding and trust
+### AI: trust
 
-- **Citations and sources** (`@aimy/citation`): A numbered marker in an answer that points at its source (Knowledge's .cite). https://aimy-ui-lib.aimy.flairstech.com/components/citation/
+- **Citations & sources** (`@aimy/citation`): A numbered marker in an answer that points at its source (Knowledge's .cite). https://aimy-ui-lib.aimy.flairstech.com/components/citation/
 - **Trust state** (`@aimy/trust-state`): The trust condition of a source, on the source (Knowledge's statusBadge): current (No issues), outdated (Out of date), conflicting, draft, unowned, unused, superseded (also says Not in answers). https://aimy-ui-lib.aimy.flairstech.com/components/trust-state/
 - **Trust disclosure** (`@aimy/trust-disclosure`): What an answer is grounded on, said under it (Knowledge's .trust-disclosure): rows in ok, warn, err or none tone, and the warm exclusion ground when nothing could answer, with DisclosureAction for the way forward. https://aimy-ui-lib.aimy.flairstech.com/components/trust-disclosure/
-- **Confidence and score** (`@aimy/confidence`): How sure AiMY is about a group of facts, in words, with why (Sales' .b-conf): ok (a check), old (May be out of date, Check again), gap (Partly known), none (Not known yet, Find out more), busy (Checking again). https://aimy-ui-lib.aimy.flairstech.com/components/confidence/
+- **Confidence & score** (`@aimy/confidence`): How sure AiMY is about a group of facts, in words, with why (Sales' .b-conf): ok (a check), old (May be out of date, Check again), gap (Partly known), none (Not known yet, Find out more), busy (Checking again). https://aimy-ui-lib.aimy.flairstech.com/components/confidence/
 - **When AiMY is unavailable**: https://aimy-ui-lib.aimy.flairstech.com/components/unavailable/
 
-### AI: agency and action
+### AI: actions
 
 - **Work state** (`@aimy/work-state`): Where a surfaced item stands, required on every item (doctrine §2.3): detected (Found), recommended (Suggested), drafted (Drafted), staged (Awaiting you), completed (Done), failed (Stopped). https://aimy-ui-lib.aimy.flairstech.com/components/work-state/
 - **Entry action** (`@aimy/entry-action`): An action that declares how it behaves (doctrine §3); mode is required so an unclassified action does not compile. https://aimy-ui-lib.aimy.flairstech.com/components/entry-action/
@@ -149,7 +149,7 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 - **Decision zone** (`@aimy/decision-zone`): A proposal with operational consequences decided in place (design system spec): the question, its consequence and how long it stays reversible, Accept / Edit / Reject (edit required), Awaiting you, then what was decided and Undo. https://aimy-ui-lib.aimy.flairstech.com/components/decision-zone/
 - **Step list** (`@aimy/step-list`): The compact step list (design system spec): done with what it found ('3 matches · 1.2s'), running, pending with its number, failed. https://aimy-ui-lib.aimy.flairstech.com/components/step-list/
 
-### AI: relationship and memory
+### AI: memory
 
 - **Brief** (`@aimy/brief`): What AiMY has to say at the top of a page, from parts: Brief (wash, accent or plain ground), BriefHead (Sales' large Today title, or the small AiMY label with a work state), BriefLines with BriefLink numbers, BriefFigure (one large figure and its sentence), BriefDeck, BriefActions, BriefStarts (ways to start with counts and reasons), BriefNext (Knowledge's 'Worth asking'). https://aimy-ui-lib.aimy.flairstech.com/components/brief/
 - **Memory**: https://aimy-ui-lib.aimy.flairstech.com/components/memory/

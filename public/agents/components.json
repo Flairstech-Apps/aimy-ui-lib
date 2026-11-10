@@ -85,7 +85,7 @@
   },
   {
     "name": "field",
-    "title": "Field and text inputs",
+    "title": "Inputs",
     "group": "Forms",
     "description": "Wraps a form control with its label above and help or an error below, and wires them up: the control gets the id, aria-describedby and aria-invalid. A new error makes the control shake once (transitions.dev 12); the message stays until fixed. Never use a placeholder as a label. Pass id to link an ErrorSummary to the control.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/field/"
@@ -142,105 +142,105 @@
   {
     "name": "card",
     "title": "Card",
-    "group": "Containers and navigation",
+    "group": "Containers & navigation",
     "description": "The record card both products draw: an article with CardHead (a state Tag and CardType), CardTitle (a real button or link whose hit area covers the card), CardSummary, CardFacts, CardBody and CardFoot (stay clickable on their own). status ok, warn or err tints the edge; never a left stripe.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/card/"
   },
   {
     "name": "tabs",
     "title": "Tabs",
-    "group": "Containers and navigation",
+    "group": "Containers & navigation",
     "description": "A real tablist with arrow keys. size page (18px, counts, an ink bar: Sales view switcher) or section (14px, a hairline under the strip, a brand underline: Knowledge settings). The bar slides with transitions.dev tabs sliding (16). Use for views of one thing; not for moving between pages.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/tabs/"
   },
   {
     "name": "menu",
     "title": "Menu",
-    "group": "Containers and navigation",
+    "group": "Containers & navigation",
     "description": "A menu of actions or choices from a control: MenuItem (acts and closes; danger for destructive), MenuRadioGroup and MenuRadioItem (one answer), MenuCheckboxItem (several answers; stays open), MenuLabel, MenuSeparator, MenuSearch (filters long lists). Items take a description line and a leading icon or avatar. Full keyboard model. Opens with transitions.dev menu dropdown (05).",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/menu/"
   },
   {
     "name": "tooltip",
-    "title": "Tooltip and popover",
-    "group": "Containers and navigation",
+    "title": "Tooltip & popover",
+    "group": "Containers & navigation",
     "description": "A short hint on hover or keyboard focus, after 80ms (transitions.dev tooltip, 17). Nothing inside can be clicked; use Popover for that. InfoTip is the small question-mark button that explains a label.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/tooltip/"
   },
   {
     "name": "disclosure",
     "title": "Disclosure",
-    "group": "Containers and navigation",
+    "group": "Containers & navigation",
     "description": "Show or hide one section in place: a header with an optional count and a chevron, the body sliding open with transitions.dev accordion (21). For bounded sections such as a call transcript; not for hiding open-ended data.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/disclosure/"
   },
   {
     "name": "pager",
     "title": "Pager",
-    "group": "Containers and navigation",
+    "group": "Containers & navigation",
     "description": "Paging in words: 1–15 of 134 contacts, page 1 of 9, with Back and Next text actions that say how many. One page reads: 134 contacts, all shown.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/pager/"
   },
   {
     "name": "toast",
     "title": "Toast",
-    "group": "Feedback and overlays",
+    "group": "Feedback & overlays",
     "description": "The confirmation every action ends with: act at once, then toast what happened with Undo. toast(title, { sub, onUndo }). One at a time; 6s with Undo, 4s without; waits while hovered or focused; announced politely. Render <Toaster /> once at the root (offset lifts it above a composer bar). Rises and leaves with transitions.dev toast (22). tone err for a failed action: the alert icon on a red tile, announced at once, 8s, with an action such as Try again.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/toast/"
   },
   {
     "name": "dialog",
     "title": "Dialog",
-    "group": "Feedback and overlays",
+    "group": "Feedback & overlays",
     "description": "Dialog: for ordered forms and changes with consequences, never to confirm what Undo can take back. Title, optional description, a scrolling body and an end-aligned footer; focus trapped, Escape closes, focus returns (transitions.dev modal, 06). TypeToConfirm: the last rung for destructive or governed changes: the named action stays disabled until the word or number is typed.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/dialog/"
   },
   {
     "name": "sheet",
     "title": "Sheet",
-    "group": "Feedback and overlays",
+    "group": "Feedback & overlays",
     "description": "A panel that slides in from the side over the page, with a scrim: the rail as a drawer below the rail rung, settings and connection sheets. Title, scrolling body, Escape or the scrim closes, focus returns. Slides with transitions.dev panel reveal (07).",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/sheet/"
   },
   {
     "name": "notice",
     "title": "Notice",
-    "group": "Feedback and overlays",
+    "group": "Feedback & overlays",
     "description": "A notice in the page: neutral, info, ok, warn or err. A tinted ground with an icon and words, an optional title and an action that resolves it (Try again, Open the new version). Never a coloured left stripe. err is announced at once.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/notice/"
   },
   {
     "name": "empty-state",
-    "title": "Empty and error states",
-    "group": "Feedback and overlays",
+    "title": "Empty & error states",
+    "group": "Feedback & overlays",
     "description": "EmptyState: why there is nothing here and the way forward (Clear filters, New document), with an icon tile and an optional fine line; dashed or plain. ErrorState: what failed, that nothing was lost, and Try again.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/empty-state/"
   },
   {
     "name": "recovery",
-    "title": "Errors and recovery",
-    "group": "Feedback and overlays",
+    "title": "Recovery",
+    "group": "Feedback & overlays",
     "description": "AIMY-2979's error and recovery patterns. RecoveryState: one component for session, permission, workspace, offline, connection, timeout, uncertain, service, maintenance, rate-limit, missing, deleted, expired, validation, save, upload, file-too-large, file-type, conflict, load and action, shown as a blocking page, a section or widget that keeps the rest of the page usable, an inline note or a persistent banner; retrying with Attempt 2 of 3, or failed with the recovery; Retry-After countdown; support reference. RecoveryStatus for background retries, ErrorSummary for forms (links to fields, takes focus), RecoveryDialog for a decision. classifyError maps HTTP status, OIDC and network codes to a kind; the codes never reach the screen.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/recovery/"
   },
   {
     "name": "skeleton",
     "title": "Skeleton",
-    "group": "Feedback and overlays",
+    "group": "Feedback & overlays",
     "description": "Placeholders shaped like what is coming, pulsing while loading; Reveal cross-fades from the skeleton to the content when loading ends (transitions.dev skeleton reveal, 14). label names what is loading for screen readers.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/skeleton/"
   },
   {
     "name": "progress",
     "title": "Progress",
-    "group": "Feedback and overlays",
+    "group": "Feedback & overlays",
     "description": "How much is done or used: thin (3px) for work in progress, meter (6px) or large (8px) for usage. limit turns a meter warn from 80% and err from 95%. Always put the numbers in words beside it.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/progress/"
   },
   {
     "name": "notification-bell",
     "title": "Notification bell",
-    "group": "Feedback and overlays",
+    "group": "Feedback & overlays",
     "description": "The topbar bell with its micro-interactions: the count slides on and pops (transitions.dev 03); a new ping rocks the bell from its top, three swings in 600ms, and drops one line under it saying what finished, gone after 1.4s (Knowledge's ring and tip). Quiet while its panel is open; still under reduced motion.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/notification-bell/"
   },
@@ -505,155 +505,155 @@
   },
   {
     "name": "citation",
-    "title": "Citations and sources",
-    "group": "AI: grounding and trust",
+    "title": "Citations & sources",
+    "group": "AI: trust",
     "description": "A numbered marker in an answer that points at its source (Knowledge's .cite). Hover or keyboard focus opens the preview: title, trust state, the quoted passage, where it came from, and Flag (feedback per citation). Escape closes it; a tap opens it on touch. Numbers match the answer's SourceList.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/citation/"
   },
   {
     "name": "trust-state",
     "title": "Trust state",
-    "group": "AI: grounding and trust",
+    "group": "AI: trust",
     "description": "The trust condition of a source, on the source (Knowledge's statusBadge): current (No issues), outdated (Out of date), conflicting, draft, unowned, unused, superseded (also says Not in answers). Tone and words together; the title says why; a dot when a person set it by hand.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/trust-state/"
   },
   {
     "name": "trust-disclosure",
     "title": "Trust disclosure",
-    "group": "AI: grounding and trust",
+    "group": "AI: trust",
     "description": "What an answer is grounded on, said under it (Knowledge's .trust-disclosure): rows in ok, warn, err or none tone, and the warm exclusion ground when nothing could answer, with DisclosureAction for the way forward. Every answer states its grounding; the exclusion case is never silent.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/trust-disclosure/"
   },
   {
     "name": "confidence",
-    "title": "Confidence and score",
-    "group": "AI: grounding and trust",
+    "title": "Confidence & score",
+    "group": "AI: trust",
     "description": "How sure AiMY is about a group of facts, in words, with why (Sales' .b-conf): ok (a check), old (May be out of date, Check again), gap (Partly known), none (Not known yet, Find out more), busy (Checking again). The explanation says where the facts came from and when. Not a score: use Score for ratings.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/confidence/"
   },
   {
     "name": "work-state",
     "title": "Work state",
-    "group": "AI: agency and action",
+    "group": "AI: actions",
     "description": "Where a surfaced item stands, required on every item (doctrine §2.3): detected (Found), recommended (Suggested), drafted (Drafted), staged (Awaiting you), completed (Done), failed (Stopped). Sales' pill; a specific label may replace the word, never the state.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/work-state/"
   },
   {
     "name": "entry-action",
     "title": "Entry action",
-    "group": "AI: agency and action",
+    "group": "AI: actions",
     "description": "An action that declares how it behaves (doctrine §3); mode is required so an unclassified action does not compile. direct = primary (completes in place, offers Undo; one per surface), review = secondary (shows a proposal), investigate and prompt = tertiary text (open a conversation). aimy puts the AiMY mark on actions AiMY carries out.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/entry-action/"
   },
   {
     "name": "suggestion",
     "title": "Suggestion",
-    "group": "AI: agency and action",
+    "group": "AI: actions",
     "description": "A change AiMY proposes, shown as a change (Knowledge's editor suggestion): old wording struck through, new wording after, Accept, Edit, Reject. Never applied silently; Edit makes the new wording editable and Accept applies what is there. pending shows the steps AiMY is on. Toasts Applied (with Undo) or Rejected.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/suggestion/"
   },
   {
     "name": "agent-steps",
     "title": "Agent steps",
-    "group": "AI: agency and action",
+    "group": "AI: actions",
     "description": "AiMY's work step by step while it runs (Sales' curation trace): what it is doing with a running clock, a line saying the person can leave, steps that appear as they start, beat while live and tick with what they found. Done reads 'Curated in 6.0s'.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/agent-steps/"
   },
   {
     "name": "change-review",
     "title": "Change review",
-    "group": "AI: agency and action",
+    "group": "AI: actions",
     "description": "A governed or irreversible change, reviewed before it runs (Knowledge's commit surface): Now → After, why, 'What this will do' (changes, cautions, what is skipped), Reversible for 24h, and a typed word for destructive changes. Confirming toasts with Undo, logged to the audit trail.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/change-review/"
   },
   {
     "name": "version-list",
     "title": "Version list",
-    "group": "AI: agency and action",
+    "group": "AI: actions",
     "description": "A document's versions (Knowledge's versionList). AiMY's edits are ordinary versions with AiMY as the author and its mark, saying who accepted them. Rows can be picked to read a version; restore with ChangeReview, additively.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/version-list/"
   },
   {
     "name": "activity",
     "title": "Activity",
-    "group": "AI: agency and action",
+    "group": "AI: actions",
     "description": "What happened, who did it and when (Sales' activity rows): the subject, the outcome in its tone, then who and when, with the note under it. AiMY's actions say AiMY, never the person's name.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/activity/"
   },
   {
     "name": "set-scope-bar",
     "title": "Set-scope bar",
-    "group": "AI: agency and action",
+    "group": "AI: actions",
     "description": "Bulk work states its scope: N selected, of what, filtered how, the actions that apply, and Clear (the design system's set-scope bar; neither product draws one). The action names the operation and count, never 'Apply'.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/set-scope-bar/"
   },
   {
     "name": "audit-trail",
     "title": "Audit trail",
-    "group": "AI: agency and action",
+    "group": "AI: actions",
     "description": "A governed record of changes (design system spec): what changed, who and how, when, and Revert or Irreversible on every entry. AiMY's entries carry its mark. For contact activity use Activity.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/audit-trail/"
   },
   {
     "name": "decision-zone",
     "title": "Decision zone",
-    "group": "AI: agency and action",
+    "group": "AI: actions",
     "description": "A proposal with operational consequences decided in place (design system spec): the question, its consequence and how long it stays reversible, Accept / Edit / Reject (edit required), Awaiting you, then what was decided and Undo.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/decision-zone/"
   },
   {
     "name": "step-list",
     "title": "Step list",
-    "group": "AI: agency and action",
+    "group": "AI: actions",
     "description": "The compact step list (design system spec): done with what it found ('3 matches · 1.2s'), running, pending with its number, failed. For a long watched run use AgentSteps.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/step-list/"
   },
   {
     "name": "brief",
     "title": "Brief",
-    "group": "AI: relationship and memory",
+    "group": "AI: memory",
     "description": "What AiMY has to say at the top of a page, from parts: Brief (wash, accent or plain ground), BriefHead (Sales' large Today title, or the small AiMY label with a work state), BriefLines with BriefLink numbers, BriefFigure (one large figure and its sentence), BriefDeck, BriefActions, BriefStarts (ways to start with counts and reasons), BriefNext (Knowledge's 'Worth asking'). DayBrief is Sales' Today, ready made.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/brief/"
   },
   {
     "name": "aimy-note",
     "title": "AiMY note",
-    "group": "AI: relationship and memory",
+    "group": "AI: memory",
     "description": "A sentence from AiMY on a record or card with where it came from (Sales' .b-aimy): the mark, one useful sentence, the source line, one optional control. Variants quiet, gap, lead.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/aimy-note/"
   },
   {
     "name": "briefing",
     "title": "Briefing",
-    "group": "AI: relationship and memory",
+    "group": "AI: memory",
     "description": "A briefing item's Acknowledge, and Dismiss with one-click reasons in place, each with Undo (doctrine §5.9; design system spec). Aggregate summarises a cluster: stats, rows with share bars, and what the rest add up to.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/briefing/"
   },
   {
     "name": "autonomy",
     "title": "Autonomy",
-    "group": "AI: relationship and memory",
+    "group": "AI: memory",
     "description": "How much AiMY may do without asking, per kind of work, with the evidence it has earned it: Ask me first / Do it, then tell me / Do it, keep a log. AskPolicy sets Always ask or Just do it per category; governed categories are locked and say why. Every change toasts with Undo; anything irreversible or touching scoring always asks.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/autonomy/"
   },
   {
     "name": "usage",
     "title": "Usage",
-    "group": "AI: relationship and memory",
+    "group": "AI: memory",
     "description": "How much of AiMY a person has used (Knowledge's usage popover): groups by period, rows 'N of M' with a meter and what it means. Open it from the Composer's usage ring.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/usage/"
   },
   {
     "name": "usage-limit",
     "title": "Usage limits",
-    "group": "AI: relationship and memory",
+    "group": "AI: memory",
     "description": "What a person is told at a usage limit, in the products' words: past your share (You can keep going), limit reached (when it starts again), stopped by an admin (who can turn it back on); always what still works. Pair with the Composer's unavailable sentence and red usage ring.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/usage-limit/"
   },
   {
     "name": "model-picker",
     "title": "Model picker",
-    "group": "AI: relationship and memory",
+    "group": "AI: memory",
     "description": "Which AiMY model answers (design system spec): the AI dot, the name and tag, and a menu where each model says what it is for.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/model-picker/"
   },

@@ -4,7 +4,7 @@ import { NAV } from "@/components/docs/nav"
 import type { Metadata } from "next"
 import { Code, CodeBlock, PageHeader, Section } from "@/components/docs/page"
 
-export const metadata: Metadata = { title: "Install and start" }
+export const metadata: Metadata = { title: "Install" }
 
 const npmrc = `@flairstech-aimy:registry=https://aimy-ui-lib.aimy.flairstech.com/npm/`
 
@@ -40,7 +40,7 @@ export default function Start() {
   return (
     <>
       <PageHeader
-        title="Install and start"
+        title="Install"
         lead="Three ways in, from copying components into your app to plain CSS variables. No sign-in and no token."
       />
 

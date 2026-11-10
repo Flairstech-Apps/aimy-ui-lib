@@ -3,12 +3,12 @@ import { TipsDemo } from "@/components/docs/batch-c-demos"
 import { A11y, Install, Source } from "@/components/docs/component"
 import { CodeBlock, DoDont, PageHeader, Section, ThemePair } from "@/components/docs/page"
 
-export const metadata: Metadata = { title: "Tooltip and popover" }
+export const metadata: Metadata = { title: "Tooltip & popover" }
 
 export default function Page() {
   return (
     <>
-      <PageHeader title="Tooltip and popover" lead="A tooltip is a short hint you can't click into. A popover is a small panel you can." />
+      <PageHeader title="Tooltip & popover" lead="A tooltip is a short hint you can't click into. A popover is a small panel you can." />
       <Section title="Tooltip, info tip, popover">
         <ThemePair>
           <TipsDemo />

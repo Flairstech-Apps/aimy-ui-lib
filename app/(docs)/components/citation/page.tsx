@@ -3,13 +3,13 @@ import { CitationDemo } from "@/components/docs/ai2-demos"
 import { A11y, Install, Source } from "@/components/docs/component"
 import { CodeBlock, DoDont, PageHeader, Section, ThemePair } from "@/components/docs/page"
 
-export const metadata: Metadata = { title: "Citations and sources" }
+export const metadata: Metadata = { title: "Citations & sources" }
 
 export default function Page() {
   return (
     <>
       <PageHeader
-        title="Citations and sources"
+        title="Citations & sources"
         lead="Every claim in an answer points at what it stands on, and the person can check it without leaving the answer."
       />
       <Section title="Citations in an answer, its sources, the drawer, and one plain line">

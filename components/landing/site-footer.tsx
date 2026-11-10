@@ -14,7 +14,7 @@ import { useAsk, useInView } from "./ask"
 import { FloatDock, OrbHorizon } from "./orb-horizon"
 
 const LINKS: [string, string][] = [
-  ["Install and start", "/start/"],
+  ["Install", "/start/"],
   ["How to adopt", "/adopt/"],
   ["Foundations", "/foundations/color/"],
   ["Components", "/components/button/"],

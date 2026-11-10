@@ -7,7 +7,7 @@ const LIBRARY: NavGroup[] = [
   {
     label: "Start here",
     items: [
-      { href: "/start/", label: "Install and start" },
+      { href: "/start/", label: "Install" },
       { href: "/adopt/", label: "How to adopt" },
       { href: "/ai-tools/", label: "Tools for AI agents" },
       { href: "/whats-new/", label: "What's new" },
@@ -50,7 +50,7 @@ const LIBRARY: NavGroup[] = [
   {
     label: "Forms",
     items: [
-      { href: "/components/field/", label: "Field and text inputs" },
+      { href: "/components/field/", label: "Inputs" },
       { href: "/components/search-field/", label: "Search field" },
       { href: "/components/select/", label: "Select" },
       { href: "/components/checkbox/", label: "Checkbox" },
@@ -61,25 +61,25 @@ const LIBRARY: NavGroup[] = [
     ],
   },
   {
-    label: "Containers and navigation",
+    label: "Containers & navigation",
     items: [
       { href: "/components/card/", label: "Card" },
       { href: "/components/tabs/", label: "Tabs" },
       { href: "/components/menu/", label: "Menu" },
-      { href: "/components/tooltip/", label: "Tooltip and popover" },
+      { href: "/components/tooltip/", label: "Tooltip & popover" },
       { href: "/components/disclosure/", label: "Disclosure" },
       { href: "/components/pager/", label: "Pager" },
     ],
   },
   {
-    label: "Feedback and overlays",
+    label: "Feedback & overlays",
     items: [
       { href: "/components/toast/", label: "Toast" },
       { href: "/components/dialog/", label: "Dialog" },
       { href: "/components/sheet/", label: "Sheet" },
       { href: "/components/notice/", label: "Notice" },
-      { href: "/components/empty-state/", label: "Empty and error states" },
-      { href: "/components/recovery/", label: "Errors and recovery" },
+      { href: "/components/empty-state/", label: "Empty & error states" },
+      { href: "/components/recovery/", label: "Recovery" },
       { href: "/components/skeleton/", label: "Skeleton" },
       { href: "/components/progress/", label: "Progress" },
       { href: "/components/notification-bell/", label: "Notification bell" },
@@ -154,17 +154,17 @@ const LIBRARY: NavGroup[] = [
     ],
   },
   {
-    label: "AI: grounding and trust",
+    label: "AI: trust",
     items: [
-      { href: "/components/citation/", label: "Citations and sources" },
+      { href: "/components/citation/", label: "Citations & sources" },
       { href: "/components/trust-state/", label: "Trust state" },
       { href: "/components/trust-disclosure/", label: "Trust disclosure" },
-      { href: "/components/confidence/", label: "Confidence and score" },
+      { href: "/components/confidence/", label: "Confidence & score" },
       { href: "/components/unavailable/", label: "When AiMY is unavailable" },
     ],
   },
   {
-    label: "AI: agency and action",
+    label: "AI: actions",
     items: [
       { href: "/components/work-state/", label: "Work state" },
       { href: "/components/entry-action/", label: "Entry action" },
@@ -180,7 +180,7 @@ const LIBRARY: NavGroup[] = [
     ],
   },
   {
-    label: "AI: relationship and memory",
+    label: "AI: memory",
     items: [
       { href: "/components/brief/", label: "Brief" },
       { href: "/components/memory/", label: "Memory" },

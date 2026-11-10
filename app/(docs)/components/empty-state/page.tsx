@@ -3,12 +3,12 @@ import { StatesDemo } from "@/components/docs/batch-d-demos"
 import { A11y, Install, Source } from "@/components/docs/component"
 import { CodeBlock, DoDont, PageHeader, Section, ThemePair } from "@/components/docs/page"
 
-export const metadata: Metadata = { title: "Empty and error states" }
+export const metadata: Metadata = { title: "Empty & error states" }
 
 export default function Page() {
   return (
     <>
-      <PageHeader title="Empty and error states" lead="When there's nothing to show, say why and offer the way forward. When something fails, say nothing was lost." />
+      <PageHeader title="Empty & error states" lead="When there's nothing to show, say why and offer the way forward. When something fails, say nothing was lost." />
       <Section title="No matches, nothing yet, couldn't load">
         <ThemePair>
           <StatesDemo />
@@ -21,7 +21,7 @@ export default function Page() {
       <Section title="Rules">
         <div className="flex flex-col gap-3">
           <DoDont doText="Count what's there and name the fix: 134 contacts, none matching. Clear filters." dontText="Write No data." />
-          <DoDont doText="For a session, access, connection or any other failure, use RecoveryState (Errors and recovery)." dontText="Show an empty state when the load failed." />
+          <DoDont doText="For a session, access, connection or any other failure, use RecoveryState (Recovery)." dontText="Show an empty state when the load failed." />
         </div>
       </Section>
       <Source>

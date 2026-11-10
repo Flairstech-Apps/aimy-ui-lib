@@ -190,7 +190,7 @@ export const COLUMNS: { title: string; links: [string, string][] }[] = [
   {
     title: "Start",
     links: [
-      ["Install and start", "/start/"],
+      ["Install", "/start/"],
       ["How to adopt", "/adopt/"],
       ["What's new", "/whats-new/"],
     ],

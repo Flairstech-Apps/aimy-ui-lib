@@ -15,7 +15,7 @@ import {
 import { A11y, Install, Source } from "@/components/docs/component"
 import { Code, CodeBlock, DoDont, PageHeader, Section, ThemePair } from "@/components/docs/page"
 
-export const metadata: Metadata = { title: "Errors and recovery" }
+export const metadata: Metadata = { title: "Recovery" }
 
 const CHOOSE: [string, string][] = [
   ["Screen", "The app can't draw its shell: the session ended at start-up, the account has no workspace, all of AiMY is in maintenance. The whole window, a card in the middle, the recovery full width."],
@@ -50,7 +50,7 @@ export default function Page() {
   return (
     <>
       <PageHeader
-        title="Errors and recovery"
+        title="Recovery"
         lead="What every AiMY screen shows when something fails: what happened, what is safe, and the one action that recovers. Calm while it retries, clear when it has stopped."
       />
 

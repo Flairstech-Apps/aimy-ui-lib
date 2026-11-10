@@ -3,12 +3,12 @@ import { FieldsDemo } from "@/components/docs/forms-demos"
 import { A11y, Install, Source } from "@/components/docs/component"
 import { CodeBlock, DoDont, PageHeader, Section, ThemePair } from "@/components/docs/page"
 
-export const metadata: Metadata = { title: "Field and text inputs" }
+export const metadata: Metadata = { title: "Inputs" }
 
 export default function Page() {
   return (
     <>
-      <PageHeader title="Field and text inputs" lead="A label above, the control, then help or the error below. Two looks: a box for settings and pages, a line for forms inside dialogs and AiMY panels." />
+      <PageHeader title="Inputs" lead="A label above, the control, then help or the error below. Two looks: a box for settings and pages, a line for forms inside dialogs and AiMY panels." />
       <Section title="Box, the default. Press Save with the name empty">
         <ThemePair>
           <FieldsDemo variant="box" />

@@ -3,13 +3,13 @@ import { ConfidenceDemo, ScoreDemo } from "@/components/docs/ai2-demos"
 import { A11y, Install, Source } from "@/components/docs/component"
 import { CodeBlock, DoDont, PageHeader, Section, ThemePair } from "@/components/docs/page"
 
-export const metadata: Metadata = { title: "Confidence and score" }
+export const metadata: Metadata = { title: "Confidence & score" }
 
 export default function Page() {
   return (
     <>
       <PageHeader
-        title="Confidence and score"
+        title="Confidence & score"
         lead="How sure AiMY is about a fact, in words that say what limits it; and, separately, how well something scores."
       />
       <Section title="Confidence on a contact's facts: checked, out of date, partly known, not known yet">
