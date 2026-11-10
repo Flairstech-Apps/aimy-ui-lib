@@ -2,7 +2,6 @@ import {
   AppWindow,
   ChartLine,
   FileText,
-  FlaskConical,
   MessageSquareDot,
   MessagesSquare,
   Palette,
@@ -33,7 +32,7 @@ const ICONS: Record<string, LucideIcon> = {
 /** The icon for a docs group. AI groups carry the AiMY mark, as AI does everywhere in the products.
     It sits in a box one line tall, so beside a label that wraps it stays on the first line. */
 export function GroupIcon({ group, className }: { group: string; className?: string }) {
-  const Icon = group.startsWith("Lab") ? FlaskConical : (ICONS[group] ?? Shapes)
+  const Icon = ICONS[group] ?? Shapes
   return (
     <span className="flex shrink-0 items-center" style={{ height: "1lh" }}>
       {group.startsWith("AI:") ? (

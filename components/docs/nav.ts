@@ -1,4 +1,3 @@
-import { LAB_NAV } from "./lab-nav"
 
 export type NavItem = { href: string; label: string }
 export type NavGroup = { label: string; items: NavItem[] }
@@ -205,4 +204,4 @@ const LIBRARY: NavGroup[] = [
 
 // Lab groups show on the dev server only; the production build never sees
 // them, like the lab pages themselves (next.config.ts).
-export const NAV: NavGroup[] = process.env.NODE_ENV === "development" ? [...LIBRARY, ...LAB_NAV] : LIBRARY
+export const NAV: NavGroup[] = LIBRARY
