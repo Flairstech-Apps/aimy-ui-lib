@@ -187,15 +187,29 @@ export function AgentLoop() {
     result: r.result,
     state: elapsed >= ENDS[i]! ? "done" : elapsed >= ENDS[i]! - r.secs ? "live" : "wait",
   }))
+  // The run grows as steps arrive and results come back, which pushed everything under it
+  // down. An invisible copy of its tallest state (every step done with its result, the
+  // "you can close this" line still showing) shares the grid cell and holds the height.
   return (
-    <div ref={ref}>
-      <AgentSteps
-        live={elapsed < TOTAL}
-        title="Building “Leeds logistics”"
-        doneTitle="Built"
-        seconds={elapsed}
-        steps={steps}
-      />
+    <div ref={ref} className="grid [grid-template-areas:'run']">
+      <div aria-hidden="true" inert className="invisible [grid-area:run]">
+        <AgentSteps
+          live
+          title="Building “Leeds logistics”"
+          doneTitle="Built"
+          seconds={TOTAL}
+          steps={RUN.map((r) => ({ label: r.label, result: r.result, state: "done" }))}
+        />
+      </div>
+      <div className="self-start [grid-area:run]">
+        <AgentSteps
+          live={elapsed < TOTAL}
+          title="Building “Leeds logistics”"
+          doneTitle="Built"
+          seconds={elapsed}
+          steps={steps}
+        />
+      </div>
     </div>
   )
 }
