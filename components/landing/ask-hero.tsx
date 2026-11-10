@@ -92,7 +92,7 @@ export function AskHero({ count }: { count: number }) {
             canvas in front, the questions step aside, and the orb stays behind the glass, growing
             into a backdrop; the page glides so the canvas sits under the nav and the bar settles
             under it. Closing plays it back. Styles: .hero-orb, .hero-aside, .hero-canvas. */}
-        <div ref={stage} className="mt-4 grid [grid-template-areas:'stage']">
+        <div ref={stage} className="mt-4 grid grid-cols-[minmax(0,1fr)] [grid-template-areas:'stage']">
           {/* The questions sit either side of the orb, never on it: the library's openers first,
               then the follow-ups for the part on screen. On a phone they drop under the orb. */}
           <div className="grid items-center gap-4 self-center [grid-area:stage] column:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] column:gap-0">

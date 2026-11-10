@@ -67,7 +67,7 @@ export function AnswerCanvas({
         ) : null}
         <div className="min-w-0 flex-1">
           <p className="truncate text-body font-semibold text-ink">{thinking || !part ? "Finding the part" : part.name}</p>
-          <p className="truncate text-meta text-ink-secondary">You asked: {question}</p>
+          <p className="text-meta text-ink-secondary">You asked: {question}</p>
         </div>
         {part && !thinking ? (
           <Link
