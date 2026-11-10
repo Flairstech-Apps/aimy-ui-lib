@@ -23,7 +23,7 @@ export function Crumb() {
   const { item } = useCurrent()
   if (!item) return null
   return (
-    <p className="mb-4 flex items-center gap-2 text-xs font-semibold text-ink-secondary">
+    <p className="mb-4 flex items-start gap-2 text-xs font-semibold text-ink-secondary">
       <GroupIcon group={item.group} />
       {item.group}
     </p>

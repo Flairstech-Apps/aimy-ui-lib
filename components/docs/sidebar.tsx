@@ -34,7 +34,7 @@ export function Sidebar() {
     <nav ref={ref} aria-label="Documentation" className="flex flex-col gap-6 px-3 py-7">
       {NAV.map((group) => (
         <div key={group.label} className="flex flex-col gap-0.5">
-          <p className="flex items-center gap-2 px-3 pb-2 text-xs font-semibold text-ink">
+          <p className="flex items-start gap-2 px-3 pb-2 text-xs font-semibold text-ink">
             <GroupIcon group={group.label} className="text-ink-secondary" />
             {group.label}
           </p>

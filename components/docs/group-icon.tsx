@@ -30,9 +30,17 @@ const ICONS: Record<string, LucideIcon> = {
   "Chat widgets": MessagesSquare,
 }
 
-/** The icon for a docs group. AI groups carry the AiMY mark, as AI does everywhere in the products. */
+/** The icon for a docs group. AI groups carry the AiMY mark, as AI does everywhere in the products.
+    It sits in a box one line tall, so beside a label that wraps it stays on the first line. */
 export function GroupIcon({ group, className }: { group: string; className?: string }) {
-  if (group.startsWith("AI:")) return <AimyMark title="" className={cn("size-3.5 shrink-0", className)} />
   const Icon = group.startsWith("Lab") ? FlaskConical : (ICONS[group] ?? Shapes)
-  return <Icon aria-hidden="true" strokeWidth={2} className={cn("size-3.5 shrink-0", className)} />
+  return (
+    <span className="flex shrink-0 items-center" style={{ height: "1lh" }}>
+      {group.startsWith("AI:") ? (
+        <AimyMark title="" className={cn("size-3.5 shrink-0", className)} />
+      ) : (
+        <Icon aria-hidden="true" strokeWidth={2} className={cn("size-3.5 shrink-0", className)} />
+      )}
+    </span>
+  )
 }
