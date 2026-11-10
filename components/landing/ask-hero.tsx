@@ -7,7 +7,6 @@
 // its install command, while the stage orb hands over to a small one in the
 // canvas head.
 
-import { CornerDownLeft } from "lucide-react"
 import { useRef, useState } from "react"
 import { AnswerCanvas, CommandLine } from "@/components/landing/answer-canvas"
 import { Haze } from "@/components/landing/haze"
@@ -27,16 +26,14 @@ export function AskHero({ count }: { count: number }) {
   const [lean, setLean] = useState(false)
   // Once the drawer has been pulled, it stops hinting that it can be.
   const [pulled, setPulled] = useState(false)
-  // Closing the canvas tucks the drawer away; the next question opens it again.
-  const [tucked, setTucked] = useState(false)
   // A new ask keeps an open canvas open: it shows the new part once found.
   const ask = (q: string) => {
     setGone(false)
-    setTucked(false)
     a.ask(q)
   }
   const questions = a.match ? a.match.follow : ASKS
   const stage = useRef<HTMLDivElement>(null)
+  const dock = useRef<HTMLDivElement>(null)
   const glide = (): ScrollBehavior => (matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth")
   const openCanvas = () => {
     setPulled(true)
@@ -54,7 +51,13 @@ export function AskHero({ count }: { count: number }) {
   }
   const close = () => {
     setOpen(false)
-    setTucked(true)
+    // The hero's own touch, not the products' (there, closing the canvas closes the drawer):
+    // once the drawer is back, press its own grip so it tucks away with Peek's own motion.
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() =>
+        dock.current?.querySelector<HTMLButtonElement>(".aimy-peek:not(.is-shut) .aimy-peek-grip")?.click()
+      )
+    )
     window.scrollTo({ top: 0, behavior: glide() })
   }
   const status = a.phase === "thinking" ? "thinking" : a.phase === "speaking" ? "streaming" : "answered"
@@ -138,11 +141,10 @@ export function AskHero({ count }: { count: number }) {
           ) : null}
         </div>
         {/* The float bar: sticky to the screen's foot, with the peek rising above it. */}
-        <div className="sticky bottom-6 z-[2] mx-auto mt-6 w-full max-w-[47.5rem]">
+        <div ref={dock} className="sticky bottom-6 z-[2] mx-auto mt-6 w-full max-w-[47.5rem]">
           {a.question && !gone && !open ? (
             <Peek
               key={a.question}
-              defaultTucked={tucked}
               status={status}
               thinkingLabel={["Searching the library", "Reading its rules"]}
               className={status === "answered" && !pulled ? "peek-nudge" : undefined}
@@ -166,10 +168,11 @@ export function AskHero({ count }: { count: number }) {
   )
 }
 
-/** The questions beside the orb: each one a small glass bubble, the message you would send,
-    its square corner pointing at the orb, joined to it by a hairline ending in a dot, with an
-    Enter glyph to say it sends. Hovering lifts it 2px, lights the line and makes the orb lean
-    in (onLean). Below the column rung they drop under the orb as centred bubbles without lines. */
+/** The questions beside the orb: each one a thin glass outline with its words at rest, the
+    message you would send, its square corner pointing at the orb and joined to it by a hairline
+    ending in a dot. Hover or focus brings it to full strength: the fill, a 2px lift, the lit
+    line, and the orb leaning in (onLean). The bubble never shrinks or wraps; only the line gives
+    way when space is tight. On a phone they stack under the orb. */
 function OrbQuestions({
   side,
   items,
@@ -207,14 +210,9 @@ function OrbQuestions({
           className={`aimy-sugg-in group flex min-w-0 items-center rounded-2xl column:justify-end ${left ? "" : "column:flex-row-reverse"}`}
         >
           <span
-            className={`flex min-w-0 items-center gap-2.5 rounded-2xl border border-edge bg-card/70 py-2.5 pr-3 pl-4 text-left text-body font-medium text-ink shadow-lg backdrop-blur-md transition-[border-color,background-color,translate] duration-(--t-fast) ease-out group-hover:-translate-y-0.5 group-hover:border-accent group-hover:bg-card/90 motion-reduce:group-hover:translate-y-0 rail:whitespace-nowrap ${left ? "column:rounded-br-sm" : "column:rounded-bl-sm"}`}
+            className={`flex shrink-0 items-center rounded-2xl border border-w14 bg-w03 px-2.5 py-1 text-left text-2xs font-medium whitespace-nowrap text-ink backdrop-blur-sm transition-[border-color,background-color,box-shadow,translate] duration-(--t-fast) ease-out group-hover:-translate-y-0.5 group-hover:border-accent group-hover:bg-card/90 group-hover:shadow-lg group-focus-visible:border-accent group-focus-visible:bg-card/90 group-focus-visible:shadow-lg motion-reduce:group-hover:translate-y-0 ${left ? "column:rounded-br-sm" : "column:rounded-bl-sm"}`}
           >
-            <span className="min-w-0">{q}</span>
-            <CornerDownLeft
-              aria-hidden="true"
-              strokeWidth={2}
-              className="size-4 shrink-0 text-ink-secondary transition-[color] duration-(--t-fast) ease-out group-hover:text-ink-action"
-            />
+            {q}
           </span>
           <span aria-hidden="true" className={`hidden w-28 min-w-4 shrink items-center column:flex ${left ? "" : "flex-row-reverse"}`}>
             <span
