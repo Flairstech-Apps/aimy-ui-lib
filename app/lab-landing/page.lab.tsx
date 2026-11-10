@@ -15,6 +15,7 @@ import {
   HeroHorizon,
   HeroShelf,
 } from "@/components/landing/variants-more"
+import { FooterArc, FooterHorizon } from "@/components/landing/variants-footers"
 import registry from "@/registry.json"
 
 // Dev-only (page.lab.tsx): hero and footer options for the landing page.
@@ -57,6 +58,8 @@ export default function LandingVariants() {
           <a href="#footer-d">Footer D</a>
           <a href="#footer-e">Footer E</a>
           <a href="#footer-f">Footer F</a>
+          <a href="#footer-g">Footer G</a>
+          <a href="#footer-h">Footer H</a>
         </nav>
       </header>
       <Variant
@@ -76,7 +79,7 @@ export default function LandingVariants() {
       <Variant
         id="hero-c"
         title="Hero C: The product's float bar"
-        idea="The orb as the stage, the composer docked like Sales' float bar, the answer rising in the Peek. Open it to lay the part out."
+        idea="The orb as the stage, the composer docked like Sales' float bar, the answer rising in the Peek. Drag the peek up: it becomes one wide canvas with the part, the answer and its install line."
       >
         <HeroFloat count={COUNT} />
       </Variant>
@@ -89,8 +92,8 @@ export default function LandingVariants() {
       </Variant>
       <Variant
         id="hero-c3"
-        title="Hero C3: Horizon"
-        idea="The orb rises from the hero's foot like a sun and the float bar rests on it. Open the peek to lay the part out above."
+        title="Hero C3: Horizon, redesigned"
+        idea="A dark sky and the orb rising behind the curve of a lit ground; the float bar rests on the horizon, the asks wait below. Drag the peek up to open the canvas."
       >
         <HeroHorizon count={COUNT} />
       </Variant>
@@ -142,6 +145,20 @@ export default function LandingVariants() {
         idea="A small resting orb and Ask AiMY that take you back to the float bar, then one row of links."
       >
         <FooterSignoff barId="hero-c" />
+      </Variant>
+      <Variant
+        id="footer-g"
+        title="Footer G: The arc, made luxurious"
+        idea="Today's lit arc as two fine hairlines fading at their ends, the AiMY mark at the apex, light roomy type, the links resting in the bowl."
+      >
+        <FooterArc />
+      </Variant>
+      <Variant
+        id="footer-h"
+        title="Footer H: The orb horizon"
+        idea="The page ends where C3 begins: the orb rising behind a lit ground, the bar on the line, links, release and maker below."
+      >
+        <FooterHorizon />
       </Variant>
     </main>
   )

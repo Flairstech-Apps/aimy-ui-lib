@@ -9,6 +9,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react"
 import Link from "next/link"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { CodeBlock } from "@/components/docs/page"
+import { AnswerCanvas } from "@/components/landing/answer-canvas"
 import { Haze } from "@/components/landing/haze"
 import { AgentLoop, ConversationCard, GroundedCard, LiveProposal } from "@/components/landing/live"
 import type { VoicePhase } from "@/registry/aimy/hooks/use-voice"
@@ -29,7 +30,16 @@ const RELEASED = "5 Nov 2026"
 
 /* ── The finder: a question in, the library part out ─────────────────────── */
 
-export type Match = { item: string; name: string; href: string; answer: string; preview: () => React.ReactNode }
+// follow: what a developer would ask next about the library once this part is
+// on screen. Each one is worded so the finder resolves it to another real part.
+export type Match = {
+  item: string
+  name: string
+  href: string
+  answer: string
+  follow: string[]
+  preview: () => React.ReactNode
+}
 
 export const MATCHES: [RegExp, Match][] = [
   [
@@ -39,6 +49,7 @@ export const MATCHES: [RegExp, Match][] = [
       name: "Agent steps",
       href: "/components/agent-steps/",
       answer: "Agent steps. It lists each step AiMY takes with its time, keeps the running one live and stops on a failure.",
+      follow: ["How does the user accept what it drafted?", "Which part cites its sources?", "How do I stream the reply?"],
       preview: () => <AgentLoop />,
     },
   ],
@@ -49,6 +60,7 @@ export const MATCHES: [RegExp, Match][] = [
       name: "Citation",
       href: "/components/citation/",
       answer: "Citation and Source list. A chip in the sentence opens the source on hover or focus; the list says where each came from.",
+      follow: ["How do I show the steps behind it?", "Can the user accept an edit to the policy?", "How do I stream the answer?"],
       preview: () => <GroundedCard />,
     },
   ],
@@ -59,6 +71,7 @@ export const MATCHES: [RegExp, Match][] = [
       name: "Suggestion",
       href: "/components/suggestion/",
       answer: "Suggestion. AiMY's change shows struck and inserted text; Accept applies it with Undo in a toast.",
+      follow: ["Which part shows how it was drafted, step by step?", "How do I cite the policy it changes?", "How do I stream the reply?"],
       preview: () => <LiveProposal />,
     },
   ],
@@ -69,13 +82,15 @@ const CHAT: Match = {
   name: "Message",
   href: "/components/message/",
   answer: "Message, with the Composer under it. Answers stream in word by word, and the speaker's side carries the corner.",
+  follow: ["Which part shows an agent's steps?", "How do I cite where an answer came from?", "What lets a user accept an edit?"],
   preview: () => <ConversationCard />,
 }
 
-export const ASKS = ["Show an agent's steps", "Cite where an answer came from", "Propose a change to accept"]
+// Openers, asked the way a developer asks the library.
+export const ASKS = ["Which part shows an agent's steps?", "How do I cite where an answer came from?", "What lets a user accept an edit?"]
 
 const find = (q: string) => MATCHES.find(([re]) => re.test(q))?.[1] ?? CHAT
-const install = (m: Match) => `npx shadcn@latest add ${SITE}/r/${m.item}.json`
+export const install = (m: Match) => `npx shadcn@latest add ${SITE}/r/${m.item}.json`
 
 export function useInView<T extends HTMLElement>() {
   const ref = useRef<T>(null)
@@ -328,9 +343,9 @@ export function HeroFloat({ count }: { count: number }) {
   const [open, setOpen] = useState(false)
   const [gone, setGone] = useState(false)
   useFirstAsk(inView, a.ask, ASKS[1]!)
+  // A new ask keeps an open canvas open: it shows the new part once found.
   const ask = (q: string) => {
     setGone(false)
-    setOpen(false)
     a.ask(q)
   }
   const status = a.phase === "thinking" ? "thinking" : a.phase === "speaking" ? "streaming" : "answered"
@@ -349,23 +364,36 @@ export function HeroFloat({ count }: { count: number }) {
             <Ctas center />
           </div>
         </div>
-        <div
-          className={`mt-10 grid items-center gap-10 ${open && a.match ? "column:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]" : ""}`}
-        >
-          <div className="mx-auto size-56 column:size-72">
+        {/* Dragging the peek up turns it into the canvas: the stage orb hands over to the small
+            one in the canvas head, so the part gets the whole width. */}
+        {open ? (
+          <div className="mx-auto mt-10 w-full max-w-[60rem]">
+            <AnswerCanvas
+              part={
+                a.match
+                  ? { name: a.match.name, href: a.match.href, preview: a.match.preview(), command: install(a.match) }
+                  : null
+              }
+              question={a.question}
+              answer={a.shown}
+              phase={a.phase}
+              onClose={() => setOpen(false)}
+            />
+          </div>
+        ) : (
+          <div className="mx-auto mt-10 size-56 column:size-72">
             <Orb phase={a.phase} level={a.phase === "listening" ? a.level : 0} running={inView} />
           </div>
-          {open && a.match ? <Answer m={a.match} /> : null}
-        </div>
+        )}
         {/* The peek rises above the bar, so the dock leaves it room under the orb. */}
-        <div className="relative mx-auto mt-40 w-full max-w-[47.5rem]">
-          {a.question && !gone ? (
+        <div className={`relative mx-auto w-full max-w-[47.5rem] ${open ? "mt-6" : "mt-48"}`}>
+          {a.question && !gone && !open ? (
             <Peek
               status={status}
               thinkingLabel={["Searching the library", "Reading its rules"]}
               onOpenCanvas={() => setOpen(true)}
               onDismiss={() => setGone(true)}
-              actions={a.match ? <Suggestions variant="follow" items={ASKS} onPick={ask} /> : null}
+              actions={a.match ? <Suggestions variant="follow" items={a.match.follow} onPick={ask} /> : null}
             >
               <StreamingText text={a.shown} streaming={a.phase === "speaking"} />
             </Peek>

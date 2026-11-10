@@ -238,3 +238,51 @@
   background-size: 16px 16px;
   background-position: -1px -1px;
 }
+
+/* Lab: the orb horizon (components/landing/variants-more.tsx OrbHorizon). The
+   sky glows from the line; the ground is a very wide ellipse in the page colour
+   whose top edge is the horizon, so it hides the orb's lower half. --line is
+   the horizon's distance from the scene's top. */
+.horizon-glow {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: var(--line);
+  background: radial-gradient(
+    50% 80% at 50% 100%,
+    color-mix(in oklab, var(--accent) 34%, transparent),
+    color-mix(in oklab, var(--brand) 16%, transparent) 45%,
+    transparent 78%
+  );
+}
+.horizon-ground {
+  position: absolute;
+  left: 50%;
+  top: var(--line);
+  width: max(220%, 160rem);
+  height: 80rem;
+  translate: -50% 0;
+  border-radius: 50%;
+  /* The ground has a surface: the orb's light reflected under the line, and
+     latitude lines that follow the curve, closer together near the horizon. */
+  --lat1: color-mix(in oklab, var(--accent-text) 34%, transparent);
+  --lat2: color-mix(in oklab, var(--accent-text) 22%, transparent);
+  --lat3: color-mix(in oklab, var(--accent-text) 13%, transparent);
+  background:
+    radial-gradient(24% 8% at 50% 0%, color-mix(in oklab, var(--accent) 30%, transparent), transparent),
+    radial-gradient(14% 4% at 50% 0%, color-mix(in oklab, var(--brand) 26%, transparent), transparent),
+    radial-gradient(
+      closest-side,
+      transparent 64.8%, var(--lat3) 65%, transparent 65.25%,
+      transparent 77.3%, var(--lat2) 77.5%, transparent 77.72%,
+      transparent 86.05%, var(--lat2) 86.25%, transparent 86.45%,
+      transparent 92.32%, var(--lat1) 92.5%, transparent 92.66%,
+      transparent 96.1%, var(--lat1) 96.25%, transparent 96.38%,
+      transparent 98.38%, var(--lat1) 98.5%, transparent 98.6%
+    ),
+    var(--body-bg);
+  border-top: 1px solid color-mix(in oklab, var(--accent-text) 70%, transparent);
+  box-shadow:
+    0 -1px 16px color-mix(in oklab, var(--accent) 55%, transparent),
+    0 -40px 120px -24px color-mix(in oklab, var(--brand) 45%, transparent);
+}

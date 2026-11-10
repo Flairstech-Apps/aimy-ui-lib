@@ -8,7 +8,9 @@ import { ArrowUpRight } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import { CodeBlock } from "@/components/docs/page"
+import { AnswerCanvas, CommandLine } from "@/components/landing/answer-canvas"
 import { Haze } from "@/components/landing/haze"
+import type { VoicePhase } from "@/registry/aimy/hooks/use-voice"
 import { AimyMark } from "@/registry/aimy/brand/aimy-mark"
 import { Button } from "@/registry/aimy/ui/button"
 import { Composer } from "@/registry/aimy/ui/composer"
@@ -24,6 +26,7 @@ import {
   Ctas,
   footLink,
   INIT,
+  install,
   MATCHES,
   Release,
   SITE,
@@ -36,14 +39,17 @@ import {
 /* ── Heroes built on C ───────────────────────────────────────────────────── */
 
 /** C's dock: the Peek rising over the float bar. */
-function FloatDock({
+export function FloatDock({
   a,
   onAsk,
   onOpen,
+  peek = true,
 }: {
   a: ReturnType<typeof useAsk>
   onAsk: (q: string) => void
   onOpen?: () => void
+  /** Off while the canvas is open: the peek has become the canvas. */
+  peek?: boolean
 }) {
   const [gone, setGone] = useState(false)
   const ask = (q: string) => {
@@ -53,12 +59,13 @@ function FloatDock({
   const status = a.phase === "thinking" ? "thinking" : a.phase === "speaking" ? "streaming" : "answered"
   return (
     <div className="relative w-full">
-      {a.question && !gone ? (
+      {a.question && !gone && peek ? (
         <Peek
           status={status}
           thinkingLabel={["Searching the library", "Reading its rules"]}
           onOpenCanvas={() => onOpen?.()}
           onDismiss={() => setGone(true)}
+          actions={a.match ? <Suggestions variant="follow" items={a.match.follow} onPick={ask} /> : null}
         >
           <StreamingText text={a.shown} streaming={a.phase === "speaking"} />
         </Peek>
@@ -143,42 +150,95 @@ export function HeroCanvas({ count }: { count: number }) {
   )
 }
 
-/* C3: Horizon. The orb rises from the hero's foot like a sun, and the float
-   bar rests on it. Opening the peek lays the part out above. */
+/** The orb on the horizon: it rises behind the curve of a lit ground, half
+    hidden, and whatever is docked sits on the line. Used by Hero C3 and Footer H. */
+export function OrbHorizon({
+  phase,
+  level,
+  running,
+  line,
+  orb = "min(28rem, 80vw)",
+  dock,
+  children,
+}: {
+  phase: VoicePhase
+  level: number
+  running: boolean
+  /** Distance from the scene's top to the horizon. */
+  line: string
+  orb?: string
+  /** Rests on the line, half above it (the float bar). */
+  dock?: React.ReactNode
+  /** Sits in the ground, under the line. */
+  children?: React.ReactNode
+}) {
+  return (
+    <div className="relative w-full" style={{ "--line": line } as React.CSSProperties}>
+      <div aria-hidden="true" className="horizon-glow" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-1/2 -translate-x-1/2"
+        style={{ top: `calc(var(--line) - ${orb} * 0.72)`, width: orb, height: orb }}
+      >
+        <Orb phase={phase} level={level} running={running} />
+      </div>
+      <div aria-hidden="true" className="horizon-ground" />
+      {dock ? (
+        <div className="absolute inset-x-0 z-[1] px-5" style={{ top: "calc(var(--line) - 1.625rem)" }}>
+          <div className="mx-auto w-full max-w-[40rem]">{dock}</div>
+        </div>
+      ) : null}
+      <div className="relative z-[1]" style={{ paddingTop: `calc(var(--line) + ${dock ? "4rem" : "2.5rem"})` }}>
+        {children}
+      </div>
+    </div>
+  )
+}
+
+/* C3: Horizon. No ribbed glass: a dark sky, and the orb rising behind the curve
+   of a lit ground like a sun. The float bar rests on the horizon; dragging the
+   peek up opens the canvas above it. The asks wait in the ground below. */
 export function HeroHorizon({ count }: { count: number }) {
   const [ref, inView] = useInView<HTMLElement>()
   const a = useAsk()
   const [open, setOpen] = useState(false)
   useFirstAsk(inView, a.ask, ASKS[1]!)
-  const ask = (q: string) => {
-    setOpen(false)
-    a.ask(q)
-  }
   return (
     <section ref={ref} className="relative overflow-hidden">
-      <Haze />
       <div className="relative mx-auto flex max-w-[80rem] flex-col items-center px-5 pt-24">
         <HeroWords count={count} />
-        <div className="mt-6 w-full max-w-[40rem] text-left">
-          <Install />
+        <div className="mt-6 w-full max-w-[50rem]">
+          <CommandLine command={INIT} what="the install command" />
         </div>
-        {open && a.match ? (
-          <div className="mt-10 w-full max-w-[56rem] rounded-2xl border border-edge bg-card/80 p-6 backdrop-blur-md">
-            <Answer m={a.match} />
+        {open ? (
+          <div className="mt-10 w-full max-w-[60rem]">
+            <AnswerCanvas
+              speaker={false}
+              part={
+                a.match
+                  ? { name: a.match.name, href: a.match.href, preview: a.match.preview(), command: install(a.match) }
+                  : null
+              }
+              question={a.question}
+              answer={a.shown}
+              phase={a.phase}
+              onClose={() => setOpen(false)}
+            />
           </div>
         ) : null}
-        {/* The orb is twice the bar's width and cut by the section's foot. */}
-        <div className="relative mt-4 w-full" style={{ height: "min(30rem, 60vw)" }}>
-          <div
-            className="pointer-events-none absolute left-1/2 -translate-x-1/2"
-            style={{ top: "9rem", width: "min(52rem, 100vw)", height: "min(52rem, 100vw)" }}
-          >
-            <Orb phase={a.phase} level={a.phase === "listening" ? a.level : 0} running={inView} />
+      </div>
+      <div className={open ? "mt-10" : "mt-4"}>
+        <OrbHorizon
+          phase={a.phase}
+          level={a.phase === "listening" ? a.level : 0}
+          running={inView}
+          line={open ? "11rem" : "22rem"}
+          dock={<FloatDock a={a} onAsk={a.ask} onOpen={() => setOpen(true)} peek={!open} />}
+        >
+          <div className="flex justify-center px-5 pb-16">
+            <Suggestions className="justify-center" items={ASKS} onPick={a.ask} />
           </div>
-          <div className="relative mx-auto w-full max-w-[40rem] pt-40">
-            <FloatDock a={a} onAsk={ask} onOpen={() => setOpen(true)} />
-          </div>
-        </div>
+        </OrbHorizon>
       </div>
     </section>
   )
@@ -247,7 +307,7 @@ const SETUP = {
   },
 }
 
-function LinkRow() {
+export function LinkRow() {
   return (
     <div className="mx-auto flex max-w-[80rem] flex-wrap items-center gap-x-6 gap-y-3 border-t border-hairline px-5 py-6">
       <AimyMark variant="lockup" title="AiMY" className="h-5" />
