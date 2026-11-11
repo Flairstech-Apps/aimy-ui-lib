@@ -1,174 +1,303 @@
 import type { Metadata } from "next"
-import { Code, CodeBlock, PageHeader, Section } from "@/components/docs/page"
+import Link from "next/link"
+import { cn } from "@/lib/utils"
+import { CopyButton } from "@/registry/aimy/ui/copy-button"
+import { Tag } from "@/registry/aimy/ui/tag"
+import { PageHeader, slug } from "@/components/docs/page"
+import site from "@/site.json"
 
 export const metadata: Metadata = { title: "What's new" }
 
-// Newest first. Each entry says what changed and whether anyone has to do anything.
-const RELEASES: { version: string; date: string; summary: string; changes: string[]; action?: string }[] = [
+// A timeline, newest first. Releases, patches and site changes are each their
+// own entry (Nour, 11 Nov: patches get their own place, not folded into a
+// release). An entry is a title of a few words, one short line per change
+// with the part's name as a link, what to do before updating when anything,
+// and the one command that takes it.
+
+type Kind = "new" | "changed" | "fixed"
+type Item = { kind: Kind; name: string; href?: string; text: string }
+type Entry = {
+  label: string
+  type: "Release" | "Patch" | "Site"
+  date: string
+  title: string
+  items: Item[]
+  /** What to do first, in one sentence. Only when someone must act. */
+  before?: string
+  /** The one command that takes it. */
+  run?: string
+}
+
+const BOTH = "pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest"
+const c = (name: string) => `/components/${name}/`
+
+const ENTRIES: Entry[] = [
   {
-    version: "1.4.0",
+    label: "1.4.2",
+    type: "Patch",
+    date: "11 Nov 2026",
+    title: "AiMY's messages and phones",
+    items: [
+      { kind: "changed", name: "Message", href: c("message"), text: "AiMY's turns lose the mark and take 95% of the thread." },
+      { kind: "changed", name: "Canvas", href: c("canvas"), text: "A 53rem thread, the composer on the same edges." },
+      { kind: "changed", name: "AppShell", href: c("app-shell"), text: "Clears the status bar, the notch and the home indicator." },
+      { kind: "changed", name: "Sheet, toast", href: c("sheet"), text: "Keep clear of the phone's bars too." },
+      { kind: "new", name: "--safe-*", href: "/foundations/layout/", text: "Tokens for anything you fix to the screen's edge." },
+    ],
+    before: "Add viewport-fit=cover to your viewport meta.",
+    run: BOTH,
+  },
+  {
+    label: "1.4.1",
+    type: "Patch",
     date: "5 Nov 2026",
-    summary: "Side navigation leads with Sales' tabs; QA's column becomes a variant. And the face stack and the call recording, from Sales.",
-    changes: [
-      "SideNav now draws Sales' tabs by default: one card at the top of the Rail, a row per page with its count, and the page you are on holding AiMY's reading of it (SideNavRead: its work state, a sentence, the figures and one way in). Choosing a page closes the rail's drawer.",
-      "QA's column, open with each page's figures or collapsed to icons, is SideNav variant=\"qa\". Use Sales' tabs for a product with a few pages and QA's for many pages and nested flows; the Side navigation page and the rules for agents say so.",
-      "FaceStack: a group of people as one object, the first face on top and the rest counted; as a door, a chip that opens the whole set, named with their jobs.",
-      "Fixed: an Avatar whose photo failed before the page came alive showed the browser's broken image instead of the person's initials.",
-      "The diary door, as Sales now draws it: captioned Diary instead of Today, and its link says Open, since the caption already names the page. The examples, the starters and the rules for agents say so; the Financials door keeps Open the report.",
-      "CallRecording, from Sales' call log: the recording of a call, or the message left on a missed one. Play, a waveform drawn from the call's id, and the time left counting down; one plays at a time. It plays the audio you pass as src. In the npm package from @flairstech-aimy/ui 1.4.1.",
-      "Message: AiMY's turns no longer carry the AiMY mark, and the answer takes 95% of the thread, starting on its left edge. Your turns keep your face. As Sales, Knowledge's gate and the Console canvas now draw them. From 1.4.2.",
-      "Canvas: the thread is 53rem wide (was 42rem) and the canvas Composer widens with it, so the bubbles and the bar share both edges, on a phone too. From 1.4.2.",
-      "Phones: with viewport-fit=cover in the app's viewport meta, the top bar clears the status bar, the shell keeps out of a landscape notch, and the canvas composer, sheets, toasts and the page's foot stay above the home indicator or gesture bar. New tokens --safe-top, --safe-bottom, --safe-left and --safe-right for anything the app fixes to the screen's edge itself. From tokens and ui 1.4.2.",
+    title: "Call recording",
+    items: [
+      { kind: "new", name: "CallRecording", href: c("call-recording"), text: "Play a call, or the message left on a missed one." },
+      { kind: "changed", name: "Rail door", href: c("rail-door"), text: "The diary door reads Diary, its link Open." },
     ],
-    action:
-      "QA: add variant=\"qa\" to SideNav before you update, or your navigation turns into Sales' tabs. Everyone: pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest, or npx shadcn@latest add @aimy/side-nav @aimy/avatar --overwrite and npx shadcn@latest add @aimy/face-stack @aimy/call-recording. Copied components need the tokens at 1.4.0 for the tabs' styles. For 1.4.2: npx shadcn@latest add @aimy/message @aimy/canvas @aimy/composer @aimy/sheet @aimy/toast --overwrite (or pnpm up both packages), and add viewport-fit=cover to your viewport meta so the phone's bars report their size.",
+    run: "pnpm up @flairstech-aimy/ui@latest",
   },
   {
-    version: "1.3.0",
+    label: "1.4.0",
+    type: "Release",
+    date: "5 Nov 2026",
+    title: "Sales' side nav and the face stack",
+    items: [
+      { kind: "changed", name: "SideNav", href: c("side-nav"), text: "Sales' tabs by default; QA's column is variant=\"qa\"." },
+      { kind: "new", name: "SideNavRead", href: c("side-nav"), text: "AiMY's reading of the page you're on." },
+      { kind: "new", name: "FaceStack", href: c("face-stack"), text: "A group of people as one object." },
+      { kind: "fixed", name: "Avatar", href: c("avatar"), text: "A failed photo shows initials, not a broken image." },
+    ],
+    before: "QA: add variant=\"qa\" to SideNav first.",
+    run: BOTH,
+  },
+  {
+    label: "1.3.0",
+    type: "Release",
     date: "4 Nov 2026",
-    summary: "Chat widgets: one standard for the results AiMY draws inside a chat reply.",
-    changes: [
-      "WidgetFrame: what every result in a reply sits in. Its name and count, Open in the canvas and Download, and a foot that opens the rest instead of a paginator.",
-      "CandidateCard and CandidateCards: people two across, with the Fit badge, company, location, two skills and how many more, and View profile, Email, Start outreach.",
-      "CandidateProfile: one person in full inside the reply, About and experience opening in place.",
-      "ChatTable: a tool's table, sortable, with loading rows; when the reply is narrow it changes form instead of scrolling sideways. RankedList: results best first with each reason in view. UploadResults: a batch counted by status, opening on what needs a person.",
-      "Fixed: in the DataTable's narrow rows form, a long value in any cell after the first spilled out of its row.",
+    title: "Chat widgets",
+    items: [
+      { kind: "new", name: "WidgetFrame", href: c("widget-frame"), text: "The frame every result in a reply sits in." },
+      { kind: "new", name: "CandidateCards", href: c("candidate-card"), text: "People two across, with their Fit." },
+      { kind: "new", name: "CandidateProfile", href: c("candidate-profile"), text: "One person in full." },
+      { kind: "new", name: "ChatTable", href: c("chat-table"), text: "A tool's table that turns to rows when narrow." },
+      { kind: "new", name: "RankedList", href: c("ranked-list"), text: "Results best first, each reason in view." },
+      { kind: "new", name: "UploadResults", href: c("upload-results"), text: "A batch, counted by status." },
+      { kind: "fixed", name: "DataTable", href: c("data-table"), text: "Long values stay inside their row." },
     ],
-    action:
-      "Take it with pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest, or add a widget with npx shadcn@latest add @aimy/chat-table (and the others by name). Nothing changes for screens you already have.",
+    run: BOTH,
   },
   {
-    version: "1.2.0",
+    label: "1.2.0",
+    type: "Release",
     date: "31 Oct 2026",
-    summary: "Errors and recovery (AIMY-2979): one way to show every failure, from a whole-window sign-in to a failed save.",
-    changes: [
-      "RecoveryState covers session, permission, workspace, offline, connection, timeout, uncertain, service, maintenance, rate limit, missing, deleted, expired, validation, save, upload, file size and type, conflict and failed loads, as the whole window, a blocking page, a section, a widget, an inline note or a banner.",
-      "It retries calmly with Attempt 2 of 3, then shows the failure with its recovery; a rate limit counts down; a support reference can be copied.",
-      "classifyError turns an Axios error, a fetch failure, an OIDC error or a status into the right kind, with Retry-After and the correlation ID. The codes never reach the screen.",
-      "RecoveryStatus for background retries, ErrorSummary for forms, RecoveryDialog for a decision, and a red toast (tone err) for a failed action.",
-      "Field takes an id, so the summary can link to it. The rail toggle's icon is centred again at narrow widths.",
+    title: "Errors and recovery",
+    items: [
+      { kind: "new", name: "RecoveryState", href: c("recovery"), text: "Every failure, from the whole window to one field." },
+      { kind: "new", name: "classifyError", href: c("recovery"), text: "Turns any error into the right kind." },
+      { kind: "new", name: "ErrorSummary", href: c("recovery"), text: "A form's errors, each linked to its field." },
+      { kind: "new", name: "toast err", href: c("toast"), text: "A red toast for a failed action." },
+      { kind: "fixed", name: "Rail toggle", href: c("app-shell"), text: "Its icon is centred again when narrow." },
     ],
-    action:
-      "Take it with pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest, or add the component with npx shadcn@latest add @aimy/recovery. Nothing changes for screens you already have.",
+    run: BOTH,
   },
   {
-    version: "Fix",
+    label: "Fix",
+    type: "Site",
     date: "30 Oct 2026",
-    summary: "The shadcn commands work in a project with no .npmrc line.",
-    changes: [
-      "The theme asked npm for @flairstech-aimy/tokens by name, so a project without the .npmrc line looked for it on npmjs and failed with E404. The theme now names the package's file on this site.",
-      "package.json records the tokens package by that address, pinned to one version. The aimy-ui-upgrade skill turns it back into a version range: it adds the .npmrc line and installs the package again by name.",
-    ],
-    action: "If init failed with E404 on @flairstech-aimy/tokens, run the same command again.",
+    title: "Install without .npmrc",
+    items: [{ kind: "fixed", name: "init", href: "/start/", text: "The shadcn commands no longer fail with E404." }],
+    before: "If init failed with E404, run it again.",
   },
   {
-    version: "1.1.0",
+    label: "1.1.0",
+    type: "Release",
     date: "30 Oct 2026",
-    summary: "QA's navigation and scroll dot, in the npm package and the registry.",
-    changes: [
-      "SideNav: QA's left navigation, open with each page's figures or collapsed to icons with counts, and a drawer when narrow. It goes in AppShell's new nav slot.",
-      "ScrollDot: QA's scroll indicator, turned on per scrolling area. The rest of the page keeps the library's scrollbar.",
-      "The tokens add sidenav.css and scroll-dot.css, imported by index.css and tailwind.css as before.",
+    title: "QA's navigation",
+    items: [
+      { kind: "new", name: "SideNav", href: c("side-nav"), text: "QA's column: open, or icons with counts." },
+      { kind: "new", name: "ScrollDot", href: c("scroll-dot"), text: "QA's scroll indicator, turned on per area." },
     ],
-    action:
-      "Take it with pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest. Nothing changes for screens you already have.",
+    run: BOTH,
   },
   {
-    version: "Agents",
+    label: "Agents",
+    type: "Site",
     date: "30 Oct 2026",
-    summary: "Tools for AI agents: an MCP server and three task skills.",
-    changes: [
-      "The AiMY UI MCP server at aimy-ui-lib.aimy.flairstech.com/mcp: search the components, take one with its code and install commands, read the rules.",
-      "Three skills beside aimy-ui: aimy-ui-build (a screen from a brief), aimy-ui-review (check a screen against the rules) and aimy-ui-upgrade (take a new release).",
-      "A new page, Tools for AI agents, says how to connect Claude Code, Copilot and Cursor.",
-      "The docs have search: the box in the bar, or Ctrl+K (⌘K on a Mac) from any page. Top navigation has its own page under Shell.",
-      "From QA: Side navigation (open with each page's figures, collapsed to icons with counts, a drawer when narrow) and the Scroll dot, an opt-in scroll indicator. Copy them in now; they reach the npm package in its next version.",
+    title: "Tools for AI agents",
+    items: [
+      { kind: "new", name: "MCP server", href: "/ai-tools/", text: "Search the parts and read the rules from your agent." },
+      { kind: "new", name: "Skills", href: "/ai-tools/", text: "Build, review and upgrade screens by name." },
+      { kind: "new", name: "Search", text: "Ctrl K from any page of the docs." },
     ],
-    action: "To get the skills in an existing app, run the init command again with --overwrite.",
+    run: `npx shadcn@latest add ${site.url}/r/init.json --overwrite`,
   },
   {
-    version: "Site",
+    label: "Open",
+    type: "Site",
     date: "29 Oct 2026",
-    summary: "The docs moved to Coolify and are open: no sign-in and no token.",
-    changes: [
-      "The library lives at aimy-ui-lib.aimy.flairstech.com. The starters copy from Flairstech-Apps on GitHub.",
-      "Installing needs no token. .npmrc is one line, and components.json names the @aimy registry by its address alone.",
-      "Every code block has a Copy button, and every page has On this page and links to the pages either side.",
-      "A landing page at the address itself. Install and start moved to /start/; every other page kept its address.",
-      "Any item installs from its address with no setup, for example npx shadcn@latest add https://aimy-ui-lib.aimy.flairstech.com/r/init.json.",
+    title: "No sign-in, no token",
+    items: [
+      { kind: "changed", name: "Address", href: "/start/", text: `${site.url.replace("https://", "")}, open to everyone.` },
+      { kind: "new", name: "Landing page", href: "/", text: "Install and start moved to /start/." },
     ],
-    action:
-      "In an app set up before today, change the address in .npmrc and components.json to aimy-ui-lib.aimy.flairstech.com and delete the token lines. AIMY_REGISTRY_TOKEN is no longer needed.",
+    before: "Point .npmrc and components.json at the new address, and delete the token lines.",
   },
   {
-    version: "1.0.0",
+    label: "1.0.0",
+    type: "Release",
     date: "29 Oct 2026",
-    summary: "The first stable release of @flairstech-aimy/ui and @flairstech-aimy/tokens.",
-    changes: [
-      "The foundations, the components, forms, containers, feedback and overlays.",
-      "The shell: AppShell, Topnav, Rail, the notification centre and the page head.",
-      "Records, data tables and charts, the diary, and the document page with its writing tools.",
-      "The AI parts: conversation, grounding and trust, agency and action, relationship and memory, voice.",
-      "Both starters (Vite and Next.js), @aimy/init, and the rules for AI agents.",
+    title: "The first stable release",
+    items: [
+      { kind: "new", name: "Foundations", href: "/foundations/color/", text: "Colour, type, spacing, motion and the rest." },
+      { kind: "new", name: "Components", href: c("button"), text: "Forms, overlays, shell, records, charts, diary, documents." },
+      { kind: "new", name: "AI parts", href: c("message"), text: "Conversation, grounding, agency, memory and voice." },
+      { kind: "new", name: "Starters", href: "/start/", text: "Vite and Next.js, @aimy/init, and the rules for agents." },
     ],
   },
 ]
 
+const KIND: Record<Kind, { word: string; tone: "ok" | "info" | "warn" }> = {
+  new: { word: "New", tone: "ok" },
+  changed: { word: "Changed", tone: "info" },
+  fixed: { word: "Fixed", tone: "warn" },
+}
+
+/** One command on one line, with Copy. */
+function Command({ children, what }: { children: string; what: string }) {
+  return (
+    <div
+      data-theme="dark"
+      className="flex min-w-0 items-center gap-3 rounded-lg border border-hairline bg-code py-1.5 pr-1.5 pl-4"
+    >
+      {/* Wraps rather than scrolls, so the whole command is always in view. */}
+      <code className="min-w-0 flex-1 py-1 font-mono text-meta text-ink [overflow-wrap:anywhere]">{children}</code>
+      <CopyButton value={children} what={what} />
+    </div>
+  )
+}
+
+function Row({ item }: { item: Item }) {
+  const k = KIND[item.kind]
+  return (
+    <li
+      data-ai="li"
+      className="grid grid-cols-[5.25rem_10.5rem_minmax(0,1fr)] items-baseline gap-x-4 py-2.5 max-canvas:grid-cols-[5.25rem_minmax(0,1fr)] max-canvas:gap-y-0.5"
+    >
+      <span>
+        <Tag tone={k.tone}>{k.word}</Tag>
+      </span>
+      {item.href ? (
+        <Link
+          href={item.href}
+          className="truncate text-meta font-semibold text-ink underline-offset-4 transition-colors duration-(--t-fast) ease-out hover:text-ink-action hover:underline"
+        >
+          {item.name}
+        </Link>
+      ) : (
+        <span className="truncate text-meta font-semibold text-ink">{item.name}</span>
+      )}
+      <span className="text-meta text-ink-secondary max-canvas:col-start-2">{item.text}</span>
+    </li>
+  )
+}
+
+const entryId = (e: Entry) => slug(`${e.label} ${e.type}`)
+
+function EntryBlock({ entry, last }: { entry: Entry; last: boolean }) {
+  const id = entryId(entry)
+  const release = entry.type === "Release"
+  return (
+    <section className="grid grid-cols-[7rem_1.25rem_minmax(0,1fr)] gap-x-5 max-canvas:grid-cols-[1.25rem_minmax(0,1fr)] max-canvas:gap-x-3">
+      {/* The version and its date, beside the line. */}
+      <div className="pb-12 text-right max-canvas:hidden">
+        <p className="text-2xl leading-tight font-semibold tracking-tight text-ink tabular-nums">{entry.label}</p>
+        <p className="mt-1 text-xs font-semibold text-ink-secondary">{entry.date}</p>
+      </div>
+
+      {/* The line: a filled dot for a release, a ring for a patch or a site change. */}
+      <div aria-hidden="true" className="relative flex justify-center text-2xl leading-tight">
+        <span
+          className={cn(
+            "relative z-1 mt-[calc((1lh-0.75rem)/2)] block size-3 rounded-full",
+            release ? "bg-brand ring-4 ring-brand/20" : "border-2 border-ink-secondary bg-body"
+          )}
+        />
+        {last ? null : <span className="absolute top-[calc(1lh/2)] -bottom-0 w-px bg-hairline" />}
+      </div>
+
+      <div className="min-w-0 pb-12">
+        <h2
+          id={id}
+          data-ai="h2"
+          // "On this page" names each entry as it always did: the version, or
+          // what a site change was, and its date.
+          data-title={`${entry.type === "Site" ? entry.title : entry.label}, ${entry.date}`}
+          className="flex scroll-mt-[calc(var(--topbar-height)+1.5rem)] flex-wrap items-baseline gap-x-3 gap-y-1 text-2xl leading-tight font-semibold tracking-tight text-ink"
+        >
+          <span className="hidden tabular-nums max-canvas:inline">{entry.label}</span>
+          <span>{entry.title}</span>
+        </h2>
+        <p className="mt-1.5 text-xs font-semibold text-ink-secondary">
+          {entry.type}
+          <span className="hidden max-canvas:inline"> · {entry.date}</span>
+        </p>
+
+        <ul className="mt-4 divide-y divide-hairline border-y border-hairline">
+          {entry.items.map((item) => (
+            <Row key={item.name + item.text} item={item} />
+          ))}
+        </ul>
+
+        {entry.before || entry.run ? (
+          <div className="mt-4 flex flex-col gap-2.5">
+            {entry.before ? (
+              <p data-ai="p" className="flex items-baseline gap-2.5 text-meta text-ink">
+                <Tag tone="warn">First</Tag>
+                <span>{entry.before}</span>
+              </p>
+            ) : null}
+            {entry.run ? <Command what={`the ${entry.label} update command`}>{entry.run}</Command> : null}
+          </div>
+        ) : null}
+      </div>
+    </section>
+  )
+}
+
 export default function WhatsNew() {
   return (
     <>
-      <PageHeader
-        title="What's new"
-        lead="Every release, newest first: what changed and what you need to do, if anything."
-      />
+      <PageHeader title="What's new" lead="Every release, patch and site change, newest first." />
 
-      <Section title="Stay up to date">
-        <ul data-ai="li" className="flex max-w-[46rem] list-disc flex-col gap-2 pl-5 text-body text-ink-secondary">
-          <li>
-            To hear about every release, open the repo on GitHub and choose <b className="text-ink">Watch</b>, then{" "}
-            <b className="text-ink">Custom</b>, then <b className="text-ink">Releases</b>.
-          </li>
-          <li>See whether your app is behind:</li>
-        </ul>
-        <div className="mt-3 flex max-w-[46rem] flex-col gap-3">
-          <CodeBlock>pnpm outdated @flairstech-aimy/ui @flairstech-aimy/tokens</CodeBlock>
-          <CodeBlock>npx shadcn@latest diff</CodeBlock>
-        </div>
-        <p data-ai="p" className="mt-3 max-w-[46rem] text-meta text-ink-secondary">
-          The first lists newer package versions; the second lists copied components that changed here. Take a change
-          with <Code>npx shadcn@latest add @aimy/&lt;name&gt; --overwrite</Code>, after committing your own edits.
-        </p>
-      </Section>
-
-      {RELEASES.map((r) => (
-        <Section
-          key={r.version}
-          title={
-            r.version === "Site"
-              ? `The site, ${r.date}`
-              : r.version === "Agents"
-                ? `Tools for agents, ${r.date}`
-                : `${r.version}, ${r.date}`
-          }
+      {/* Keeping up: two commands, each with its question, and the GitHub watch. */}
+      <dl className="mt-10 grid max-w-[44rem] grid-cols-[11rem_minmax(0,1fr)] items-center gap-x-4 gap-y-2.5 max-canvas:grid-cols-1 max-canvas:gap-y-1.5">
+        <dt className="text-meta font-semibold text-ink">Is your app behind?</dt>
+        <dd className="min-w-0 max-canvas:mb-2">
+          <Command what="the outdated command">pnpm outdated @flairstech-aimy/ui @flairstech-aimy/tokens</Command>
+        </dd>
+        <dt className="text-meta font-semibold text-ink">Which copies changed?</dt>
+        <dd className="min-w-0">
+          <Command what="the diff command">npx shadcn@latest diff</Command>
+        </dd>
+      </dl>
+      <p className="mt-3 text-meta text-ink-secondary">
+        Hear about each one: on{" "}
+        <a
+          href={`https://github.com/${site.repo}/releases`}
+          className="font-semibold text-ink-action underline-offset-4 hover:underline"
         >
-          <p data-ai="p" className="max-w-[46rem] text-body text-ink">
-            {r.summary}
-          </p>
-          <ul className="mt-3 flex max-w-[46rem] list-disc flex-col gap-1.5 pl-5 text-body text-ink-secondary">
-            {r.changes.map((c) => (
-              <li key={c} data-ai="li">
-                {c}
-              </li>
-            ))}
-          </ul>
-          {r.action ? (
-            <p data-ai="p" className="mt-4 max-w-[46rem] rounded-lg bg-warn-bg p-4 text-meta text-ink">
-              <strong className="font-semibold text-warn-text">What to do: </strong>
-              {r.action}
-            </p>
-          ) : null}
-        </Section>
-      ))}
+          GitHub
+        </a>
+        , Watch, then Custom, then Releases.
+      </p>
+
+      <div className="mt-14 border-t border-hairline pt-12">
+        {ENTRIES.map((e, i) => (
+          <EntryBlock key={e.label + e.date} entry={e} last={i === ENTRIES.length - 1} />
+        ))}
+      </div>
     </>
   )
 }
