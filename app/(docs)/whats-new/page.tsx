@@ -131,7 +131,8 @@ const ENTRIES: Entry[] = [
       { kind: "new", name: "Skills", href: "/ai-tools/", text: "Build, review and upgrade screens by name." },
       { kind: "new", name: "Search", text: "Ctrl K from any page of the docs." },
     ],
-    run: `npx shadcn@latest add ${site.url}/r/init.json --overwrite`,
+    // An app that ran init already has the @aimy registry, so the short name works.
+    run: "npx shadcn@latest add @aimy/init --overwrite",
   },
   {
     label: "Open",
@@ -171,8 +172,9 @@ function Command({ children, what }: { children: string; what: string }) {
       data-theme="dark"
       className="flex min-w-0 items-center gap-3 rounded-lg border border-hairline bg-code py-1.5 pr-1.5 pl-4"
     >
-      {/* Wraps rather than scrolls, so the whole command is always in view. */}
-      <code className="min-w-0 flex-1 py-1 font-mono text-meta text-ink [overflow-wrap:anywhere]">{children}</code>
+      {/* One line wherever it fits. Only on a phone, where it can't, it breaks
+          between words (never inside one) rather than scrolling out of view. */}
+      <code className="min-w-0 flex-1 py-1 font-mono text-meta text-ink [overflow-wrap:break-word]">{children}</code>
       <CopyButton value={children} what={what} />
     </div>
   )
@@ -272,7 +274,7 @@ export default function WhatsNew() {
       <PageHeader title="What's new" lead="Every release, patch and site change, newest first." />
 
       {/* Keeping up: two commands, each with its question, and the GitHub watch. */}
-      <dl className="mt-10 grid max-w-[44rem] grid-cols-[11rem_minmax(0,1fr)] items-center gap-x-4 gap-y-2.5 max-canvas:grid-cols-1 max-canvas:gap-y-1.5">
+      <dl className="mt-10 grid max-w-[52rem] grid-cols-[11rem_minmax(0,1fr)] items-center gap-x-4 gap-y-2.5 max-canvas:grid-cols-1 max-canvas:gap-y-1.5">
         <dt className="text-meta font-semibold text-ink">Is your app behind?</dt>
         <dd className="min-w-0 max-canvas:mb-2">
           <Command what="the outdated command">pnpm outdated @flairstech-aimy/ui @flairstech-aimy/tokens</Command>
