@@ -2,7 +2,7 @@
 
 import { Briefcase, Table2, Upload, Users } from "lucide-react"
 import { useState } from "react"
-import { AimyAvatar } from "@/registry/aimy/ui/avatar"
+import { Message } from "@/registry/aimy/ui/message"
 import { Button } from "@/registry/aimy/ui/button"
 import { CandidateCards, type Candidate } from "@/registry/aimy/ui/candidate-card"
 import { CandidateProfile } from "@/registry/aimy/ui/candidate-profile"
@@ -19,16 +19,16 @@ import { WidgetFrame } from "@/registry/aimy/ui/widget-frame"
 const canvas = () => toast("Opens in the canvas")
 const download = () => toast("Downloaded")
 
-/** An AiMY turn at chat width: the mark, a sentence, then the widget. */
+/** An AiMY turn at chat width: AiMY's Message, no mark, the sentence and
+ *  then the widget inside the bubble, as Sales' answers carry their cards. */
 function Turn({ text, children }: { text: string; children: React.ReactNode }) {
   return (
-    <div className="flex gap-3">
-      <AimyAvatar size="md" />
-      <div className="flex min-w-0 flex-1 flex-col gap-3 pt-1">
-        <p className="text-body text-ink">{text}</p>
+    <Message speaker="aimy">
+      <div className="flex flex-col gap-3">
+        <p>{text}</p>
         {children}
       </div>
-    </div>
+    </Message>
   )
 }
 

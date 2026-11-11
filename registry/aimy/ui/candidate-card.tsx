@@ -51,7 +51,8 @@ export function CandidateCard({ candidate: c, maxSkills = 2, onView, onEmail, on
       data-slot="candidate-card"
       aria-label={c.name}
       className={cn(
-        "flex h-full flex-col gap-3 rounded-lg border border-hairline bg-raised p-3.5 transition-[border-color] duration-(--t-fast) ease-out hover:border-edge-hover",
+        // A card on AiMY's see-through bubble, as Sales draws cards in an answer.
+        "flex h-full flex-col gap-3 rounded-lg border border-edge bg-card p-3.5 transition-[border-color] duration-(--t-fast) ease-out hover:border-edge-hover",
         className
       )}
     >

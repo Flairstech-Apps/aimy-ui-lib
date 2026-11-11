@@ -14,6 +14,10 @@ import { cn } from "@/lib/utils"
 // rest, in place of a paginator inside the reply. The doctrine sends long
 // generated work to the canvas.
 //
+// It wears AiMY's bubble (Nour, 11 Nov): the see-through ground, edge and
+// corners of a Message from AiMY, square corner top left. Put inside AiMY's
+// bubble, it becomes a card on it, as Sales draws cards in an answer.
+//
 //   <WidgetFrame icon={<Users />} title="Recommended candidates" meta="Best match first"
 //     onOpen={openCanvas} onDownload={download} more={{ label: "Show all candidates", onClick: openCanvas }}>
 //     <CandidateCards candidates={list} … />
@@ -56,7 +60,9 @@ export function WidgetFrame({
     <section
       data-slot="widget-frame"
       aria-labelledby={titleId}
-      className={cn("overflow-hidden rounded-xl border border-edge bg-card", className)}
+      // AiMY's bubble surface (ai.css .aimy-widget-frame): see-through in the
+      // thread, a card when it sits inside AiMY's bubble.
+      className={cn("aimy-widget-frame", className)}
     >
       <header className="flex items-center gap-3 border-b border-hairline px-4 py-3">
         <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-w05 text-ink-secondary [&_svg]:size-4">

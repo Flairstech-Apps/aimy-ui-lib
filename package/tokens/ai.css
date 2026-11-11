@@ -396,3 +396,19 @@
   color: var(--d100); border-top-right-radius: 0.25rem;
 }
 @media (prefers-reduced-motion: reduce) { .aimy-msg-bubble { transition: none; } }
+/* ── Chat widgets wear AiMY's bubble ───────────────────────────────────────
+   Nour, 11 Nov: the widgets match the bubble. A WidgetFrame standing in the
+   thread is AiMY speaking, so it takes the bubble's see-through ground, edge
+   and corners, the square one top left. Inside AiMY's bubble it is a card on
+   the bubble instead, as Sales draws the cards in an answer (#141b24 with a
+   7% edge and 10px corners; white with a 10% ink edge in light). */
+.aimy-widget-frame {
+  overflow: hidden;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 0.75rem; border-top-left-radius: 0.25rem;
+}
+[data-theme="light"] .aimy-widget-frame { background: #edf2f8; border-color: rgba(16,24,40,0.10); }
+.aimy-msg-bubble .aimy-widget-frame,
+[data-theme="light"] .aimy-msg-bubble .aimy-widget-frame {
+  background: var(--card-bg); border-color: var(--card-border); border-radius: var(--r-lg);
+}

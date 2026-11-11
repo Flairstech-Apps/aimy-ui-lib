@@ -60,6 +60,7 @@ Conversations:
 Results inside a chat reply:
 
 - Every result AiMY draws in a reply sits in a `WidgetFrame`: its name in sentence case, a count or order, Open in the canvas, and a foot that opens the rest. No paginator and no sideways scrolling in a reply.
+- Put the widget inside AiMY's `Message`, after its sentence: the frame then draws as a card on AiMY's bubble. Never give a widget its own AiMY mark or a ground of its own.
 - People are `CandidateCards`; one person in full is `CandidateProfile`; a ranking whose reason matters is `RankedList`; a tool's table is `ChatTable`; a batch is `UploadResults`. Every score is the Fit badge (`Score`).
 
 Errors and recovery (AIMY-2979):
