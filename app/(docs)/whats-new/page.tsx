@@ -33,6 +33,16 @@ const c = (name: string) => `/components/${name}/`
 
 const ENTRIES: Entry[] = [
   {
+    label: "1.4.3",
+    type: "Patch",
+    date: "11 Nov 2026",
+    title: "One chat bubble",
+    items: [
+      { kind: "changed", name: "Message", href: c("message"), text: "Sales' bubble, with AiMY on a see-through ground." },
+    ],
+    run: BOTH,
+  },
+  {
     label: "1.4.2",
     type: "Patch",
     date: "11 Nov 2026",
