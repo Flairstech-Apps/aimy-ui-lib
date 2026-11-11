@@ -16,9 +16,12 @@ const RELEASES: { version: string; date: string; summary: string; changes: strin
       "Fixed: an Avatar whose photo failed before the page came alive showed the browser's broken image instead of the person's initials.",
       "The diary door, as Sales now draws it: captioned Diary instead of Today, and its link says Open, since the caption already names the page. The examples, the starters and the rules for agents say so; the Financials door keeps Open the report.",
       "CallRecording, from Sales' call log: the recording of a call, or the message left on a missed one. Play, a waveform drawn from the call's id, and the time left counting down; one plays at a time. It plays the audio you pass as src. In the npm package from @flairstech-aimy/ui 1.4.1.",
+      "Message: AiMY's turns no longer carry the AiMY mark, and the answer takes 95% of the thread, starting on its left edge. Your turns keep your face. As Sales, Knowledge's gate and the Console canvas now draw them. From 1.4.2.",
+      "Canvas: the thread is 53rem wide (was 42rem) and the canvas Composer widens with it, so the bubbles and the bar share both edges, on a phone too. From 1.4.2.",
+      "Phones: with viewport-fit=cover in the app's viewport meta, the top bar clears the status bar, the shell keeps out of a landscape notch, and the canvas composer, sheets, toasts and the page's foot stay above the home indicator or gesture bar. New tokens --safe-top, --safe-bottom, --safe-left and --safe-right for anything the app fixes to the screen's edge itself. From tokens and ui 1.4.2.",
     ],
     action:
-      "QA: add variant=\"qa\" to SideNav before you update, or your navigation turns into Sales' tabs. Everyone: pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest, or npx shadcn@latest add @aimy/side-nav @aimy/avatar --overwrite and npx shadcn@latest add @aimy/face-stack @aimy/call-recording. Copied components need the tokens at 1.4.0 for the tabs' styles.",
+      "QA: add variant=\"qa\" to SideNav before you update, or your navigation turns into Sales' tabs. Everyone: pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest, or npx shadcn@latest add @aimy/side-nav @aimy/avatar --overwrite and npx shadcn@latest add @aimy/face-stack @aimy/call-recording. Copied components need the tokens at 1.4.0 for the tabs' styles. For 1.4.2: npx shadcn@latest add @aimy/message @aimy/canvas @aimy/composer @aimy/sheet @aimy/toast --overwrite (or pnpm up both packages), and add viewport-fit=cover to your viewport meta so the phone's bars report their size.",
   },
   {
     version: "1.3.0",
