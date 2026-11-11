@@ -33,6 +33,17 @@ const c = (name: string) => `/components/${name}/`
 
 const ENTRIES: Entry[] = [
   {
+    label: "1.4.5",
+    type: "Patch",
+    date: "11 Nov 2026",
+    title: "Widget heads on a phone",
+    items: [
+      { kind: "fixed", name: "WidgetFrame", href: c("widget-frame"), text: "When narrow, the actions take a row of their own." },
+      { kind: "fixed", name: "WidgetFrame", href: c("widget-frame"), text: "The icon stays on the name's first line." },
+    ],
+    run: BOTH,
+  },
+  {
     label: "1.4.4",
     type: "Patch",
     date: "11 Nov 2026",

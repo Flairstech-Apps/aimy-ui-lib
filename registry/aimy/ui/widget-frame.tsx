@@ -62,11 +62,21 @@ export function WidgetFrame({
       aria-labelledby={titleId}
       // AiMY's bubble surface (ai.css .aimy-widget-frame): see-through in the
       // thread, a card when it sits inside AiMY's bubble.
-      className={cn("aimy-widget-frame", className)}
+      className={cn("aimy-widget-frame @container", className)}
     >
-      <header className="flex items-center gap-3 border-b border-hairline px-4 py-3">
-        <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-w05 text-ink-secondary [&_svg]:size-4">
-          {icon}
+      {/* Under 26rem of its own width the head changes form instead of
+          squeezing the name between the icon and the actions (Nour, 11 Nov,
+          from a phone): the icon and the name keep the first row, the
+          actions take a row of their own from the head's left edge, so their
+          glyphs stand under the icon's (7px in against its 8px).
+          The icon and the actions centre on the name's first line, so a name
+          that wraps never pulls them off it: each sits in a box one line of
+          the name tall. */}
+      <header className="flex flex-wrap items-start gap-x-3 gap-y-1.5 border-b border-hairline px-4 py-3">
+        <span className="flex h-[1lh] shrink-0 items-center text-xs">
+          <span className="grid size-8 place-items-center rounded-lg bg-w05 text-ink-secondary [&_svg]:size-4">
+            {icon}
+          </span>
         </span>
         <div className="min-w-0 flex-1">
           <h3 id={titleId} className="text-xs font-semibold text-ink">
@@ -75,7 +85,7 @@ export function WidgetFrame({
           {meta ? <p className="text-2xs text-ink-secondary">{meta}</p> : null}
         </div>
         {onOpen || onDownload || actions ? (
-          <div className="flex shrink-0 items-center gap-1">
+          <div className="flex h-[1lh] shrink-0 items-center gap-1 text-xs @max-[26rem]:h-auto @max-[26rem]:basis-full">
             {onOpen ? (
               <IconButton label="Open in the canvas" variant="toolbar" size="sm" onClick={onOpen}>
                 <Maximize2 />
