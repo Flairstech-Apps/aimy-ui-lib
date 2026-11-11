@@ -180,7 +180,7 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 ### AI: conversation
 
 - **Composer** (`@aimy/composer`): Where a person asks AiMY, as the products' voice.js arranges it. https://aimy-ui-lib.aimy.flairstech.com/components/composer/
-- **Message** (`@aimy/message`): One conversation turn. https://aimy-ui-lib.aimy.flairstech.com/components/message/
+- **Message** (`@aimy/message`): One conversation turn, as the Knowledge gate and the Console canvas draw it: 14px text, 16px corners with the square one on the speaker's side. https://aimy-ui-lib.aimy.flairstech.com/components/message/
 - **Streaming text** (`@aimy/streaming-text`): Text that arrives over time: pass the text so far and streaming. https://aimy-ui-lib.aimy.flairstech.com/components/streaming-text/
 - **Thinking** (`@aimy/thinking`): AiMY at work before any words: the particle think-mark (the AiMY mark scattering and gathering, ported from the products) and a line saying what it does. https://aimy-ui-lib.aimy.flairstech.com/components/thinking/
 - **Response actions** (`@aimy/response-actions`): What a person can do with one answer (Knowledge's .msg-acts): Copy, Retry, the N sources it stands on, and Useful / Not useful (mutually exclusive, toggles). https://aimy-ui-lib.aimy.flairstech.com/components/response-actions/

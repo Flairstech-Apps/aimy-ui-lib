@@ -36,10 +36,11 @@ export default function Page() {
       </Section>
       <Source>
         <p>
-          Sales&apos; <code>.chat-msg</code>, your choice on 28 Oct: your turn is a bubble up to 540px with 16px text
-          beside your 28px face (8px corners), the square corner on your side. On 11 Nov you took the AiMY mark off
-          AiMY&apos;s turns and gave the answer the room: it starts on the thread&apos;s left edge and takes 95% of
-          it, in Sales, Knowledge&apos;s gate and the Console canvas alike. While AiMY thinks, the think-mark stands
+          The Knowledge gate&apos;s <code>.chat-msg</code>, which the Console canvas draws too, your choice on 11 Nov
+          (it replaced Sales&apos; shape from 28 Oct): 14px text at weight 500, 10px by 14px, 16px corners with the
+          square one on the speaker&apos;s side. Your turn sits on the accent&apos;s dim ground, up to 480px, beside
+          your 30px round face. AiMY&apos;s turn has no mark, starts on the thread&apos;s left edge and takes 95% of
+          it, on a 4% wash with a 7% edge (light: <code>#edf2f8</code> with a 10% ink edge). While AiMY thinks, the think-mark stands
           where the bubble will be; then the bubble&apos;s ground fades in (both products). A stopped answer keeps its
           words and says Stopped under them (Knowledge&apos;s <code>.msg-stopped</code>, in secondary ink instead of
           muted). Neither product shows timestamps in a thread, so there are none.

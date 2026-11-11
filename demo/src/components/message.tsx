@@ -4,9 +4,12 @@ import { ThinkingIndicator } from "@/components/thinking"
 import type { Person, Speaker, TurnStatus } from "@/lib/ai-types"
 import { cn } from "@/lib/utils"
 
-// One turn in a conversation. Sales' shape, Nour's choice (28 Oct): your turn
-// is a bubble up to 540px with 16px text beside your 28px face (8px corners),
-// the square corner on your side.
+// One turn in a conversation, as the Knowledge gate and the Console canvas
+// draw it (Nour, 11 Nov; it replaced Sales' shape from 28 Oct): 14px text,
+// 16px corners with the square one on the speaker's side. Your turn is a
+// bubble up to 480px on the accent's dim ground beside your 30px round face.
+// The bubble's surfaces live in ai.css (.aimy-msg-bubble), so each theme
+// carries Knowledge's own values.
 //
 // AiMY's turn has no mark and takes 95% of the thread (Nour, 11 Nov; Sales
 // ead3a9e, Knowledge d3e44a2): the thread is AiMY's, so the mark said nothing
@@ -47,22 +50,25 @@ export function Message({ speaker, status = "done", author, thinkingLabel, after
       data-status={status}
       className={cn("flex flex-col gap-1.5 px-1", !aimy && "items-end", className)}
     >
-      <div className={cn("flex w-full items-start gap-3", !aimy && "flex-row-reverse")}>
+      <div className={cn("flex w-full items-start gap-2.5", !aimy && "flex-row-reverse")}>
         {aimy ? null : (
-          <span className="mt-0.5 shrink-0">
-            <Avatar name={author?.name ?? "You"} src={author?.src} size="sm" className="rounded-md" />
+          <span className="shrink-0">
+            <Avatar
+              name={author?.name ?? "You"}
+              src={author?.src}
+              size="sm"
+              className="size-7.5 rounded-full text-xs font-[700]"
+            />
           </span>
         )}
         {thinking ? (
           <ThinkingIndicator label={thinkingLabel} />
         ) : (
           <div
+            data-slot="message-bubble"
             className={cn(
-              "min-w-0 border px-4 py-3 text-body font-medium",
-              "transition-[background-color,border-color] duration-(--t-base) ease-out",
-              aimy
-                ? "flex-[0_1_95%] rounded-xl rounded-tl-xs border-edge bg-raised text-ink"
-                : "max-w-[33.75rem] rounded-xl rounded-tr-xs border-accent/22 bg-accent-dim text-ink"
+              "aimy-msg-bubble min-w-0",
+              aimy ? "is-aimy flex-[0_1_95%]" : "is-you max-w-[30rem]"
             )}
           >
             {children}

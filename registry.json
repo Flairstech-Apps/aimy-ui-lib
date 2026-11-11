@@ -980,7 +980,7 @@
       "name": "message",
       "type": "registry:component",
       "title": "Message",
-      "description": "One conversation turn. Your turn is Sales' shape: your 28px face and a bubble up to 540px, the square corner on your side. AiMY's turn has no mark and takes 95% of the thread, starting on its left edge (Nour, 11 Nov). status thinking shows the think-mark instead of a bubble; stopped keeps the text and says Stopped; failed says nothing was lost. `after` holds ResponseActions or follow-up Suggestions, starting where AiMY's bubble starts.",
+      "description": "One conversation turn, as the Knowledge gate and the Console canvas draw it: 14px text, 16px corners with the square one on the speaker's side. Your turn is a bubble up to 480px on the accent's dim ground beside your 30px round face. AiMY's turn has no mark and takes 95% of the thread, starting on its left edge. Surfaces in ai.css (.aimy-msg-bubble). status thinking shows the think-mark instead of a bubble; stopped keeps the text and says Stopped; failed says nothing was lost. `after` holds ResponseActions or follow-up Suggestions, starting where AiMY's bubble starts.",
       "dependencies": [
         "lucide-react"
       ],
