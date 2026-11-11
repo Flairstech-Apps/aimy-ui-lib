@@ -451,7 +451,7 @@
     "name": "message",
     "title": "Message",
     "group": "AI: conversation",
-    "description": "One conversation turn, as the Knowledge gate and the Console canvas draw it: 14px text, 16px corners with the square one on the speaker's side. Your turn is a bubble up to 480px on the accent's dim ground beside your 30px round face. AiMY's turn has no mark and takes 95% of the thread, starting on its left edge. Surfaces in ai.css (.aimy-msg-bubble). status thinking shows the think-mark instead of a bubble; stopped keeps the text and says Stopped; failed says nothing was lost. `after` holds ResponseActions or follow-up Suggestions, starting where AiMY's bubble starts.",
+    "description": "One conversation turn in Sales' shape: 16px text, 12px corners with the square one on the speaker's side. Your turn is a bubble up to 540px on the accent's dim ground beside your 28px round face. AiMY's turn has no mark, takes 95% of the thread from its left edge, and sits on the Knowledge gate's see-through ground. Surfaces in ai.css (.aimy-msg-bubble). status thinking shows the think-mark instead of a bubble; stopped keeps the text and says Stopped; failed says nothing was lost. `after` holds ResponseActions or follow-up Suggestions, starting where AiMY's bubble starts.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/message/"
   },
   {

@@ -373,19 +373,17 @@
   .aimy-overlay[data-state="closed"] { animation-duration: 1ms; }
 }
 
-/* ── Message: the Knowledge gate's bubble ──────────────────────────────────
-   Nour, 11 Nov: "the gate chat bubble in knowledge prototype is the one we
-   want" (the Console canvas draws the same one). Knowledge's .chat-msg
-   .msg-bubble values unchanged (aimy-ds.css 1732-1740, 634; knowledge.css
-   3237-3260): 14px at weight 500 and 1.55 leading, 10px by 14px, 16px corners
-   with the square one on the speaker's side; AiMY on a 4% white wash with a
-   7% white edge (light: #edf2f8 with a 10% ink edge), you on the accent's dim
-   ground with a 20% accent edge in --d100. It replaces the Sales shape chosen
-   on 28 Oct (16px, 12px corners, the raised card ground). */
+/* ── Message: Sales' bubble with the Knowledge gate's see-through ground ────
+   Nour, 11 Nov: Sales' bubble (sales.css 7549-7578) in everything but AiMY's
+   ground, which is the gate's (aimy-ds.css 1737-1738), so the canvas glass
+   shows through: 16px at 400 with 1.5 leading, 12px by 16px, 12px corners with
+   the square one on the speaker's side; AiMY on a 4% white wash with a 7%
+   white edge (light: #edf2f8 with a 10% ink edge, as both products); you on
+   the accent's dim ground with a 22% accent edge in --d100. */
 .aimy-msg-bubble {
-  padding: 0.625rem 0.875rem;
-  border: 1px solid transparent; border-radius: 1rem;
-  font-size: 0.875rem; font-weight: 500; line-height: 1.55;
+  padding: 0.75rem 1rem;
+  border: 1px solid transparent; border-radius: 0.75rem;
+  font-size: 1rem; font-weight: 400; line-height: 1.5;
   transition: background-color var(--t-base) var(--ease-out), border-color var(--t-base) var(--ease-out);
 }
 .aimy-msg-bubble.is-aimy {
@@ -394,7 +392,7 @@
 }
 [data-theme="light"] .aimy-msg-bubble.is-aimy { background: #edf2f8; border-color: rgba(16,24,40,0.10); }
 .aimy-msg-bubble.is-you {
-  background: var(--accent-dim); border-color: rgba(var(--accent-rgb),0.2);
+  background: var(--accent-dim); border-color: rgba(var(--accent-rgb),0.22);
   color: var(--d100); border-top-right-radius: 0.25rem;
 }
 @media (prefers-reduced-motion: reduce) { .aimy-msg-bubble { transition: none; } }

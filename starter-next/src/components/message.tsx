@@ -4,12 +4,12 @@ import { ThinkingIndicator } from "@/components/thinking"
 import type { Person, Speaker, TurnStatus } from "@/lib/ai-types"
 import { cn } from "@/lib/utils"
 
-// One turn in a conversation, as the Knowledge gate and the Console canvas
-// draw it (Nour, 11 Nov; it replaced Sales' shape from 28 Oct): 14px text,
-// 16px corners with the square one on the speaker's side. Your turn is a
-// bubble up to 480px on the accent's dim ground beside your 30px round face.
+// One turn in a conversation, in Sales' shape (Nour, 28 Oct, and again
+// 11 Nov) with the Knowledge gate's see-through ground for AiMY: 16px text,
+// 12px corners with the square one on the speaker's side. Your turn is a
+// bubble up to 540px on the accent's dim ground beside your 28px round face.
 // The bubble's surfaces live in ai.css (.aimy-msg-bubble), so each theme
-// carries Knowledge's own values.
+// carries the products' own values.
 //
 // AiMY's turn has no mark and takes 95% of the thread (Nour, 11 Nov; Sales
 // ead3a9e, Knowledge d3e44a2): the thread is AiMY's, so the mark said nothing
@@ -50,15 +50,10 @@ export function Message({ speaker, status = "done", author, thinkingLabel, after
       data-status={status}
       className={cn("flex flex-col gap-1.5 px-1", !aimy && "items-end", className)}
     >
-      <div className={cn("flex w-full items-start gap-2.5", !aimy && "flex-row-reverse")}>
+      <div className={cn("flex w-full items-start gap-3", !aimy && "flex-row-reverse")}>
         {aimy ? null : (
-          <span className="shrink-0">
-            <Avatar
-              name={author?.name ?? "You"}
-              src={author?.src}
-              size="sm"
-              className="size-7.5 rounded-full text-xs font-[700]"
-            />
+          <span className="mt-0.5 shrink-0">
+            <Avatar name={author?.name ?? "You"} src={author?.src} size="sm" className="rounded-full" />
           </span>
         )}
         {thinking ? (
@@ -68,7 +63,7 @@ export function Message({ speaker, status = "done", author, thinkingLabel, after
             data-slot="message-bubble"
             className={cn(
               "aimy-msg-bubble min-w-0",
-              aimy ? "is-aimy flex-[0_1_95%]" : "is-you max-w-[30rem]"
+              aimy ? "is-aimy flex-[0_1_95%]" : "is-you max-w-[33.75rem]"
             )}
           >
             {children}
