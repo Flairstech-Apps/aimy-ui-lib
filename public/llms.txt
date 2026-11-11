@@ -98,13 +98,13 @@ Install by address, with no setup: `npx shadcn@latest add https://aimy-ui-lib.ai
 ## AI: conversation
 
 - **Composer** (`@aimy/composer`): Where a person asks AiMY, as the products' voice.js arranges it. https://aimy-ui-lib.aimy.flairstech.com/components/composer/
-- **Message** (`@aimy/message`): One conversation turn in Sales' shape: 28px avatar (AiMY's tile, or the person), a bubble up to 540px with the square corner on the speaker's side. https://aimy-ui-lib.aimy.flairstech.com/components/message/
+- **Message** (`@aimy/message`): One conversation turn. https://aimy-ui-lib.aimy.flairstech.com/components/message/
 - **Streaming text** (`@aimy/streaming-text`): Text that arrives over time: pass the text so far and streaming. https://aimy-ui-lib.aimy.flairstech.com/components/streaming-text/
 - **Thinking** (`@aimy/thinking`): AiMY at work before any words: the particle think-mark (the AiMY mark scattering and gathering, ported from the products) and a line saying what it does. https://aimy-ui-lib.aimy.flairstech.com/components/thinking/
 - **Response actions** (`@aimy/response-actions`): What a person can do with one answer (Knowledge's .msg-acts): Copy, Retry, the N sources it stands on, and Useful / Not useful (mutually exclusive, toggles). https://aimy-ui-lib.aimy.flairstech.com/components/response-actions/
 - **Suggestions** (`@aimy/suggestions`): One-click questions: openers centred in an empty conversation, follow-ups under an answer. https://aimy-ui-lib.aimy.flairstech.com/components/suggestions/
 - **Reasoning** (`@aimy/reasoning`): How AiMY got to an answer, folded under it: 'How this was answered' with steps that say what AiMY did and why (Knowledge's act-log; Sales' 'Why AiMY wrote it this way'). https://aimy-ui-lib.aimy.flairstech.com/components/reasoning/
-- **Canvas** (`@aimy/canvas`): The AiMY canvas: glass over the page from under the topbar, with 'Based on' (what the conversation is about), a chats column that becomes a drawer below 900px, the thread (a polite live log) and the canvas Composer. https://aimy-ui-lib.aimy.flairstech.com/components/canvas/
+- **Canvas** (`@aimy/canvas`): The AiMY canvas: glass over the page from under the topbar, with 'Based on' (what the conversation is about), a chats column that becomes a drawer below 900px, the thread (a polite live log, 53rem wide) and the canvas Composer on the same edges. https://aimy-ui-lib.aimy.flairstech.com/components/canvas/
 - **Peek** (`@aimy/peek`): AiMY's answer in a card that rises out of the float bar (Sales' .b-peek, Knowledge's .aimy-peek): thinks, then answers; three lines then a fade; press to open the canvas; one-click questions under it. https://aimy-ui-lib.aimy.flairstech.com/components/peek/
 
 ## AI: trust

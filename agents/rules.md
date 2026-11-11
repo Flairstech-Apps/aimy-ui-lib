@@ -48,6 +48,15 @@ Moving between pages:
 - A product with a few pages (four or five) uses `SideNav`, Sales' tabs, as the first card of the `Rail`: a row per page with its count, and the current page holding AiMY's reading of it (`SideNavRead`). Most AiMY products are this.
 - A product with many pages and nested flows uses `SideNav variant="qa"` in AppShell's `nav` slot: each page with its headline figures, collapsing to icons. Only QA uses it today. Never use it for a handful of pages, and never put both forms in one product.
 
+Phones:
+
+- Set `viewport-fit=cover` in the viewport meta (Next.js: `viewport: { viewportFit: "cover" }`). The shell, the canvas, sheets and toasts then keep clear of the status bar, the home indicator or gesture bar and a landscape notch on their own.
+- Anything the app fixes to the screen's edge itself, such as the float bar, adds the matching `--safe-top`, `--safe-bottom`, `--safe-left` or `--safe-right` to its offset. They are 0 on a laptop.
+
+Conversations:
+
+- AiMY's turns in a `Message` carry no mark and take 95% of the thread; only the person's turns show a face. Never add the AiMY mark beside a message.
+
 Results inside a chat reply:
 
 - Every result AiMY draws in a reply sits in a `WidgetFrame`: its name in sentence case, a count or order, Open in the canvas, and a foot that opens the rest. No paginator and no sideways scrolling in a reply.

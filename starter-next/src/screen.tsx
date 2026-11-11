@@ -132,7 +132,7 @@ export function App() {
         </Page>
       </AppShell>
 
-      <div className="pointer-events-none fixed inset-x-5 bottom-3.5 z-(--z-float) flex justify-center">
+      <div className="pointer-events-none fixed right-[calc(1.25rem+var(--safe-right,0px))] bottom-[calc(0.875rem+var(--safe-bottom,0px))] left-[calc(1.25rem+var(--safe-left,0px))] z-(--z-float) flex justify-center">
         <div className="pointer-events-auto w-full max-w-[47.5rem]">
           <Composer
             onSubmit={ask}

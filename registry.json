@@ -773,7 +773,7 @@
       "name": "toast",
       "type": "registry:component",
       "title": "toast() and Toaster",
-      "description": "The confirmation every action ends with: act at once, then toast what happened with Undo. toast(title, { sub, onUndo }). One at a time; 6s with Undo, 4s without; waits while hovered or focused; announced politely. Render <Toaster /> once at the root (offset lifts it above a composer bar). Rises and leaves with transitions.dev toast (22). tone err for a failed action: the alert icon on a red tile, announced at once, 8s, with an action such as Try again.",
+      "description": "The confirmation every action ends with: act at once, then toast what happened with Undo. toast(title, { sub, onUndo }). One at a time; 6s with Undo, 4s without; waits while hovered or focused; announced politely. Render <Toaster /> once at the root (offset lifts it above a composer bar; it also rises above a phone's home indicator). Rises and leaves with transitions.dev toast (22). tone err for a failed action: the alert icon on a red tile, announced at once, 8s, with an action such as Try again.",
       "dependencies": [],
       "registryDependencies": [
         "@aimy/theme",
@@ -814,7 +814,7 @@
       "name": "sheet",
       "type": "registry:component",
       "title": "Sheet",
-      "description": "A panel that slides in from the side over the page, with a scrim: the rail as a drawer below the rail rung, settings and connection sheets. Title, scrolling body, Escape or the scrim closes, focus returns. Slides with transitions.dev panel reveal (07).",
+      "description": "A panel that slides in from the side over the page, with a scrim: the rail as a drawer below the rail rung, settings and connection sheets. Title, scrolling body, Escape or the scrim closes, focus returns. Slides with transitions.dev panel reveal (07). Keeps clear of a phone's status bar, home indicator and, on its side, a landscape notch.",
       "dependencies": [
         "radix-ui",
         "lucide-react"
@@ -980,7 +980,7 @@
       "name": "message",
       "type": "registry:component",
       "title": "Message",
-      "description": "One conversation turn in Sales' shape: 28px avatar (AiMY's tile, or the person), a bubble up to 540px with the square corner on the speaker's side. status thinking shows the think-mark instead of a bubble; stopped keeps the text and says Stopped; failed says nothing was lost. `after` holds ResponseActions or follow-up Suggestions, aligned with the bubble. AiMY's turns never show a person's face.",
+      "description": "One conversation turn. Your turn is Sales' shape: your 28px face and a bubble up to 540px, the square corner on your side. AiMY's turn has no mark and takes 95% of the thread, starting on its left edge (Nour, 11 Nov). status thinking shows the think-mark instead of a bubble; stopped keeps the text and says Stopped; failed says nothing was lost. `after` holds ResponseActions or follow-up Suggestions, starting where AiMY's bubble starts.",
       "dependencies": [
         "lucide-react"
       ],
@@ -1085,7 +1085,7 @@
       "name": "canvas",
       "type": "registry:component",
       "title": "Canvas",
-      "description": "The AiMY canvas: glass over the page from under the topbar, with 'Based on' (what the conversation is about), a chats column that becomes a drawer below 900px, the thread (a polite live log) and the canvas Composer. Focus goes to the composer; Escape or × closes and returns focus. 400ms in, 350ms out. Keeps the backdrop-filter, as the doctrine requires. The meeting slot holds a NoteTaker with layout=\"canvas\" in place of the thread and composer (Knowledge's meeting view).",
+      "description": "The AiMY canvas: glass over the page from under the topbar, with 'Based on' (what the conversation is about), a chats column that becomes a drawer below 900px, the thread (a polite live log, 53rem wide) and the canvas Composer on the same edges. Focus goes to the composer; Escape or × closes and returns focus. 400ms in, 350ms out. Keeps the backdrop-filter, as the doctrine requires. The meeting slot holds a NoteTaker with layout=\"canvas\" in place of the thread and composer (Knowledge's meeting view). On a phone it keeps clear of a landscape notch and its composer rises above the home indicator (needs viewport-fit=cover).",
       "dependencies": [
         "lucide-react",
         "radix-ui"
@@ -2153,7 +2153,7 @@
       "name": "app-shell",
       "type": "registry:component",
       "title": "AppShell",
-      "description": "The frame every AiMY product sits in: topnav, rail, page. Knowledge's widths on the shell's own width (rail a drawer below 1040, products to a menu below 900); the rail width a setting, 320px by default. useShell gives the rail state. Page and PageHead are Knowledge's page and head.",
+      "description": "The frame every AiMY product sits in: topnav, rail, page. Knowledge's widths on the shell's own width (rail a drawer below 1040, products to a menu below 900); the rail width a setting, 320px by default. useShell gives the rail state. Page and PageHead are Knowledge's page and head. On a phone (viewport-fit=cover) the topnav clears the status bar, the shell a landscape notch, and the page leaves room above the home indicator.",
       "dependencies": [],
       "registryDependencies": [
         "@aimy/theme",

@@ -117,4 +117,15 @@ export const PATCHES = [
       }
     },
   },
+  {
+    id: "safe-areas",
+    why: "the phone's own bars never cover the app (Nour, 11 Nov; Sales ead3a9e, Knowledge d3e44a2): --safe-* name the status bar, home indicator and landscape notch (0 on a laptop), and the top bar grows by the status bar so everything hung off it follows",
+    apply({ dark }) {
+      dark.set("--safe-top", "env(safe-area-inset-top, 0px)")
+      dark.set("--safe-bottom", "env(safe-area-inset-bottom, 0px)")
+      dark.set("--safe-left", "env(safe-area-inset-left, 0px)")
+      dark.set("--safe-right", "env(safe-area-inset-right, 0px)")
+      dark.set("--topbar-height", "calc(3.75rem + var(--safe-top))")
+    },
+  },
 ]

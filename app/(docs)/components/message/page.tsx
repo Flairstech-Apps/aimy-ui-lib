@@ -28,22 +28,27 @@ export default function Page() {
             doText="Show a stopped answer with what it had written."
             dontText="Remove an answer the person stopped part way."
           />
+          <DoDont
+            doText="Let AiMY's answer start on the thread's edge and take 95% of it."
+            dontText="Put the AiMY mark beside AiMY's messages."
+          />
         </div>
       </Section>
       <Source>
         <p>
-          Sales&apos; <code>.chat-msg</code>, your choice on 28 Oct, which is also the design system&apos;s spec: a 28px
-          avatar with 8px corners, a bubble up to 540px, 16px text, and the square corner on the speaker&apos;s side.
-          Knowledge drew a 30px circle and a 480px bubble at 14px. While AiMY thinks, the think-mark stands where the
-          bubble will be and the avatar waits; then the bubble&apos;s ground fades in (both products). A stopped answer
-          keeps its words and says Stopped under them (Knowledge&apos;s <code>.msg-stopped</code>, in secondary ink
-          instead of muted). Neither product shows timestamps in a thread, so there are none.
+          Sales&apos; <code>.chat-msg</code>, your choice on 28 Oct: your turn is a bubble up to 540px with 16px text
+          beside your 28px face (8px corners), the square corner on your side. On 11 Nov you took the AiMY mark off
+          AiMY&apos;s turns and gave the answer the room: it starts on the thread&apos;s left edge and takes 95% of
+          it, in Sales, Knowledge&apos;s gate and the Console canvas alike. While AiMY thinks, the think-mark stands
+          where the bubble will be; then the bubble&apos;s ground fades in (both products). A stopped answer keeps its
+          words and says Stopped under them (Knowledge&apos;s <code>.msg-stopped</code>, in secondary ink instead of
+          muted). Neither product shows timestamps in a thread, so there are none.
         </p>
       </Source>
       <A11y
         items={[
           "Put messages inside a polite live region (Canvas does) so new answers are read out.",
-          "AiMY's avatar is the AiMY tile, never a person's face.",
+          "Only the person's turns show a face; AiMY's turns carry no mark, so a screen reader hears the words alone.",
         ]}
       />
     </>

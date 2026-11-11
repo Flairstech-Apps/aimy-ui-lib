@@ -81,7 +81,7 @@ describe("Message", () => {
     expect(screen.getByText("Stopped")).toBeInTheDocument()
   })
 
-  it("draws AiMY with its tile and a person with their name", () => {
+  it("draws a person with their face and AiMY with no mark", () => {
     const { container } = render(
       <>
         <Message speaker="user" author={{ name: "Engy Hassan" }}>
@@ -91,7 +91,9 @@ describe("Message", () => {
       </>
     )
     expect(screen.getByRole("img", { name: "Engy Hassan" })).toBeInTheDocument()
-    expect(container.querySelector('[data-speaker="aimy"] [data-slot="aimy-avatar"]')).toBeInTheDocument()
+    const aimy = container.querySelector('[data-speaker="aimy"]')!
+    expect(aimy.querySelector('[data-slot="aimy-avatar"], [data-slot="avatar"]')).toBeNull()
+    expect(aimy.querySelector('[role="img"]')).toBeNull()
   })
 })
 

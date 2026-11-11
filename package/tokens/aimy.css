@@ -15,6 +15,7 @@
  *   - product-leading: Sales and Knowledge both set line heights to 1.25 / 1.5 / 1.6 (tight / base / relaxed); where both products agree, they win
  *   - motion-moves-out: durations, curves and lifts move to motion.css, which follows transitions.dev (PLAN.md 7a)
  *   - rem: sizes in rem so apps can scale them (decision 9); same values at a 16px root
+ *   - safe-areas: the phone's own bars never cover the app (Nour, 11 Nov; Sales ead3a9e, Knowledge d3e44a2): --safe-* name the status bar, home indicator and landscape notch (0 on a laptop), and the top bar grows by the status bar so everything hung off it follows
  */
 
 :root,
@@ -86,7 +87,7 @@
   --grad-avatar: linear-gradient(135deg,#7c3aed,#3369ff);
   --grad-ellipse-1: radial-gradient(ellipse at 30% 50%, rgba(0,102,255,0.18) 0%, rgba(97,173,241,0.1) 28%, transparent 60%);
   --grad-ellipse-2: radial-gradient(ellipse at 75% 70%, rgba(69,211,230,0.1) 0%, rgba(139,79,244,0.07) 38%, transparent 60%);
-  --topbar-height: 3.75rem;
+  --topbar-height: calc(3.75rem + var(--safe-top));
   --sidebar-width: 15rem;
   --r-xs: 0.25rem;
   --r-sm: 0.375rem;
@@ -220,6 +221,10 @@
   --ink-quiet: var(--d300);
   --ink-faint: var(--d400);
   --ink-action: var(--accent-text);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
 }
 
 [data-theme="light"] {
@@ -362,6 +367,7 @@
   --aimy-tile-edge: rgba(110,70,220,0.28);
   --teal: var(--cyan);
   --teal-dim: var(--cyan-bg);
+  --topbar-height: calc(3.75rem + var(--safe-top));
   --ink-quiet: var(--d300);
   --ink-faint: var(--d400);
   --ink-action: var(--accent-text);

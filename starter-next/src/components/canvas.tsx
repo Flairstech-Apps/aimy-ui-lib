@@ -21,6 +21,17 @@ import { cn } from "@/lib/utils"
 // Below 900px the chats column becomes a drawer behind a button, as both
 // products do.
 //
+// The thread is 53rem (848px) wide, Sales' and Knowledge's since 11 Nov
+// (Nour: the messages take more of the screen), and the composer widens with
+// it, so the bubbles and the bar share both edges. Once room runs out the
+// sides drop to 0.5rem, which with a Message's own 0.25rem keeps the bubbles
+// on the composer's 0.75rem edges on a phone too. The thread's 0.3125rem
+// scrollbar is always reserved and taken off the right side, so the right
+// edge is the composer's whether the thread scrolls or not.
+//
+// On a phone the canvas keeps out of a landscape notch and its composer
+// rises above the home indicator or gesture bar (--safe-*, 0 on a laptop).
+//
 //   <Canvas open={open} onOpenChange={setOpen} basis={["Kestrel Logistics", "Contact"]}
 //     chats={<ChatList />} composer={<Composer variant="canvas" onSubmit={ask} />}>
 //     {turns.map((t) => <Message key={t.id} … />)}
@@ -79,7 +90,7 @@ export function Canvas({
               ?.focus()
           }}
           className={cn(
-            "aimy-overlay fixed inset-x-0 top-(--topbar-height) bottom-0 z-(--z-modal) flex outline-none",
+            "aimy-overlay fixed inset-x-0 top-(--topbar-height) bottom-0 z-(--z-modal) flex pr-[var(--safe-right,0px)] pl-[var(--safe-left,0px)] outline-none",
             className
           )}
         >
@@ -94,7 +105,7 @@ export function Canvas({
             </aside>
           ) : null}
 
-          <div className="relative flex min-w-0 flex-1 flex-col pb-6">
+          <div className="relative flex min-w-0 flex-1 flex-col pb-[calc(1.5rem+var(--safe-bottom,0px))]">
             {chats ? (
               <Sheet>
                 <SheetTrigger asChild>
@@ -147,7 +158,8 @@ export function Canvas({
                   aria-live="polite"
                   aria-label="Conversation"
                   className={cn(
-                    "flex flex-1 flex-col gap-4 overflow-y-auto px-[max(1.5rem,calc((100%-42rem)/2))] pb-4",
+                    "flex flex-1 flex-col gap-4 overflow-y-auto pb-4 [scrollbar-gutter:stable]",
+                    "pr-[max(0.1875rem,calc((100%-53rem)/2-0.3125rem))] pl-[max(0.5rem,calc((100%-53rem)/2))]",
                     hasBasis ? "pt-4" : "pt-[5rem]"
                   )}
                 >

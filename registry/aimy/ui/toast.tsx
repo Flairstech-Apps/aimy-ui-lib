@@ -171,12 +171,14 @@ export function Toaster({ offset = "1.5rem" }: ToasterProps) {
   // Two live regions that are always there, so either announces reliably:
   // a polite one for confirmations, an assertive one for failures.
   const region = "pointer-events-none fixed inset-x-0 z-(--z-toast) flex justify-center px-4"
+  // Above a phone's home indicator or gesture bar as well (0 on a laptop).
+  const bottom = `calc(${offset} + var(--safe-bottom, 0px))`
   return (
     <>
-      <div data-slot="toaster" role="status" aria-live="polite" className={region} style={{ bottom: offset }}>
+      <div data-slot="toaster" role="status" aria-live="polite" className={region} style={{ bottom }}>
         {err ? null : card}
       </div>
-      <div data-slot="toaster-alert" role="alert" className={region} style={{ bottom: offset }}>
+      <div data-slot="toaster-alert" role="alert" className={region} style={{ bottom }}>
         {err ? card : null}
       </div>
     </>

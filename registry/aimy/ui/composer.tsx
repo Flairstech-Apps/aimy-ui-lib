@@ -444,7 +444,9 @@ export function Composer({
 
   if (float) return bar
   return (
-    <div data-slot="composer-wrap" className={cn("mx-auto w-full max-w-[45rem] px-3", className)}>
+    // 54rem less its 0.75rem sides is the canvas thread's 52.5rem of bubbles
+    // (11 Nov), so the bar and the bubbles share both edges.
+    <div data-slot="composer-wrap" className={cn("mx-auto w-full max-w-[54rem] px-3", className)}>
       {bar}
     </div>
   )

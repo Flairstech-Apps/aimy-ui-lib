@@ -52,6 +52,15 @@ Moving between pages:
 - A product with a few pages (four or five) uses `SideNav`, Sales' tabs, as the first card of the `Rail`: a row per page with its count, and the current page holding AiMY's reading of it (`SideNavRead`). Most AiMY products are this.
 - A product with many pages and nested flows uses `SideNav variant="qa"` in AppShell's `nav` slot: each page with its headline figures, collapsing to icons. Only QA uses it today. Never use it for a handful of pages, and never put both forms in one product.
 
+Phones:
+
+- Set `viewport-fit=cover` in the viewport meta (Next.js: `viewport: { viewportFit: "cover" }`). The shell, the canvas, sheets and toasts then keep clear of the status bar, the home indicator or gesture bar and a landscape notch on their own.
+- Anything the app fixes to the screen's edge itself, such as the float bar, adds the matching `--safe-top`, `--safe-bottom`, `--safe-left` or `--safe-right` to its offset. They are 0 on a laptop.
+
+Conversations:
+
+- AiMY's turns in a `Message` carry no mark and take 95% of the thread; only the person's turns show a face. Never add the AiMY mark beside a message.
+
 Results inside a chat reply:
 
 - Every result AiMY draws in a reply sits in a `WidgetFrame`: its name in sentence case, a count or order, Open in the canvas, and a foot that opens the rest. No paginator and no sideways scrolling in a reply.
@@ -171,13 +180,13 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 ### AI: conversation
 
 - **Composer** (`@aimy/composer`): Where a person asks AiMY, as the products' voice.js arranges it. https://aimy-ui-lib.aimy.flairstech.com/components/composer/
-- **Message** (`@aimy/message`): One conversation turn in Sales' shape: 28px avatar (AiMY's tile, or the person), a bubble up to 540px with the square corner on the speaker's side. https://aimy-ui-lib.aimy.flairstech.com/components/message/
+- **Message** (`@aimy/message`): One conversation turn. https://aimy-ui-lib.aimy.flairstech.com/components/message/
 - **Streaming text** (`@aimy/streaming-text`): Text that arrives over time: pass the text so far and streaming. https://aimy-ui-lib.aimy.flairstech.com/components/streaming-text/
 - **Thinking** (`@aimy/thinking`): AiMY at work before any words: the particle think-mark (the AiMY mark scattering and gathering, ported from the products) and a line saying what it does. https://aimy-ui-lib.aimy.flairstech.com/components/thinking/
 - **Response actions** (`@aimy/response-actions`): What a person can do with one answer (Knowledge's .msg-acts): Copy, Retry, the N sources it stands on, and Useful / Not useful (mutually exclusive, toggles). https://aimy-ui-lib.aimy.flairstech.com/components/response-actions/
 - **Suggestions** (`@aimy/suggestions`): One-click questions: openers centred in an empty conversation, follow-ups under an answer. https://aimy-ui-lib.aimy.flairstech.com/components/suggestions/
 - **Reasoning** (`@aimy/reasoning`): How AiMY got to an answer, folded under it: 'How this was answered' with steps that say what AiMY did and why (Knowledge's act-log; Sales' 'Why AiMY wrote it this way'). https://aimy-ui-lib.aimy.flairstech.com/components/reasoning/
-- **Canvas** (`@aimy/canvas`): The AiMY canvas: glass over the page from under the topbar, with 'Based on' (what the conversation is about), a chats column that becomes a drawer below 900px, the thread (a polite live log) and the canvas Composer. https://aimy-ui-lib.aimy.flairstech.com/components/canvas/
+- **Canvas** (`@aimy/canvas`): The AiMY canvas: glass over the page from under the topbar, with 'Based on' (what the conversation is about), a chats column that becomes a drawer below 900px, the thread (a polite live log, 53rem wide) and the canvas Composer on the same edges. https://aimy-ui-lib.aimy.flairstech.com/components/canvas/
 - **Peek** (`@aimy/peek`): AiMY's answer in a card that rises out of the float bar (Sales' .b-peek, Knowledge's .aimy-peek): thinks, then answers; three lines then a fade; press to open the canvas; one-click questions under it. https://aimy-ui-lib.aimy.flairstech.com/components/peek/
 
 ### AI: trust

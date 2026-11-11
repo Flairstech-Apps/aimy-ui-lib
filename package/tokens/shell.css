@@ -325,3 +325,22 @@
 @media (max-width: 519.98px) {
   .ntf-panel { width: calc(100vw - 1.5rem); max-width: none; }
 }
+
+/* ── The phone's own bars never cover the app ─────────────────────────────
+   Nour, 11 Nov (Sales ead3a9e, Knowledge d3e44a2). An app that sets
+   viewport-fit=cover in its viewport meta gets the whole glass: the status
+   bar and notch at the top, the home indicator or Android's gesture bar at
+   the foot, the notch at the side in landscape. --safe-* (aimy.css) say how
+   much each takes and are 0 on a laptop, so nothing here moves there.
+
+   TOP: --topbar-height already includes the status bar, so the bar pads it
+   out and keeps its own row; the canvas and anything else hung off the
+   token follows. Border-box, because the bar's height is the token whole.
+   SIDES: the shell keeps out of a landscape notch, and so does everything
+   inside it, the rail and side nav drawers included (they are placed in
+   .app-shell-body).
+   BOTTOM: the page leaves room under its last row. Last in the file, so the
+   container-query rules above that reset the bar's padding keep this. */
+.app-shell { padding-left: var(--safe-left); padding-right: var(--safe-right); }
+.app-topnav { box-sizing: border-box; padding-top: var(--safe-top); }
+.page-scroll { padding-bottom: calc(6rem + var(--safe-bottom)); }

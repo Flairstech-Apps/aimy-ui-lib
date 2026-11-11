@@ -37,11 +37,14 @@ export default function Page() {
         <p>
           Both products&apos; <code>#aimyOverlay</code>: glass from under the topbar down (blur 28px, sunk a stop in
           dark, lifted in light). The work stays visible behind it, as the doctrine requires. It has a 240px chats
-          column, a thread on a 42rem measure, and the canvas composer. &quot;Based on&quot; names what the conversation
-          is about (Knowledge&apos;s scope, Sales&apos; contact, account and campaign). Below 900px the chats column
-          becomes a drawer. It opens over 400ms and closes over 350ms, Knowledge&apos;s timing and the panel
-          reveal&apos;s clocks. Focus goes to the composer, and Escape or × returns the person to where they were. The
-          visible &quot;AiMY Canvas&quot; badge is left out, as Sales did.
+          column, a thread 53rem wide (42rem until 11 Nov, when you asked for the messages to take more of the
+          screen), and the canvas composer on the same two edges as the bubbles. &quot;Based on&quot; names what the
+          conversation is about (Knowledge&apos;s scope, Sales&apos; contact, account and campaign). Below 900px the
+          chats column becomes a drawer. It opens over 400ms and closes over 350ms, Knowledge&apos;s timing and the
+          panel reveal&apos;s clocks. Focus goes to the composer, and Escape or × returns the person to where they
+          were. The visible &quot;AiMY Canvas&quot; badge is left out, as Sales did. On a phone with{" "}
+          <code>viewport-fit=cover</code> it keeps clear of a landscape notch and the composer rises above the home
+          indicator or gesture bar.
         </p>
       </Source>
       <A11y

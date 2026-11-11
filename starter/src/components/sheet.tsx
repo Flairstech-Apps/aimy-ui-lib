@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils"
 // ground with a blur, an edge on the inner side, a deep shadow; the page
 // behind is scrimmed. Focus moves in and returns; Escape or the scrim closes.
 // Slides with transitions.dev's panel reveal (07) on the X axis.
+// On a phone it keeps clear of the status bar, the home indicator and, on
+// its own side, a landscape notch (--safe-*, 0 on a laptop).
 export const Sheet = Primitive.Root
 export const SheetTrigger = Primitive.Trigger
 export const SheetClose = Primitive.Close
@@ -31,8 +33,8 @@ export function SheetContent({ title, description, side = "right", width = "w-[2
         data-slot="sheet"
         data-side={side}
         className={cn(
-          "t-sheet fixed inset-y-0 z-(--z-modal) flex max-w-[calc(100dvw-3.5rem)] flex-col bg-panel shadow-xl backdrop-blur-lg outline-none",
-          side === "right" ? "right-0 border-l border-edge" : "left-0 border-r border-edge",
+          "t-sheet fixed inset-y-0 z-(--z-modal) flex max-w-[calc(100dvw-3.5rem)] flex-col bg-panel pt-[var(--safe-top,0px)] pb-[var(--safe-bottom,0px)] shadow-xl backdrop-blur-lg outline-none",
+          side === "right" ? "right-0 border-l border-edge pr-[var(--safe-right,0px)]" : "left-0 border-r border-edge pl-[var(--safe-left,0px)]",
           width,
           className
         )}

@@ -103,7 +103,7 @@ export function Toaster({ offset = "1.5rem" }: ToasterProps) {
       role="status"
       aria-live="polite"
       className="pointer-events-none fixed inset-x-0 z-(--z-toast) flex justify-center px-4"
-      style={{ bottom: offset }}
+      style={{ bottom: `calc(${offset} + var(--safe-bottom, 0px))` }}
     >
       {shown ? (
         <div
