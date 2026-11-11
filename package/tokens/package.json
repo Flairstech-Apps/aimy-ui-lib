@@ -1,6 +1,6 @@
 {
   "name": "@flairstech-aimy/tokens",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "AiMY design tokens, motion, fonts and the Tailwind v4 mapping. Works anywhere HTML renders. Internal to FlairsTech; served from the AiMY UI registry.",
   "style": "./index.css",
   "exports": {

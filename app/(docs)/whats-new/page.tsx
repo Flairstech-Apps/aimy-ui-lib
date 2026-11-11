@@ -33,6 +33,18 @@ const c = (name: string) => `/components/${name}/`
 
 const ENTRIES: Entry[] = [
   {
+    label: "1.4.4",
+    type: "Patch",
+    date: "11 Nov 2026",
+    title: "Widgets wear the bubble",
+    items: [
+      { kind: "changed", name: "WidgetFrame", href: c("widget-frame"), text: "AiMY's bubble in the thread; a card inside a reply." },
+      { kind: "changed", name: "CandidateCard", href: c("candidate-card"), text: "Drawn like the cards in Sales' answers." },
+    ],
+    before: "Put widgets inside AiMY's Message, after its sentence.",
+    run: BOTH,
+  },
+  {
     label: "1.4.3",
     type: "Patch",
     date: "11 Nov 2026",
