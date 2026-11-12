@@ -307,14 +307,24 @@ export default function WhatsNew() {
       <PageHeader title="What's new" lead="Every release, patch and site change, newest first." />
 
       {/* Keeping up: two commands, each with its question, and the GitHub watch. */}
-      <dl className="mt-10 grid max-w-[52rem] grid-cols-[11rem_minmax(0,1fr)] items-center gap-x-4 gap-y-2.5 max-canvas:grid-cols-1 max-canvas:gap-y-1.5">
+      {/* Each question beside its command, and each check beside the command
+          that acts on it: packages, then copied parts. */}
+      <dl className="mt-10 grid max-w-[56rem] grid-cols-[11rem_minmax(0,1fr)] items-center gap-x-4 gap-y-2.5 max-canvas:grid-cols-1 max-canvas:gap-y-1.5">
         <dt className="text-meta font-semibold text-ink">Is your app behind?</dt>
         <dd className="min-w-0 max-canvas:mb-2">
           <Command what="the outdated command">pnpm outdated @flairstech-aimy/ui @flairstech-aimy/tokens</Command>
         </dd>
+        <dt className="text-meta font-semibold text-ink">Update the packages</dt>
+        <dd className="min-w-0 max-canvas:mb-2">
+          <Command what="the update command">{BOTH}</Command>
+        </dd>
         <dt className="text-meta font-semibold text-ink">Which copies changed?</dt>
-        <dd className="min-w-0">
+        <dd className="min-w-0 max-canvas:mb-2">
           <Command what="the diff command">npx shadcn@latest diff</Command>
+        </dd>
+        <dt className="text-meta font-semibold text-ink">Update a copied part</dt>
+        <dd className="min-w-0">
+          <Command what="the copy update command">npx shadcn@latest add @aimy/&lt;name&gt; --overwrite</Command>
         </dd>
       </dl>
       <p className="mt-3 text-meta text-ink-secondary">
