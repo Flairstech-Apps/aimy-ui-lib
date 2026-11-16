@@ -184,6 +184,18 @@
       ]
     },
     {
+      "name": "generative-ui-core",
+      "type": "registry:lib",
+      "title": "Generative UI core",
+      "description": "Checks a model's UI spec ({ type, props, children }) against a catalogue of parts and props, names what it leaves out, repairs half-streamed JSON so an answer can draw as it arrives, and writes the catalogue as a prompt (uiPrompt) and as a show_ui tool with a JSON Schema per part (showUiTool).",
+      "files": [
+        {
+          "path": "registry/aimy/lib/generative-ui.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "popper-primitive",
       "type": "registry:lib",
       "title": "Popper primitive",
@@ -1224,6 +1236,38 @@
       "files": [
         {
           "path": "registry/aimy/ui/streaming-text.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "generative-ui",
+      "type": "registry:component",
+      "title": "Generative UI",
+      "description": "AiMY answers with interface drawn only from library parts: GenerativeUI renders a model's show_ui spec (finished or streaming, each part as soon as it is whole) with WidgetFrame, StatTiles, TrendChart, KpiWidget, RankedList, DataTable, Donut, TargetBar, DescriptionList, Notice, Tag and Button. AIMY_UI is the catalogue (every figure must say what it means), AIMY_UI_RENDER how each is drawn; extend both with your own parts. No model code runs; what is left out goes to onProblems.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/generative-ui-core",
+        "@aimy/button",
+        "@aimy/data-table",
+        "@aimy/description-list",
+        "@aimy/donut",
+        "@aimy/kpi-widget",
+        "@aimy/notice",
+        "@aimy/ranked-list",
+        "@aimy/stat-tile",
+        "@aimy/tag",
+        "@aimy/target-bar",
+        "@aimy/trend-chart",
+        "@aimy/widget-frame"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/generative-ui.tsx",
           "type": "registry:component"
         }
       ]

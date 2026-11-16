@@ -90,6 +90,7 @@ Behaviours (building a part the library doesn't have):
 - Every pointer gesture needs a keyboard path (Space to pick up, the arrows, Space to drop, Escape to cancel), and the behaviour's announcement for screen readers.
 - A floating panel uses the primitives (`@aimy/popover-primitive`, `menu-primitive`, `select-primitive`, `tooltip-primitive`, `dialog-primitive`), never its own outside-click or Escape code.
 - Let AiMY work the screen through the agent bridge (`@aimy/agent-bridge`): wrap the page in `AgentProvider`, give each part AiMY may change an `agent` id, pass the person's Autonomy setting to `levelFor`, and hand `bridge.tools()` to the model. Every action returns its undo; what can't be undone is `undoable: false` and always asks. Never let AiMY change the page any other way.
+- When AiMY answers with interface, give the model `uiPrompt(AIMY_UI)` and `showUiTool(AIMY_UI)` and draw its answer with `GenerativeUI` (`@aimy/generative-ui`); never render model HTML or code. Send `onProblems` back to the model.
 - Test it with `@aimy/behaviors-testing`: `ariaProblems` and `singleTabStopProblems` must come back empty.
 
 Never:
@@ -210,6 +211,7 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 - **Composer** (`@aimy/composer`): Where a person asks AiMY, as the products' voice.js arranges it. https://aimy-ui-lib.aimy.flairstech.com/components/composer/
 - **Message** (`@aimy/message`): One conversation turn in Sales' shape: 16px text, 12px corners with the square one on the speaker's side. https://aimy-ui-lib.aimy.flairstech.com/components/message/
 - **Streaming text** (`@aimy/streaming-text`): Text that arrives over time: pass the text so far and streaming. https://aimy-ui-lib.aimy.flairstech.com/components/streaming-text/
+- **Generative UI** (`@aimy/generative-ui`): AiMY answers with interface drawn only from library parts: GenerativeUI renders a model's show_ui spec (finished or streaming, each part as soon as it is whole) with WidgetFrame, StatTiles, TrendChart, KpiWidget, RankedList, DataTable, Donut, TargetBar, DescriptionList, Notice, Tag and Button. https://aimy-ui-lib.aimy.flairstech.com/components/generative-ui/
 - **Thinking** (`@aimy/thinking`): AiMY at work before any words: the particle think-mark (the AiMY mark scattering and gathering, ported from the products) and a line saying what it does. https://aimy-ui-lib.aimy.flairstech.com/components/thinking/
 - **Response actions** (`@aimy/response-actions`): What a person can do with one answer (Knowledge's .msg-acts): Copy, Retry, the N sources it stands on, and Useful / Not useful (mutually exclusive, toggles). https://aimy-ui-lib.aimy.flairstech.com/components/response-actions/
 - **Suggestions** (`@aimy/suggestions`): One-click questions: openers centred in an empty conversation, follow-ups under an answer. https://aimy-ui-lib.aimy.flairstech.com/components/suggestions/

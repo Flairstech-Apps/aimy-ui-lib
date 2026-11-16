@@ -158,6 +158,7 @@ const LIBRARY: NavGroup[] = [
       { href: "/components/composer/", label: "Composer" },
       { href: "/components/message/", label: "Message" },
       { href: "/components/streaming-text/", label: "Streaming text" },
+      { href: "/components/generative-ui/", label: "Generative UI" },
       { href: "/components/thinking/", label: "Thinking" },
       { href: "/components/response-actions/", label: "Response actions" },
       { href: "/components/suggestions/", label: "Suggestions" },

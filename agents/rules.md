@@ -86,6 +86,7 @@ Behaviours (building a part the library doesn't have):
 - Every pointer gesture needs a keyboard path (Space to pick up, the arrows, Space to drop, Escape to cancel), and the behaviour's announcement for screen readers.
 - A floating panel uses the primitives (`@aimy/popover-primitive`, `menu-primitive`, `select-primitive`, `tooltip-primitive`, `dialog-primitive`), never its own outside-click or Escape code.
 - Let AiMY work the screen through the agent bridge (`@aimy/agent-bridge`): wrap the page in `AgentProvider`, give each part AiMY may change an `agent` id, pass the person's Autonomy setting to `levelFor`, and hand `bridge.tools()` to the model. Every action returns its undo; what can't be undone is `undoable: false` and always asks. Never let AiMY change the page any other way.
+- When AiMY answers with interface, give the model `uiPrompt(AIMY_UI)` and `showUiTool(AIMY_UI)` and draw its answer with `GenerativeUI` (`@aimy/generative-ui`); never render model HTML or code. Send `onProblems` back to the model.
 - Test it with `@aimy/behaviors-testing`: `ariaProblems` and `singleTabStopProblems` must come back empty.
 
 Never:

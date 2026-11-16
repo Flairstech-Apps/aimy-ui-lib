@@ -518,6 +518,13 @@
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/streaming-text/"
   },
   {
+    "name": "generative-ui",
+    "title": "Generative UI",
+    "group": "AI: conversation",
+    "description": "AiMY answers with interface drawn only from library parts: GenerativeUI renders a model's show_ui spec (finished or streaming, each part as soon as it is whole) with WidgetFrame, StatTiles, TrendChart, KpiWidget, RankedList, DataTable, Donut, TargetBar, DescriptionList, Notice, Tag and Button. AIMY_UI is the catalogue (every figure must say what it means), AIMY_UI_RENDER how each is drawn; extend both with your own parts. No model code runs; what is left out goes to onProblems.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/generative-ui/"
+  },
+  {
     "name": "thinking",
     "title": "Thinking",
     "group": "AI: conversation",
