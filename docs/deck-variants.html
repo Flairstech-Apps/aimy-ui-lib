@@ -155,7 +155,7 @@
      The landing footer's orb horizon (app/globals.css .horizon-glow and
      .horizon-ground), at stage size. */
   .hzn { --line: 800px; }
-  .hzn-glow { position: absolute; inset-inline: 0; top: 0; height: var(--line); background: radial-gradient(50% 80% at 50% 100%, color-mix(in oklab, var(--accent) 34%, transparent), color-mix(in oklab, var(--brand) 16%, transparent) 45%, transparent 78%); }
+  .hzn-glow { position: absolute; left: -600px; right: -600px; top: 0; transition: transform 760ms var(--ease-smooth-out); height: var(--line); background: radial-gradient(50% 80% at 50% 100%, color-mix(in oklab, var(--accent) 34%, transparent), color-mix(in oklab, var(--brand) 16%, transparent) 45%, transparent 78%); }
   .hzn-ground {
     position: absolute; z-index: 2; left: 50%; top: var(--line); width: 4400px; height: 1400px; translate: -50% 0; border-radius: 50%;
     --lat1: color-mix(in oklab, var(--accent-text) 34%, transparent);
@@ -182,7 +182,22 @@
   .hzn-mark { position: relative; display: block; width: 12px; height: 12px; margin: -6px auto 0; border-radius: 50%; background: var(--accent-text); }
   .hzn-mark::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--ai-ink); opacity: 0; }
   .hzn-tick[data-state="now"] .hzn-mark::after { animation: mk-ping 900ms var(--ease-smooth-out) var(--lead, 250ms) both; }
-  .hzn-tick b { display: block; margin-top: 28px; font-size: 26px; line-height: 1.3; font-weight: 600; color: var(--ink-secondary); }
+  /* The sky path: a hop between each pair of marks. Ahead it is a dotted
+     trace; once travelled it is lit in AiMY's gradient, drawn in step with the
+     orb (the same curve, the same ease-in-out). */
+  .hzn-sky { position: absolute; z-index: 1; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; pointer-events: none; }
+  .hzn-arc-trace { fill: none; stroke: var(--w20); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 0.1 12; }
+  .hzn-arc-lit { fill: none; stroke: url(#hzn-ai); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; filter: drop-shadow(0 0 8px rgba(var(--cyan-rgb), 0.55)); transition: stroke-dashoffset 760ms cubic-bezier(0.65, 0, 0.35, 1); }
+  .hzn-arc:is([data-state="now"], [data-state="done"]) .hzn-arc-lit { stroke-dashoffset: 0; }
+  /* Where the orb lands, the ground answers: two rings run out across it. */
+  .hzn-ripple { position: absolute; z-index: 3; left: 0; top: 0; width: 360px; height: 72px; margin: -36px 0 0 -180px; border-radius: 50%; box-sizing: border-box; border: 2px solid color-mix(in oklab, var(--ai-ink) 75%, transparent); box-shadow: 0 0 24px rgba(var(--ai-ink-rgb), 0.45), inset 0 0 18px rgba(var(--ai-ink-rgb), 0.3); opacity: 0; pointer-events: none; }
+  /* The current date rises onto a glass chip. Its ground is a layer that fades
+     and scales, so only opacity and transform move. */
+  .hzn-chip { position: relative; display: inline-block; margin-top: 20px; padding: 8px 22px 10px; }
+  .hzn-chip::before { content: ""; position: absolute; inset: 0; border-radius: 16px; background: var(--glass-soft); box-shadow: inset 0 0 0 1px var(--glass-border), 0 10px 28px -14px rgba(0, 0, 0, 0.55); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); opacity: 0; transform: scale(var(--scale-large)); transition: opacity var(--duration-quick) var(--ease-smooth-out), transform var(--duration-quick) var(--ease-smooth-out); }
+  .hzn-tick[data-state="now"] .hzn-chip::before { opacity: 1; transform: none; transition-duration: var(--duration-very-slow); transition-delay: calc(var(--lead, 250ms) + 400ms); }
+  .hzn-chip > * { position: relative; }
+  .hzn-tick b { display: block; font-size: 26px; line-height: 1.3; font-weight: 600; color: var(--ink-secondary); }
   .hzn-tick span { display: block; font-size: 24px; line-height: 1.4; color: var(--ink-secondary); }
   .hzn-tick[data-state="now"] b, .hzn-tick[data-state="now"] span { color: var(--ink-primary); }
   .hzn-tick[data-state="done"] .hzn-mark { background: var(--ai-ink); }
@@ -780,17 +795,43 @@ const orbPose = (i) => {
   return { x, y: LINE + (on ? curve(x) : 0), s: on ? 0.6 : i === 0 ? 1 : 0.8 };
 };
 const orbT = (p) => `translate(${p.x - 300}px, ${p.y - 300}px) scale(${p.s})`;
+const tickPose = (k) => orbPose(k + 1);
+/* One curve for the hop and the path it leaves: a quadratic whose peak is
+   110px above the higher end. */
+const HOP = 220;
+const hopCtrl = (a, b) => ({ x: (a.x + b.x) / 2, y: Math.min(a.y, b.y) - HOP });
+const arcPath = (a, b) => { const c = hopCtrl(a, b); return `M${a.x} ${a.y.toFixed(1)} Q${c.x} ${c.y.toFixed(1)} ${b.x} ${b.y.toFixed(1)}`; };
+function hopFrames(a, b, n = 28) {
+  const c = hopCtrl(a, b);
+  return Array.from({ length: n + 1 }, (_, k) => {
+    const t = easeInOutCubic(k / n), u = 1 - t;
+    const p = { x: u * u * a.x + 2 * u * t * c.x + t * t * b.x, y: u * u * a.y + 2 * u * t * c.y + t * t * b.y, s: a.s + (b.s - a.s) * t + Math.sin(Math.PI * t) * 0.05 };
+    return { transform: orbT(p), offset: k / n };
+  });
+}
+function ripple(st, at, delay) {
+  if (reduced()) return;
+  st.querySelectorAll('.hzn-ripple').forEach((el, k) => el.animate([
+    { transform: `translate(${at.x}px, ${at.y}px) scale(0.15)`, opacity: 0.9 },
+    { transform: `translate(${at.x}px, ${at.y}px) scale(2.6)`, opacity: 0 },
+  ], { duration: 1100, delay: delay + k * 180, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }));
+}
 
 const horizon = {
   build: () => `<div class="sl hzn">
     <div class="hzn-glow"></div>
     ${field(false)}
+    <svg class="hzn-sky" viewBox="0 0 1920 1080" aria-hidden="true">
+      <defs><linearGradient id="hzn-ai" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#0066ff"/><stop offset="0.47" stop-color="#61adf1"/><stop offset="1" stop-color="#45d3e6"/></linearGradient></defs>
+      ${M.slice(1).map((_, k) => { const d = arcPath(tickPose(k), tickPose(k + 1)); return `<g class="hzn-arc" data-n="${k + 2}"><path class="hzn-arc-trace" d="${d}"/><path class="hzn-arc-lit" pathLength="1" d="${d}"/></g>`; }).join('')}
+    </svg>
     <div class="hzn-orb"><canvas></canvas></div>
     <div class="hzn-ground"></div>
     <div class="hzn-reflect"></div>
     <div class="mk-comet"></div>
+    <div class="hzn-ripple"></div><div class="hzn-ripple"></div>
     ${brandHead(COVER.when)}
-    <ol class="hzn-ticks">${M.map((s, k) => `<li class="hzn-tick" data-n="${k + 1}" style="left:${tickX(k)}px;top:${(LINE + curve(tickX(k))).toFixed(1)}px"><span class="hzn-mark"></span><b>${s.when}</b><span>${s.chapter}</span></li>`).join('')}</ol>
+    <ol class="hzn-ticks">${M.map((s, k) => `<li class="hzn-tick" data-n="${k + 1}" style="left:${tickX(k)}px;top:${(LINE + curve(tickX(k))).toFixed(1)}px"><span class="hzn-mark"></span><span class="hzn-chip"><b>${s.when}</b><span>${s.chapter}</span></span></li>`).join('')}</ol>
     <section class="hzn-panel" data-n="0">${spot('cover')}${rv(1, COVER.kicker, 'sl-kicker')}<h2 class="sl-display">${words(COVER.title)}</h2></section>
     ${M.map((s, k) => `<section class="hzn-panel" data-n="${k + 1}">${rv(0, `${s.when} · ${s.chapter}`, 'sl-kicker')}${s.figure
       ? rv(1, figure(s, ''), 'sl-figure') + rv(2, s.figure.means, 'sl-lede', 'p')
@@ -809,15 +850,15 @@ const horizon = {
     orb.getAnimations().forEach((a) => a.cancel());
     orb.style.transform = orbT(to);
     st.querySelector('.hzn-reflect').style.transform = `translate(${to.x}px, ${(to.y - LINE).toFixed(1)}px)`;
-    if (prev >= 0 && !reduced()) {
-      /* A hop, not a slide: up and over to the next mark. */
-      const from = orbPose(prev);
-      const mid = { x: (from.x + to.x) / 2, y: Math.min(from.y, to.y) - 110, s: Math.max(from.s, to.s) * 1.06 };
-      orb.animate([
-        { transform: orbT(from), easing: 'cubic-bezier(0.33, 0, 0.2, 1)' },
-        { transform: orbT(mid), offset: 0.42, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
-        { transform: orbT(to) },
-      ], { duration: 760 });
+    st.querySelector('.hzn-glow').style.transform = `translateX(${((to.x - 960) * 0.4).toFixed(0)}px)`;
+    if (reduced()) { /* nothing moves; the states above are the slide */ }
+    else if (i === 0) {
+      /* Sunrise: the orb comes up from behind the horizon. */
+      orb.animate([{ transform: orbT({ ...to, y: to.y + 320 }) }, { transform: orbT(to) }], { duration: 1100, delay: prev < 0 ? 300 : 0, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' });
+    } else if (prev >= 0) {
+      /* A hop along the same curve the sky path draws. */
+      orb.animate(hopFrames(orbPose(prev), to), { duration: 760, easing: 'linear' });
+      if (moment(i)) ripple(st, { x: to.x, y: to.y }, 640);
       if (moment(prev) && moment(i)) {
         const x0 = tickX(prev - 1), x1 = tickX(i - 1), dir = Math.sign(x1 - x0);
         comet(st.querySelector('.mk-comet'), Array.from({ length: 15 }, (_, k) => {
