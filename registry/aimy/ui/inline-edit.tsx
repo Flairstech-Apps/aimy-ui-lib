@@ -49,6 +49,7 @@ export function InlineEdit({ value, onSave, label, validate, size = "text", plac
       actions: {
         set: {
           description: `Change the ${label.toLowerCase()}`,
+          keywords: "rename edit set update",
           params: { value: { type: "string", description: `The new ${label.toLowerCase()}` } },
           say: (p) => `changed the ${label.toLowerCase()} to \u201c${p.value}\u201d`,
           run: async (p) => {

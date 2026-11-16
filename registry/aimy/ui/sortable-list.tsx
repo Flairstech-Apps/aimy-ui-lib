@@ -46,6 +46,7 @@ export function SortableList<T>({ items, getKey, getLabel, onReorder, renderItem
       actions: {
         move: {
           description: "Move an item to a position",
+          keywords: "reorder order first last up down",
           params: {
             item: { type: "string", description: "The item's name", enum: items.map(getLabel) },
             position: { type: "number", description: `Its new position, 1 to ${items.length}` },

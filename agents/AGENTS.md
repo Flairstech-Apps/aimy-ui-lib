@@ -90,6 +90,7 @@ Behaviours (building a part the library doesn't have):
 - Every pointer gesture needs a keyboard path (Space to pick up, the arrows, Space to drop, Escape to cancel), and the behaviour's announcement for screen readers.
 - A floating panel uses the primitives (`@aimy/popover-primitive`, `menu-primitive`, `select-primitive`, `tooltip-primitive`, `dialog-primitive`), never its own outside-click or Escape code.
 - Let AiMY work the screen through the agent bridge (`@aimy/agent-bridge`): wrap the page in `AgentProvider`, give each part AiMY may change an `agent` id, pass the person's Autonomy setting to `levelFor`, and hand `bridge.tools()` to the model. Every action returns its undo; what can't be undone is `undoable: false` and always asks. Never let AiMY change the page any other way.
+- Give every page one `CommandBar` (`@aimy/command-bar`) inside the `AgentProvider`; add the app's own commands with `useCommand` (they are AiMY's tools too). Ctrl+Z outside a field takes back the last change; never hand-write another undo.
 - When AiMY answers with interface, give the model `uiPrompt(AIMY_UI)` and `showUiTool(AIMY_UI)` and draw its answer with `GenerativeUI` (`@aimy/generative-ui`); never render model HTML or code. Send `onProblems` back to the model.
 - Test it with `@aimy/behaviors-testing`: `ariaProblems` and `singleTabStopProblems` must come back empty.
 
@@ -137,6 +138,7 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 - **Card** (`@aimy/card`): The record card both products draw: an article with CardHead (a state Tag and CardType), CardTitle (a real button or link whose hit area covers the card), CardSummary, CardFacts, CardBody and CardFoot (stay clickable on their own). https://aimy-ui-lib.aimy.flairstech.com/components/card/
 - **Tabs** (`@aimy/tabs`): A real tablist with arrow keys. https://aimy-ui-lib.aimy.flairstech.com/components/tabs/
 - **Menu** (`@aimy/menu`): A menu of actions or choices from a control: MenuItem (acts and closes; danger for destructive), MenuRadioGroup and MenuRadioItem (one answer), MenuCheckboxItem (several answers; stays open), MenuLabel, MenuSeparator, MenuSearch (filters long lists). https://aimy-ui-lib.aimy.flairstech.com/components/menu/
+- **Command bar** (`@aimy/command-bar`): Ctrl+K opens one bar for every action the page's parts offer (through the agent bridge) and every command the app adds with useCommand; the same set AiMY uses as tools. https://aimy-ui-lib.aimy.flairstech.com/components/command-bar/
 - **Tooltip & popover** (`@aimy/tooltip`): A short hint on hover or keyboard focus, after 80ms (transitions.dev tooltip, 17). https://aimy-ui-lib.aimy.flairstech.com/components/tooltip/
 - **Disclosure** (`@aimy/disclosure`): Show or hide one section in place: a header with an optional count and a chevron, the body sliding open with transitions.dev accordion (21). https://aimy-ui-lib.aimy.flairstech.com/components/disclosure/
 - **Pager** (`@aimy/pager`): Paging in words: 1–15 of 134 contacts, page 1 of 9, with Back and Next text actions that say how many. https://aimy-ui-lib.aimy.flairstech.com/components/pager/

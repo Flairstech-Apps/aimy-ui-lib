@@ -26,6 +26,8 @@ type AgentProviderProps = {
   webmcp?: boolean
   /** Use your own bridge (to share it with a command bar or a test). */
   bridge?: AgentBridge
+  /** Ctrl+Z (Cmd+Z) outside a text field takes back the last change made through the bridge. Default true. */
+  undoShortcut?: boolean
 }
 
 type Pending = AgentRequest & { id: number; resolve: (ok: boolean) => void }
@@ -37,7 +39,7 @@ const setPending = (next: Pending[]) => {
   listeners.forEach((l) => l(pending))
 }
 
-export function AgentProvider({ children, levelFor, webmcp, bridge: given }: AgentProviderProps) {
+export function AgentProvider({ children, levelFor, webmcp, bridge: given, undoShortcut = true }: AgentProviderProps) {
   const latest = useLatest({ levelFor })
   const [bridge] = useState(
     () =>
@@ -51,6 +53,19 @@ export function AgentProvider({ children, levelFor, webmcp, bridge: given }: Age
       })
   )
   useEffect(() => (webmcp ? bridge.registerWebMCP() : undefined), [bridge, webmcp])
+  // One undo for the whole page: what AiMY did and what you ran, newest first.
+  useEffect(() => {
+    if (!undoShortcut) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() !== "z" || !(e.ctrlKey || e.metaKey) || e.shiftKey || e.altKey || e.defaultPrevented) return
+      const t = e.target as HTMLElement | null
+      if (t?.closest("input,textarea,select,[contenteditable]:not([contenteditable=false])")) return
+      e.preventDefault()
+      void bridge.undoLast().then((done) => done && toast(`Took back: ${done.sentence.replace(/\.$/, "")}`))
+    }
+    document.addEventListener("keydown", onKey)
+    return () => document.removeEventListener("keydown", onKey)
+  }, [bridge, undoShortcut])
   return <AgentContext value={bridge}>{children}</AgentContext>
 }
 
@@ -99,11 +114,12 @@ const WORDS: Record<AgentActivity["status"], string> = {
 }
 
 /** What AiMY did on this screen, newest first, each with Undo while it can be taken back. */
-export function AgentLog({ className, limit = 8 }: { className?: string; limit?: number }) {
-  const { activity } = useAgentActivity()
+export function AgentLog({ className, limit = 8, everyone }: { className?: string; limit?: number; /** Also list what the person ran from the command bar. */ everyone?: boolean }) {
+  const { activity: all } = useAgentActivity()
+  const activity = everyone ? all : all.filter((a) => a.by === "aimy")
   if (!activity.length) return <p className={cn("text-meta text-ink-secondary", className)}>Nothing yet. What AiMY does here shows up in this list.</p>
   return (
-    <ol data-slot="agent-log" aria-label="What AiMY did" className={cn("flex flex-col gap-1", className)}>
+    <ol data-slot="agent-log" aria-label={everyone ? "What changed" : "What AiMY did"} className={cn("flex flex-col gap-1", className)}>
       {activity.slice(0, limit).map((a) => (
         <li key={a.id} className="flex items-baseline gap-3 rounded-md px-2 py-1.5 text-meta">
           <span className="min-w-0 flex-1 text-ink">{a.sentence}</span>
@@ -123,4 +139,4 @@ export function AgentLog({ className, limit = 8 }: { className?: string; limit?:
 }
 
 export { useAgent, useAgentActivity }
-export { useAgentSurface } from "@/lib/behaviors-agent-react"
+export { useAgentSurface, useCommand } from "@/lib/behaviors-agent-react"

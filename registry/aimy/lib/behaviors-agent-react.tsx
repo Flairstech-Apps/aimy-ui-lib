@@ -67,6 +67,28 @@ function nameOf(el: Element | null): string {
   return labels?.[0]?.textContent?.trim() ?? ""
 }
 
+/**
+ * Adds a command for the command bar (and for AiMY, as a tool): "Go to
+ * Contacts", "New deal". said is what happened, in the past tense, for the
+ * log: "opened Contacts". Return a function to make it undoable.
+ */
+export function useCommand(
+  id: string,
+  command: { group: string; label: string; said?: string; run: () => void | (() => void) | Promise<void | (() => void)> },
+  enabled = true
+) {
+  useAgentSurface(
+    enabled ? id : undefined,
+    {
+      kind: "command",
+      label: command.group,
+      state: () => null,
+      actions: { run: { description: command.label, say: () => command.said ?? `ran “${command.label}”`, run: () => command.run() } },
+    },
+    null
+  )
+}
+
 /** What AiMY has done, newest first, and what it is working on now. */
 export function useAgentActivity() {
   const bridge = useAgent()

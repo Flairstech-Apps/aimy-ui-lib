@@ -957,6 +957,31 @@
       ]
     },
     {
+      "name": "command-bar",
+      "type": "registry:component",
+      "title": "Command bar",
+      "description": "Ctrl+K opens one bar for every action the page's parts offer (through the agent bridge) and every command the app adds with useCommand; the same set AiMY uses as tools. Choice params become one row per choice, a free value is asked for in the same field, Undo is the first row while there is something to take back, and words that match nothing become a question for AiMY (onAsk). A modal dialog with a combobox over grouped options.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/agent-bridge",
+        "@aimy/behaviors-agent",
+        "@aimy/dialog-primitive",
+        "@aimy/kbd",
+        "@aimy/toast",
+        "@aimy/aimy-mark"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/command-bar.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "tooltip",
       "type": "registry:component",
       "title": "Tooltip and InfoTip",

@@ -28,6 +28,8 @@ export type AgentUndo = () => void | Promise<void>
 export type AgentAction = {
   /** What it does, as a command: "Choose a company". */
   description: string
+  /** Other words people use for it, so the command bar finds it: "rename edit". */
+  keywords?: string
   params?: Record<string, AgentParam>
   /** The level this action asks for. The bridge's levelFor can lower or raise it. Default "tell". */
   level?: AutonomyLevel
@@ -62,6 +64,8 @@ export type AgentActivity = {
   label: string
   /** "AiMY chose Kestrel Logistics in Company." */
   sentence: string
+  /** Who did it: AiMY through a tool call, or the person through the command bar. */
+  by: "aimy" | "person"
   level: AutonomyLevel
   status: AgentStatus
   at: number
@@ -69,6 +73,20 @@ export type AgentActivity = {
 }
 
 export type AgentResult = { ok: true; message: string; state: unknown } | { ok: false; message: string }
+
+/** One thing a person can run from the command bar: an action with its choices filled in, or one that asks for a value. */
+export type AgentCommand = {
+  id: string
+  /** The part's name, as the group heading: "Company". */
+  group: string
+  /** What it does: "Choose Atlas Energy". */
+  label: string
+  /** Extra words that should find it. */
+  keywords: string
+  /** When set, the command bar asks for this before running. */
+  needs?: { param: string; description: string; type: "string" | "number" }
+  run: (value?: string) => Promise<AgentResult>
+}
 
 export type AgentTool = {
   name: string
@@ -175,7 +193,8 @@ export function createAgentBridge(options: AgentBridgeOptions = {}) {
     },
 
     /** Runs a tool call by name (from tools()), or an action on a surface. */
-    async act(name: string | { surface: string; action: string }, input: Record<string, unknown> = {}): Promise<AgentResult> {
+    async act(name: string | { surface: string; action: string }, input: Record<string, unknown> = {}, opts: { by?: "aimy" | "person" } = {}): Promise<AgentResult> {
+      const person = opts.by === "person"
       if (name === "read_screen") return { ok: true, message: "Here is the screen.", state: bridge.snapshot() }
       let surface: AgentSurface | undefined
       let actionName = ""
@@ -198,10 +217,12 @@ export function createAgentBridge(options: AgentBridgeOptions = {}) {
 
       const said = action.say?.(input) ?? `${action.description.charAt(0).toLowerCase()}${action.description.slice(1)}`
       // "AiMY chose Atlas Energy in Company." — unless the words already name the part.
-      const sentence = said.toLowerCase().includes(surface.label.toLowerCase()) ? `${who} ${said}.` : `${who} ${said} in ${surface.label}.`
-      // What can't be undone always asks, whatever the setting.
-      const level = action.undoable === false ? "ask" : (options.levelFor?.(surface, actionName) ?? action.level ?? "tell")
-      const entry: AgentActivity = { id: nextId("agent"), surface: surface.id, label: surface.label, sentence, level, status: "asked", at: Date.now() }
+      const actor = person ? "You" : who
+      const sentence = said.toLowerCase().includes(surface.label.toLowerCase()) ? `${actor} ${said}.` : `${actor} ${said} in ${surface.label}.`
+      // What can't be undone always asks, whatever the setting. A person
+      // running a command has already chosen: it acts, then tells with Undo.
+      const level: AutonomyLevel = person ? "tell" : action.undoable === false ? "ask" : (options.levelFor?.(surface, actionName) ?? action.level ?? "tell")
+      const entry: AgentActivity = { id: nextId("agent"), surface: surface.id, label: surface.label, sentence, by: person ? "person" : "aimy", level, status: "asked", at: Date.now() }
 
       if (level === "ask") {
         log(entry)
@@ -214,7 +235,7 @@ export function createAgentBridge(options: AgentBridgeOptions = {}) {
 
       store.set({ acting: surface.id })
       const unlight = light(surface)
-      announce(`${who} is working on ${surface.label}.`)
+      if (!person) announce(`${who} is working on ${surface.label}.`)
       try {
         const undo = await action.run(input)
         const done: AgentActivity = { ...entry, status: "done" }
@@ -236,11 +257,58 @@ export function createAgentBridge(options: AgentBridgeOptions = {}) {
       }
     },
 
+    /**
+     * Everything a person can run, for the command bar: an action whose
+     * params are all choices becomes one command per choice ("Choose Atlas
+     * Energy"); one free text or number param is asked for when it runs.
+     */
+    commands(): AgentCommand[] {
+      const out: AgentCommand[] = []
+      for (const s of surfaces.values()) {
+        for (const [name, a] of Object.entries(s.actions)) {
+          const params = Object.entries(a.params ?? {})
+          const free = params.filter(([, p]) => !p.enum && p.type !== "boolean" && !p.optional)
+          if (free.length > 1) continue
+          // Every combination of the choice params, at most 60 per action.
+          let combos: Record<string, unknown>[] = [{}]
+          for (const [k, p] of params) {
+            if (p.enum) combos = combos.flatMap((c) => p.enum!.map((v) => ({ ...c, [k]: p.type === "number" ? Number(v) : v })))
+            else if (p.type === "boolean") combos = combos.flatMap((c) => [{ ...c, [k]: true }, { ...c, [k]: false }])
+            if (combos.length > 60) combos = combos.slice(0, 60)
+          }
+          const verb = a.description
+          for (const c of combos) {
+            const chosen = Object.entries(c)
+            // One choice reads as a sentence: "Choose an option" → "Choose Atlas Energy".
+            const placeholder = / (an option|an item|a folder|an owner|a person)\b/
+            const one = chosen.length === 1 && typeof chosen[0]![1] !== "boolean" && placeholder.test(verb)
+            const label = one
+              ? verb.replace(placeholder, ` ${String(chosen[0]![1])}`)
+              : chosen.length
+                ? `${verb}: ${chosen.map(([, v]) => (typeof v === "boolean" ? (v ? "yes" : "no") : String(v))).join(", ")}`
+                : verb
+            const needs = free[0] ? { param: free[0][0], description: free[0][1].description, type: free[0][1].type as "string" | "number" } : undefined
+            out.push({
+              id: `${s.id}:${name}:${JSON.stringify(c)}`,
+              group: s.label,
+              label,
+              keywords: `${s.label} ${s.kind} ${verb} ${a.keywords ?? ""}`,
+              needs,
+              run: (value?: string) =>
+                bridge.act({ surface: s.id, action: name }, needs ? { ...c, [needs.param]: needs.type === "number" ? Number(value) : value } : c, { by: "person" }),
+            })
+          }
+        }
+      }
+      return out
+    },
+
     /** Undoes the most recent action that can be undone. */
-    async undoLast() {
+    /** Undoes the most recent action that can be undone; returns it, or null when there was none. */
+    async undoLast(): Promise<AgentActivity | null> {
       const last = store.get().activity.find((a) => a.status === "done" && a.undo)
       await last?.undo?.()
-      return !!last
+      return last ?? null
     },
 
     /**

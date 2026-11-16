@@ -105,12 +105,14 @@ export function Tree({ items, label, defaultExpanded, selected, onSelect, checka
       actions: {
         open: {
           description: "Open a folder",
+          keywords: "expand show",
           params: { item: { type: "string", description: "The folder's name", enum: folders.map((n) => n.data.label) } },
           say: (p) => `opened ${p.item}`,
           run: (p) => openFolder(p.item, true),
         },
         close: {
           description: "Close a folder",
+          keywords: "collapse hide",
           params: { item: { type: "string", description: "The folder's name", enum: folders.map((n) => n.data.label) } },
           say: (p) => `closed ${p.item}`,
           run: (p) => openFolder(p.item, false),

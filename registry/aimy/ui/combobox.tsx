@@ -93,6 +93,7 @@ export function Combobox({
       actions: {
         choose: {
           description: "Choose an option",
+          keywords: "pick select set change",
           params: { option: { type: "string", description: "The option's name as shown", enum: usable.map((o) => o.label) } },
           say: (p) => `chose ${p.option}`,
           run: (p) => {

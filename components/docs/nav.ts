@@ -68,6 +68,7 @@ const LIBRARY: NavGroup[] = [
       { href: "/components/card/", label: "Card" },
       { href: "/components/tabs/", label: "Tabs" },
       { href: "/components/menu/", label: "Menu" },
+      { href: "/components/command-bar/", label: "Command bar" },
       { href: "/components/tooltip/", label: "Tooltip & popover" },
       { href: "/components/disclosure/", label: "Disclosure" },
       { href: "/components/pager/", label: "Pager" },

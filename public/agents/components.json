@@ -175,6 +175,13 @@
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/menu/"
   },
   {
+    "name": "command-bar",
+    "title": "Command bar",
+    "group": "Containers & navigation",
+    "description": "Ctrl+K opens one bar for every action the page's parts offer (through the agent bridge) and every command the app adds with useCommand; the same set AiMY uses as tools. Choice params become one row per choice, a free value is asked for in the same field, Undo is the first row while there is something to take back, and words that match nothing become a question for AiMY (onAsk). A modal dialog with a combobox over grouped options.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/command-bar/"
+  },
+  {
     "name": "tooltip",
     "title": "Tooltip & popover",
     "group": "Containers & navigation",
