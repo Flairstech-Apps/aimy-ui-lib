@@ -79,6 +79,12 @@ Errors and recovery (AIMY-2979):
 - A request that creates, updates, deletes, sends or pays and then times out is `uncertain`: ask people to check, never offer a blind retry.
 - An empty result is an `EmptyState`, never a failure; a failed load is never an empty state.
 
+Presentations:
+
+- A deck is `HorizonDeck` (keynotes, launches, all-hands: a headline and a line or two per slide, the orb travelling the horizon) or `LanesDeck` (reviews, retrospectives, updates: what we learned above, what we did below). Pass a story: a cover, the moments in order, a close. Never lay slides out by hand.
+- Every moment has a date and a short chapter name; the timeline is drawn from them. A figure is a number with what it means, never a bare number.
+- Write slides in plain words, a headline and at most two lines under it. When there is more to say, add a moment.
+
 Never:
 
 - Never use a native `<select>`, an inline `onclick` string, a coloured left-edge stripe, gradient text, or a pulsing decorative dot.
@@ -151,6 +157,11 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 
 - **Document page** (`@aimy/document`): Knowledge's document page: the paper and the details beside it (one column below 1100px of its own width). https://aimy-ui-lib.aimy.flairstech.com/components/document/
 - **Writing tools** (`@aimy/doc-editor`): Knowledge's writing tools: SelectionMenu (Bold, Italic, Underline, then what AiMY can do with the selected words), WritingToolbar (add a block, formats, headings, lists, quote, undo, redo, AiMY), BlockMenu ('+' or '/' on an empty line) and AiMenu (AiMY for the whole document), wired together in DocEditor over a contenteditable body. https://aimy-ui-lib.aimy.flairstech.com/components/doc-editor/
+
+### Presentations
+
+- **Horizon deck** (`@aimy/horizon-deck`): A presentation told on the orb's horizon: the orb rises on the cover, then hops along the horizon from moment to moment, drawing its path in the sky, rippling the ground where it lands and raising that date onto a glass chip. https://aimy-ui-lib.aimy.flairstech.com/components/horizon-deck/
+- **Two lanes deck** (`@aimy/lanes-deck`): A presentation told in two lanes on one time axis: what we learned above, what we did below, an arrow drawn between, past columns kept at full strength, and a glass rail with the legend (Knowledge to Action) and the chapter. https://aimy-ui-lib.aimy.flairstech.com/components/lanes-deck/
 
 ### Data display
 
@@ -252,3 +263,4 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 - **MemoryPanel** (`@aimy/memory-panel`): What AiMY carries into this conversation from an earlier thread (Knowledge's memory panel), with Answer without it always present, and each line forgettable with Undo.
 - **MemoryList** (`@aimy/memory-list`): Everything AiMY remembers about a person or account, with where each came from; forget one in a click with Undo, or all of it after one inline confirm.
 - **Rail** (`@aimy/rail`): Sales' left column of standing facts, Knowledge's drawer below 1040 (scrim, Escape, focus in and back).
+- **Deck** (`@aimy/deck`): The engine both presentation templates share: a fixed 1920x1080 stage scaled whole to its frame (letterboxed when presenting), keys (arrows, Space, Page Up and Down, Home, End), click to go on or back, Present full screen, and the motion borrowed from the Chrome extension: the logo flying between the cover, the header and the close, the header mark's dots thinking between moments, drifting blooms and rising dust, figures counting up, titles word by word.

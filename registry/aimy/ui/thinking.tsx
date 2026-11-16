@@ -25,7 +25,7 @@ const T_HOLD = 420
 const T_CYCLE = T_SCATTER + T_ORBIT + T_GATHER + T_HOLD
 const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
 
-type Pt = {
+export type Pt = {
   x: number
   y: number
   c: string
@@ -65,8 +65,8 @@ function stopColour(o: number): Channels {
 
 /* A jittered grid over the mark, so an even spread reads as the shape. Each
    point gets a fixed orbit seat, so it always leaves for the same place and
-   comes back to the same petal. */
-function sampleMark(): Pt[] {
+   comes back to the same petal. Exported for the decks' header mark. */
+export function sampleMark(): Pt[] {
   if (POINTS) return POINTS
   POINTS = []
   try {

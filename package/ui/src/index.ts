@@ -214,3 +214,23 @@ export { CandidateProfile, type ExperienceItem } from "../../../registry/aimy/ui
 export { ChatTable, wrapCell } from "../../../registry/aimy/ui/chat-table"
 export { RankedList, type RankedItem } from "../../../registry/aimy/ui/ranked-list"
 export { UploadResults, type UploadItem, type UploadStatus } from "../../../registry/aimy/ui/upload-results"
+export {
+  Deck,
+  DeckCount,
+  DeckField,
+  DeckHead,
+  DeckSpot,
+  CloseAction,
+  CloseTitle,
+  DeckLine,
+  DeckWords,
+  useDeck,
+  stateOf,
+  isMoment,
+  runComet,
+  type DeckClose,
+  type DeckCover,
+  type DeckFigure,
+} from "../../../registry/aimy/ui/deck"
+export { HorizonDeck, type HorizonMoment, type HorizonStory } from "../../../registry/aimy/ui/horizon-deck"
+export { LanesDeck, type LanesMoment, type LanesStory } from "../../../registry/aimy/ui/lanes-deck"

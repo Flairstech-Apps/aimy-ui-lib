@@ -1,0 +1,246 @@
+/*
+ * AiMY decks: presentations told on a timeline (registry deck, horizon-deck,
+ * lanes-deck). Explored in docs/deck-variants.html; the motion is the Chrome
+ * extension's (Knowledge/extension): the logo flight, the thinking mark and
+ * the ambient field.
+ *
+ * A slide is authored on a fixed 1920x1080 stage that the frame scales whole,
+ * so it never re-lays out on a smaller screen. Sizes below are stage pixels.
+ * Slides switch by data-state (now, done, ahead), never by display.
+ */
+
+/* ═════════════════ ENGINE ═════════════════ */
+.dk { display: flex; flex-direction: column; gap: 12px; }
+.dk-frame {
+  position: relative; aspect-ratio: 16 / 9; overflow: hidden; cursor: pointer; user-select: none;
+  border-radius: var(--r-lg); border: 1px solid var(--card-border); background: var(--body-bg);
+}
+.dk-frame:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.dk-frame:fullscreen { aspect-ratio: auto; border: 0; border-radius: 0; }
+.dk-stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+/* Hidden until it is scaled to its frame, so it never flashes at full size. */
+.dk-stage:not([data-fit]) { visibility: hidden; }
+.dk-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.dk-count { min-width: 4.5rem; text-align: center; font-size: var(--fs-xs); font-weight: 500; color: var(--ink-primary); font-variant-numeric: tabular-nums; }
+.dk-keys { margin-left: auto; font-size: var(--fs-xs); color: var(--ink-secondary); }
+
+/* ═════════════════ SLIDE TYPE ═════════════════
+   The brand guide's line slide sets the voice: Poppins 600, tight tracking on
+   display sizes, AiMY blue for the turn of a phrase. */
+.dk-slide {
+  position: absolute; inset: 0; overflow: hidden; font-family: var(--font-sans); color: var(--ink-primary); background: var(--body-bg);
+  --mote: color-mix(in oklab, var(--d50) 85%, transparent);
+  --comet-head: var(--d50);
+}
+[data-theme="light"] .dk-slide, .dk-slide[data-theme="light"] {
+  --mote: color-mix(in oklab, var(--brand) 55%, transparent);
+  --comet-head: var(--brand);
+  --o-mul: 0.8;
+}
+.dk-head { position: absolute; z-index: 5; left: 120px; right: 120px; top: 72px; display: flex; align-items: center; justify-content: space-between; }
+.dk-head-meta { font-size: 24px; font-weight: 500; color: var(--ink-secondary); }
+.dk-kicker { font-size: 28px; line-height: 1.3; font-weight: 600; color: var(--accent-text); }
+.dk-display { margin: 24px 0 0; font-size: 104px; line-height: 1.02; font-weight: 600; letter-spacing: -0.035em; text-wrap: balance; }
+.dk-title { margin: 24px 0 0; font-size: 88px; line-height: 1.05; font-weight: 600; letter-spacing: -0.03em; text-wrap: balance; }
+.dk-lede { margin: 32px 0 0; font-size: 40px; line-height: 1.4; color: var(--ink-secondary); text-wrap: pretty; }
+.dk-body { margin: 28px 0 0; font-size: 34px; line-height: 1.5; color: var(--ink-secondary); text-wrap: pretty; }
+.dk-figure { margin: 8px 0 0; font-size: 280px; line-height: 0.95; font-weight: 600; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; }
+.dk-turn { color: var(--ai-ink); }
+.dk-cta { display: flex; align-items: center; gap: 28px; margin-top: 56px; }
+.dk-cta.is-center { justify-content: center; }
+.dk-cta-btn { display: inline-flex; align-items: center; height: 76px; padding: 0 40px; border-radius: var(--r-pill); background: var(--brand); color: var(--on-brand); font-size: 28px; font-weight: 500; text-decoration: none; }
+.dk-cta-where { font-family: var(--font-mono); font-size: 24px; color: var(--ink-secondary); }
+.dk-card { padding: 32px 36px; border-radius: 20px; border: 1px solid transparent; font-size: 30px; line-height: 1.45; color: var(--ink-primary); }
+.dk-card-label { display: block; margin-bottom: 12px; font-size: 20px; line-height: 1.3; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.dk-card.is-learned { background: var(--brand-dim); border-color: rgba(var(--brand-rgb), 0.3); }
+.dk-card.is-learned .dk-card-label { color: var(--ai-ink); }
+.dk-card.is-did { background: var(--accent-dim); border-color: rgba(var(--accent-rgb), 0.3); }
+.dk-card.is-did .dk-card-label { color: var(--accent-text); }
+
+/* ═════════════════ REVEAL ═════════════════
+   transitions.dev 18 (text reveal), lines ordered by --i on the large stagger;
+   titles arrive word by word (30). --lead is how long a line waits: the
+   camera's move, or the logo's whole flight when the logo is travelling. */
+.dk-rv, .dk-w {
+  opacity: 0; transform: translateY(var(--distance-medium)); filter: blur(var(--blur-medium));
+  transition: opacity var(--duration-quick) var(--ease-smooth-out), transform var(--duration-quick) var(--ease-smooth-out), filter var(--duration-quick) var(--ease-smooth-out);
+}
+[data-state="now"] .dk-rv, [data-state="now"] .dk-w {
+  opacity: 1; transform: none; filter: none;
+  transition-duration: var(--duration-very-slow);
+  transition-delay: calc(var(--lead, var(--duration-fast)) + var(--i, 0) * var(--duration-micro));
+}
+.dk-w { display: inline-block; }
+[data-state="now"] .dk-w { transition-delay: calc(var(--lead, var(--duration-fast)) + var(--w, 0) * var(--duration-stagger) * 2); }
+/* A card that lands rather than rises: the spring of a press that settles. */
+.dk-rv.is-pop { transform: translateY(var(--distance-medium)) scale(var(--scale-large)); }
+[data-state="now"] .dk-rv.is-pop { transform: none; transition-timing-function: var(--ease-spring); }
+
+/* ═════════════════ THE LOGO ═════════════════
+   The header lockup, split so the mark can land and the word can follow.
+   Sizes are the lockup's own geometry at 44px: the word is 68.54/147.66 of
+   the mark's height, 14.1 units after it, its top 39.6 units down. */
+.dk-brand { display: flex; align-items: flex-start; }
+.dk-anchor { position: relative; width: 45.1px; height: 44px; flex: none; }
+.dk-icon { display: block; width: 100%; height: 100%; opacity: 0; }
+.dk-anchor.is-on .dk-icon { opacity: 1; }
+.dk-anchor.is-landing .dk-icon { animation: dk-land 260ms var(--ease-spring); }
+@keyframes dk-land { from { transform: scale(1.14); } to { transform: scale(1); } }
+.dk-think { position: absolute; left: -12px; top: -12px; width: 69px; height: 68px; opacity: 0; pointer-events: none; }
+.dk-anchor.is-thinking .dk-icon { opacity: 0; }
+.dk-anchor.is-thinking .dk-think { opacity: 1; }
+.dk-word { display: block; width: 75.6px; height: 20.4px; margin: 11.8px 0 0 4.2px; clip-path: inset(0 100% 0 0); }
+/* Wipes out from behind the mark rather than fading in place (the extension's word-reveal). */
+.dk-word.is-on { animation: dk-word 380ms ease-out 60ms forwards; }
+@keyframes dk-word { from { clip-path: inset(0 100% 0 0); transform: translateX(-6px); opacity: 0.35; } to { clip-path: inset(0 -2px 0 0); transform: none; opacity: 1; } }
+/* The mark in flight, moved by the Web Animations API, and the places it rests. */
+.dk-fly { position: absolute; z-index: 8; left: 0; top: 0; visibility: hidden; transform-origin: center; will-change: transform; pointer-events: none; }
+.dk-fly svg { display: block; width: 100%; height: 100%; }
+.dk-spot { position: relative; display: block; flex: none; width: 150px; height: 146.3px; margin-bottom: 36px; }
+.dk-halo { position: absolute; inset: -80px; border-radius: 50%; background: radial-gradient(closest-side, rgba(var(--brand-rgb), 0.34), transparent); }
+
+/* ═════════════════ AMBIENT FIELD ═════════════════
+   Two blooms drifting on coprime cycles and dust rising on its own. */
+.dk-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+[data-theme="light"] .dk-field { opacity: 0.6; }
+.dk-bloom { position: absolute; inset: -20%; will-change: transform, opacity; }
+.dk-bloom.is-a { background: radial-gradient(ellipse at 30% 50%, rgba(var(--ai-rgb), 0.36) 0%, rgba(var(--ai-ink-rgb), 0.2) 28%, transparent 60%); animation: dk-drift-a var(--deck-drift-a) var(--ease-smooth-out) infinite alternate; }
+.dk-bloom.is-b { background: radial-gradient(ellipse at 75% 70%, rgba(var(--cyan-rgb), 0.2) 0%, rgba(var(--accent-rgb), 0.14) 38%, transparent 60%); animation: dk-drift-b var(--deck-drift-b) var(--ease-smooth-out) infinite alternate; }
+@keyframes dk-drift-a { from { transform: translate3d(-9%, -5%, 0) scale(1); opacity: 0.72; } to { transform: translate3d(10%, 6%, 0) scale(1.32); opacity: 1; } }
+@keyframes dk-drift-b { from { transform: translate3d(7%, 8%, 0) scale(1.26); opacity: 0.55; } to { transform: translate3d(-10%, -6%, 0) scale(1); opacity: 0.95; } }
+.dk-mote { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); border-radius: 50%; background: var(--mote); opacity: 0; will-change: transform, opacity; animation: dk-mote var(--d) linear infinite; animation-delay: calc(var(--n) * -1.7s); }
+@keyframes dk-mote { 0% { transform: translate3d(0, 0, 0); opacity: 0; } 18% { opacity: calc(var(--o) * var(--o-mul, 1)); } 76% { opacity: calc(var(--o) * var(--o-mul, 1)); } 100% { transform: translate3d(var(--dx), var(--t), 0); opacity: 0; } }
+/* A moment arriving: its mark rings once. */
+@keyframes dk-ping { from { transform: scale(1); opacity: 0.8; } to { transform: scale(3.4); opacity: 0; } }
+/* A light that runs along the timeline to the next moment, head first. */
+.dk-comet { position: absolute; z-index: 3; left: 0; top: 0; width: 240px; height: 6px; margin: -3px 0 0 -240px; border-radius: 3px; transform-origin: 100% 50%; opacity: 0; pointer-events: none; background: linear-gradient(90deg, transparent, rgba(var(--cyan-rgb), 0.9) 70%, var(--comet-head)); box-shadow: 0 0 18px rgba(var(--cyan-rgb), 0.6); }
+
+/* ═════════════════ HORIZON ═════════════════
+   The landing footer's orb horizon as a timeline. The ground is a 4400x1400
+   ellipse whose top is the horizon at y 800. */
+.dk-hzn { --line: 800px; }
+.dk-hzn-glow { position: absolute; left: -600px; right: -600px; top: 0; height: var(--line); background: radial-gradient(50% 80% at 50% 100%, color-mix(in oklab, var(--accent) 34%, transparent), color-mix(in oklab, var(--brand) 16%, transparent) 45%, transparent 78%); transition: transform var(--deck-hop) var(--ease-smooth-out); }
+.dk-hzn-ground {
+  position: absolute; z-index: 2; left: 50%; top: var(--line); width: 4400px; height: 1400px; translate: -50% 0; border-radius: 50%;
+  --lat1: color-mix(in oklab, var(--accent-text) 34%, transparent);
+  --lat2: color-mix(in oklab, var(--accent-text) 22%, transparent);
+  --lat3: color-mix(in oklab, var(--accent-text) 13%, transparent);
+  background:
+    radial-gradient(closest-side,
+      transparent 64.8%, var(--lat3) 65%, transparent 65.25%,
+      transparent 77.3%, var(--lat2) 77.5%, transparent 77.72%,
+      transparent 86.05%, var(--lat2) 86.25%, transparent 86.45%,
+      transparent 92.32%, var(--lat1) 92.5%, transparent 92.66%,
+      transparent 96.1%, var(--lat1) 96.25%, transparent 96.38%,
+      transparent 98.38%, var(--lat1) 98.5%, transparent 98.6%),
+    var(--body-bg);
+  border-top: 1px solid color-mix(in oklab, var(--accent-text) 70%, transparent);
+  box-shadow: 0 -1px 16px color-mix(in oklab, var(--accent) 55%, transparent), 0 -40px 120px -24px color-mix(in oklab, var(--brand) 45%, transparent);
+}
+/* The orb's light on the ground follows the orb. */
+.dk-hzn-reflect { position: absolute; z-index: 2; left: 0; top: var(--line); width: 900px; height: 150px; margin: -10px 0 0 -450px; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 34%, transparent), color-mix(in oklab, var(--brand) 14%, transparent) 55%, transparent); transition: transform var(--deck-hop) var(--ease-smooth-out); }
+.dk-hzn-orb { position: absolute; z-index: 1; left: 0; top: 0; width: 600px; height: 600px; will-change: transform; }
+/* The sky path: a hop between each pair of marks, dotted ahead and lit once travelled. */
+.dk-hzn-sky { position: absolute; z-index: 1; left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; pointer-events: none; }
+.dk-hzn-sky .is-a { stop-color: rgb(var(--ai-rgb)); }
+.dk-hzn-sky .is-b { stop-color: var(--ai-ink); }
+.dk-hzn-sky .is-c { stop-color: var(--cyan); }
+.dk-arc-trace { fill: none; stroke: var(--w20); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 0.1 12; }
+.dk-arc-lit { fill: none; stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; filter: drop-shadow(0 0 8px rgba(var(--cyan-rgb), 0.55)); transition: stroke-dashoffset var(--deck-hop) var(--ease-deck-arc); }
+.dk-arc:is([data-state="now"], [data-state="done"]) .dk-arc-lit { stroke-dashoffset: 0; }
+/* Where the orb lands, the ground answers: two rings run out across it. */
+.dk-hzn-ripple { position: absolute; z-index: 3; left: 0; top: 0; width: 360px; height: 72px; margin: -36px 0 0 -180px; box-sizing: border-box; border-radius: 50%; border: 2px solid color-mix(in oklab, var(--ai-ink) 75%, transparent); box-shadow: 0 0 24px rgba(var(--ai-ink-rgb), 0.45), inset 0 0 18px rgba(var(--ai-ink-rgb), 0.3); opacity: 0; pointer-events: none; }
+.dk-hzn-ticks { position: absolute; z-index: 3; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+.dk-hzn-tick { position: absolute; width: 280px; translate: -50% 0; text-align: center; }
+.dk-hzn-mark { position: relative; display: block; width: 12px; height: 12px; margin: -6px auto 0; border-radius: 50%; background: var(--accent-text); }
+.dk-hzn-mark::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--ai-ink); opacity: 0; }
+.dk-hzn-tick[data-state="now"] .dk-hzn-mark::after { animation: dk-ping 900ms var(--ease-smooth-out) var(--lead, 250ms) both; }
+.dk-hzn-tick[data-state="done"] .dk-hzn-mark { background: var(--ai-ink); }
+/* The current date rises onto a glass chip; its ground is a layer that fades and scales. */
+.dk-hzn-chip { position: relative; display: inline-block; margin-top: 20px; padding: 8px 22px 10px; }
+.dk-hzn-chip::before { content: ""; position: absolute; inset: 0; border-radius: 16px; background: var(--glass-soft); box-shadow: inset 0 0 0 1px var(--glass-border), var(--shadow-lg); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); opacity: 0; transform: scale(var(--scale-large)); transition: opacity var(--duration-quick) var(--ease-smooth-out), transform var(--duration-quick) var(--ease-smooth-out); }
+.dk-hzn-tick[data-state="now"] .dk-hzn-chip::before { opacity: 1; transform: none; transition-duration: var(--duration-very-slow); transition-delay: calc(var(--lead, 250ms) + 400ms); }
+.dk-hzn-chip > * { position: relative; display: block; }
+.dk-hzn-chip b { font-size: 26px; line-height: 1.3; font-weight: 600; color: var(--ink-secondary); }
+.dk-hzn-chip span { font-size: 24px; line-height: 1.4; color: var(--ink-secondary); }
+.dk-hzn-tick[data-state="now"] .dk-hzn-chip :is(b, span) { color: var(--ink-primary); }
+.dk-hzn-panel { position: absolute; z-index: 3; left: 160px; right: 160px; top: 150px; display: flex; flex-direction: column; align-items: center; text-align: center; pointer-events: none; }
+.dk-hzn-panel .dk-display { max-width: 1400px; }
+.dk-hzn-panel .dk-title { max-width: 1500px; }
+.dk-hzn-panel :is(.dk-body, .dk-lede) { max-width: 1100px; }
+.dk-hzn-panel .dk-cta { pointer-events: auto; }
+
+/* ═════════════════ TWO LANES ═════════════════
+   Each moment is a column on one time axis (y 540): what we learned above,
+   what we did below, an arrow drawn between. */
+.dk-lns-axis { position: absolute; left: 400px; right: 0; top: 540px; height: 2px; background: var(--w12); transition: opacity var(--duration-medium) var(--ease-smooth-out); }
+/* Columns travel in a window right of the rail, so they clip there. */
+.dk-lns-view { position: absolute; left: 400px; right: 0; top: 0; bottom: 0; overflow: hidden; }
+.dk-lns-strip { position: absolute; left: 0; top: 0; height: 1080px; transition: transform var(--duration-very-slow) var(--ease-smooth-out), opacity var(--duration-medium) var(--ease-smooth-out); }
+.dk-lns-fill { position: absolute; left: 12px; top: 539px; height: 4px; border-radius: 2px; background: var(--ai); transform-origin: 0 50%; transition: transform var(--duration-very-slow) var(--ease-smooth-out); }
+.dk-lns-comet { top: 541px; }
+.dk-lns[data-edge] :is(.dk-lns-axis, .dk-lns-strip) { opacity: 0; }
+.dk-lns-col { position: absolute; top: 0; width: 560px; height: 1080px; }
+.dk-lns-up { position: absolute; left: 0; bottom: 600px; width: 560px; }
+.dk-lns-down { position: absolute; left: 0; top: 600px; width: 560px; }
+.dk-lns-dot { position: absolute; left: 0; top: 529px; width: 24px; height: 24px; border-radius: 50%; background: var(--body-bg); box-shadow: inset 0 0 0 3px var(--w25); }
+.dk-lns-dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--brand); opacity: 0; }
+.dk-lns-col[data-state="now"] .dk-lns-dot { background: var(--brand); box-shadow: 0 0 0 10px var(--brand-dim), 0 0 40px var(--brand-glow); }
+.dk-lns-col[data-state="now"] .dk-lns-dot::after { animation: dk-ping 900ms var(--ease-smooth-out) var(--lead, 250ms) both; }
+.dk-lns-col[data-state="done"] .dk-lns-dot { background: var(--brand); box-shadow: none; }
+.dk-lns-when { position: absolute; left: 36px; top: 541px; translate: 0 -50%; padding: 0 14px; background: var(--body-bg); font-size: 26px; line-height: 1.3; font-weight: 600; color: var(--ink-secondary); white-space: nowrap; }
+.dk-lns-col[data-state="now"] .dk-lns-when { color: var(--ink-primary); }
+.dk-lns-link { position: absolute; left: 260px; top: 486px; width: 40px; height: 108px; overflow: visible; }
+.dk-lns-link path { fill: none; stroke: var(--accent-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset var(--duration-quick) var(--ease-smooth-out); }
+.dk-lns-col[data-state="now"] .dk-lns-link path { stroke-dashoffset: 0; transition-duration: var(--duration-very-slow); transition-delay: calc(var(--lead, var(--duration-fast)) + var(--duration-micro) * 2); }
+.dk-lns-col[data-state="done"] .dk-lns-link path { stroke-dashoffset: 0; stroke: var(--w25); }
+/* Past columns stay in the story at full strength, on a plain ground. */
+.dk-lns-col[data-state="done"] .dk-rv { opacity: 1; transform: none; filter: none; }
+.dk-lns-col[data-state="done"] .dk-card { background: var(--w03); border-color: var(--w07); }
+.dk-lns-col[data-state="done"] .dk-card-label { color: var(--ink-secondary); }
+.dk-lns-figure { display: block; margin-bottom: 8px; font-size: 120px; line-height: 1; font-weight: 600; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+/* The rail: a glass column that carries the logo, says what the two lanes are
+   and where the story is. It slides in while the logo flies to it. */
+.dk-lns-rail {
+  position: absolute; z-index: 3; left: 0; top: 0; bottom: 0; width: 400px;
+  background: linear-gradient(180deg, var(--glass-soft), color-mix(in oklab, var(--glass-soft) 55%, transparent));
+  -webkit-backdrop-filter: blur(24px) saturate(1.2); backdrop-filter: blur(24px) saturate(1.2);
+  border-right: 1px solid var(--glass-border);
+  transition: opacity var(--duration-very-slow) var(--ease-smooth-out) 200ms, transform var(--duration-very-slow) var(--ease-smooth-out) 200ms;
+}
+.dk-lns[data-edge] .dk-lns-rail { opacity: 0; transform: translateX(-40px); transition-delay: 0ms; transition-duration: var(--duration-medium); }
+.dk-lns-rail::before { content: ""; position: absolute; inset: 0; background: radial-gradient(70% 26% at 100% 50%, var(--brand-dim), transparent 75%); pointer-events: none; }
+.dk-lns-node { position: absolute; right: -8px; top: 533px; width: 16px; height: 16px; border-radius: 50%; background: var(--body-bg); box-shadow: inset 0 0 0 3px var(--ai-ink), 0 0 24px rgba(var(--ai-ink-rgb), 0.5); }
+/* A legend entry: a tile as tall as the name's line, the name, what it holds. */
+.dk-lns-legend { position: absolute; left: 120px; right: 24px; display: grid; grid-template-columns: 48px 1fr; column-gap: 16px; }
+.dk-lns-legend.is-up { bottom: 580px; }
+.dk-lns-legend.is-down { top: 580px; }
+.dk-lns-tile { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; }
+.dk-lns-tile svg { width: 24px; height: 24px; }
+.is-up .dk-lns-tile { background: var(--brand-dim); color: var(--ai-ink); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), 0.3); }
+.is-down .dk-lns-tile { background: var(--accent-dim); color: var(--accent-text); box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.3); }
+.dk-lns-legend b { font-size: 30px; line-height: 48px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink-primary); }
+.dk-lns-legend-sub { grid-column: 2; font-size: 20px; line-height: 1.4; color: var(--ink-secondary); }
+/* Knowledge to action, drawn each time the rail comes in. */
+.dk-rail-link { position: absolute; left: 124px; top: 478px; width: 40px; height: 98px; overflow: visible; }
+.dk-rail-link path { fill: none; stroke: var(--accent-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.dk-lns:not([data-edge]) .dk-rail-link path { stroke-dashoffset: 0; transition: stroke-dashoffset var(--duration-very-slow) var(--ease-smooth-out) var(--lead, 250ms); }
+/* Where the story is: the chapter in words, and a bar per chapter. */
+.dk-lns-where { position: absolute; left: 120px; right: 40px; bottom: 72px; }
+.dk-lns-where-k { display: block; font-size: 20px; line-height: 1.35; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-secondary); }
+.dk-lns-where-n { display: block; margin-top: 8px; font-size: 40px; line-height: 1.2; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--ink-primary); }
+.dk-lns-where-name { display: block; font-size: 24px; line-height: 1.4; color: var(--ink-secondary); }
+.dk-swap { animation: dk-swap var(--duration-fast) var(--ease-smooth-out); }
+@keyframes dk-swap { from { opacity: 0; transform: translateY(var(--distance-micro)); filter: blur(var(--blur-small)); } }
+.dk-lns-segs { display: flex; gap: 8px; margin-top: 20px; }
+.dk-lns-seg { position: relative; flex: 1; height: 4px; border-radius: 2px; overflow: hidden; background: var(--w12); }
+.dk-lns-seg::after { content: ""; position: absolute; inset: 0; background: var(--ai); transform: scaleX(0); transform-origin: 0 50%; transition: transform var(--duration-quick) var(--ease-smooth-out); }
+.dk-lns-seg[data-state="done"]::after { transform: none; }
+.dk-lns-seg[data-state="now"]::after { transform: none; transition-duration: var(--duration-very-slow); transition-delay: var(--lead, 250ms); }
+.dk-lns-panel { position: absolute; z-index: 4; left: 440px; width: 1200px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; pointer-events: none; }
+.dk-lns-panel .dk-cta { pointer-events: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dk-stage *, .dk-stage *::before, .dk-stage *::after { transition-duration: 0ms !important; transition-delay: 0ms !important; animation: none !important; }
+  .dk-word.is-on { clip-path: none; }
+}

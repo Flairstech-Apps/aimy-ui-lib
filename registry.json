@@ -2334,6 +2334,64 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "deck",
+      "type": "registry:component",
+      "title": "Deck",
+      "description": "The engine both presentation templates share: a fixed 1920x1080 stage scaled whole to its frame (letterboxed when presenting), keys (arrows, Space, Page Up and Down, Home, End), click to go on or back, Present full screen, and the motion borrowed from the Chrome extension: the logo flying between the cover, the header and the close, the header mark's dots thinking between moments, drifting blooms and rising dust, figures counting up, titles word by word. Use HorizonDeck or LanesDeck; build on Deck, useDeck and its parts only for a new template.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/aimy-mark",
+        "@aimy/button",
+        "@aimy/icon-button",
+        "@aimy/thinking"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/deck.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "horizon-deck",
+      "type": "registry:component",
+      "title": "HorizonDeck",
+      "description": "A presentation told on the orb's horizon: the orb rises on the cover, then hops along the horizon from moment to moment, drawing its path in the sky, rippling the ground where it lands and raising that date onto a glass chip. A headline and a line or two per slide, for keynotes, launches and all-hands. Pass a story: cover, two to seven moments (when, chapter, title, body or a figure), close.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/deck",
+        "@aimy/orb"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/horizon-deck.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "lanes-deck",
+      "type": "registry:component",
+      "title": "LanesDeck",
+      "description": "A presentation told in two lanes on one time axis: what we learned above, what we did below, an arrow drawn between, past columns kept at full strength, and a glass rail with the legend (Knowledge to Action) and the chapter. For reviews, retrospectives and updates, where every insight needs its next step. Pass a story: cover, moments (when, chapter, learned or a figure, did), close.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/deck"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/lanes-deck.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }

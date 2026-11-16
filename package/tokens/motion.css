@@ -60,4 +60,16 @@
   --press-scale: var(--scale-medium);
   --motion-hover-lift-sm: translateY(-1px);
   --motion-hover-lift-md: translateY(-2px);
+
+  /* Decks (deck.css). A slide moves further than a control, so presentations
+     have their own values instead of stretching the UI ones. The flight is the
+     Chrome extension's own; the rest were set on the deck explorations. */
+  --deck-flight: 720ms;  /* the logo between the cover, the header and the close */
+  --deck-hop: 760ms;     /* the orb from mark to mark; the sky path draws with it */
+  --deck-think: 1220ms;  /* the header mark's dots: apart, round once, back */
+  --deck-count: 1100ms;  /* a figure counting up to itself */
+  --deck-rise: 1100ms;   /* the orb's sunrise; the ripples across the ground */
+  --deck-drift-a: 29s;   /* the two blooms, coprime so they never fall into a beat */
+  --deck-drift-b: 37s;
+  --ease-deck-arc: cubic-bezier(0.65, 0, 0.35, 1); /* ease-in-out: the hop and the path it draws */
 }

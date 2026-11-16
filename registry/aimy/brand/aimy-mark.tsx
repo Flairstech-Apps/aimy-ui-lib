@@ -40,8 +40,10 @@ const WORDMARK = [
 ]
 
 type AimyMarkProps = {
-  /** "icon" is the mark alone; "lockup" adds the AiMY wordmark. */
-  variant?: "icon" | "lockup"
+  /** "icon" is the mark alone; "lockup" adds the AiMY wordmark; "word" is the
+   * wordmark alone, cropped to its letters, for a mark that lands first and is
+   * joined by its word (the decks' header). */
+  variant?: "icon" | "lockup" | "word"
   /** Accessible name. Pass an empty string when the mark sits beside the word "AiMY". */
   title?: string
   className?: string
@@ -51,12 +53,13 @@ export function AimyMark({ variant = "icon", title = "AiMY", className }: AimyMa
   const id = useId()
   const gradient = `aimy-rg-${id.replace(/:/g, "")}`
   const lockup = variant === "lockup"
+  const word = variant === "word"
   const decorative = title === ""
   return (
     <svg
       data-slot="aimy-mark"
-      viewBox={lockup ? "0 0 418.18 147.66" : "0 0 151.43 147.66"}
-      className={cn(lockup ? "h-6 w-auto" : "size-6", "shrink-0", className)}
+      viewBox={lockup ? "0 0 418.18 147.66" : word ? "162.44 40.82 253.66 68.54" : "0 0 151.43 147.66"}
+      className={cn(lockup || word ? "h-6 w-auto" : "size-6", "shrink-0", className)}
       role={decorative ? undefined : "img"}
       aria-hidden={decorative ? true : undefined}
       aria-label={decorative ? undefined : title}
@@ -69,7 +72,13 @@ export function AimyMark({ variant = "icon", title = "AiMY", className }: AimyMa
           ))}
         </radialGradient>
       </defs>
-      {lockup ? (
+      {word ? (
+        <g fill="#0366ff">
+          {WORDMARK.map((d) => (
+            <path key={d.slice(0, 16)} d={d} />
+          ))}
+        </g>
+      ) : lockup ? (
         <>
           <g fill="#0366ff">
             {WORDMARK.map((d) => (

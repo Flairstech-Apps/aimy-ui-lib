@@ -72,6 +72,12 @@ Errors and recovery (AIMY-2979):
 - A request that creates, updates, deletes, sends or pays and then times out is `uncertain`: ask people to check, never offer a blind retry.
 - An empty result is an `EmptyState`, never a failure; a failed load is never an empty state.
 
+Presentations:
+
+- A deck is `HorizonDeck` (keynotes, launches, all-hands: a headline and a line or two per slide, the orb travelling the horizon) or `LanesDeck` (reviews, retrospectives, updates: what we learned above, what we did below). Pass a story: a cover, the moments in order, a close. Never lay slides out by hand.
+- Every moment has a date and a short chapter name; the timeline is drawn from them. A figure is a number with what it means, never a bare number.
+- Write slides in plain words, a headline and at most two lines under it. When there is more to say, add a moment.
+
 Never:
 
 - Never use a native `<select>`, an inline `onclick` string, a coloured left-edge stripe, gradient text, or a pulsing decorative dot.

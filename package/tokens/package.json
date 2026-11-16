@@ -29,7 +29,8 @@
     "./sidenav.css": "./sidenav.css",
     "./scroll-dot.css": "./scroll-dot.css",
     "./diary.css": "./diary.css",
-    "./document.css": "./document.css"
+    "./document.css": "./document.css",
+    "./deck.css": "./deck.css"
   },
   "files": [
     "*.css"
