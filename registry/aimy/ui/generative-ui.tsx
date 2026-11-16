@@ -280,7 +280,12 @@ export function GenerativeUI({ spec, stream, catalog = AIMY_UI, render = AIMY_UI
     const kids = n.children?.map((c, i) => draw(c, `${key}.${i}`))
     return (
       <PartBoundary key={key} onError={(e) => onProblems?.([`${n.type}: couldn't be drawn (${e.message})`])}>
-        {r(n.props, kids, { onAction })}
+        <div
+          data-part={n.type}
+          className="flex min-w-0 flex-col transition-[opacity,translate] duration-(--t-slow) ease-out motion-reduce:transition-none starting:translate-y-1.5 starting:opacity-0 [&>*]:flex-1"
+        >
+          {r(n.props, kids, { onAction })}
+        </div>
       </PartBoundary>
     )
   }

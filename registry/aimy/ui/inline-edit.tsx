@@ -112,7 +112,7 @@ export function InlineEdit({ value, onSave, label, validate, size = "text", plac
     onKeyDown: (e: React.KeyboardEvent) => edit.onKeyDown(e, multiline),
     onBlur: () => void edit.commit(),
     onFocus: (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => e.currentTarget.select(),
-    className: cn(controlStyles.base, controlStyles.box, "-mx-2 w-[calc(100%+1rem)] px-2 py-1", sizes[size]),
+    className: cn(controlStyles.base, controlStyles.box, "-mx-2 w-[calc(100%+1rem)] px-2 py-1 starting:scale-[0.98] starting:opacity-0", sizes[size]),
   }
   return (
     <div ref={setRoot} data-slot="inline-edit" className={cn("flex max-w-full flex-col gap-1", className)}>

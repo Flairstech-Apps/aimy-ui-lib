@@ -7,7 +7,7 @@ import { Button } from "@/components/button"
 import { toast } from "@/components/toast"
 import { type AgentActivity, type AgentBridge, type AgentRequest, type AutonomyLevel, createAgentBridge } from "@/lib/behaviors-agent"
 import { AgentContext, useAgent, useAgentActivity } from "@/lib/behaviors-agent-react"
-import { useLatest } from "@/lib/behaviors-react"
+import { useFlip, useLatest } from "@/lib/behaviors-react"
 import { cn } from "@/lib/utils"
 
 // Lets AiMY see and work the screen. Wrap a page in AgentProvider; parts
@@ -84,7 +84,7 @@ export function AgentAsks({ className }: { className?: string }) {
   return (
     <ul data-slot="agent-asks" aria-label="Waiting for your answer" className={cn("flex flex-col gap-2", className)}>
       {list.map((p) => (
-        <li key={p.id} role="group" aria-label={p.sentence} className="flex items-start gap-3 rounded-lg border border-edge bg-brand-dim p-3">
+        <li key={p.id} role="group" aria-label={p.sentence} className="flex items-start gap-3 rounded-lg border border-edge bg-brand-dim p-3 transition-[opacity,translate] duration-(--t-slow) ease-out starting:translate-y-1 starting:opacity-0">
           <span className="flex h-[1lh] shrink-0 items-center text-meta">
             <AimyMark title="" className="h-3.5 w-3" />
           </span>
@@ -117,11 +117,12 @@ const WORDS: Record<AgentActivity["status"], string> = {
 export function AgentLog({ className, limit = 8, everyone }: { className?: string; limit?: number; /** Also list what the person ran from the command bar. */ everyone?: boolean }) {
   const { activity: all } = useAgentActivity()
   const activity = everyone ? all : all.filter((a) => a.by === "aimy")
+  const flipRef = useFlip<HTMLOListElement>(activity.map((a) => a.id + a.status).join(","), { enter: true })
   if (!activity.length) return <p className={cn("text-meta text-ink-secondary", className)}>Nothing yet. What AiMY does here shows up in this list.</p>
   return (
-    <ol data-slot="agent-log" aria-label={everyone ? "What changed" : "What AiMY did"} className={cn("flex flex-col gap-1", className)}>
+    <ol ref={flipRef} data-slot="agent-log" aria-label={everyone ? "What changed" : "What AiMY did"} className={cn("flex flex-col gap-1", className)}>
       {activity.slice(0, limit).map((a) => (
-        <li key={a.id} className="flex items-baseline gap-3 rounded-md px-2 py-1.5 text-meta">
+        <li key={a.id} data-flip={a.id} className="flex items-baseline gap-3 rounded-md px-2 py-1.5 text-meta">
           <span className="min-w-0 flex-1 text-ink">{a.sentence}</span>
           <span className={cn("shrink-0 text-2xs font-semibold", a.status === "done" ? "text-ok-text" : a.status === "failed" || a.status === "refused" ? "text-err-text" : "text-ink-secondary")}>
             {WORDS[a.status]}

@@ -3,12 +3,10 @@
 // Live demos for the Behaviours page: each one is a behaviour hook driving
 // plain markup, so what you try here is the behaviour itself, not a part.
 
-import { ChevronRight, GripVertical } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 import {
   type Span,
-  arrayMove,
-  bindDrag,
   createTreeCollection,
   stackSpans,
   toggleTreeChecked,
@@ -17,7 +15,8 @@ import {
   treeFromPaths,
   type PathItem,
 } from "@/lib/behaviors"
-import { useInlineEdit, useListbox, useReorder, useResize, useSpans, useStickToBottom, useTreeView, useViewport } from "@/lib/behaviors-react"
+import { useInlineEdit, useListbox, useResize, useSpans, useStickToBottom, useTreeView, useViewport } from "@/lib/behaviors-react"
+import { SortableList } from "@/registry/aimy/ui/sortable-list"
 import { cn } from "@/lib/utils"
 
 const box = "rounded-lg border border-edge bg-card p-3"
@@ -27,52 +26,9 @@ const hint = "mt-2 text-2xs text-ink-secondary"
 
 export function ReorderDemo() {
   const [steps, setSteps] = useState(["Read the brief", "Draft the plan", "Agree the scope", "Build it", "Ship it"])
-  const list = useRef<HTMLOListElement>(null)
-  const reorder = useReorder({ count: () => steps.length, label: (i) => steps[i] ?? "", onReorder: (a, b) => setSteps((s) => arrayMove(s, a, b)) })
-  const shown = reorder.from !== null && reorder.to !== null ? arrayMove(steps, reorder.from, reorder.to) : steps
-  const moving = reorder.from !== null ? steps[reorder.from] : null
-
-  // One drag listener on the list for every grip, bound once.
-  const { pointer } = reorder
-  useEffect(() => {
-    const el = list.current
-    if (!el) return
-    let from = -1
-    return bindDrag(el, {
-      filter: (e) => !!(e.target as Element).closest("[data-grip]"),
-      onPress: (e) => (from = Number((e.target as Element).closest<HTMLElement>("[data-grip]")?.dataset.grip)),
-      onStart: () => pointer.start(from),
-      onMove: (info) => {
-        const rects = Array.from(el.children).map((c) => c.getBoundingClientRect())
-        pointer.move(info.point, rects.map((r) => ({ x: r.left, y: r.top, width: r.width, height: r.height })))
-      },
-      onEnd: () => pointer.end(),
-      onCancel: () => pointer.cancel(),
-    })
-  }, [pointer])
-
   return (
     <div className={box}>
-      <ol ref={list} className="flex flex-col gap-1">
-        {shown.map((s) => {
-          const i = steps.indexOf(s)
-          return (
-            <li key={s} className={cn("flex items-center gap-2 rounded-md px-2 py-1.5 text-xs text-ink", s === moving ? "bg-brand-dim" : "bg-raised")}>
-              <button
-                data-grip={i}
-                type="button"
-                aria-label={`Move ${s}`}
-                aria-pressed={s === moving}
-                onKeyDown={(e) => reorder.onKeyDown(i, e)}
-                className="grid size-6 cursor-grab touch-none place-items-center rounded-sm text-ink-secondary hover:bg-w07"
-              >
-                <GripVertical aria-hidden="true" className="size-3.5" strokeWidth={2} />
-              </button>
-              {s}
-            </li>
-          )
-        })}
-      </ol>
+      <SortableList label="Plan steps" items={steps} getKey={(s) => s} getLabel={(s) => s} onReorder={setSteps} renderItem={(s) => s} />
       <p className={hint}>Drag a grip, or focus one and press Space, the arrows, then Space. Escape cancels. Each step is announced.</p>
     </div>
   )
@@ -246,7 +202,7 @@ export function SpansDemo() {
             aria-label={`Meeting ${at(span.start)} to ${at(span.end)}`}
             onKeyDown={(e) => s.onKeyDown(span.id, e)}
             style={{ left: `${(span.start / DAY) * 100}%`, width: `${((span.end - span.start) / DAY) * 100}%`, top: `${(lane / lanes) * 100}%`, height: `${100 / lanes}%` }}
-            className="absolute cursor-grab touch-none p-0.5"
+            className="absolute cursor-grab touch-none p-0.5 transition-[left,width,top,height] duration-(--t-fast) ease-out motion-reduce:transition-none"
           >
             <div className="relative h-full rounded-sm border border-brand bg-brand-dim px-2 py-1 text-2xs font-semibold text-ink">
               {at(span.start)}–{at(span.end)}

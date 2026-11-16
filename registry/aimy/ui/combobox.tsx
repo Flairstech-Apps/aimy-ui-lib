@@ -130,6 +130,8 @@ export function Combobox({
     if (!open) {
       lb.setQuery(typing ? lb.query : "")
       lb.highlight(value)
+      // The chosen name is selected, so typing replaces it instead of adding to it.
+      if (!typing) anchor?.querySelector("input")?.select()
     }
     setOpen(true)
   }
@@ -234,7 +236,7 @@ export function Combobox({
                     }}
                     className={cn(
                       "flex cursor-pointer items-start gap-2 rounded-sm px-2.5 py-1.5 text-xs text-ink-secondary select-none",
-                      "data-highlighted:bg-w06 data-highlighted:text-ink",
+                      "transition-[background-color,color] duration-(--t-intent) ease-out data-highlighted:bg-w06 data-highlighted:text-ink",
                       isChosen && "bg-brand-dim text-ai-ink",
                       o.disabled && "cursor-not-allowed opacity-[0.38]"
                     )}
@@ -243,7 +245,7 @@ export function Combobox({
                       <span className="truncate font-semibold">{o.label}</span>
                       {o.description ? <span className="truncate text-ink-secondary">{o.description}</span> : null}
                     </span>
-                    {isChosen ? <Check aria-hidden="true" strokeWidth={2} className="mt-px size-3.5 shrink-0" /> : null}
+                    {isChosen ? <Check aria-hidden="true" strokeWidth={2} className="mt-px size-3.5 shrink-0 transition-[opacity,scale] duration-(--t-base) ease-(--ease-spring) starting:scale-50 starting:opacity-0" /> : null}
                   </li>
                 )
               })}

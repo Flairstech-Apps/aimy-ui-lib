@@ -21,7 +21,7 @@ import {
   useSyncExternalStore,
 } from "react"
 import { createPortal } from "react-dom"
-import { type Cleanup, type Store, isBrowser } from "./behaviors-core"
+import { type Cleanup, type Store, isBrowser, reducedMotion, tokenEase, tokenMs } from "./behaviors-core"
 import { type FocusTrapOptions, type GridFocusOptions, type RovingFocusOptions, type TypeaheadOptions, createFocusRecovery, createFocusTrap, createGridFocus, createRovingFocus, createTypeahead } from "./behaviors-focus"
 import { type CellRange, type LassoOptions, type SelectionOptions, createCellRange, createLasso, createSelection } from "./behaviors-selection"
 import { type ReorderOptions, type TreeDrop, type TreeRow, createAutoScroll, createReorder, createTransfer, createTreeReorder } from "./behaviors-drag"
@@ -209,6 +209,68 @@ export function usePresence(open: boolean): { present: boolean; ref: RefCallback
     }
   }, [open, present, node])
   return { present, ref: setNode as RefCallback<HTMLElement>, state: open ? "open" : "closed" }
+}
+
+// ── FLIP ────────────────────────────────────────────────────
+
+/**
+ * Animates items to their new places when a list re-orders, opens or
+ * closes rows: each [data-flip] child that moved glides from where it was
+ * (First, Last, Invert, Play), and a new one rises in. Positions are read
+ * relative to the container, so scrolling between renders doesn't count as
+ * a move. Put the ref on the container; change `key` when the order changes.
+ */
+export function useFlip<T extends HTMLElement = HTMLElement>(key: unknown, options: { enter?: boolean; enabled?: boolean } = {}): RefCallback<T> {
+  const ref = useRef<T | null>(null)
+  const last = useRef(new Map<string, { x: number; y: number }>())
+  const enter = options.enter ?? false
+  const enabled = options.enabled ?? true
+  useIsoLayoutEffect(() => {
+    const root = ref.current
+    // Paused (rows moved by transforms, say): forget positions, so the next
+    // render starts fresh instead of animating from transformed places.
+    if (!enabled) {
+      last.current = new Map()
+      return
+    }
+    if (!root) return
+    const box = root.getBoundingClientRect()
+    const next = new Map<string, { x: number; y: number }>()
+    const items = Array.from(root.querySelectorAll<HTMLElement>("[data-flip]"))
+    for (const el of items) {
+      const r = el.getBoundingClientRect()
+      next.set(el.dataset.flip!, { x: r.left - box.left, y: r.top - box.top })
+    }
+    const animate = !reducedMotion() && typeof Element.prototype.animate === "function" && last.current.size > 0
+    if (animate) {
+      const duration = tokenMs("--duration-fast", 250)
+      const easing = tokenEase("--ease-smooth-out")
+      let entering = 0
+      for (const el of items) {
+        const k = el.dataset.flip!
+        const now = next.get(k)!
+        const was = last.current.get(k)
+        if (was) {
+          const dx = was.x - now.x
+          const dy = was.y - now.y
+          if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5)
+            el.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "translate(0, 0)" }], { duration, easing })
+        } else if (enter) {
+          const stagger = tokenMs("--duration-stagger", 40)
+          el.animate([{ opacity: 0, transform: `translateY(-${tokenMs("--distance-micro", 4)}px)` }, { opacity: 1, transform: "none" }], {
+            duration,
+            easing,
+            delay: Math.min(entering++, 6) * stagger,
+            fill: "backwards",
+          })
+        }
+      }
+    }
+    last.current = next
+  }, [key, enter, enabled])
+  return useCallback((node: T | null) => {
+    ref.current = node
+  }, [])
 }
 
 // ── Layers and focus ────────────────────────────────────────

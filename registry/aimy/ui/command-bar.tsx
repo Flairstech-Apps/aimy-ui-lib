@@ -220,7 +220,7 @@ export function CommandBar({ onAsk, open: openProp, onOpenChange, shortcut = tru
                       onClick={() => void run(r)}
                       className={cn(
                         "flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-xs text-ink select-none",
-                        "data-highlighted:bg-[color-mix(in_srgb,var(--accent)_14%,transparent)]",
+                        "transition-[background-color] duration-(--t-intent) ease-out data-highlighted:bg-[color-mix(in_srgb,var(--accent)_14%,transparent)]",
                         "[&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:text-ink-secondary"
                       )}
                     >

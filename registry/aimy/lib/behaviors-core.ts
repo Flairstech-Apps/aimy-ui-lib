@@ -101,6 +101,12 @@ export function tokenMs(name: string, fallback: number): number {
   return raw.endsWith("ms") ? n : raw.endsWith("s") ? n * 1000 : n
 }
 
+/** Reads an easing token (--ease-smooth-out, --ease-spring) for the Web Animations API. */
+export function tokenEase(name: string, fallback = "ease-out"): string {
+  if (!isBrowser) return fallback
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback
+}
+
 // ── Announcer ───────────────────────────────────────────────
 // One polite and one assertive live region, created on first use. Drag,
 // reorder, resize and the like say what happened in plain English.

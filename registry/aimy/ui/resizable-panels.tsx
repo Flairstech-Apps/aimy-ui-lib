@@ -70,12 +70,17 @@ export function ResizablePanels({ children, direction = "horizontal", defaultSiz
         const px = latest.current.horizontal ? info.delta.x : info.delta.y
         latest.current.setSizes(latest.current.shift(start, index, (px / (total || 1)) * 100))
       },
-      onCancel: () => latest.current.setSizes(start),
+      onStart: () => el.setAttribute("data-dragging", ""),
+      onEnd: () => el.removeAttribute("data-dragging"),
+      onCancel: () => {
+        el.removeAttribute("data-dragging")
+        latest.current.setSizes(start)
+      },
     })
   }, [])
 
   return (
-    <div ref={root} data-slot="resizable-panels" data-direction={direction} className={cn("flex min-h-0 min-w-0", horizontal ? "flex-row" : "flex-col", className)}>
+    <div ref={root} data-slot="resizable-panels" data-direction={direction} className={cn("group/panels flex min-h-0 min-w-0", horizontal ? "flex-row" : "flex-col", className)}>
       {panels.map((panel, i) => (
         <PanelAndHandle
           key={i}
@@ -127,7 +132,7 @@ function PanelAndHandle({
 }) {
   return (
     <>
-      <div data-slot="resizable-panel" style={{ flexBasis: `${size}%` }} className="min-h-0 min-w-0 shrink grow-0 overflow-auto">
+      <div data-slot="resizable-panel" style={{ flexBasis: `${size}%` }} className="min-h-0 min-w-0 shrink grow-0 overflow-auto transition-[flex-basis] duration-(--t-base) ease-out group-data-dragging/panels:transition-none motion-reduce:transition-none">
         {children}
       </div>
       {last ? null : (

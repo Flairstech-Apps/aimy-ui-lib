@@ -69,7 +69,7 @@ export function SwipeRow({ children, leading, trailing, fullSwipe, className }: 
         style={{ transform: `translateX(${offset}px)` }}
         className={cn(
           "relative touch-pan-y bg-card",
-          !swiping && "transition-transform duration-(--t-base) ease-out motion-reduce:transition-none"
+          !swiping && "transition-transform duration-(--t-slow) ease-(--ease-spring) motion-reduce:transition-none"
         )}
       >
         {children}

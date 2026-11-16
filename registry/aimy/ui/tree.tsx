@@ -4,7 +4,7 @@ import { ChevronRight } from "lucide-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { type CheckedState, createTreeCollection, toggleTreeChecked, treeCheckedStates, treeDataNodes } from "@/lib/behaviors"
 import { useAgentSurface } from "@/lib/behaviors-agent-react"
-import { useTreeView } from "@/lib/behaviors-react"
+import { useFlip, useTreeView } from "@/lib/behaviors-react"
 import { cn } from "@/lib/utils"
 
 // Nested items you open and close: folders and files, a team under a
@@ -161,11 +161,14 @@ export function Tree({ items, label, defaultExpanded, selected, onSelect, checka
     rootEl
   )
 
+  const flipRef = useFlip<HTMLUListElement>(view.rows.map((r) => r.id).join("\u0000"), { enter: true })
+
   return (
     <ul
       ref={(node) => {
         root.current = node
         setRootEl(node)
+        flipRef(node)
       }}
       role="tree"
       aria-label={label}
@@ -182,6 +185,7 @@ export function Tree({ items, label, defaultExpanded, selected, onSelect, checka
           <li
             key={r.id}
             role="treeitem"
+            data-flip={r.id}
             data-tree-id={r.id}
             aria-level={r.level}
             aria-posinset={r.posInSet}
