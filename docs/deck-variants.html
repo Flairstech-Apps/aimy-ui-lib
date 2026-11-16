@@ -79,7 +79,7 @@
   .sl-card { padding: 32px 36px; border-radius: 20px; font-size: 30px; line-height: 1.45; color: var(--ink-primary); border: 1px solid transparent; }
   .sl-card-label { display: block; margin-bottom: 12px; font-size: 20px; line-height: 1.3; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
   .sl-card.is-learned { background: var(--brand-dim); border-color: rgba(var(--brand-rgb), 0.3); }
-  .sl-card.is-learned .sl-card-label { color: var(--ink-action); }
+  .sl-card.is-learned .sl-card-label { color: var(--ai-ink); }
   .sl-card.is-did { background: var(--accent-dim); border-color: rgba(var(--accent-rgb), 0.3); }
   .sl-card.is-did .sl-card-label { color: var(--accent-text); }
 
@@ -192,11 +192,11 @@
   .hzn-panel .sl-title { max-width: 1500px; }
 
   /* ═════════════════ D. TWO LANES ═════════════════ */
-  .lns-axis { position: absolute; left: 0; right: 0; top: 540px; height: 2px; background: var(--w12); transition: opacity var(--duration-medium) var(--ease-smooth-out); }
+  .lns-axis { position: absolute; left: 400px; right: 0; top: 540px; height: 2px; background: var(--w12); transition: opacity var(--duration-medium) var(--ease-smooth-out); }
   .lns-strip { position: absolute; left: 0; top: 0; height: 1080px; transition: transform var(--duration-very-slow) var(--ease-smooth-out), opacity var(--duration-medium) var(--ease-smooth-out); }
   .lns-fill { position: absolute; left: 12px; top: 539px; height: 4px; border-radius: 2px; background: var(--ai); transform-origin: 0 50%; transition: transform var(--duration-very-slow) var(--ease-smooth-out); }
   .lns-comet { top: 541px; }
-  .lns[data-edge] .lns-axis, .lns[data-edge] .lns-strip, .lns[data-edge] .lns-lane { opacity: 0; }
+  .lns[data-edge] .lns-axis, .lns[data-edge] .lns-strip { opacity: 0; }
   .lns-col { position: absolute; top: 0; width: 560px; height: 1080px; }
   .lns-up { position: absolute; left: 0; bottom: 600px; width: 560px; }
   .lns-down { position: absolute; left: 0; top: 600px; width: 560px; }
@@ -218,10 +218,47 @@
   .lns-figure { display: block; font-size: 120px; line-height: 1; font-weight: 600; letter-spacing: -0.04em; margin-bottom: 8px; font-variant-numeric: tabular-nums; }
   /* Columns travel in a window right of the lane labels, so they clip there without a solid band over the field. */
   .lns-view { position: absolute; left: 400px; right: 0; top: 0; bottom: 0; overflow: hidden; }
-  .lns-gutter { position: absolute; z-index: 3; left: 0; top: 0; bottom: 0; width: 400px; }
-  .lns-lane { position: absolute; left: 120px; width: 250px; font-size: 20px; line-height: 1.35; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; transition: opacity var(--duration-medium); }
-  .lns-lane.is-up { bottom: 560px; color: var(--ink-action); }
-  .lns-lane.is-down { top: 560px; color: var(--accent-text); }
+  /* The rail: a glass column that carries the logo, says what the two lanes
+     are (knowledge above the axis, action below, the brand line drawn between
+     them) and where the story is. It slides in while the logo flies to it. */
+  .lns-rail {
+    position: absolute; z-index: 3; left: 0; top: 0; bottom: 0; width: 400px;
+    background: linear-gradient(180deg, var(--glass-soft), color-mix(in oklab, var(--glass-soft) 55%, transparent));
+    -webkit-backdrop-filter: blur(24px) saturate(1.2); backdrop-filter: blur(24px) saturate(1.2);
+    border-right: 1px solid var(--glass-border);
+    transition: opacity var(--duration-very-slow) var(--ease-smooth-out) 200ms, transform var(--duration-very-slow) var(--ease-smooth-out) 200ms;
+  }
+  .lns[data-edge] .lns-rail { opacity: 0; transform: translateX(-40px); transition-delay: 0ms; transition-duration: var(--duration-medium); }
+  /* The axis leaves the rail from a glow at its edge. */
+  .lns-rail::before { content: ""; position: absolute; inset: 0; background: radial-gradient(70% 26% at 100% 50%, var(--brand-dim), transparent 75%); pointer-events: none; }
+  .lns-node { position: absolute; right: -8px; top: 533px; width: 16px; height: 16px; border-radius: 50%; background: var(--body-bg); box-shadow: inset 0 0 0 3px var(--ai-ink), 0 0 24px rgba(var(--ai-ink-rgb), 0.5); }
+  /* A legend entry: a tile, the lane's name, and what it holds. The tile is as
+     tall as the name's line, so it centres on it. */
+  .lns-legend { position: absolute; left: 120px; right: 24px; display: grid; grid-template-columns: 48px 1fr; column-gap: 16px; }
+  .lns-legend.is-up { bottom: 580px; }
+  .lns-legend.is-down { top: 580px; }
+  .lns-tile { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; }
+  .lns-tile svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .is-up .lns-tile { background: var(--brand-dim); color: var(--ai-ink); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), 0.3); }
+  .is-down .lns-tile { background: var(--accent-dim); color: var(--accent-text); box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.3); }
+  .lns-legend b { font-size: 30px; line-height: 48px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink-primary); }
+  .lns-legend-sub { grid-column: 2; font-size: 20px; line-height: 1.4; color: var(--ink-secondary); }
+  /* Knowledge to action, drawn once each time the rail comes in. */
+  .lns-rail-link { position: absolute; left: 124px; top: 478px; width: 40px; height: 98px; overflow: visible; }
+  .lns-rail-link path { fill: none; stroke: var(--accent-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .lns:not([data-edge]) .lns-rail-link path { stroke-dashoffset: 0; transition: stroke-dashoffset var(--duration-very-slow) var(--ease-smooth-out) var(--lead, 250ms); }
+  /* Where the story is: the chapter in words, and a bar per chapter. */
+  .lns-where { position: absolute; left: 120px; right: 40px; bottom: 72px; }
+  .lns-where-k { display: block; font-size: 20px; line-height: 1.35; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-secondary); }
+  .lns-where-n { display: block; margin-top: 8px; font-size: 40px; line-height: 1.2; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--ink-primary); }
+  .lns-where-name { display: block; font-size: 24px; line-height: 1.4; color: var(--ink-secondary); }
+  .lns-where-n.is-swap, .lns-where-name.is-swap { animation: mk-swap var(--duration-fast) var(--ease-smooth-out); }
+  @keyframes mk-swap { from { opacity: 0; transform: translateY(var(--distance-micro)); filter: blur(var(--blur-small)); } }
+  .lns-segs { display: flex; gap: 8px; margin-top: 20px; }
+  .lns-seg { position: relative; flex: 1; height: 4px; border-radius: 2px; overflow: hidden; background: var(--w12); }
+  .lns-seg::after { content: ""; position: absolute; inset: 0; background: var(--ai); transform: scaleX(0); transform-origin: 0 50%; transition: transform var(--duration-quick) var(--ease-smooth-out); }
+  .lns-seg[data-state="done"]::after { transform: none; }
+  .lns-seg[data-state="now"]::after { transform: none; transition-duration: var(--duration-very-slow); transition-delay: var(--lead, 250ms); }
   .lns-panel { position: absolute; z-index: 4; left: 440px; width: 1200px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; pointer-events: none; }
 
   @media (prefers-reduced-motion: reduce) {
@@ -810,7 +847,14 @@ const lanes = {
       </section>`).join('')}
       <div class="mk-comet lns-comet"></div>
     </div></div>
-    <aside class="lns-gutter"><span class="lns-lane is-up">What we learned</span><span class="lns-lane is-down">What we did</span></aside>
+    <aside class="lns-rail">
+      <span class="lns-node"></span>
+      <div class="lns-legend is-up"><span class="lns-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></span><b>Knowledge</b><span class="lns-legend-sub">What we learned</span></div>
+      <svg class="lns-rail-link" viewBox="0 0 40 98" aria-hidden="true"><path pathLength="1" d="M20 4 V88 M12 80 L20 90 L28 80"/></svg>
+      <div class="lns-legend is-down"><span class="lns-tile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/></svg></span><b>Action</b><span class="lns-legend-sub">What we did</span></div>
+      <div class="lns-where"><span class="lns-where-k">Chapter</span><b class="lns-where-n"></b><span class="lns-where-name"></span>
+        <span class="lns-segs">${M.map((_, k) => `<span class="lns-seg" data-n="${k + 1}"></span>`).join('')}</span></div>
+    </aside>
     ${brandHead()}
     <section class="lns-panel" data-n="0">${spot('cover')}${rv(1, COVER.kicker, 'sl-kicker')}<h2 class="sl-display">${words(COVER.title)}</h2>${rv(5, 'Every step, told as what we learned and what we did about it.', 'sl-lede', 'p')}</section>
     <section class="lns-panel" data-n="${LAST}">${spot('close')}<h2 class="sl-display">${closeTitle}</h2>${rv(4, CLOSE.sub, 'sl-lede', 'p')}${rv(5, cta())}</section>
@@ -822,6 +866,13 @@ const lanes = {
     st.querySelector('.lns-strip').style.transform = `translateX(${COL_X - k * COL}px)`;
     st.querySelector('.lns-fill').style.transform = `scaleX(${moment(i) ? (i - 1) / (M.length - 1) : 0})`;
     if (moment(i)) delete root.dataset.edge; else root.dataset.edge = '';
+    if (moment(i)) {
+      /* The rail says where we are; the words swap rather than jump. */
+      const n = st.querySelector('.lns-where-n'), name = st.querySelector('.lns-where-name');
+      n.textContent = `${i} of ${M.length}`;
+      name.textContent = M[i - 1].chapter;
+      [n, name].forEach((el) => { el.classList.remove('is-swap'); void el.offsetWidth; el.classList.add('is-swap'); });
+    }
     if (prev >= 0 && moment(prev) && moment(i)) {
       const x0 = (prev - 1) * COL + 12, x1 = (i - 1) * COL + 12;
       comet(st.querySelector('.lns-comet'), Array.from({ length: 9 }, (_, n) => ({ x: x0 + (x1 - x0) * easeInOutCubic(n / 8), y: 0, r: x1 > x0 ? 0 : 180 })), 620);
