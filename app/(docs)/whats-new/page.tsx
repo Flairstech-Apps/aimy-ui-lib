@@ -33,6 +33,30 @@ const c = (name: string) => `/components/${name}/`
 
 const ENTRIES: Entry[] = [
   {
+    label: "2.0.0",
+    type: "Release",
+    date: "16 Nov 2026",
+    title: "AiMY works the interface",
+    items: [
+      { kind: "new", name: "Agent bridge", href: c("agent-bridge"), text: "AiMY reads the screen and acts on it, by your Autonomy setting." },
+      { kind: "new", name: "Generative UI", href: c("generative-ui"), text: "Answers drawn from library parts only, as they stream." },
+      { kind: "new", name: "Command bar", href: c("command-bar"), text: "Ctrl+K for every action on the page; Ctrl+Z takes back the last." },
+      { kind: "new", name: "Confirmation & feedback", href: c("feedback"), text: "Act at once with Undo, optimistic saves, buttons that report." },
+      { kind: "new", name: "Behaviours", href: "/foundations/behaviors/", text: "Keyboard, focus, drag, resize, trees, layers and gestures, written once." },
+      { kind: "new", name: "Combobox", href: c("combobox"), text: "Type to choose from a long list." },
+      { kind: "new", name: "InlineEdit", href: c("inline-edit"), text: "Change one value where it sits." },
+      { kind: "new", name: "Tree", href: c("tree"), text: "Folders that open and close, with checks that roll up." },
+      { kind: "new", name: "SortableList", href: c("sortable-list"), text: "People's own order, by drag or keys." },
+      { kind: "new", name: "SwipeRow", href: c("swipe-row"), text: "Row actions on a phone, never the only way." },
+      { kind: "new", name: "ResizablePanels", href: c("resizable-panels"), text: "A list beside its detail, sized by hand." },
+      { kind: "changed", name: "Dialog, Sheet, Popover, Tooltip, Menu, Select", href: c("dialog"), text: "On AiMY's own behaviours instead of Radix; same parts and props." },
+      { kind: "fixed", name: "Select", href: c("select"), text: "Inside a field, the chevron sits at the end." },
+    ],
+    before:
+      "If your own CSS reads --radix-* variables, use --available-height and --anchor-width; Radix-only props on the popup contents and Select's item-aligned placement are gone.",
+    run: BOTH,
+  },
+  {
     label: "1.5.0",
     type: "Release",
     date: "16 Nov 2026",
