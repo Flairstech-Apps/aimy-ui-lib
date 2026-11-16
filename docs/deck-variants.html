@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Deck variants</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../package/tokens/aimy.css" />
+<link rel="stylesheet" href="../package/tokens/motion.css" />
+<style>
+  /* ═════════════════ PAGE ═════════════════
+     The exploration page around the decks, in the apps' variants-page form. */
+  html, body { margin: 0; }
+  body { font-family: var(--font-sans); color: var(--d100); background: var(--body-bg); -webkit-font-smoothing: antialiased; }
+  .pv-page { max-width: 1148px; margin: 0 auto; padding: 40px 16px 120px; }
+  .pv-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .pv-h1 { margin: 0 0 10px; font-size: 28px; font-weight: 600; color: var(--ink-primary); letter-spacing: -0.01em; }
+  .pv-lead { margin: 0; max-width: 68ch; font-size: 16px; line-height: 1.6; color: var(--ink-secondary); text-wrap: pretty; }
+  .pv-lead b, .pv-view b, .pv-var-say b { color: var(--ink-primary); font-weight: 600; }
+  .pv-view { margin: 24px 0 0; padding: 0 0 0 20px; max-width: 72ch; font-size: 16px; line-height: 1.6; color: var(--ink-secondary); }
+  .pv-view li { margin: 0 0 8px; }
+  .pv-var { margin: 40px 0 0; padding: 28px 28px 24px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--card-bg); }
+  .pv-var-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 0 0 6px; }
+  .pv-var-key { font-size: 14px; font-weight: 600; color: var(--accent-text); }
+  .pv-var-name { margin: 0; font-size: 18px; font-weight: 600; color: var(--ink-primary); }
+  .pv-var-say { margin: 0 0 20px; max-width: 72ch; font-size: 15px; line-height: 1.6; color: var(--ink-secondary); }
+  .pv-btn {
+    display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 14px; border-radius: 9999px;
+    font: 500 14px/1 var(--font-sans); color: var(--ink-primary); background: none; border: 1px solid var(--card-border); cursor: pointer;
+    transition: transform 90ms var(--ease-smooth-out);
+  }
+  .pv-btn:hover { background: var(--w05); }
+  .pv-btn:active { transform: scale(var(--press-scale)); }
+  .pv-btn.is-brand { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
+  .pv-btn.is-brand:hover { background: var(--brand-hover); }
+  .pv-btn:focus-visible, .pv-icobtn:focus-visible, .dk-frame:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .pv-btn svg, .pv-icobtn svg { width: 16px; height: 16px; flex: none; }
+  .pv-icobtn {
+    display: inline-grid; place-items: center; width: 32px; height: 32px; padding: 0; border-radius: 9999px;
+    color: var(--ink-primary); background: none; border: 1px solid var(--card-border); cursor: pointer;
+    transition: transform 90ms var(--ease-smooth-out);
+  }
+  .pv-icobtn:hover { background: var(--w05); }
+  .pv-icobtn:active { transform: scale(var(--press-scale)); }
+  .pv-icobtn:disabled { cursor: default; color: var(--ink-secondary); background: none; transform: none; }
+  .pv-count { min-width: 64px; text-align: center; font-size: 14px; font-weight: 500; color: var(--ink-primary); font-variant-numeric: tabular-nums; }
+
+  /* ═════════════════ DECK ENGINE ═════════════════
+     A fixed 1920x1080 stage, scaled as a whole to its frame and letterboxed when
+     presenting, so a slide never re-lays out. Slide switching is by data-state
+     (now, done, ahead) on any element carrying data-n, never display:none. */
+  .dk { display: flex; flex-direction: column; gap: 12px; }
+  .dk-frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 10px; background: var(--body-bg); border: 1px solid var(--card-border); cursor: pointer; user-select: none; }
+  .dk-frame:fullscreen { aspect-ratio: auto; border: 0; border-radius: 0; background: var(--body-bg); }
+  .dk-stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+  .dk-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .dk-bar .pv-push { margin-left: auto; }
+  .dk-keys { font-size: 14px; color: var(--ink-secondary); }
+
+  /* ═════════════════ SLIDE TYPE ═════════════════
+     Authored at 1920x1080. The brand guide's line slide sets the voice:
+     Poppins 600 to 700, tight tracking on display sizes, AiMY blue for the turn. */
+  .sl { position: absolute; inset: 0; overflow: hidden; font-family: var(--font-sans); color: var(--ink-primary); background: var(--body-bg); }
+  .sl-head { position: absolute; z-index: 5; left: 120px; right: 120px; top: 72px; display: flex; align-items: center; justify-content: space-between; }
+  .sl-lockup { height: 44px; width: auto; display: block; }
+  .sl-head-meta { font-size: 24px; font-weight: 500; color: var(--ink-secondary); }
+  .sl-kicker { font-size: 28px; line-height: 1.3; font-weight: 600; color: var(--accent-text); }
+  .sl-display { margin: 24px 0 0; font-size: 120px; line-height: 1.02; font-weight: 600; letter-spacing: -0.035em; text-wrap: balance; }
+  .sl-title { margin: 24px 0 0; font-size: 88px; line-height: 1.05; font-weight: 600; letter-spacing: -0.03em; text-wrap: balance; }
+  .sl-lede { margin: 32px 0 0; font-size: 40px; line-height: 1.4; color: var(--ink-secondary); text-wrap: pretty; }
+  .sl-body { margin: 28px 0 0; font-size: 34px; line-height: 1.5; color: var(--ink-secondary); text-wrap: pretty; }
+  .sl-figure { margin: 8px 0 0; font-size: 280px; line-height: 0.95; font-weight: 600; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; }
+  .sl-ai { color: var(--ai-ink); }
+  .sl-meta { margin-top: 40px; font-size: 26px; font-weight: 500; color: var(--ink-secondary); }
+  .sl-cta { display: flex; align-items: center; gap: 28px; margin-top: 56px; }
+  .sl-cta.is-center { justify-content: center; }
+  .sl-cta-btn { display: inline-flex; align-items: center; height: 76px; padding: 0 40px; border-radius: 9999px; background: var(--brand); color: var(--on-brand); font-size: 28px; font-weight: 500; }
+  .sl-cta-where { font-family: var(--font-mono); font-size: 24px; color: var(--ink-secondary); }
+  .sl-card { padding: 32px 36px; border-radius: 20px; font-size: 30px; line-height: 1.45; color: var(--ink-primary); border: 1px solid transparent; }
+  .sl-card-label { display: block; margin-bottom: 12px; font-size: 20px; line-height: 1.3; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  .sl-card.is-learned { background: var(--brand-dim); border-color: rgba(var(--brand-rgb), 0.3); }
+  .sl-card.is-learned .sl-card-label { color: var(--ink-action); }
+  .sl-card.is-did { background: var(--accent-dim); border-color: rgba(var(--accent-rgb), 0.3); }
+  .sl-card.is-did .sl-card-label { color: var(--accent-text); }
+
+  /* ═════════════════ REVEAL ═════════════════
+     transitions.dev 18 (text reveal), lines ordered by --i on the large stagger.
+     A line waits for the camera (fast) before it rises; leaving is quick. */
+  .rv, .rv-w {
+    opacity: 0; transform: translateY(var(--distance-medium)); filter: blur(var(--blur-medium));
+    transition: opacity var(--duration-quick) var(--ease-smooth-out), transform var(--duration-quick) var(--ease-smooth-out), filter var(--duration-quick) var(--ease-smooth-out);
+  }
+  [data-state="now"] .rv, [data-state="now"] .rv-w {
+    opacity: 1; transform: none; filter: none;
+    transition-duration: var(--duration-very-slow);
+    transition-delay: calc(var(--duration-fast) + var(--i, 0) * var(--duration-micro));
+  }
+  /* transitions.dev 30 (words): one word after another on the stagger step. */
+  .rv-w { display: inline-block; }
+  [data-state="now"] .rv-w { transition-delay: calc(var(--duration-fast) + var(--w) * var(--duration-stagger) * 2); }
+
+  /* ═════════════════ A. TRACK ═════════════════ */
+  .trk-glow {
+    position: absolute; inset: -200px -900px -200px -200px;
+    background:
+      radial-gradient(ellipse at 15% 90%, rgba(var(--brand-rgb), 0.24), transparent 55%),
+      radial-gradient(ellipse at 70% 10%, rgba(var(--accent-rgb), 0.16), transparent 50%);
+    transition: transform var(--duration-very-slow) var(--ease-smooth-out);
+  }
+  .trk-strip { position: absolute; left: 0; top: 0; height: 1080px; transition: transform var(--duration-very-slow) var(--ease-smooth-out); }
+  .trk-line { position: absolute; left: -600px; top: 800px; height: 2px; background: var(--w12); }
+  .trk-fill { position: absolute; left: 0; top: 799px; height: 4px; border-radius: 2px; background: var(--ai); transform-origin: 0 50%; transition: transform var(--duration-very-slow) var(--ease-smooth-out); }
+  .trk-stop { position: absolute; top: 0; width: 1080px; height: 1080px; }
+  .trk-copy { position: absolute; left: 0; bottom: 340px; width: 1080px; }
+  .trk-copy .sl-display { font-size: 112px; }
+  .trk-dot { position: absolute; left: -14px; top: 787px; width: 28px; height: 28px; border-radius: 50%; background: var(--body-bg); box-shadow: inset 0 0 0 3px var(--w25); }
+  .trk-dot::after { content: ""; position: absolute; inset: -12px; border-radius: 50%; background: var(--brand-dim); box-shadow: 0 0 48px var(--brand-glow); opacity: 0; transform: scale(0.5); transition: opacity var(--duration-quick), transform var(--duration-quick) var(--ease-smooth-out); z-index: -1; }
+  [data-state="done"] > .trk-dot, [data-state="now"] > .trk-dot { background: var(--brand); box-shadow: none; }
+  [data-state="now"] > .trk-dot::after { opacity: 1; transform: none; transition-duration: var(--duration-very-slow); transition-delay: var(--duration-fast); }
+  .trk-label { position: absolute; left: 0; top: 844px; font-size: 28px; line-height: 1.3; color: var(--ink-secondary); white-space: nowrap; }
+  .trk-label b { font-weight: 600; color: var(--ink-primary); margin-right: 12px; }
+  [data-state="now"] > .trk-label { color: var(--ink-primary); }
+
+  /* ═════════════════ B. SPINE ═════════════════ */
+  .spn-glow { position: absolute; inset: 0; background: radial-gradient(ellipse at 90% 100%, rgba(var(--brand-rgb), 0.18), transparent 55%), radial-gradient(ellipse at 0% 0%, rgba(var(--cyan-rgb), 0.08), transparent 45%); }
+  .spn-list { position: absolute; left: 120px; top: 232px; width: 600px; margin: 0; padding: 0; list-style: none; }
+  .spn-rail, .spn-fill { position: absolute; left: 195px; top: 19px; width: 2px; height: calc((var(--rows) - 1) * 112px); background: var(--w12); }
+  .spn-fill { width: 4px; left: 194px; border-radius: 2px; background: linear-gradient(180deg, #0066ff, #45d3e6); transform-origin: 50% 0; transition: transform var(--duration-very-slow) var(--ease-smooth-out); }
+  .spn-row { position: relative; display: grid; grid-template-columns: 150px 92px 1fr; align-items: start; height: 112px; }
+  .spn-when { text-align: right; font-size: 24px; line-height: 39px; font-weight: 500; color: var(--ink-secondary); }
+  .spn-dot { justify-self: center; margin-top: 5.5px; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--body-bg); box-shadow: inset 0 0 0 3px var(--w25); color: var(--body-bg); }
+  .spn-dot svg { width: 16px; height: 16px; opacity: 0; }
+  .spn-name { font-size: 30px; line-height: 39px; font-weight: 500; color: var(--ink-secondary); }
+  .spn-name em { display: none; font-style: normal; font-size: 22px; line-height: 1.4; font-weight: 500; }
+  .spn-row[data-state="ahead"] .is-ahead, .spn-row[data-state="now"] .is-now, .spn-row[data-state="done"] .is-done { display: block; }
+  .spn-name .is-ahead { color: var(--ink-secondary); }
+  .spn-name .is-now { color: var(--ink-action); }
+  .spn-name .is-done { color: var(--ok-text); }
+  .spn-row[data-state="now"] .spn-name { color: var(--ink-primary); font-weight: 600; }
+  .spn-row[data-state="now"] .spn-when { color: var(--ink-primary); }
+  .spn-row[data-state="now"] .spn-dot { background: var(--brand); box-shadow: 0 0 0 10px var(--brand-dim), 0 0 40px var(--brand-glow); }
+  .spn-row[data-state="done"] .spn-dot { background: var(--ok); box-shadow: none; }
+  .spn-row[data-state="done"] .spn-dot svg { opacity: 1; }
+  .spn-pane { position: absolute; left: 820px; right: 120px; top: 180px; bottom: 120px; }
+  .spn-panel { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; }
+  .spn-panel .sl-display { font-size: 100px; }
+  .spn-panel .sl-title { font-size: 76px; }
+  .spn-panel .sl-body { font-size: 32px; }
+  .spn-figure { display: flex; align-items: baseline; gap: 36px; margin-top: 16px; }
+  .spn-figure .sl-figure { font-size: 200px; }
+  .spn-figure .sl-lede { margin: 0; font-size: 36px; max-width: 520px; }
+  .spn-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
+  .spn-pair .sl-card { font-size: 28px; }
+
+  /* ═════════════════ C. HORIZON ═════════════════
+     The landing footer's orb horizon (app/globals.css .horizon-glow and
+     .horizon-ground), at stage size. */
+  .hzn { --line: 800px; }
+  .hzn-glow { position: absolute; inset-inline: 0; top: 0; height: var(--line); background: radial-gradient(50% 80% at 50% 100%, color-mix(in oklab, var(--accent) 34%, transparent), color-mix(in oklab, var(--brand) 16%, transparent) 45%, transparent 78%); }
+  .hzn-ground {
+    position: absolute; z-index: 2; left: 50%; top: var(--line); width: 4400px; height: 1400px; translate: -50% 0; border-radius: 50%;
+    --lat1: color-mix(in oklab, var(--accent-text) 34%, transparent);
+    --lat2: color-mix(in oklab, var(--accent-text) 22%, transparent);
+    --lat3: color-mix(in oklab, var(--accent-text) 13%, transparent);
+    background:
+      radial-gradient(24% 8% at 50% 0%, color-mix(in oklab, var(--accent) 30%, transparent), transparent),
+      radial-gradient(14% 4% at 50% 0%, color-mix(in oklab, var(--brand) 26%, transparent), transparent),
+      radial-gradient(closest-side,
+        transparent 64.8%, var(--lat3) 65%, transparent 65.25%,
+        transparent 77.3%, var(--lat2) 77.5%, transparent 77.72%,
+        transparent 86.05%, var(--lat2) 86.25%, transparent 86.45%,
+        transparent 92.32%, var(--lat1) 92.5%, transparent 92.66%,
+        transparent 96.1%, var(--lat1) 96.25%, transparent 96.38%,
+        transparent 98.38%, var(--lat1) 98.5%, transparent 98.6%),
+      var(--body-bg);
+    border-top: 1px solid color-mix(in oklab, var(--accent-text) 70%, transparent);
+    box-shadow: 0 -1px 16px color-mix(in oklab, var(--accent) 55%, transparent), 0 -40px 120px -24px color-mix(in oklab, var(--brand) 45%, transparent);
+  }
+  .hzn-orb { position: absolute; z-index: 1; left: 0; top: 0; width: 600px; height: 600px; transition: transform var(--duration-very-slow) var(--ease-smooth-out); }
+  .hzn-orb canvas { display: block; width: 100%; height: 100%; }
+  .hzn-ticks { position: absolute; z-index: 3; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+  .hzn-tick { position: absolute; top: var(--line); width: 280px; translate: -50% 0; text-align: center; }
+  .hzn-mark { display: block; width: 12px; height: 12px; margin: -6px auto 0; border-radius: 50%; background: var(--accent-text); }
+  .hzn-tick b { display: block; margin-top: 28px; font-size: 26px; line-height: 1.3; font-weight: 600; color: var(--ink-secondary); }
+  .hzn-tick span { display: block; font-size: 24px; line-height: 1.4; color: var(--ink-secondary); }
+  .hzn-tick[data-state="now"] b, .hzn-tick[data-state="now"] span { color: var(--ink-primary); }
+  .hzn-tick[data-state="done"] .hzn-mark { background: var(--ai-ink); }
+  .hzn-panel { position: absolute; z-index: 3; left: 160px; right: 160px; top: 190px; display: flex; flex-direction: column; align-items: center; text-align: center; pointer-events: none; }
+  .hzn-panel .sl-display { max-width: 1400px; }
+  .hzn-panel .sl-body { max-width: 1100px; }
+  .hzn-panel .sl-lede { max-width: 1100px; }
+
+  /* ═════════════════ D. TWO LANES ═════════════════ */
+  .lns-axis { position: absolute; left: 0; right: 0; top: 540px; height: 2px; background: var(--w12); transition: opacity var(--duration-medium) var(--ease-smooth-out); }
+  .lns[data-edge] .lns-axis { opacity: 0; }
+  .lns-glow { position: absolute; inset: 0; background: radial-gradient(ellipse at 100% 0%, rgba(var(--brand-rgb), 0.16), transparent 50%), radial-gradient(ellipse at 100% 100%, rgba(var(--accent-rgb), 0.14), transparent 50%); }
+  .lns-strip { position: absolute; left: 0; top: 0; height: 1080px; transition: transform var(--duration-very-slow) var(--ease-smooth-out); }
+  .lns-col { position: absolute; top: 0; width: 560px; height: 1080px; }
+  .lns-up { position: absolute; left: 0; bottom: 600px; width: 560px; }
+  .lns-down { position: absolute; left: 0; top: 600px; width: 560px; }
+  .lns-dot { position: absolute; left: 0; top: 529px; width: 24px; height: 24px; border-radius: 50%; background: var(--body-bg); box-shadow: inset 0 0 0 3px var(--w25); }
+  .lns-col[data-state="now"] .lns-dot { background: var(--brand); box-shadow: 0 0 0 10px var(--brand-dim), 0 0 40px var(--brand-glow); }
+  .lns-col[data-state="done"] .lns-dot { background: var(--brand); box-shadow: none; }
+  .lns-when { position: absolute; left: 36px; top: 541px; translate: 0 -50%; padding: 0 14px; background: var(--body-bg); font-size: 26px; line-height: 1.3; font-weight: 600; color: var(--ink-secondary); white-space: nowrap; }
+  .lns-col[data-state="now"] .lns-when { color: var(--ink-primary); }
+  .lns-link { position: absolute; left: 260px; top: 486px; width: 40px; height: 108px; overflow: visible; }
+  .lns-link path { fill: none; stroke: var(--accent-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset var(--duration-quick) var(--ease-smooth-out); }
+  .lns-col[data-state="now"] .lns-link path { stroke-dashoffset: 0; transition-duration: var(--duration-very-slow); transition-delay: calc(var(--duration-fast) + var(--duration-micro) * 3); }
+  .lns-col[data-state="done"] .lns-link path { stroke-dashoffset: 0; stroke: var(--w25); }
+  /* Past columns stay in the story at full strength, on a plain ground. */
+  .lns-col[data-state="done"] .rv { opacity: 1; transform: none; filter: none; }
+  .lns-col[data-state="done"] .sl-card { background: var(--w03); border-color: var(--w07); }
+  .lns-col[data-state="done"] .sl-card .sl-card-label { color: var(--ink-secondary); }
+  .lns-figure { display: block; font-size: 120px; line-height: 1; font-weight: 600; letter-spacing: -0.04em; margin-bottom: 8px; }
+  .lns-gutter { position: absolute; z-index: 3; left: 0; top: 0; bottom: 0; width: 400px; background: var(--body-bg); }
+  .lns-gutter .sl-lockup { position: absolute; left: 120px; top: 72px; }
+  .lns-lane { position: absolute; left: 120px; width: 250px; font-size: 20px; line-height: 1.35; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; transition: opacity var(--duration-medium); }
+  .lns-lane.is-up { bottom: 560px; color: var(--ink-action); }
+  .lns-lane.is-down { top: 560px; color: var(--accent-text); }
+  .lns[data-edge] .lns-lane { opacity: 0; }
+  .lns-panel { position: absolute; z-index: 4; left: 440px; width: 1200px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; pointer-events: none; }
+
+  /* ═════════════════ E. RUN ═════════════════ */
+  .run-glow { position: absolute; inset: 0; background: radial-gradient(ellipse at 100% 100%, rgba(var(--brand-rgb), 0.18), transparent 55%), radial-gradient(ellipse at 60% 0%, rgba(var(--accent-rgb), 0.12), transparent 50%); }
+  .run-card { position: absolute; left: 96px; top: 96px; bottom: 96px; width: 680px; box-sizing: border-box; padding: 40px; display: flex; flex-direction: column; border-radius: 28px; background: var(--card-bg); border: 1px solid var(--card-border); box-shadow: var(--shadow-lg); }
+  .run-top { display: flex; align-items: center; gap: 16px; }
+  .run-tile { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: var(--aimy-tile); box-shadow: inset 0 0 0 1px var(--aimy-tile-edge); }
+  .run-tile svg { width: 30px; height: 30px; }
+  .run-top b { font-size: 30px; font-weight: 600; }
+  .run-status { margin-left: auto; padding: 6px 18px; border-radius: 9999px; font-size: 22px; font-weight: 500; background: var(--brand-dim); color: var(--ink-action); }
+  .run-status[data-done] { background: var(--ok-bg); color: var(--ok-text); }
+  .run-ask { align-self: flex-end; max-width: 480px; margin: 40px 0 36px; padding: 18px 24px; border-radius: 20px 4px 20px 20px; background: var(--accent-dim); border: 1px solid rgba(var(--accent-rgb), 0.22); font-size: 28px; line-height: 1.4; }
+  .run-steps { margin: 0; padding: 0; list-style: none; }
+  .run-step { display: grid; grid-template-columns: 52px 1fr auto; align-items: start; padding: 22px 0; border-top: 1px solid var(--w07); }
+  .run-icon { width: 32px; height: 32px; margin-top: 3.5px; border-radius: 50%; display: grid; place-items: center; box-shadow: inset 0 0 0 3px var(--w25); color: var(--body-bg); box-sizing: border-box; }
+  .run-icon svg { width: 18px; height: 18px; opacity: 0; }
+  .run-name { font-size: 28px; line-height: 39px; color: var(--ink-secondary); }
+  .run-when { font-size: 22px; line-height: 39px; color: var(--ink-secondary); }
+  .run-step[data-state="now"] .run-name, .run-step[data-state="done"] .run-name { color: var(--ink-primary); }
+  .run-step[data-state="now"] .run-name { font-weight: 600; }
+  .run-step[data-state="now"] .run-icon { box-shadow: none; border: 3px solid var(--brand-dim); border-top-color: var(--brand); animation: run-spin calc(var(--duration-very-slow) * 2) var(--ease-linear) infinite; }
+  .run-step[data-state="done"] .run-icon { background: var(--ok); box-shadow: none; }
+  .run-step[data-state="done"] .run-icon svg { opacity: 1; }
+  @keyframes run-spin { to { transform: rotate(1turn); } }
+  .run-pane { position: absolute; left: 880px; right: 120px; top: 96px; bottom: 96px; }
+  .run-panel { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; }
+  .run-panel .sl-display { font-size: 104px; }
+  .run-panel .sl-title { font-size: 80px; }
+  .run-from { margin-top: 56px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dk-stage *, .dk-stage *::after { transition-duration: 0ms !important; transition-delay: 0ms !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="aimy-rg" cx="75.72" cy="73.83" fx="75.72" fy="73.83" r="70.54" gradientUnits="userSpaceOnUse"><stop offset="0.26" stop-color="#8c4ff4"/><stop offset="0.36" stop-color="#8250f4"/><stop offset="0.51" stop-color="#6954f6"/><stop offset="0.7" stop-color="#3f5bf9"/><stop offset="0.92" stop-color="#0764fe"/><stop offset="0.95" stop-color="#0066ff"/></radialGradient>
+    <symbol id="aimy-mark" viewBox="0 0 151.43 147.66"><path fill="var(--aimy-mark, url(#aimy-rg))" d="m84.2,6.76c1.09-2.9,3.26-3.67,6.2-3.46,3.04.21,6.12-.04,9.17.09,3.09.13,4.19,1.99,2.72,4.73-2.8,5.23-5.69,10.4-8.64,15.54-.91,1.59-1.31,2.9-.3,4.69,1.09,1.94,1.68,4.16,2.47,6.27.56,1.48,1.14,2.9,3.1,2.84,2.03-.06,2.38-1.54,2.71-3.11,1.1-5.1,2.22-10.19,3.39-15.28.66-2.88,1.64-3.2,3.7-1.18,3.15,3.08,6.22,6.25,9.37,9.33,1.29,1.26,1.36,2.4.1,3.7-1.25,1.29-2.47,2.62-3.66,3.97-.61.69-1.13,1.49-.46,2.42.68.94,1.55.61,2.42.27,4.51-1.8,9.04-3.53,13.53-5.39,1.83-.76,3.32-.47,4.67.87,2.49,2.47,5.04,4.9,7.42,7.47,2.54,2.73,1.91,4.74-1.77,5.82-5.69,1.67-11.39,3.26-17.1,4.85-1.37.38-2.26.89-2.75,2.47-.76,2.47-2.02,4.8-3.1,7.17-.61,1.35-.72,2.59.51,3.68,1.25,1.11,2.44.75,3.68-.05,4.53-2.92,9.07-5.83,13.64-8.69,2.5-1.57,3.33-1.08,3.36,1.91.04,4.22-.08,8.45.05,12.67.07,2.39-.98,3.24-3.21,3.2-1.53-.03-3.06.06-4.59.14-1.02.06-2.06.26-2.2,1.52-.13,1.15.81,1.46,1.65,1.82,4.29,1.85,8.54,3.8,12.88,5.53,2.16.86,3.1,2.23,3.06,4.5-.06,3.33.02,6.65-.04,9.98-.08,3.82-1.88,4.89-5.2,3.07-5.2-2.84-10.38-5.72-15.53-8.66-1.34-.76-2.38-1.03-3.92-.2-2.28,1.22-4.82,1.95-7.26,2.86-1.4.53-2.29,1.38-2.17,3,.13,1.67,1.24,2.19,2.69,2.5,5.27,1.12,10.53,2.27,15.78,3.49,2.92.67,3.16,1.56,1.07,3.69-3.09,3.14-6.26,6.21-9.33,9.38-1.27,1.3-2.36,1.38-3.66.09-1.27-1.27-2.63-2.45-3.98-3.65-.69-.62-1.48-1.14-2.42-.5-.97.66-.64,1.53-.29,2.4,1.76,4.42,3.43,8.88,5.28,13.26.95,2.24.47,3.9-1.24,5.51-2.23,2.09-4.32,4.33-6.51,6.47-3.13,3.06-5.22,2.5-6.45-1.76-1.58-5.52-3.13-11.05-4.64-16.59-.4-1.48-1.02-2.39-2.66-2.9-2.39-.74-4.62-1.97-6.92-3.01-1.43-.65-2.78-.8-3.9.57-1.05,1.29-.54,2.46.25,3.69,2.88,4.45,5.73,8.92,8.55,13.41,1.65,2.62,1.17,3.48-1.98,3.52-4.14.05-8.28-.06-12.41.06-2.47.07-3.33-1.01-3.38-3.37-.04-1.94.39-3.96-.55-5.82-1.74-2.18-2.36-.35-2.92.91-1.76,3.94-3.56,7.87-5.08,11.9-1.11,2.96-2.92,4.25-6.1,4.03-2.77-.2-5.57-.01-8.36-.06-4.27-.07-5.4-1.95-3.37-5.63,2.74-4.95,5.49-9.9,8.31-14.8.9-1.56,1.33-2.86.29-4.67-1.15-2-1.75-4.32-2.56-6.51-.53-1.44-1.25-2.6-3.04-2.53-1.83.08-2.32,1.31-2.64,2.85-1.1,5.18-2.24,10.36-3.44,15.52-.67,2.88-1.65,3.17-3.72,1.13-3.08-3.02-6.08-6.14-9.19-9.14-1.49-1.44-1.54-2.68-.06-4.1,1.1-1.06,2.11-2.22,3.13-3.36.73-.81,1.57-1.72.72-2.83-.76-1-1.8-.44-2.72-.08-4.27,1.69-8.56,3.31-12.78,5.1-2.23.95-3.93.54-5.56-1.18-2.29-2.42-4.75-4.67-7.02-7.1-2.34-2.51-1.78-4.64,1.49-5.62,5.6-1.67,11.22-3.27,16.86-4.79,1.77-.48,2.96-1.11,3.53-3.1.67-2.31,1.91-4.45,2.9-6.66.65-1.44.72-2.79-.65-3.89-1.32-1.05-2.45-.47-3.67.32-4.36,2.84-8.76,5.65-13.17,8.41-2.76,1.73-3.71,1.23-3.74-1.95-.04-4.14.09-8.28-.03-12.41-.06-2.34.89-3.26,3.18-3.21,1.7.04,3.41-.17,5.12-.3.87-.06,1.62-.4,1.76-1.36.15-1-.58-1.41-1.36-1.75-4.37-1.89-8.7-3.87-13.12-5.63-2.25-.9-3.23-2.35-3.19-4.71.06-3.33-.07-6.66.04-9.98.12-3.56,2.07-4.64,5.2-2.93,5.13,2.79,10.23,5.62,15.3,8.52,1.5.86,2.72,1.22,4.44.29,2.12-1.15,4.5-1.81,6.77-2.67,1.47-.55,2.53-1.38,2.37-3.15-.15-1.68-1.35-2.16-2.76-2.46-5.19-1.13-10.37-2.25-15.55-3.44-2.86-.66-3.17-1.67-1.16-3.73,3.02-3.09,6.14-6.07,9.13-9.19,1.44-1.51,2.67-1.53,4.1-.06,1.07,1.09,2.21,2.12,3.36,3.12.8.7,1.66,1.64,2.81.74,1-.78.45-1.8.08-2.71-1.69-4.27-3.3-8.56-5.1-12.78-.97-2.26-.48-3.92,1.19-5.56,2.24-2.2,4.29-4.6,6.51-6.82,2.52-2.52,5.28-1.85,6.29,1.53,1.68,5.69,3.31,11.4,4.86,17.13.42,1.53,1.09,2.38,2.7,2.9,2.47.8,4.79,2.05,7.17,3.11,1.38.61,2.62.55,3.64-.69.98-1.19.61-2.32-.13-3.46-2.82-4.38-5.65-8.75-8.42-13.17-.58-.93-1.69-1.87-.93-3.15.68-1.15,1.94-.76,2.97-.77,4.13-.04,8.27.06,12.4-.03,2.07-.04,2.97.78,2.95,2.84-.01,1.71.14,3.41.26,5.12.07.94.34,1.85,1.47,1.96.98.1,1.41-.63,1.73-1.42,1.76-4.23,3.52-8.46,5.28-12.68Zm-22.36,61.41c-3.34,1.86-6.31,1.33-9.12-1.21-2.13-1.92-4.4-3.7-6.68-5.44-1.37-1.05-5.46-.12-5.88,1.48-.4,1.51,1.45,1.62,2.35,2.26,2.26,1.62,2.42,2.82.44,4.99-1.2,1.31-1.86,2.77-.81,4.36,1.07,1.61,2.68,2.01,4.5,1.25,1.66-.69,3.35-1.31,4.95-2.11,3.35-1.67,6.39-1.47,9.13,1.21,2.48,5.78.4,9.43-5.84,10.19-2.94.36-5.9.59-8.84.99-1.71.24-3.72,3.37-3.04,4.99.74,1.75,2.14.27,3.18.13,2.82-.39,3.74.25,3.89,3.17.09,1.76.6,3.29,2.48,3.69,2.06.43,3.44-.64,4.21-2.52.82-1.99,1.6-4,2.44-5.99,1.06-2.53,2.86-4.12,5.72-4.2,2.6-.07,4.55,1.12,5.68,3.4,1.22,2.48.87,4.87-.94,7.03-1.56,1.86-3.06,3.77-4.61,5.63-2.97,3.57-2.9,4.91.52,8.4.47-.79.92-1.56,1.38-2.32,1.77-2.93,2.86-3.11,5.4-.87,1.35,1.19,2.84,1.7,4.39.59,1.5-1.08,1.78-2.66,1.12-4.34-.89-2.26-1.96-4.45-2.77-6.73-1.32-3.73.56-7.35,4.17-8.3,3.57-.94,7.08,1.37,7.7,5.21.4,2.48.6,5,.8,7.5.41,4.94.97,5.53,5.99,5.97.04.05.08.11.13.14.01,0,.07-.05.11-.08-.09,0-.19,0-.28,0,.48-1.21-.26-2.26-.46-3.37-.48-2.69.29-3.75,2.95-3.8,1.88-.03,3.52-.5,3.93-2.51.45-2.19-.81-3.54-2.79-4.32-2.01-.78-4.01-1.57-5.99-2.42-2.45-1.05-3.89-2.93-3.98-5.6-.08-2.55,1.12-4.54,3.41-5.68,2.38-1.18,4.72-.92,6.82.76,1.9,1.51,3.77,3.05,5.64,4.6,3.87,3.21,4.66,3.2,8.75-.27-1.04-.61-2.07-1.14-3.02-1.79-2.24-1.53-2.4-2.82-.54-4.79,1.28-1.36,2.12-2.83.94-4.56-1.2-1.75-2.96-1.85-4.82-1.09-2.08.86-4.11,1.83-6.22,2.59-3.73,1.35-7.49-.5-8.38-4.02-.96-3.81,1.3-7.23,5.33-7.83,2.48-.37,5-.59,7.51-.78,4.75-.36,5.44-1.05,5.77-6.3-1.15.29-2.24.62-3.35.82-2.62.49-3.71-.35-3.78-3.03-.05-1.89-.52-3.49-2.57-3.85-2.07-.36-3.39.78-4.14,2.67-.83,2.09-1.62,4.2-2.57,6.23-1.68,3.6-5.57,4.91-8.76,3.05-3.36-1.96-4.18-6.1-1.75-9.32,1.57-2.08,3.27-4.06,4.93-6.07,2.94-3.56,2.89-4.57-.43-8.15-.08.02-.2.01-.23.06-.3.44-.6.89-.88,1.35-2.3,3.81-2.75,3.89-6.21,1.3-1.24-.93-2.61-1.34-3.97-.31-1.33,1.02-1.89,2.42-1.26,4.06.84,2.18,1.74,4.33,2.67,6.47,1.16,2.67.88,5.12-1.13,7.24-1.79,1.89-4.12,2.26-6.47,1.44-2.61-.91-3.96-2.91-4.18-5.72-.25-3.13-.61-6.26-1.01-9.38-.24-1.92-3.07-4.03-5.03-3.37-2.01.68-.22,2.24-.11,3.34.27,2.74-.36,3.64-3.35,3.81-1.79.1-3.25.69-3.58,2.6-.31,1.81.57,3.15,2.24,3.88,1.73.76,3.5,1.42,5.24,2.15,5.82,2.41,6.87,6.44,2.99,11.41Z"/></symbol>
+    <symbol id="aimy-lockup" viewBox="0 0 418.18 147.66"><g fill="#0366ff"><path d="m209.6,97.25h-25.58l-4.1,12.11h-17.48l24.8-68.54h19.33l24.8,68.54h-17.67l-4.1-12.11Zm-4.3-12.89l-8.49-25.09-8.4,25.09h16.89Z"/><path d="m255.58,40.82v68.54h-16.7V40.82h16.7Z"/><path d="m345.31,40.82v68.54h-16.7v-41.1l-15.33,41.1h-13.47l-15.43-41.2v41.2h-16.7V40.82h19.72l19.23,47.45,19.04-47.45h19.63Z"/><path d="m416.1,40.82l-23.73,45.89v22.65h-16.7v-22.65l-23.73-45.89h18.94l13.28,28.71,13.18-28.71h18.75Z"/></g><path fill="var(--aimy-mark, url(#aimy-rg))" d="m81.08,8.02c1.09-2.9,3.26-3.67,6.2-3.46,3.04.21,6.12-.04,9.17.09,3.09.13,4.19,1.99,2.72,4.73-2.8,5.23-5.69,10.4-8.64,15.54-.91,1.59-1.31,2.9-.3,4.69,1.09,1.94,1.68,4.16,2.47,6.27.56,1.48,1.14,2.9,3.1,2.84,2.03-.06,2.38-1.54,2.71-3.11,1.1-5.1,2.22-10.19,3.39-15.28.66-2.88,1.64-3.2,3.7-1.18,3.15,3.08,6.22,6.25,9.37,9.33,1.29,1.26,1.36,2.4.1,3.7-1.25,1.29-2.47,2.62-3.66,3.97-.61.69-1.13,1.49-.46,2.42.68.94,1.55.61,2.42.27,4.51-1.8,9.04-3.53,13.53-5.39,1.83-.76,3.32-.47,4.67.87,2.49,2.47,5.04,4.9,7.42,7.47,2.54,2.73,1.91,4.74-1.77,5.82-5.69,1.67-11.39,3.26-17.1,4.85-1.37.38-2.26.89-2.75,2.47-.76,2.47-2.02,4.8-3.1,7.17-.61,1.35-.72,2.59.51,3.68,1.25,1.11,2.44.75,3.68-.05,4.53-2.92,9.07-5.83,13.64-8.69,2.5-1.57,3.33-1.08,3.36,1.91.04,4.22-.08,8.45.05,12.67.07,2.39-.98,3.24-3.21,3.2-1.53-.03-3.06.06-4.59.14-1.02.06-2.06.26-2.2,1.52-.13,1.15.81,1.46,1.65,1.82,4.29,1.85,8.54,3.8,12.88,5.53,2.16.86,3.1,2.23,3.06,4.5-.06,3.33.02,6.65-.04,9.98-.08,3.82-1.88,4.89-5.2,3.07-5.2-2.84-10.38-5.72-15.53-8.66-1.34-.76-2.38-1.03-3.92-.2-2.28,1.22-4.82,1.95-7.26,2.86-1.4.53-2.29,1.38-2.17,3,.13,1.67,1.24,2.19,2.69,2.5,5.27,1.12,10.53,2.27,15.78,3.49,2.92.67,3.16,1.56,1.07,3.69-3.09,3.14-6.26,6.21-9.33,9.38-1.27,1.3-2.36,1.38-3.66.09-1.27-1.27-2.63-2.45-3.98-3.65-.69-.62-1.48-1.14-2.42-.5-.97.66-.64,1.53-.29,2.4,1.76,4.42,3.43,8.88,5.28,13.26.95,2.24.47,3.9-1.24,5.51-2.23,2.09-4.32,4.33-6.51,6.47-3.13,3.06-5.22,2.5-6.45-1.76-1.58-5.52-3.13-11.05-4.64-16.59-.4-1.48-1.02-2.39-2.66-2.9-2.39-.74-4.62-1.97-6.92-3.01-1.43-.65-2.78-.8-3.9.57-1.05,1.29-.54,2.46.25,3.69,2.88,4.45,5.73,8.92,8.55,13.41,1.65,2.62,1.17,3.48-1.98,3.52-4.14.05-8.28-.06-12.41.06-2.47.07-3.33-1.01-3.38-3.37-.04-1.94.39-3.96-.55-5.82-1.74-2.18-2.36-.35-2.92.91-1.76,3.94-3.56,7.87-5.08,11.9-1.11,2.96-2.92,4.25-6.1,4.03-2.77-.2-5.57-.01-8.36-.06-4.27-.07-5.4-1.95-3.37-5.63,2.74-4.95,5.49-9.9,8.31-14.8.9-1.56,1.33-2.86.29-4.67-1.15-2-1.75-4.32-2.56-6.51-.53-1.44-1.25-2.6-3.04-2.53-1.83.08-2.32,1.31-2.64,2.85-1.1,5.18-2.24,10.36-3.44,15.52-.67,2.88-1.65,3.17-3.72,1.13-3.08-3.02-6.08-6.14-9.19-9.14-1.49-1.44-1.54-2.68-.06-4.1,1.1-1.06,2.11-2.22,3.13-3.36.73-.81,1.57-1.72.72-2.83-.76-1-1.8-.44-2.72-.08-4.27,1.69-8.56,3.31-12.78,5.1-2.23.95-3.93.54-5.56-1.18-2.29-2.42-4.75-4.67-7.02-7.1-2.34-2.51-1.78-4.64,1.49-5.62,5.6-1.67,11.22-3.27,16.86-4.79,1.77-.48,2.96-1.11,3.53-3.1.67-2.31,1.91-4.45,2.9-6.66.65-1.44.72-2.79-.65-3.89-1.32-1.05-2.45-.47-3.67.32-4.36,2.84-8.76,5.65-13.17,8.41-2.76,1.73-3.71,1.23-3.74-1.95-.04-4.14.09-8.28-.03-12.41-.06-2.34.89-3.26,3.18-3.21,1.7.04,3.41-.17,5.12-.3.87-.06,1.62-.4,1.76-1.36.15-1-.58-1.41-1.36-1.75-4.37-1.89-8.7-3.87-13.12-5.63-2.25-.9-3.23-2.35-3.19-4.71.06-3.33-.07-6.66.04-9.98.12-3.56,2.07-4.64,5.2-2.93,5.13,2.79,10.23,5.62,15.3,8.52,1.5.86,2.72,1.22,4.44.29,2.12-1.15,4.5-1.81,6.77-2.67,1.47-.55,2.53-1.38,2.37-3.15-.15-1.68-1.35-2.16-2.76-2.46-5.19-1.13-10.37-2.25-15.55-3.44-2.86-.66-3.17-1.67-1.16-3.73,3.02-3.09,6.14-6.07,9.13-9.19,1.44-1.51,2.67-1.53,4.1-.06,1.07,1.09,2.21,2.12,3.36,3.12.8.7,1.66,1.64,2.81.74,1-.78.45-1.8.08-2.71-1.69-4.27-3.3-8.56-5.1-12.78-.97-2.26-.48-3.92,1.19-5.56,2.24-2.2,4.29-4.6,6.51-6.82,2.52-2.52,5.28-1.85,6.29,1.53,1.68,5.69,3.31,11.4,4.86,17.13.42,1.53,1.09,2.38,2.7,2.9,2.47.8,4.79,2.05,7.17,3.11,1.38.61,2.62.55,3.64-.69.98-1.19.61-2.32-.13-3.46-2.82-4.38-5.65-8.75-8.42-13.17-.58-.93-1.69-1.87-.93-3.15.68-1.15,1.94-.76,2.97-.77,4.13-.04,8.27.06,12.4-.03,2.07-.04,2.97.78,2.95,2.84-.01,1.71.14,3.41.26,5.12.07.94.34,1.85,1.47,1.96.98.1,1.41-.63,1.73-1.42,1.76-4.23,3.52-8.46,5.28-12.68Zm-22.36,61.41c-3.34,1.86-6.31,1.33-9.12-1.21-2.13-1.92-4.4-3.7-6.68-5.44-1.37-1.05-5.46-.12-5.88,1.48-.4,1.51,1.45,1.62,2.35,2.26,2.26,1.62,2.42,2.82.44,4.99-1.2,1.31-1.86,2.77-.81,4.36,1.07,1.61,2.68,2.01,4.5,1.25,1.66-.69,3.35-1.31,4.95-2.11,3.35-1.67,6.39-1.47,9.13,1.21,2.48,5.78.4,9.43-5.84,10.19-2.94.36-5.9.59-8.84.99-1.71.24-3.72,3.37-3.04,4.99.74,1.75,2.14.27,3.18.13,2.82-.39,3.74.25,3.89,3.17.09,1.76.6,3.29,2.48,3.69,2.06.43,3.44-.64,4.21-2.52.82-1.99,1.6-4,2.44-5.99,1.06-2.53,2.86-4.12,5.72-4.2,2.6-.07,4.55,1.12,5.68,3.4,1.22,2.48.87,4.87-.94,7.03-1.56,1.86-3.06,3.77-4.61,5.63-2.97,3.57-2.9,4.91.52,8.4.47-.79.92-1.56,1.38-2.32,1.77-2.93,2.86-3.11,5.4-.87,1.35,1.19,2.84,1.7,4.39.59,1.5-1.08,1.78-2.66,1.12-4.34-.89-2.26-1.96-4.45-2.77-6.73-1.32-3.73.56-7.35,4.17-8.3,3.57-.94,7.08,1.37,7.7,5.21.4,2.48.6,5,.8,7.5.41,4.94.97,5.53,5.99,5.97.04.05.08.11.13.14.01,0,.07-.05.11-.08-.09,0-.19,0-.28,0,.48-1.21-.26-2.26-.46-3.37-.48-2.69.29-3.75,2.95-3.8,1.88-.03,3.52-.5,3.93-2.51.45-2.19-.81-3.54-2.79-4.32-2.01-.78-4.01-1.57-5.99-2.42-2.45-1.05-3.89-2.93-3.98-5.6-.08-2.55,1.12-4.54,3.41-5.68,2.38-1.18,4.72-.92,6.82.76,1.9,1.51,3.77,3.05,5.64,4.6,3.87,3.21,4.66,3.2,8.75-.27-1.04-.61-2.07-1.14-3.02-1.79-2.24-1.53-2.4-2.82-.54-4.79,1.28-1.36,2.12-2.83.94-4.56-1.2-1.75-2.96-1.85-4.82-1.09-2.08.86-4.11,1.83-6.22,2.59-3.73,1.35-7.49-.5-8.38-4.02-.96-3.81,1.3-7.23,5.33-7.83,2.48-.37,5-.59,7.51-.78,4.75-.36,5.44-1.05,5.77-6.3-1.15.29-2.24.62-3.35.82-2.62.49-3.71-.35-3.78-3.03-.05-1.89-.52-3.49-2.57-3.85-2.07-.36-3.39.78-4.14,2.67-.83,2.09-1.62,4.2-2.57,6.23-1.68,3.6-5.57,4.91-8.76,3.05-3.36-1.96-4.18-6.1-1.75-9.32,1.57-2.08,3.27-4.06,4.93-6.07,2.94-3.56,2.89-4.57-.43-8.15-.08.02-.2.01-.23.06-.3.44-.6.89-.88,1.35-2.3,3.81-2.75,3.89-6.21,1.3-1.24-.93-2.61-1.34-3.97-.31-1.33,1.02-1.89,2.42-1.26,4.06.84,2.18,1.74,4.33,2.67,6.47,1.16,2.67.88,5.12-1.13,7.24-1.79,1.89-4.12,2.26-6.47,1.44-2.61-.91-3.96-2.91-4.18-5.72-.25-3.13-.61-6.26-1.01-9.38-.24-1.92-3.07-4.03-5.03-3.37-2.01.68-.22,2.24-.11,3.34.27,2.74-.36,3.64-3.35,3.81-1.79.1-3.25.69-3.58,2.6-.31,1.81.57,3.15,2.24,3.88,1.73.76,3.5,1.42,5.24,2.15,5.82,2.41,6.87,6.44,2.99,11.41Z"/></symbol>
+  </defs>
+</svg>
+
+<main class="pv-page">
+  <div class="pv-top">
+    <div>
+      <h1 class="pv-h1">Presentations: storytelling on a timeline</h1>
+      <p class="pv-lead">Five ways to tell a story as a deck in AiMY's look. Each one tells <b>the same story</b>, the library's own from 27 October to now, so you can compare them on the same words. Every deck works: click it, then use the arrow keys or Space, or press Present to see it full screen.</p>
+    </div>
+    <button class="pv-btn" type="button" id="pvTheme">Light theme</button>
+  </div>
+
+  <ul class="pv-view">
+    <li><b>All five share one engine.</b> A fixed 16:9 stage, scaled whole to any screen, so a slide looks the same on a laptop, a projector or a phone. Arrows, Space, Page Up and Down, Home and End move through it.</li>
+    <li><b>Motion uses the library's tokens only.</b> The camera moves in 500ms (very slow, the longest token we have), lines rise on transitions.dev's text reveal, and nothing dims to show it is past: past and next are said in words and colour.</li>
+    <li><b>My pick is A, Track, as the library's deck, with B, Spine, as its reading form.</b> Track is the clearest story on a big screen; Spine is the same timeline turned on its side for a deck people read alone. Both can take C's orb horizon for the cover and the close, and B already carries D's "what we learned, what we did" pair.</li>
+    <li><b>I need your call on two things.</b> Whether 500ms is enough for a camera move across a slide (a longer "scene" token would be new), and which variant, or which mix, goes into the library.</li>
+  </ul>
+
+  <article class="pv-var" id="vA">
+    <div class="pv-var-head"><span class="pv-var-key">A</span><h3 class="pv-var-name">Track: one line through the whole story</h3></div>
+    <p class="pv-var-say">The timeline runs along the foot of every slide and the camera travels along it. The line fills in AiMY's gradient behind you, and the next moment's date waits at the right edge. <b>Good:</b> the audience always knows where they are and what comes next; it reads as one continuous story. <b>Weak:</b> one idea per slide, so detail goes to the speaker.</p>
+    <div class="dk" data-deck="track"></div>
+  </article>
+
+  <article class="pv-var" id="vB">
+    <div class="pv-var-head"><span class="pv-var-key">B</span><h3 class="pv-var-name">Spine: the agenda is the timeline</h3></div>
+    <p class="pv-var-say">A vertical spine on the left lists every chapter with its state in words: Done, Now, Ahead. The moment reads on the right with what we learned and what we did. <b>Good:</b> holds the most; works as a deck people read on their own after the meeting. <b>Weak:</b> the least cinematic of the five.</p>
+    <div class="dk" data-deck="spine"></div>
+  </article>
+
+  <article class="pv-var" id="vC">
+    <div class="pv-var-head"><span class="pv-var-key">C</span><h3 class="pv-var-name">Horizon: the orb is now</h3></div>
+    <p class="pv-var-say">The landing page's orb horizon, as a timeline. The orb rises on the cover, then sits on each moment's mark along the horizon as the story moves left to right. <b>Good:</b> the most AiMY of the five; made for a stage and a big screen. <b>Weak:</b> a headline and a line or two per slide, no more.</p>
+    <div class="dk" data-deck="horizon"></div>
+  </article>
+
+  <article class="pv-var" id="vD">
+    <div class="pv-var-head"><span class="pv-var-key">D</span><h3 class="pv-var-name">Two lanes: knowledge to action, drawn</h3></div>
+    <p class="pv-var-say">The brand line as a layout. Each moment is a column on one time axis: what we learned above, what we did below, and a line drawn from one to the other. Past columns stay on screen at full strength. <b>Good:</b> every insight visibly comes with its next step, which is AiMY's promise. <b>Weak:</b> every moment needs both halves written.</p>
+    <div class="dk" data-deck="lanes"></div>
+  </article>
+
+  <article class="pv-var" id="vE">
+    <div class="pv-var-head"><span class="pv-var-key">E</span><h3 class="pv-var-name">Run: told the way AiMY works</h3></div>
+    <p class="pv-var-say">Someone asks; AiMY works through the steps on the left, each ticking done, and each slide is the answer for one step, its words arriving one after another. <b>Good:</b> shows the product's own behaviour while telling the story; strong for demos and updates. <b>Weak:</b> the frame suits progress stories, less so a pitch.</p>
+    <div class="dk" data-deck="run"></div>
+  </article>
+</main>
+
+<script>
+/* The orb: makeSilk, transpiled from registry/aimy/ui/orb.tsx (ported from the products' voice.js). */
+(() => {
+"use strict";
+const SILK_N = 40; /* strands */
+const SILK_PTS = 64; /* points per strand */
+const SILK_BLOOM = 7; /* px (CSS): the glow under the strands */
+const TAU_PHASE = 0.6; /* s: phase blends */
+const TAU_UP = 0.2; /* s: voice rising */
+const TAU_DOWN = 0.7; /* s: voice falling */
+const BREATH_W = (Math.PI * 2) / 2.4; /* rad/s: one breath per 2.4s */
+const SILK_DARK = [
+    [69, 211, 230],
+    [64, 140, 255],
+    [140, 110, 255],
+];
+const SILK_LIGHT = [
+    [0, 120, 214],
+    [0, 86, 230],
+    [86, 58, 214],
+];
+const SILK_GREY = [
+    [150, 162, 178],
+    [126, 138, 156],
+    [150, 150, 170],
+];
+const reduced = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+function makeSilk(canvas) {
+    const ctx = canvas.getContext("2d");
+    const off = document.createElement("canvas");
+    const octx = off.getContext("2d");
+    if (!ctx || !octx)
+        return null;
+    // Canvas filters arrived late in Safari; without one the bloom is skipped.
+    const canBloom = typeof ctx.filter === "string";
+    const TAU = Math.PI * 2;
+    let w = 0;
+    let h = 0;
+    let dpr = 1;
+    let raf = 0;
+    let last = 0;
+    let t = 0;
+    let rot = 0;
+    let ph = 0;
+    let phase = "connecting";
+    let want = 0;
+    let lvl = 0;
+    let light = false;
+    const E = { spin: 0.2, height: 0.78, amp: 0.045, colour: 1, alpha: 0.45, breath: 0 };
+    const goals = () => {
+        const quiet = phase === "muted" || phase === "error";
+        return {
+            spin: phase === "thinking" ? 1.15 : phase === "speaking" ? 0.42 : quiet ? 0.05 : 0.2,
+            height: phase === "thinking" ? 0.58 : 0.86,
+            amp: quiet ? 0.02 : phase === "thinking" ? 0.07 : 0.045,
+            colour: quiet ? 0 : 1,
+            alpha: phase === "error" ? 0.35 : phase === "connecting" ? 0.45 : phase === "muted" ? 0.6 : 1,
+            breath: phase === "speaking" ? 1 : 0,
+        };
+    };
+    const mix = (a, b, f) => a.map((v, i) => Math.round(v + (b[i] - v) * f));
+    const rgba = (c, a) => "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + Math.max(0, a).toFixed(3) + ")";
+    function fit() {
+        dpr = Math.min(2, window.devicePixelRatio || 1);
+        const cw = Math.round(canvas.clientWidth * dpr);
+        const ch = Math.round(canvas.clientHeight * dpr);
+        if (cw && (cw !== w || ch !== h)) {
+            w = canvas.width = off.width = cw;
+            h = canvas.height = off.height = ch;
+        }
+        // The nearest theme scope, so an orb inside a light panel draws light.
+        light = canvas.closest("[data-theme]")?.getAttribute("data-theme") === "light";
+    }
+    function draw(dt) {
+        if (!ctx || !octx)
+            return;
+        const G = goals();
+        const kp = dt ? 1 - Math.exp(-dt / TAU_PHASE) : 1;
+        for (const key of Object.keys(G))
+            E[key] += (G[key] - E[key]) * kp;
+        const target = phase === "listening" ? want : 0;
+        lvl += (target - lvl) * (dt ? 1 - Math.exp(-dt / (target > lvl ? TAU_UP : TAU_DOWN)) : 1);
+        t += dt;
+        rot += dt * E.spin;
+        ph += dt * (0.9 + E.spin * 1.4 + lvl * 0.9);
+        if (!w)
+            return;
+        const cx = w / 2;
+        const cy = h / 2;
+        const S = Math.min(w, h) * 0.44;
+        const swell = E.breath * (0.5 - 0.5 * Math.cos(t * BREATH_W));
+        const pinch = phase === "thinking" ? 1 + 0.03 * Math.sin(t * 1.6) : 1;
+        const H = S * E.height * (1 + swell * 0.04 + lvl * 0.06) * pinch;
+        const A = S * (E.amp + lvl * 0.22 + swell * 0.065);
+        const pal = (light ? SILK_LIGHT : SILK_DARK).map((c, i) => mix(SILK_GREY[i], c, E.colour));
+        octx.clearRect(0, 0, w, h);
+        octx.globalCompositeOperation = light ? "source-over" : "lighter";
+        octx.lineCap = "butt";
+        for (let k = 0; k < SILK_N; k++) {
+            const th = (k / SILK_N) * TAU + rot;
+            const depth = (Math.cos(th) + 1) / 2;
+            const base = Math.sin(th) * H;
+            // Its own latitude: half-width of the sphere at this height.
+            const L = Math.sqrt(Math.max(S * S * 0.03, S * S - base * base));
+            const a = E.alpha * (0.06 + 0.72 * depth * depth) * (light ? 1.15 : 1);
+            const grad = octx.createLinearGradient(cx - L, 0, cx + L, 0);
+            grad.addColorStop(0, rgba(pal[0], 0));
+            grad.addColorStop(0.26, rgba(pal[0], a * 0.8));
+            grad.addColorStop(0.5, rgba(pal[1], a));
+            grad.addColorStop(0.74, rgba(pal[2], a * 0.8));
+            grad.addColorStop(1, rgba(pal[2], 0));
+            octx.beginPath();
+            for (let i = 0; i <= SILK_PTS; i++) {
+                const u = (i / SILK_PTS) * 2 - 1;
+                const env = Math.pow(Math.max(0, 1 - u * u), 0.8);
+                const wave = Math.sin(u * 3.1 + ph + k * 0.43) +
+                    0.5 * Math.sin(u * 5.9 - ph * 1.27 + k * 0.91) +
+                    E.breath * 0.55 * Math.sin(Math.abs(u) * 5 - t * 2.6);
+                const x = cx + u * L;
+                const y = cy + base + env * wave * A * (0.55 + 0.45 * depth);
+                if (i)
+                    octx.lineTo(x, y);
+                else
+                    octx.moveTo(x, y);
+            }
+            octx.strokeStyle = grad;
+            octx.lineWidth = (0.4 + 1.1 * depth) * dpr;
+            octx.stroke();
+            // The sheen, on the strands that face you full-on, faded at its ends.
+            if (!light && depth > 0.88) {
+                const sa = ((0.45 * (depth - 0.88)) / 0.12) * E.colour * E.alpha;
+                const sheen = octx.createLinearGradient(cx - L, 0, cx + L, 0);
+                sheen.addColorStop(0.2, "rgba(255,255,255,0)");
+                sheen.addColorStop(0.5, "rgba(255,255,255," + sa.toFixed(3) + ")");
+                sheen.addColorStop(0.8, "rgba(255,255,255,0)");
+                octx.strokeStyle = sheen;
+                octx.lineWidth = 0.6 * dpr;
+                octx.stroke();
+            }
+        }
+        octx.globalCompositeOperation = "source-over";
+        ctx.clearRect(0, 0, w, h);
+        // The light the silk throws on the room behind it.
+        const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, S * 1.15);
+        glow.addColorStop(0, rgba(mix(SILK_GREY[1], [0, 102, 255], E.colour), (light ? 0.08 : 0.2) * E.alpha * (0.7 + lvl * 0.8 + swell * 0.4)));
+        glow.addColorStop(1, rgba([0, 102, 255], 0));
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, w, h);
+        // Bloom, then the strands sharp over their own glow.
+        if (canBloom) {
+            ctx.globalCompositeOperation = light ? "source-over" : "lighter";
+            ctx.globalAlpha = light ? 0.35 : 0.85;
+            ctx.filter = "blur(" + SILK_BLOOM * dpr + "px)";
+            ctx.drawImage(off, 0, 0);
+            ctx.filter = "none";
+            ctx.globalAlpha = 1;
+        }
+        ctx.globalCompositeOperation = light ? "source-over" : "lighter";
+        ctx.drawImage(off, 0, 0);
+        ctx.globalCompositeOperation = "source-over";
+    }
+    function loop(now) {
+        const dt = last ? Math.min(0.05, (now - last) / 1000) : 0;
+        last = now;
+        fit();
+        draw(dt);
+        raf = requestAnimationFrame(loop);
+    }
+    // One still frame, every eased value at its goal.
+    function still() {
+        fit();
+        lvl = 0;
+        draw(0);
+    }
+    return {
+        start() {
+            if (reduced()) {
+                still();
+                return;
+            }
+            if (!raf) {
+                last = 0;
+                raf = requestAnimationFrame(loop);
+            }
+        },
+        stop() {
+            cancelAnimationFrame(raf);
+            raf = 0;
+        },
+        phase(p) {
+            phase = p;
+            if (reduced())
+                still();
+        },
+        level(v) {
+            want = v;
+        },
+    };
+}
+;
+window.makeSilk = makeSilk;
+
+})();
+</script>
+<script>
+/* ═════════════════ THE STORY ═════════════════
+   The library's own, from the project's dated log. 113 is the number of
+   registry components on 16 Nov 2026 (registry.json, type registry:component). */
+const COVER = {
+  kicker: 'AiMY UI · the story so far',
+  title: 'From two products to one system.',
+  sub: 'How Sales and Knowledge became one library any AiMY product can start from.',
+  when: 'November 2026',
+  ask: 'How did AiMY UI come together?',
+};
+const CLOSE = { sub: 'Every insight AiMY surfaces comes with a next step.', action: 'Browse the parts', where: 'aimy-ui-lib.aimy.flairstech.com' };
+const M = [
+  { when: '27 Oct', chapter: 'The plan', title: 'We started with a plan, not code.',
+    body: 'We read Sales, Knowledge and the design system, then wrote every decision down before building anything.',
+    learned: 'Sales and Knowledge already solve the same problems, in two different ways.',
+    did: 'One plan: the stack, the tokens, the batches, and nine disagreements to settle.',
+    step: 'Reading Sales and Knowledge' },
+  { when: '27 Oct', chapter: 'Day one', title: 'The registry went live on day one.',
+    body: 'A shadcn registry, two npm packages and a starter app, all from one source.',
+    learned: 'Teams use what they can install in one command.',
+    did: 'npx shadcn add @aimy/part, and the code is theirs to own.',
+    step: 'Setting up the registry' },
+  { when: '28 Oct', chapter: 'The parts', title: "Buttons first, then AiMY's own parts.",
+    body: "Forms, menus and toasts, then the conversation, voice, sources and the agent's steps.",
+    learned: 'What makes AiMY different lives in its AI parts.',
+    did: 'Message, Composer, Orb, Citation and Agent steps, measured against both products.',
+    step: 'Porting the parts' },
+  { when: '29 Oct', chapter: '1.0.0', title: 'Built from what the products draw.',
+    body: 'Parts neither product used stayed out.',
+    learned: 'A part nobody ships is a part nobody keeps up.',
+    did: "Built what the products draw, skipped the rest, and named each part's source.",
+    step: 'Publishing 1.0.0',
+    figure: { value: '113', means: "parts today, each page naming the product it came from" } },
+  { when: '11 Nov', chapter: 'Patches', title: 'Production found what the docs missed.',
+    body: 'One chat bubble, widgets that wear it, and widget heads that fit a phone.',
+    learned: 'Real screens break in ways a docs page never does.',
+    did: 'Fixed in the library and shipped the same day, 1.4.3 to 1.4.5.',
+    step: 'Patching from production' },
+];
+const LAST = M.length + 1;
+const COUNT = M.length + 2;
+
+/* ═════════════════ HELPERS ═════════════════ */
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const rv = (i, html, cls = '', tag = 'div') => `<${tag} class="rv ${cls}" style="--i:${i}">${html}</${tag}>`;
+const words = (text, from = 0) => text.split(' ').map((w, k) => `<span class="rv-w" style="--w:${k + from}">${esc(w)}</span>`).join(' ');
+const mark = (cls = '') => `<svg class="${cls}" viewBox="0 0 151.43 147.66" aria-hidden="true"><use href="#aimy-mark"/></svg>`;
+const lockup = () => `<svg class="sl-lockup" viewBox="0 0 418.18 147.66" role="img" aria-label="AiMY"><use href="#aimy-lockup"/></svg>`;
+const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+const closeTitle = 'Knowledge to <span class="sl-ai">Action.</span>';
+const cta = (center) => `<div class="sl-cta${center ? ' is-center' : ''}"><span class="sl-cta-btn">${CLOSE.action}</span><span class="sl-cta-where">${CLOSE.where}</span></div>`;
+
+/* ═════════════════ A. TRACK ═════════════════ */
+const GAP = 1180;
+const track = {
+  build: () => `<div class="sl trk">
+    <div class="trk-glow"></div>
+    <header class="sl-head">${lockup()}<span class="sl-head-meta">${COVER.kicker}</span></header>
+    <div class="trk-strip">
+      <div class="trk-line" style="width:${(COUNT - 1) * GAP + 2400}px"></div>
+      <div class="trk-fill" style="width:${(COUNT - 1) * GAP}px"></div>
+      <section class="trk-stop" data-n="0" style="left:0">
+        <div class="trk-copy">${rv(0, COVER.title, 'sl-display', 'h2')}${rv(1, COVER.sub, 'sl-lede', 'p')}</div>
+        <span class="trk-dot"></span><span class="trk-label"><b>${COVER.when}</b></span>
+      </section>
+      ${M.map((s, k) => `<section class="trk-stop" data-n="${k + 1}" style="left:${(k + 1) * GAP}px">
+        <div class="trk-copy">${s.figure
+          ? rv(0, s.figure.value, 'sl-figure') + rv(1, s.figure.means, 'sl-lede', 'p') + rv(2, s.title + ' ' + s.body, 'sl-body', 'p')
+          : rv(0, esc(s.title), 'sl-title', 'h2') + rv(1, esc(s.body), 'sl-body', 'p')}</div>
+        <span class="trk-dot"></span><span class="trk-label"><b>${s.when}</b>${s.chapter}</span>
+      </section>`).join('')}
+      <section class="trk-stop" data-n="${LAST}" style="left:${LAST * GAP}px">
+        <div class="trk-copy">${rv(0, closeTitle, 'sl-display', 'h2')}${rv(1, CLOSE.sub, 'sl-lede', 'p')}${rv(2, cta())}</div>
+        <span class="trk-dot"></span><span class="trk-label"><b>Next</b>Your product</span>
+      </section>
+    </div>
+  </div>`,
+  go: (st, i) => {
+    st.querySelector('.trk-strip').style.transform = `translateX(${240 - i * GAP}px)`;
+    st.querySelector('.trk-fill').style.transform = `scaleX(${i / (COUNT - 1)})`;
+    st.querySelector('.trk-glow').style.transform = `translateX(${-i * 90}px)`;
+  },
+};
+
+/* ═════════════════ B. SPINE ═════════════════ */
+const spine = {
+  build: () => {
+    const rows = [...M.map((s) => [s.when, s.chapter]), ['Next', 'Your product']];
+    return `<div class="sl spn">
+    <div class="spn-glow"></div>
+    <header class="sl-head">${lockup()}</header>
+    <ol class="spn-list" style="--rows:${rows.length}">
+      <span class="spn-rail"></span><span class="spn-fill"></span>
+      ${rows.map(([w, c], k) => `<li class="spn-row" data-n="${k + 1}">
+        <span class="spn-when">${w}</span><span class="spn-dot">${CHECK}</span>
+        <span class="spn-name">${c}<em class="is-done">Done</em><em class="is-now">Now</em><em class="is-ahead">Ahead</em></span>
+      </li>`).join('')}
+    </ol>
+    <div class="spn-pane">
+      <section class="spn-panel" data-n="0">${rv(0, COVER.kicker, 'sl-kicker')}${rv(1, COVER.title, 'sl-display', 'h2')}${rv(2, COVER.sub, 'sl-lede', 'p')}${rv(3, COVER.when, 'sl-meta')}</section>
+      ${M.map((s, k) => `<section class="spn-panel" data-n="${k + 1}">
+        ${rv(0, `${s.when} · ${s.chapter}`, 'sl-kicker')}
+        ${s.figure ? rv(1, `<span class="sl-figure">${s.figure.value}</span><span class="sl-lede">${s.figure.means}</span>`, 'spn-figure') : rv(1, esc(s.title), 'sl-title', 'h2')}
+        ${rv(2, esc(s.figure ? s.title + ' ' + s.body : s.body), 'sl-body', 'p')}
+        <div class="spn-pair">
+          ${rv(3, `<span class="sl-card-label">What we learned</span>${esc(s.learned)}`, 'sl-card is-learned')}
+          ${rv(4, `<span class="sl-card-label">What we did</span>${esc(s.did)}`, 'sl-card is-did')}
+        </div>
+      </section>`).join('')}
+      <section class="spn-panel" data-n="${LAST}">${rv(0, closeTitle, 'sl-display', 'h2')}${rv(1, CLOSE.sub, 'sl-lede', 'p')}${rv(2, cta())}</section>
+    </div>
+  </div>`;
+  },
+  go: (st, i) => {
+    const rows = M.length + 1;
+    st.querySelector('.spn-fill').style.transform = `scaleY(${i === 0 ? 0 : (i - 1) / (rows - 1)})`;
+  },
+};
+
+/* ═════════════════ C. HORIZON ═════════════════ */
+const LINE = 800, TICK0 = 360, TICK_GAP = 300;
+const horizon = {
+  build: () => `<div class="sl hzn">
+    <div class="hzn-glow"></div>
+    <div class="hzn-orb"><canvas></canvas></div>
+    <div class="hzn-ground"></div>
+    <header class="sl-head">${lockup()}<span class="sl-head-meta">${COVER.when}</span></header>
+    <ol class="hzn-ticks">${M.map((s, k) => `<li class="hzn-tick" data-n="${k + 1}" style="left:${TICK0 + k * TICK_GAP}px"><span class="hzn-mark"></span><b>${s.when}</b><span>${s.chapter}</span></li>`).join('')}</ol>
+    <section class="hzn-panel" data-n="0">${rv(0, COVER.kicker, 'sl-kicker')}${rv(1, COVER.title, 'sl-display', 'h2')}</section>
+    ${M.map((s, k) => `<section class="hzn-panel" data-n="${k + 1}">${rv(0, `${s.when} · ${s.chapter}`, 'sl-kicker')}${s.figure
+      ? rv(1, s.figure.value, 'sl-figure') + rv(2, s.figure.means, 'sl-lede', 'p')
+      : rv(1, esc(s.title), 'sl-title', 'h2') + rv(2, esc(s.body), 'sl-body', 'p')}</section>`).join('')}
+    <section class="hzn-panel" data-n="${LAST}">${rv(0, closeTitle, 'sl-display', 'h2')}${rv(1, CLOSE.sub, 'sl-lede', 'p')}${rv(2, cta(true))}</section>
+  </div>`,
+  init: (st) => {
+    const silk = window.makeSilk && makeSilk(st.querySelector('.hzn-orb canvas'));
+    if (silk) { silk.phase('listening'); silk.start(); }
+    return silk;
+  },
+  go: (st, i, silk) => {
+    const onTick = i > 0 && i < LAST;
+    const cx = onTick ? TICK0 + (i - 1) * TICK_GAP : 960;
+    const s = onTick ? 0.6 : i === 0 ? 1.3 : 0.95; /* the close keeps clear of its button */
+    st.querySelector('.hzn-orb').style.transform = `translate(${cx - 300}px, ${LINE - 300}px) scale(${s})`;
+    silk?.phase(i === 0 ? 'listening' : 'speaking');
+  },
+};
+
+/* ═════════════════ D. TWO LANES ═════════════════ */
+const COL = 640, COL_X = 1100;
+const lanes = {
+  build: () => `<div class="sl lns">
+    <div class="lns-glow"></div>
+    <div class="lns-axis"></div>
+    <div class="lns-strip">
+      ${M.map((s, k) => `<section class="lns-col" data-n="${k + 1}" style="left:${k * COL}px">
+        <div class="lns-up">${rv(0, `<span class="sl-card-label">${s.chapter}</span>${s.figure ? `<span class="lns-figure">${s.figure.value}</span>${s.figure.means}` : esc(s.learned)}`, 'sl-card is-learned')}</div>
+        <span class="lns-dot"></span><span class="lns-when">${s.when}</span>
+        <svg class="lns-link" viewBox="0 0 40 108" aria-hidden="true"><path pathLength="1" d="M20 4 V98 M10 88 L20 100 L30 88"/></svg>
+        <div class="lns-down">${rv(4, esc(s.did), 'sl-card is-did')}</div>
+      </section>`).join('')}
+    </div>
+    <aside class="lns-gutter">${lockup()}<span class="lns-lane is-up">What we learned</span><span class="lns-lane is-down">What we did</span></aside>
+    <section class="lns-panel" data-n="0">${rv(0, COVER.kicker, 'sl-kicker')}${rv(1, COVER.title, 'sl-display', 'h2')}${rv(2, 'Every step, told as what we learned and what we did about it.', 'sl-lede', 'p')}</section>
+    <section class="lns-panel" data-n="${LAST}">${rv(0, closeTitle, 'sl-display', 'h2')}${rv(1, CLOSE.sub, 'sl-lede', 'p')}${rv(2, cta())}</section>
+  </div>`,
+  go: (st, i) => {
+    const x = i === 0 ? 2000 : i === LAST ? -3400 : COL_X - (i - 1) * COL;
+    st.querySelector('.lns-strip').style.transform = `translateX(${x}px)`;
+    const root = st.querySelector('.lns');
+    if (i === 0 || i === LAST) root.dataset.edge = ''; else delete root.dataset.edge;
+  },
+};
+
+/* ═════════════════ E. RUN ═════════════════ */
+const run = {
+  build: () => `<div class="sl run">
+    <div class="run-glow"></div>
+    <aside class="run-card">
+      <div class="run-top"><span class="run-tile">${mark()}</span><b>AiMY</b><span class="run-status"></span></div>
+      <p class="run-ask">${COVER.ask}</p>
+      <ol class="run-steps">${M.map((s, k) => `<li class="run-step" data-n="${k + 1}"><span class="run-icon">${CHECK}</span><span class="run-name">${s.step}</span><span class="run-when">${s.when}</span></li>`).join('')}</ol>
+    </aside>
+    <div class="run-pane">
+      <section class="run-panel" data-n="0">${rv(0, COVER.kicker, 'sl-kicker')}<h2 class="sl-display">${words(COVER.title)}</h2>${rv(5, COVER.sub, 'sl-lede', 'p')}</section>
+      ${M.map((s, k) => `<section class="run-panel" data-n="${k + 1}">${rv(0, `${s.when} · ${s.chapter}`, 'sl-kicker')}${s.figure
+        ? rv(1, s.figure.value, 'sl-figure') + rv(2, s.figure.means, 'sl-lede', 'p')
+        : `<h2 class="sl-title">${words(s.title)}</h2>` + rv(5, esc(s.body), 'sl-body', 'p')}
+        ${rv(7, `<span class="sl-card-label">What we did</span>${esc(s.did)}`, 'sl-card is-did run-from')}</section>`).join('')}
+      <section class="run-panel" data-n="${LAST}"><h2 class="sl-display">${words('Knowledge to')} <span class="rv-w sl-ai" style="--w:2">Action.</span></h2>${rv(4, CLOSE.sub, 'sl-lede', 'p')}${rv(5, cta())}</section>
+    </div>
+  </div>`,
+  go: (st, i) => {
+    const s = st.querySelector('.run-status');
+    s.textContent = i === 0 ? 'Ready' : i === LAST ? 'Done' : `Step ${i} of ${M.length}`;
+    if (i === LAST) s.dataset.done = ''; else delete s.dataset.done;
+    /* The last step is done once the close is up. */
+    st.querySelectorAll('.run-step').forEach((el) => { if (i === LAST) el.dataset.state = 'done'; });
+  },
+};
+
+/* ═════════════════ ENGINE ═════════════════ */
+const ICON = {
+  prev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>',
+  next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
+  full: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/><path d="M9 21H3v-6"/></svg>',
+};
+const DECKS = { track, spine, horizon, lanes, run };
+
+document.querySelectorAll('[data-deck]').forEach((root) => {
+  const def = DECKS[root.dataset.deck];
+  const name = root.closest('.pv-var').querySelector('.pv-var-name').textContent;
+  root.innerHTML = `
+    <div class="dk-frame" tabindex="0" role="region" aria-roledescription="slide deck" aria-label="${esc(name)}"><div class="dk-stage">${def.build()}</div></div>
+    <div class="dk-bar">
+      <button class="pv-icobtn" type="button" data-prev aria-label="Previous slide">${ICON.prev}</button>
+      <span class="pv-count" aria-live="polite"></span>
+      <button class="pv-icobtn" type="button" data-next aria-label="Next slide">${ICON.next}</button>
+      <span class="dk-keys pv-push">Arrows or Space when the deck is selected</span>
+      <button class="pv-btn is-brand" type="button" data-full>${ICON.full}Present</button>
+    </div>`;
+  const frame = root.querySelector('.dk-frame');
+  const stage = root.querySelector('.dk-stage');
+  const count = root.querySelector('.pv-count');
+  const prev = root.querySelector('[data-prev]');
+  const next = root.querySelector('[data-next]');
+  const extra = def.init?.(stage);
+  let i = 0;
+
+  const fit = () => {
+    const w = frame.clientWidth, h = frame.clientHeight;
+    const s = Math.min(w / 1920, h / 1080);
+    stage.style.transform = `translate(${(w - 1920 * s) / 2}px, ${(h - 1080 * s) / 2}px) scale(${s})`;
+  };
+  new ResizeObserver(fit).observe(frame);
+  addEventListener('resize', fit);
+  document.addEventListener('fullscreenchange', fit);
+  fit();
+
+  const go = (n) => {
+    i = Math.max(0, Math.min(COUNT - 1, n));
+    stage.querySelectorAll('[data-n]').forEach((el) => {
+      const k = +el.dataset.n;
+      el.dataset.state = k === i ? 'now' : k < i ? 'done' : 'ahead';
+    });
+    def.go?.(stage, i, extra);
+    count.textContent = `${i + 1} of ${COUNT}`;
+    prev.disabled = i === 0;
+    next.disabled = i === COUNT - 1;
+  };
+
+  frame.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(e.key)) go(i + 1);
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(e.key)) go(i - 1);
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(COUNT - 1);
+    else return;
+    e.preventDefault();
+  });
+  frame.addEventListener('click', (e) => {
+    const r = frame.getBoundingClientRect();
+    go(e.clientX - r.left < r.width / 3 ? i - 1 : i + 1);
+    frame.focus();
+  });
+  prev.addEventListener('click', () => go(i - 1));
+  next.addEventListener('click', () => go(i + 1));
+  root.querySelector('[data-full]').addEventListener('click', () => frame.requestFullscreen().then(() => frame.focus()));
+  go(0);
+});
+
+/* ═════════════════ THEME ═════════════════ */
+const themeBtn = document.getElementById('pvTheme');
+themeBtn.addEventListener('click', () => {
+  const light = document.documentElement.dataset.theme !== 'light';
+  document.documentElement.dataset.theme = light ? 'light' : 'dark';
+  themeBtn.textContent = light ? 'Dark theme' : 'Light theme';
+});
+</script>
+</body>
+</html>
