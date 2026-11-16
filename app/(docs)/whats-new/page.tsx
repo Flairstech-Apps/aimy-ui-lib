@@ -33,6 +33,20 @@ const c = (name: string) => `/components/${name}/`
 
 const ENTRIES: Entry[] = [
   {
+    label: "1.5.0",
+    type: "Release",
+    date: "16 Nov 2026",
+    title: "Presentations",
+    items: [
+      { kind: "new", name: "HorizonDeck", href: c("horizon-deck"), text: "A story on the orb's horizon, for a stage." },
+      { kind: "new", name: "LanesDeck", href: c("lanes-deck"), text: "What we learned, and what we did about it." },
+      { kind: "new", name: "Deck", href: c("horizon-deck"), text: "The engine both share: keys, Present, the logo's flight." },
+      { kind: "new", name: "Deck motion", href: "/foundations/motion/", text: "Timings for slides, apart from the UI's." },
+      { kind: "new", name: "AimyMark", href: "/foundations/logo/", text: "variant=\"word\": the wordmark on its own." },
+    ],
+    run: BOTH,
+  },
+  {
     label: "1.4.5",
     type: "Patch",
     date: "11 Nov 2026",

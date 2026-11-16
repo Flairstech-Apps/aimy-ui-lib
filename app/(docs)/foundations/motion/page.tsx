@@ -62,6 +62,27 @@ export default function MotionPage() {
       </Section>
 
       <Section
+        title="Decks"
+        lead="A slide moves further than a control, so presentations have their own values instead of stretching the UI ones. Only HorizonDeck, LanesDeck and the Deck engine use them."
+      >
+        <div className="rounded-xl border border-hairline p-5">
+          {[
+            ["--deck-flight", "The AiMY mark flying between the cover, the header and the close (the Chrome extension's own)"],
+            ["--deck-hop", "The orb hopping to the next moment; the sky path draws with it"],
+            ["--deck-think", "The header mark's dots coming apart and gathering back between moments"],
+            ["--deck-count", "A figure counting up to itself"],
+            ["--deck-rise", "The orb's sunrise on the cover, and the ripples where it lands"],
+            ["--deck-drift-a", "The first background bloom's drift; --deck-drift-b is the second, coprime so they never fall into a beat"],
+            ["--ease-deck-arc", "Ease-in-out for the hop and the path it draws"],
+          ].map(([t = "", use]) => (
+            <p key={t} className="mt-1 first:mt-0 text-meta text-ink-secondary">
+              <Code>{t}</Code> <span className="font-mono text-2xs text-ink">{motion(t)}</span> {use}
+            </p>
+          ))}
+        </div>
+      </Section>
+
+      <Section
         title="Transitions"
         lead="Each component uses one named transitions.dev snippet, shipped in @flairstech-aimy/tokens/transitions.css. The list grows as components land."
       >
