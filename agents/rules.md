@@ -85,6 +85,7 @@ Behaviours (building a part the library doesn't have):
 - Take its behaviour from `@aimy/behaviors` (`@/lib/behaviors` and the hooks in `@/lib/behaviors-react`; in the package, `@flairstech-aimy/ui/behaviors`) and its look from the tokens. Keyboard, focus, selection, dragging, resizing, trees, layers and gestures are all there; never hand-write them.
 - Every pointer gesture needs a keyboard path (Space to pick up, the arrows, Space to drop, Escape to cancel), and the behaviour's announcement for screen readers.
 - A floating panel uses the primitives (`@aimy/popover-primitive`, `menu-primitive`, `select-primitive`, `tooltip-primitive`, `dialog-primitive`), never its own outside-click or Escape code.
+- Let AiMY work the screen through the agent bridge (`@aimy/agent-bridge`): wrap the page in `AgentProvider`, give each part AiMY may change an `agent` id, pass the person's Autonomy setting to `levelFor`, and hand `bridge.tools()` to the model. Every action returns its undo; what can't be undone is `undoable: false` and always asks. Never let AiMY change the page any other way.
 - Test it with `@aimy/behaviors-testing`: `ariaProblems` and `singleTabStopProblems` must come back empty.
 
 Never:

@@ -693,6 +693,13 @@
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/autonomy/"
   },
   {
+    "name": "agent-bridge",
+    "title": "Agent bridge",
+    "group": "AI: memory",
+    "description": "AgentProvider lets AiMY see and work the parts on a page that have an agent id (Combobox, Select, InlineEdit, Tree, SortableList): bridge.tools() hands their actions to a model as tools, bridge.act runs the calls. ask puts a card in AgentAsks until the person says Go ahead; tell acts and toasts with Undo; log acts and records it in AgentLog. What AiMY touches lights up in the AI ink while it works. webmcp offers the same tools to the browser's agent.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/agent-bridge/"
+  },
+  {
     "name": "usage",
     "title": "Usage",
     "group": "AI: memory",

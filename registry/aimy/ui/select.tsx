@@ -1,8 +1,11 @@
 "use client"
 
 import { ChevronDown } from "lucide-react"
+import { Children, isValidElement, useState } from "react"
 import * as Primitive from "@/lib/select-primitive"
 import { useField, useShake } from "@/components/field"
+import { useAgentSurface } from "@/lib/behaviors-agent-react"
+import { useControllable } from "@/lib/behaviors-react"
 import { cn } from "@/lib/utils"
 
 // The only select control (never a native <select>). Knowledge's
@@ -21,16 +24,52 @@ type SelectProps = {
   disabled?: boolean
   name?: string
   className?: string
+  /** Shows this part to AiMY under this id (inside an AgentProvider), so it can read it and act on it. */
+  agent?: string
   children: React.ReactNode
 }
 
-export function Select({ placeholder = "Choose", label, className, children, ...props }: SelectProps) {
+const textOf = (n: React.ReactNode): string =>
+  typeof n === "string" || typeof n === "number" ? String(n) : Array.isArray(n) ? n.map(textOf).join("") : isValidElement<{ children?: React.ReactNode }>(n) ? textOf(n.props.children) : ""
+
+export function Select({ placeholder = "Choose", label, className, children, agent, value: valueProp, defaultValue, onValueChange, ...props }: SelectProps) {
   const field = useField()
   const ref = useShake<HTMLButtonElement>(field?.error)
+  const [value, setValue] = useControllable<string | undefined>({ value: valueProp, defaultValue, onChange: (v) => v !== undefined && onValueChange?.(v) })
+  const [trigger, setTrigger] = useState<HTMLButtonElement | null>(null)
+  const options = Children.toArray(children)
+    .filter((c): c is React.ReactElement<{ value: string; children: React.ReactNode; disabled?: boolean }> => isValidElement(c))
+    .filter((c) => !c.props.disabled)
+    .map((c) => ({ value: c.props.value, label: textOf(c.props.children) }))
+  useAgentSurface(
+    agent,
+    {
+      kind: "select",
+      label: label ?? "",
+      state: () => ({ chosen: options.find((o) => o.value === value)?.label ?? null, options: options.map((o) => o.label) }),
+      actions: {
+        choose: {
+          description: "Choose an option",
+          params: { option: { type: "string", description: "The option's name as shown", enum: options.map((o) => o.label) } },
+          say: (p) => `chose ${p.option}`,
+          run: (p) => {
+            const prev = value
+            const o = options.find((x) => x.label === p.option)
+            if (o) setValue(o.value)
+            return () => setValue(prev)
+          },
+        },
+      },
+    },
+    trigger
+  )
   return (
-    <Primitive.Root {...props}>
+    <Primitive.Root {...props} value={value} onValueChange={setValue}>
       <Primitive.Trigger
-        ref={ref}
+        ref={(node: HTMLButtonElement | null) => {
+          ref.current = node
+          setTrigger(node)
+        }}
         data-slot="select"
         id={field?.id}
         aria-label={field ? undefined : label}

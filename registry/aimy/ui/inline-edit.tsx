@@ -1,8 +1,9 @@
 "use client"
 
 import { Pencil } from "lucide-react"
-import { useEffect, useId, useRef } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import { controlStyles } from "@/components/field"
+import { useAgentSurface } from "@/lib/behaviors-agent-react"
 import { useInlineEdit } from "@/lib/behaviors-react"
 import { cn } from "@/lib/utils"
 
@@ -27,6 +28,8 @@ type InlineEditProps = {
   multiline?: boolean
   disabled?: boolean
   className?: string
+  /** Shows this part to AiMY under this id (inside an AgentProvider), so it can read it and act on it. */
+  agent?: string
 }
 
 const sizes = {
@@ -34,8 +37,33 @@ const sizes = {
   text: "text-base",
 }
 
-export function InlineEdit({ value, onSave, label, validate, size = "text", placeholder = "Add a value", multiline, disabled, className }: InlineEditProps) {
+export function InlineEdit({ value, onSave, label, validate, size = "text", placeholder = "Add a value", multiline, disabled, className, agent }: InlineEditProps) {
   const edit = useInlineEdit({ value, onCommit: onSave, validate })
+  const [root, setRoot] = useState<HTMLElement | null>(null)
+  useAgentSurface(
+    agent,
+    {
+      kind: "editable text",
+      label,
+      state: () => ({ value }),
+      actions: {
+        set: {
+          description: `Change the ${label.toLowerCase()}`,
+          params: { value: { type: "string", description: `The new ${label.toLowerCase()}` } },
+          say: (p) => `changed the ${label.toLowerCase()} to \u201c${p.value}\u201d`,
+          run: async (p) => {
+            const next = String(p.value)
+            const refusal = validate?.(next)
+            if (refusal) throw new Error(refusal)
+            const prev = value
+            await onSave(next)
+            return () => onSave(prev)
+          },
+        },
+      },
+    },
+    root
+  )
   const errorId = useId()
   const button = useRef<HTMLButtonElement>(null)
   const was = useRef(false)
@@ -48,7 +76,10 @@ export function InlineEdit({ value, onSave, label, validate, size = "text", plac
   if (!edit.editing) {
     return (
       <button
-        ref={button}
+        ref={(node) => {
+          button.current = node
+          setRoot(node)
+        }}
         type="button"
         data-slot="inline-edit"
         disabled={disabled}
@@ -83,7 +114,7 @@ export function InlineEdit({ value, onSave, label, validate, size = "text", plac
     className: cn(controlStyles.base, controlStyles.box, "-mx-2 w-[calc(100%+1rem)] px-2 py-1", sizes[size]),
   }
   return (
-    <div data-slot="inline-edit" className={cn("flex max-w-full flex-col gap-1", className)}>
+    <div ref={setRoot} data-slot="inline-edit" className={cn("flex max-w-full flex-col gap-1", className)}>
       {multiline ? (
         <textarea rows={3} {...common} onChange={(e) => edit.change(e.target.value)} />
       ) : (

@@ -3,6 +3,7 @@
 import { ChevronRight } from "lucide-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { type CheckedState, createTreeCollection, toggleTreeChecked, treeCheckedStates, treeDataNodes } from "@/lib/behaviors"
+import { useAgentSurface } from "@/lib/behaviors-agent-react"
 import { useTreeView } from "@/lib/behaviors-react"
 import { cn } from "@/lib/utils"
 
@@ -39,9 +40,11 @@ type TreeProps = {
   defaultChecked?: string[]
   onCheckedChange?: (leaves: string[]) => void
   className?: string
+  /** Shows this part to AiMY under this id (inside an AgentProvider), so it can read it and act on it. */
+  agent?: string
 }
 
-export function Tree({ items, label, defaultExpanded, selected, onSelect, checkable, checked: checkedProp, defaultChecked = [], onCheckedChange, className }: TreeProps) {
+export function Tree({ items, label, defaultExpanded, selected, onSelect, checkable, checked: checkedProp, defaultChecked = [], onCheckedChange, className, agent }: TreeProps) {
   const tree = useMemo(() => {
     const { nodes, roots } = treeDataNodes<TreeItem>(items, (i) => i.id, (i) => i.children)
     return createTreeCollection(nodes, roots)
@@ -67,9 +70,101 @@ export function Tree({ items, label, defaultExpanded, selected, onSelect, checka
     if (root.current?.contains(document.activeElement)) root.current.querySelector<HTMLElement>(`[data-tree-id="${CSS.escape(view.focused ?? "")}"]`)?.focus()
   }, [view.focused])
 
+  const labelOf = (id: string) => tree.get(id)?.data.label ?? id
+  const all = [...tree.roots.flatMap((r) => [tree.get(r)!, ...tree.descendants(r)])].filter(Boolean)
+  const idOf = (name: unknown) => all.find((n) => n.data.label === name)?.id
+  const folders = all.filter((n) => n.children.length)
+  const [rootEl, setRootEl] = useState<HTMLUListElement | null>(null)
+  const openFolder = (name: unknown, open: boolean) => {
+    const id = idOf(name)
+    if (!id) return
+    const was = view.expanded.has(id)
+    view.setExpanded((s) => {
+      const n = new Set(s)
+      if (open) n.add(id)
+      else n.delete(id)
+      return n
+    })
+    return () =>
+      view.setExpanded((s) => {
+        const n = new Set(s)
+        if (was) n.add(id)
+        else n.delete(id)
+        return n
+      })
+  }
+  useAgentSurface(
+    agent,
+    {
+      kind: "tree",
+      label,
+      state: () => ({
+        open: [...view.expanded].map(labelOf),
+        ...(checkable ? { checked: all.filter((n) => states?.get(n.id) === "checked").map((n) => n.data.label) } : { chosen: selected ? labelOf(selected) : null }),
+      }),
+      actions: {
+        open: {
+          description: "Open a folder",
+          params: { item: { type: "string", description: "The folder's name", enum: folders.map((n) => n.data.label) } },
+          say: (p) => `opened ${p.item}`,
+          run: (p) => openFolder(p.item, true),
+        },
+        close: {
+          description: "Close a folder",
+          params: { item: { type: "string", description: "The folder's name", enum: folders.map((n) => n.data.label) } },
+          say: (p) => `closed ${p.item}`,
+          run: (p) => openFolder(p.item, false),
+        },
+        ...(checkable
+          ? {
+              check: {
+                description: "Check or clear an item (a folder checks or clears everything inside)",
+                params: {
+                  item: { type: "string" as const, description: "The item's name", enum: all.map((n) => n.data.label) },
+                  checked: { type: "boolean" as const, description: "True to check, false to clear" },
+                },
+                say: (p: Record<string, unknown>) => `${p.checked ? "checked" : "cleared"} ${p.item}`,
+                run: (p: Record<string, unknown>) => {
+                  const id = idOf(p.item)
+                  if (!id) return
+                  const prev = [...checked]
+                  const isOn = states?.get(id) === "checked"
+                  if (isOn !== p.checked) toggleCheck(id)
+                  return () => {
+                    if (!checkedProp) setOwnChecked(new Set(prev))
+                    onCheckedChange?.(prev)
+                  }
+                },
+              },
+            }
+          : {
+              choose: {
+                description: "Choose an item",
+                params: { item: { type: "string" as const, description: "The item's name", enum: all.map((n) => n.data.label) } },
+                say: (p: Record<string, unknown>) => `chose ${p.item}`,
+                run: (p: Record<string, unknown>) => {
+                  const id = idOf(p.item)
+                  if (!id) return
+                  const prev = selected
+                  onSelect?.(id)
+                  view.setFocused(id)
+                  return () => {
+                    if (prev) onSelect?.(prev)
+                  }
+                },
+              },
+            }),
+      },
+    },
+    rootEl
+  )
+
   return (
     <ul
-      ref={root}
+      ref={(node) => {
+        root.current = node
+        setRootEl(node)
+      }}
       role="tree"
       aria-label={label}
       aria-multiselectable={checkable || undefined}

@@ -200,6 +200,7 @@ const LIBRARY: NavGroup[] = [
       { href: "/components/aimy-note/", label: "AiMY note" },
       { href: "/components/briefing/", label: "Briefing" },
       { href: "/components/autonomy/", label: "Autonomy" },
+      { href: "/components/agent-bridge/", label: "Agent bridge" },
       { href: "/components/usage/", label: "Usage" },
       { href: "/components/usage-limit/", label: "Usage limits" },
       { href: "/components/model-picker/", label: "Model picker" },

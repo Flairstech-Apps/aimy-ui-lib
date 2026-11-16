@@ -165,6 +165,25 @@
       ]
     },
     {
+      "name": "behaviors-agent",
+      "type": "registry:lib",
+      "title": "Agent bridge behaviour",
+      "description": "What lets AiMY see and work the screen: parts register as surfaces (state and actions), the bridge lists them as tools for a model's tool use and WebMCP, runs tool calls through the confirmation ladder (ask, tell, log; what can't be undone always asks), lights up the part it acts on, announces it, and keeps an activity list with Undo. useAgentSurface shows a part to it.",
+      "files": [
+        {
+          "path": "registry/aimy/lib/behaviors-agent.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/behaviors-agent-react.tsx",
+          "type": "registry:lib"
+        }
+      ],
+      "registryDependencies": [
+        "@aimy/behaviors"
+      ]
+    },
+    {
       "name": "popper-primitive",
       "type": "registry:lib",
       "title": "Popper primitive",
@@ -663,7 +682,8 @@
         "@aimy/theme",
         "@aimy/utils",
         "@aimy/field",
-        "@aimy/select-primitive"
+        "@aimy/select-primitive",
+        "@aimy/behaviors-agent"
       ],
       "files": [
         {
@@ -685,7 +705,8 @@
         "@aimy/utils",
         "@aimy/behaviors",
         "@aimy/field",
-        "@aimy/popper-primitive"
+        "@aimy/popper-primitive",
+        "@aimy/behaviors-agent"
       ],
       "files": [
         {
@@ -706,7 +727,8 @@
         "@aimy/theme",
         "@aimy/utils",
         "@aimy/behaviors",
-        "@aimy/field"
+        "@aimy/field",
+        "@aimy/behaviors-agent"
       ],
       "files": [
         {
@@ -1921,6 +1943,29 @@
       ]
     },
     {
+      "name": "agent-bridge",
+      "type": "registry:component",
+      "title": "Agent bridge",
+      "description": "AgentProvider lets AiMY see and work the parts on a page that have an agent id (Combobox, Select, InlineEdit, Tree, SortableList): bridge.tools() hands their actions to a model as tools, bridge.act runs the calls. ask puts a card in AgentAsks until the person says Go ahead; tell acts and toasts with Undo; log acts and records it in AgentLog. What AiMY touches lights up in the AI ink while it works. webmcp offers the same tools to the browser's agent.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/behaviors-agent",
+        "@aimy/button",
+        "@aimy/toast",
+        "@aimy/aimy-mark"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/agent-bridge.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "memory-list",
       "type": "registry:component",
       "title": "MemoryList",
@@ -2230,7 +2275,8 @@
       "registryDependencies": [
         "@aimy/theme",
         "@aimy/utils",
-        "@aimy/behaviors"
+        "@aimy/behaviors",
+        "@aimy/behaviors-agent"
       ],
       "files": [
         {
@@ -2250,7 +2296,8 @@
       "registryDependencies": [
         "@aimy/theme",
         "@aimy/utils",
-        "@aimy/behaviors"
+        "@aimy/behaviors",
+        "@aimy/behaviors-agent"
       ],
       "files": [
         {

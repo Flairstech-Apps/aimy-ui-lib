@@ -92,6 +92,7 @@ Behaviours (building a part the library doesn't have):
 - Take its behaviour from `@aimy/behaviors` (`@/lib/behaviors` and the hooks in `@/lib/behaviors-react`; in the package, `@flairstech-aimy/ui/behaviors`) and its look from the tokens. Keyboard, focus, selection, dragging, resizing, trees, layers and gestures are all there; never hand-write them.
 - Every pointer gesture needs a keyboard path (Space to pick up, the arrows, Space to drop, Escape to cancel), and the behaviour's announcement for screen readers.
 - A floating panel uses the primitives (`@aimy/popover-primitive`, `menu-primitive`, `select-primitive`, `tooltip-primitive`, `dialog-primitive`), never its own outside-click or Escape code.
+- Let AiMY work the screen through the agent bridge (`@aimy/agent-bridge`): wrap the page in `AgentProvider`, give each part AiMY may change an `agent` id, pass the person's Autonomy setting to `levelFor`, and hand `bridge.tools()` to the model. Every action returns its undo; what can't be undone is `undoable: false` and always asks. Never let AiMY change the page any other way.
 - Test it with `@aimy/behaviors-testing`: `ariaProblems` and `singleTabStopProblems` must come back empty.
 
 Never:
@@ -248,6 +249,7 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 - **AiMY note** (`@aimy/aimy-note`): A sentence from AiMY on a record or card with where it came from (Sales' .b-aimy): the mark, one useful sentence, the source line, one optional control. https://aimy-ui-lib.aimy.flairstech.com/components/aimy-note/
 - **Briefing** (`@aimy/briefing`): A briefing item's Acknowledge, and Dismiss with one-click reasons in place, each with Undo (doctrine §5.9; design system spec). https://aimy-ui-lib.aimy.flairstech.com/components/briefing/
 - **Autonomy** (`@aimy/autonomy`): How much AiMY may do without asking, per kind of work, with the evidence it has earned it: Ask me first / Do it, then tell me / Do it, keep a log. https://aimy-ui-lib.aimy.flairstech.com/components/autonomy/
+- **Agent bridge** (`@aimy/agent-bridge`): AgentProvider lets AiMY see and work the parts on a page that have an agent id (Combobox, Select, InlineEdit, Tree, SortableList): bridge.tools() hands their actions to a model as tools, bridge.act runs the calls. https://aimy-ui-lib.aimy.flairstech.com/components/agent-bridge/
 - **Usage** (`@aimy/usage`): How much of AiMY a person has used (Knowledge's usage popover): groups by period, rows 'N of M' with a meter and what it means. https://aimy-ui-lib.aimy.flairstech.com/components/usage/
 - **Usage limits** (`@aimy/usage-limit`): What a person is told at a usage limit, in the products' words: past your share (You can keep going), limit reached (when it starts again), stopped by an admin (who can turn it back on); always what still works. https://aimy-ui-lib.aimy.flairstech.com/components/usage-limit/
 - **Model picker** (`@aimy/model-picker`): Which AiMY model answers (design system spec): the AI dot, the name and tag, and a menu where each model says what it is for. https://aimy-ui-lib.aimy.flairstech.com/components/model-picker/

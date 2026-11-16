@@ -1,8 +1,9 @@
 "use client"
 
 import { GripVertical } from "lucide-react"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { arrayMove, bindDrag, createAutoScroll, rectOf } from "@/lib/behaviors"
+import { useAgentSurface } from "@/lib/behaviors-agent-react"
 import { useReorder } from "@/lib/behaviors-react"
 import { cn } from "@/lib/utils"
 
@@ -24,15 +25,45 @@ type SortableListProps<T> = {
   /** Names the list for screen readers: "Plan steps". */
   label: string
   className?: string
+  /** Shows this part to AiMY under this id (inside an AgentProvider), so it can read it and act on it. */
+  agent?: string
 }
 
-export function SortableList<T>({ items, getKey, getLabel, onReorder, renderItem, label, className }: SortableListProps<T>) {
+export function SortableList<T>({ items, getKey, getLabel, onReorder, renderItem, label, className, agent }: SortableListProps<T>) {
   const list = useRef<HTMLOListElement>(null)
   const reorder = useReorder({
     count: () => items.length,
     label: (i) => getLabel(items[i]!),
     onReorder: (from, to) => onReorder(arrayMove(items, from, to)),
   })
+  const [listEl, setListEl] = useState<HTMLOListElement | null>(null)
+  useAgentSurface(
+    agent,
+    {
+      kind: "ordered list",
+      label,
+      state: () => ({ order: items.map(getLabel) }),
+      actions: {
+        move: {
+          description: "Move an item to a position",
+          params: {
+            item: { type: "string", description: "The item's name", enum: items.map(getLabel) },
+            position: { type: "number", description: `Its new position, 1 to ${items.length}` },
+          },
+          say: (p) => `moved ${p.item} to position ${p.position}`,
+          run: (p) => {
+            const from = items.findIndex((x) => getLabel(x) === p.item)
+            const to = Math.max(0, Math.min(items.length - 1, Math.round(Number(p.position)) - 1))
+            if (from < 0) return
+            const prev = items
+            onReorder(arrayMove(items, from, to))
+            return () => onReorder(prev)
+          },
+        },
+      },
+    },
+    listEl
+  )
   const moving = reorder.from
   const shown = reorder.from !== null && reorder.to !== null ? arrayMove(items, reorder.from, reorder.to) : items
 
@@ -75,7 +106,13 @@ export function SortableList<T>({ items, getKey, getLabel, onReorder, renderItem
   }, [pointer])
 
   return (
-    <ol ref={list} aria-label={label} data-slot="sortable-list" className={cn("flex flex-col gap-1", className)}>
+    <ol
+      ref={(node) => {
+        list.current = node
+        setListEl(node)
+      }}
+      aria-label={label}
+      data-slot="sortable-list" className={cn("flex flex-col gap-1", className)}>
       {shown.map((item) => {
         const i = items.indexOf(item)
         const lifted = i === moving

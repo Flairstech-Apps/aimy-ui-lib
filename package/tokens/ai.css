@@ -412,3 +412,14 @@
 [data-theme="light"] .aimy-msg-bubble .aimy-widget-frame {
   background: var(--card-bg); border-color: var(--card-border); border-radius: var(--r-lg);
 }
+/* ── Agent bridge: what AiMY is working on lights up ──────────
+   While AiMY acts on a part through the agent bridge, the part carries
+   [data-agent-acting]: the AI ink ring and a soft brand glow, so its
+   actions are never invisible. It fades out a moment after the action. */
+[data-agent-acting] {
+  outline: 2px solid var(--ai-ink);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px var(--brand-glow);
+  transition: box-shadow var(--t-base) var(--ease-out);
+}
+@media (prefers-reduced-motion: reduce) { [data-agent-acting] { transition: none; } }

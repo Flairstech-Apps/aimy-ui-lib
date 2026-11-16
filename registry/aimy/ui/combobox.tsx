@@ -4,6 +4,7 @@ import { Check, ChevronDown } from "lucide-react"
 import { useId, useState } from "react"
 import { controlStyles, useField, useShake } from "@/components/field"
 import { focus } from "@/lib/behaviors"
+import { useAgentSurface } from "@/lib/behaviors-agent-react"
 import { Portal, composeRefs, useControllable, useElement, useLayer, useListbox, usePresence } from "@/lib/behaviors-react"
 import { PopperContent } from "@/lib/popper-primitive"
 import { cn } from "@/lib/utils"
@@ -37,6 +38,8 @@ type ComboboxProps = {
   /** Adds a hidden input with the value, for a form. */
   name?: string
   className?: string
+  /** Shows this part to AiMY under this id (inside an AgentProvider), so it can read it and act on it. */
+  agent?: string
 }
 
 export function Combobox({
@@ -50,6 +53,7 @@ export function Combobox({
   disabled,
   name,
   className,
+  agent,
 }: ComboboxProps) {
   const field = useField()
   const shake = useShake<HTMLDivElement>(field?.error)
@@ -78,6 +82,38 @@ export function Combobox({
       if (k) document.getElementById(optId(k))?.scrollIntoView?.({ block: "nearest" })
     },
   })
+
+  const usable = options.filter((o) => !o.disabled)
+  useAgentSurface(
+    agent,
+    {
+      kind: "combobox",
+      label: label ?? "",
+      state: () => ({ chosen: chosen?.label ?? null, options: usable.map((o) => o.label) }),
+      actions: {
+        choose: {
+          description: "Choose an option",
+          params: { option: { type: "string", description: "The option's name as shown", enum: usable.map((o) => o.label) } },
+          say: (p) => `chose ${p.option}`,
+          run: (p) => {
+            const prev = value
+            setValue(usable.find((o) => o.label === p.option)?.value ?? null)
+            return () => setValue(prev)
+          },
+        },
+        clear: {
+          description: "Clear the choice",
+          say: () => "cleared the choice",
+          run: () => {
+            const prev = value
+            setValue(null)
+            return () => setValue(prev)
+          },
+        },
+      },
+    },
+    anchor
+  )
 
   const close = () => {
     setOpen(false)
