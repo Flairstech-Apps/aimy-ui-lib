@@ -21,7 +21,7 @@ import {
   useSyncExternalStore,
 } from "react"
 import { createPortal } from "react-dom"
-import { type Cleanup, type Point, type Store, isBrowser } from "./behaviors-core"
+import { type Cleanup, type Store, isBrowser } from "./behaviors-core"
 import { type FocusTrapOptions, type GridFocusOptions, type RovingFocusOptions, type TypeaheadOptions, createFocusRecovery, createFocusTrap, createGridFocus, createRovingFocus, createTypeahead } from "./behaviors-focus"
 import { type CellRange, type LassoOptions, type SelectionOptions, createCellRange, createLasso, createSelection } from "./behaviors-selection"
 import { type ReorderOptions, type TreeDrop, type TreeRow, createAutoScroll, createReorder, createTransfer, createTreeReorder } from "./behaviors-drag"
@@ -691,4 +691,3 @@ export function usePointerKind() {
   return useStore(p)
 }
 
-export type { Point }

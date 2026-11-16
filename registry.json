@@ -87,6 +87,178 @@
       ]
     },
     {
+      "name": "behaviors",
+      "type": "registry:lib",
+      "title": "Behaviours",
+      "description": "How AiMY parts behave, written once: focus and keys (focus trap, roving focus, grid focus, typeahead, focus recovery, input hints), selection (ranges, lasso, cell ranges, copy and paste as spreadsheet text), drag and drop (reorder lists, grids and trees by pointer or keyboard, move between lists, auto-scroll, announcements), move and resize, swipe actions, hold and repeat, a two-axis pad, ranges on tracks, lists (listbox, virtualizer, stick to bottom, scroll picker, inline edit), trees (collection, tri-state checks, keyboard model), transitions and gestures (panels, findable hidden content, springs, rubber band), popups and layers (placement, a layer stack for Escape and outside presses, scroll lock, hiding the page from screen readers), preferences (colour scheme, pointer kind, pre-paint script) and canvas (pan, zoom, connecting ports). Plain TypeScript with React hooks in behaviors-react.",
+      "files": [
+        {
+          "path": "registry/aimy/lib/behaviors.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/behaviors-core.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/behaviors-focus.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/behaviors-selection.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/behaviors-drag.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/behaviors-manipulate.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/behaviors-lists.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/behaviors-tree.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/behaviors-motion.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/behaviors-layers.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/behaviors-prefs.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/behaviors-canvas.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/behaviors-react.tsx",
+          "type": "registry:lib"
+        }
+      ],
+      "registryDependencies": [
+        "@aimy/theme-constants"
+      ]
+    },
+    {
+      "name": "behaviors-testing",
+      "type": "registry:lib",
+      "title": "Behaviour testing kit",
+      "description": "For unit tests with jsdom: press keys, press Tab the way a browser does, drag with the pointer, and check a part's ARIA, Tab stops and focus return. Problems come back as plain sentences.",
+      "files": [
+        {
+          "path": "registry/aimy/lib/behaviors-testing.ts",
+          "type": "registry:lib"
+        }
+      ],
+      "registryDependencies": [
+        "@aimy/behaviors"
+      ]
+    },
+    {
+      "name": "popper-primitive",
+      "type": "registry:lib",
+      "title": "Popper primitive",
+      "description": "The floating panel the popup parts sit in: placed beside its control, flipped and shifted to stay on screen, with --available-height, --anchor-width and --transform-origin for the panel and data-side and data-align for its transition.",
+      "files": [
+        {
+          "path": "registry/aimy/lib/popper-primitive.tsx",
+          "type": "registry:lib"
+        }
+      ],
+      "registryDependencies": [
+        "@aimy/behaviors"
+      ]
+    },
+    {
+      "name": "dialog-primitive",
+      "type": "registry:lib",
+      "title": "Dialog primitive",
+      "description": "Root, Trigger, Portal, Overlay, Content, Title, Description and Close for a modal: focus moves in and is trapped, Escape or a press outside closes, focus returns, the page behind can't scroll and is hidden from screen readers, and the panel stays until its close animation ends. Dialog, Sheet, Canvas and VoiceStage are built on it.",
+      "files": [
+        {
+          "path": "registry/aimy/lib/dialog-primitive.tsx",
+          "type": "registry:lib"
+        }
+      ],
+      "registryDependencies": [
+        "@aimy/behaviors"
+      ]
+    },
+    {
+      "name": "popover-primitive",
+      "type": "registry:lib",
+      "title": "Popover primitive",
+      "description": "Root, Anchor, Trigger, Portal, Content and Close for a panel tied to a control: opens beside it, focus moves in and returns, Escape, a press outside or focus leaving closes it.",
+      "files": [
+        {
+          "path": "registry/aimy/lib/popover-primitive.tsx",
+          "type": "registry:lib"
+        }
+      ],
+      "registryDependencies": [
+        "@aimy/behaviors",
+        "@aimy/popper-primitive"
+      ]
+    },
+    {
+      "name": "tooltip-primitive",
+      "type": "registry:lib",
+      "title": "Tooltip primitive",
+      "description": "Provider, Root, Trigger, Portal and Content for a hint on hover (after a delay) or keyboard focus (at once); moving between tooltips skips the delay.",
+      "files": [
+        {
+          "path": "registry/aimy/lib/tooltip-primitive.tsx",
+          "type": "registry:lib"
+        }
+      ],
+      "registryDependencies": [
+        "@aimy/behaviors",
+        "@aimy/popper-primitive"
+      ]
+    },
+    {
+      "name": "menu-primitive",
+      "type": "registry:lib",
+      "title": "Menu primitive",
+      "description": "Root, Trigger, Portal, Content, Item, CheckboxItem, RadioGroup, RadioItem, ItemIndicator, Label, Separator and Group for a menu button's menu: arrows, Home, End, typeahead, Enter or Space to choose; Escape, Tab or a press outside closes and focus returns.",
+      "files": [
+        {
+          "path": "registry/aimy/lib/menu-primitive.tsx",
+          "type": "registry:lib"
+        }
+      ],
+      "registryDependencies": [
+        "@aimy/behaviors",
+        "@aimy/popper-primitive"
+      ]
+    },
+    {
+      "name": "select-primitive",
+      "type": "registry:lib",
+      "title": "Select primitive",
+      "description": "Root, Trigger, Value, Icon, Portal, Content, Viewport, Item and ItemText for a select: opens by press or keys, arrows and typeahead inside, the chosen option shows on the trigger.",
+      "files": [
+        {
+          "path": "registry/aimy/lib/select-primitive.tsx",
+          "type": "registry:lib"
+        }
+      ],
+      "registryDependencies": [
+        "@aimy/behaviors",
+        "@aimy/popper-primitive"
+      ]
+    },
+    {
       "name": "theme-constants",
       "type": "registry:lib",
       "title": "Theme constants",
@@ -485,13 +657,13 @@
       "title": "Select and SelectItem",
       "description": "The only select control; never a native <select>. A pill with an inset ring that opens a raised panel; the chosen option is in the AI ink with a dot. Full keyboard model and typeahead. Opens and closes with transitions.dev menu dropdown (05). Use label when it is not inside a Field.",
       "dependencies": [
-        "radix-ui",
         "lucide-react"
       ],
       "registryDependencies": [
         "@aimy/theme",
         "@aimy/utils",
-        "@aimy/field"
+        "@aimy/field",
+        "@aimy/select-primitive"
       ],
       "files": [
         {
@@ -676,12 +848,12 @@
       "title": "Menu",
       "description": "A menu of actions or choices from a control: MenuItem (acts and closes; danger for destructive), MenuRadioGroup and MenuRadioItem (one answer), MenuCheckboxItem (several answers; stays open), MenuLabel, MenuSeparator, MenuSearch (filters long lists). Items take a description line and a leading icon or avatar. Full keyboard model. Opens with transitions.dev menu dropdown (05).",
       "dependencies": [
-        "radix-ui",
         "lucide-react"
       ],
       "registryDependencies": [
         "@aimy/theme",
-        "@aimy/utils"
+        "@aimy/utils",
+        "@aimy/menu-primitive"
       ],
       "files": [
         {
@@ -696,12 +868,12 @@
       "title": "Tooltip and InfoTip",
       "description": "A short hint on hover or keyboard focus, after 80ms (transitions.dev tooltip, 17). Nothing inside can be clicked; use Popover for that. InfoTip is the small question-mark button that explains a label.",
       "dependencies": [
-        "radix-ui",
         "lucide-react"
       ],
       "registryDependencies": [
         "@aimy/theme",
-        "@aimy/utils"
+        "@aimy/utils",
+        "@aimy/tooltip-primitive"
       ],
       "files": [
         {
@@ -715,12 +887,10 @@
       "type": "registry:component",
       "title": "Popover",
       "description": "A small panel tied to a control, for a few fields or an explanation with a button. Moves focus inside; Escape or an outside click closes and returns focus. Opens with transitions.dev menu dropdown (05).",
-      "dependencies": [
-        "radix-ui"
-      ],
       "registryDependencies": [
         "@aimy/theme",
-        "@aimy/utils"
+        "@aimy/utils",
+        "@aimy/popover-primitive"
       ],
       "files": [
         {
@@ -793,7 +963,6 @@
       "title": "Dialog and TypeToConfirm",
       "description": "Dialog: for ordered forms and changes with consequences, never to confirm what Undo can take back. Title, optional description, a scrolling body and an end-aligned footer; focus trapped, Escape closes, focus returns (transitions.dev modal, 06). TypeToConfirm: the last rung for destructive or governed changes: the named action stays disabled until the word or number is typed.",
       "dependencies": [
-        "radix-ui",
         "lucide-react"
       ],
       "registryDependencies": [
@@ -801,7 +970,8 @@
         "@aimy/utils",
         "@aimy/button",
         "@aimy/field",
-        "@aimy/input"
+        "@aimy/input",
+        "@aimy/dialog-primitive"
       ],
       "files": [
         {
@@ -816,12 +986,12 @@
       "title": "Sheet",
       "description": "A panel that slides in from the side over the page, with a scrim: the rail as a drawer below the rail rung, settings and connection sheets. Title, scrolling body, Escape or the scrim closes, focus returns. Slides with transitions.dev panel reveal (07). Keeps clear of a phone's status bar, home indicator and, on its side, a landscape notch.",
       "dependencies": [
-        "radix-ui",
         "lucide-react"
       ],
       "registryDependencies": [
         "@aimy/theme",
-        "@aimy/utils"
+        "@aimy/utils",
+        "@aimy/dialog-primitive"
       ],
       "files": [
         {
@@ -1063,8 +1233,7 @@
       "title": "Composer",
       "description": "Where a person asks AiMY, as the products' voice.js arranges it. variant float (one line over the work) or canvas (several lines). Enter sends; nothing empty is sent. The mic dictates: a red waveform and clock replace the field, cancel or keep (keep puts the words in the field). onVoice turns the empty send slot into the voice button. generating rides the beam and turns send into stop. onAttach adds the clip; a file is a row inside the bar, saying not uploaded until it is. unavailable (a sentence saying what still works) keeps the bar and the text; a question sent then goes when AiMY is back. usage puts Knowledge's ring on the AiMY mark, opening the numbers on hover, focus or press.",
       "dependencies": [
-        "lucide-react",
-        "radix-ui"
+        "lucide-react"
       ],
       "registryDependencies": [
         "@aimy/theme",
@@ -1072,7 +1241,8 @@
         "@aimy/aimy-mark",
         "@aimy/count-badge",
         "@aimy/ai-types",
-        "@aimy/use-voice"
+        "@aimy/use-voice",
+        "@aimy/popover-primitive"
       ],
       "files": [
         {
@@ -1087,14 +1257,14 @@
       "title": "Canvas",
       "description": "The AiMY canvas: glass over the page from under the topbar, with 'Based on' (what the conversation is about), a chats column that becomes a drawer below 900px, the thread (a polite live log, 53rem wide) and the canvas Composer on the same edges. Focus goes to the composer; Escape or × closes and returns focus. 400ms in, 350ms out. Keeps the backdrop-filter, as the doctrine requires. The meeting slot holds a NoteTaker with layout=\"canvas\" in place of the thread and composer (Knowledge's meeting view). On a phone it keeps clear of a landscape notch and its composer rises above the home indicator (needs viewport-fit=cover).",
       "dependencies": [
-        "lucide-react",
-        "radix-ui"
+        "lucide-react"
       ],
       "registryDependencies": [
         "@aimy/theme",
         "@aimy/utils",
         "@aimy/sheet",
-        "@aimy/ai-types"
+        "@aimy/ai-types",
+        "@aimy/dialog-primitive"
       ],
       "files": [
         {
@@ -1138,15 +1308,15 @@
       "title": "VoiceStage",
       "description": "A voice conversation as a place: the page goes away, one orb stays with a line saying what it does (Listening, Thinking, Answering, You're muted, or the error in words), the session clock, and mute and end. The orb is a button only while AiMY answers (tap to interrupt). Pair with useVoiceSession. onTakeNotes adds Take meeting notes; asking replaces the state line (NoteTakerConsent).",
       "dependencies": [
-        "lucide-react",
-        "radix-ui"
+        "lucide-react"
       ],
       "registryDependencies": [
         "@aimy/theme",
         "@aimy/utils",
         "@aimy/aimy-mark",
         "@aimy/orb",
-        "@aimy/use-voice"
+        "@aimy/use-voice",
+        "@aimy/dialog-primitive"
       ],
       "files": [
         {
@@ -1204,15 +1374,15 @@
       "title": "Citation",
       "description": "A numbered marker in an answer that points at its source (Knowledge's .cite). Hover or keyboard focus opens the preview: title, trust state, the quoted passage, where it came from, and Flag (feedback per citation). Escape closes it; a tap opens it on touch. Numbers match the answer's SourceList.",
       "dependencies": [
-        "lucide-react",
-        "radix-ui"
+        "lucide-react"
       ],
       "registryDependencies": [
         "@aimy/theme",
         "@aimy/utils",
         "@aimy/toast",
         "@aimy/trust-state",
-        "@aimy/ai-types"
+        "@aimy/ai-types",
+        "@aimy/popover-primitive"
       ],
       "files": [
         {
@@ -2254,14 +2424,12 @@
       "type": "registry:component",
       "title": "NotificationCenter",
       "description": "The bell and Sales' panel: Needs you with the unread count and Mark all read; a row per thing with a severity dot beside its type in words, when, one sentence and one action; a question for AiMY at the foot. Read rows keep their ink (hollow dot, 'read'). Empty says so.",
-      "dependencies": [
-        "radix-ui"
-      ],
       "registryDependencies": [
         "@aimy/theme",
         "@aimy/utils",
         "@aimy/notification-bell",
-        "@aimy/aimy-mark"
+        "@aimy/aimy-mark",
+        "@aimy/popover-primitive"
       ],
       "files": [
         {
@@ -2295,8 +2463,7 @@
       "title": "DocPage",
       "description": "Knowledge's document page: the paper and the details beside it (one column below 1100px of its own width). The bar goes back, says whether changes are saved (SaveState), and hides or shows the details. DocHead holds a DocNotice (archived, replaced, out of date, with the way out), the DocByline (trust state, kind, owner, source with a link to the original, collection, DocVersions) and a note; DocTitle edits in place; VersionPreview says an old version is being read. DocRail holds DocInsights (AiMY noticed), RailBlocks you fold with RailActions, and DocRailFoot (Report a problem inline, Archive or Restore, Delete). DocComments mark and resolve reported problems. DocStart is a blank document's ways to start.",
       "dependencies": [
-        "lucide-react",
-        "radix-ui"
+        "lucide-react"
       ],
       "registryDependencies": [
         "@aimy/theme",
@@ -2305,7 +2472,8 @@
         "@aimy/button",
         "@aimy/input",
         "@aimy/textarea",
-        "@aimy/version-list"
+        "@aimy/version-list",
+        "@aimy/popover-primitive"
       ],
       "files": [
         {
@@ -2320,13 +2488,13 @@
       "title": "DocEditor",
       "description": "Knowledge's writing tools: SelectionMenu (Bold, Italic, Underline, then what AiMY can do with the selected words), WritingToolbar (add a block, formats, headings, lists, quote, undo, redo, AiMY), BlockMenu ('+' or '/' on an empty line) and AiMenu (AiMY for the whole document), wired together in DocEditor over a contenteditable body. Menus stay on the page, flip above a selection with no room below, close on Escape and move with the arrow keys. AiMY's proposals go to Suggestion, never into the text directly.",
       "dependencies": [
-        "lucide-react",
-        "radix-ui"
+        "lucide-react"
       ],
       "registryDependencies": [
         "@aimy/theme",
         "@aimy/utils",
-        "@aimy/aimy-mark"
+        "@aimy/aimy-mark",
+        "@aimy/popover-primitive"
       ],
       "files": [
         {

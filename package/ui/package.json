@@ -13,6 +13,18 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
+    "./behaviors": {
+      "types": "./dist/behaviors.d.ts",
+      "import": "./dist/behaviors.js"
+    },
+    "./primitives": {
+      "types": "./dist/primitives.d.ts",
+      "import": "./dist/primitives.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.js"
+    },
     "./styles.css": "./dist/styles.css"
   },
   "files": [

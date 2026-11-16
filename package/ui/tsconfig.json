@@ -33,6 +33,9 @@
       ],
       "@/lib/recovery-kinds": [
         "../../registry/aimy/lib/recovery-kinds.ts"
+      ],
+      "@/lib/*": [
+        "../../registry/aimy/lib/*"
       ]
     }
   },

@@ -3,7 +3,7 @@ import { defineConfig } from "tsup"
 // The package is built from the same source files as the registry
 // (../../registry/aimy), so nothing is written twice.
 export default defineConfig({
-  entry: ["src/index.ts"],
+  entry: ["src/index.ts", "src/behaviors.ts", "src/primitives.ts", "src/testing.ts"],
   format: ["esm"],
   dts: true,
   clean: true,
