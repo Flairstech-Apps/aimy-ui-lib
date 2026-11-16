@@ -1,7 +1,7 @@
 "use client"
 
 import { CircleHelp } from "lucide-react"
-import { Tooltip as Primitive } from "radix-ui"
+import * as Primitive from "@/lib/tooltip-primitive"
 import { cn } from "@/lib/utils"
 
 // A short hint on hover or keyboard focus. Knowledge's settings tip

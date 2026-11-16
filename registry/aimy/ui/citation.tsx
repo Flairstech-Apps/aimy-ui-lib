@@ -1,7 +1,7 @@
 "use client"
 
 import { FileText, Flag } from "lucide-react"
-import { Popover as Primitive } from "radix-ui"
+import * as Primitive from "@/lib/popover-primitive"
 import { useRef, useState } from "react"
 import { toast } from "@/components/toast"
 import { TrustState } from "@/components/trust-state"

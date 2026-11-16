@@ -1,7 +1,7 @@
 "use client"
 
 import { X } from "lucide-react"
-import { Dialog as Primitive } from "radix-ui"
+import * as Primitive from "@/lib/dialog-primitive"
 import { useState } from "react"
 import { Button } from "@/components/button"
 import { Field } from "@/components/field"

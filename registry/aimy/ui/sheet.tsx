@@ -1,7 +1,7 @@
 "use client"
 
 import { X } from "lucide-react"
-import { Dialog as Primitive } from "radix-ui"
+import * as Primitive from "@/lib/dialog-primitive"
 import { cn } from "@/lib/utils"
 
 // A panel that slides in from the side over the page: Knowledge's rail

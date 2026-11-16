@@ -1,6 +1,6 @@
 "use client"
 
-import { Popover as Primitive } from "radix-ui"
+import * as Primitive from "@/lib/popover-primitive"
 import { useRef, useState } from "react"
 import { AimyMark } from "@/components/aimy-mark"
 import { NotificationBell, type BellPing } from "@/components/notification-bell"

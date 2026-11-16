@@ -1,7 +1,7 @@
 "use client"
 
 import { ChevronDown } from "lucide-react"
-import { Select as Primitive } from "radix-ui"
+import * as Primitive from "@/lib/select-primitive"
 import { useField, useShake } from "@/components/field"
 import { cn } from "@/lib/utils"
 
@@ -61,7 +61,7 @@ export function Select({ placeholder = "Choose", label, className, children, ...
           position="popper"
           sideOffset={4}
           className={cn(
-            "t-dropdown z-(--z-dropdown) max-h-[min(16.25rem,var(--radix-select-content-available-height))] min-w-[max(10rem,var(--radix-select-trigger-width))]",
+            "t-dropdown z-(--z-dropdown) max-h-[min(16.25rem,var(--available-height))] min-w-[max(10rem,var(--anchor-width))]",
             "overflow-y-auto rounded-lg border border-w10 bg-raised p-1 shadow-lg"
           )}
         >

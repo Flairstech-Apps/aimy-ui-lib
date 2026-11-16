@@ -1,6 +1,6 @@
 "use client"
 
-import { Popover as Primitive } from "radix-ui"
+import * as Primitive from "@/lib/popover-primitive"
 import { cn } from "@/lib/utils"
 
 // A small panel tied to a control, for a few fields or a short explanation

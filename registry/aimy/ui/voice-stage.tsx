@@ -1,7 +1,7 @@
 "use client"
 
 import { Mic, MicOff, NotebookPen, X } from "lucide-react"
-import { Dialog as Primitive } from "radix-ui"
+import * as Primitive from "@/lib/dialog-primitive"
 import { useRef } from "react"
 import { AimyMark } from "@/components/aimy-mark"
 import { Orb } from "@/components/orb"

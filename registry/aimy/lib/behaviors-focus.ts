@@ -55,6 +55,11 @@ export type FocusTrapOptions = {
   onUnmountFocus?: (e: Event) => void
   /** Return focus to what had it before. Default true. */
   returnFocus?: boolean
+  /**
+   * Return focus on the next tick. React puts focus back where it was when
+   * it moves during a commit, so the React hooks set this.
+   */
+  deferReturn?: boolean
 }
 
 const traps: HTMLElement[] = []
@@ -118,7 +123,11 @@ export function createFocusTrap(container: HTMLElement, options: FocusTrapOption
     const unmount = new Event("aimy.focus.unmount", { cancelable: true })
     options.onUnmountFocus?.(unmount)
     if (options.returnFocus === false || unmount.defaultPrevented) return
-    if (before?.isConnected) focus(before)
+    const back = () => {
+      if (before?.isConnected) focus(before)
+    }
+    if (options.deferReturn) setTimeout(back, 0)
+    else back()
   }
 }
 

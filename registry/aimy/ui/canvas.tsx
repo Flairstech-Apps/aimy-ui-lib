@@ -1,7 +1,7 @@
 "use client"
 
 import { PanelLeft, X } from "lucide-react"
-import { Dialog as Primitive } from "radix-ui"
+import * as Primitive from "@/lib/dialog-primitive"
 import { useRef } from "react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/sheet"
 import type { Basis } from "@/lib/ai-types"

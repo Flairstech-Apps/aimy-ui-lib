@@ -1,7 +1,7 @@
 "use client"
 
 import { Code, Heading2, Heading3, List, ListOrdered, Pilcrow, Plus, Quote, Redo2, Undo2 } from "lucide-react"
-import { Popover as Primitive } from "radix-ui"
+import * as Primitive from "@/lib/popover-primitive"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { AimyMark } from "@/components/aimy-mark"
 import { cn } from "@/lib/utils"

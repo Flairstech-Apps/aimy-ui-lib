@@ -20,7 +20,7 @@ import {
   Upload,
   X,
 } from "lucide-react"
-import { Popover as Primitive } from "radix-ui"
+import * as Primitive from "@/lib/popover-primitive"
 import { useState } from "react"
 import { AimyMark } from "@/components/aimy-mark"
 import { Button } from "@/components/button"

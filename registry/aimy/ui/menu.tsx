@@ -1,7 +1,7 @@
 "use client"
 
 import { Check, Search } from "lucide-react"
-import { DropdownMenu as Primitive } from "radix-ui"
+import * as Primitive from "@/lib/menu-primitive"
 import { cn } from "@/lib/utils"
 
 // Sales' pick menus (.b-menu: the draft field pickers, the persona switcher)
@@ -30,7 +30,7 @@ export function MenuContent({ className, align = "start", sideOffset = 8, childr
         sideOffset={sideOffset}
         collisionPadding={16}
         className={cn(
-          "t-dropdown z-(--z-menu) flex max-h-[min(20.5rem,var(--radix-dropdown-menu-content-available-height))] min-w-[13.5rem] flex-col gap-0.5 overflow-y-auto",
+          "t-dropdown z-(--z-menu) flex max-h-[min(20.5rem,var(--available-height))] min-w-[13.5rem] flex-col gap-0.5 overflow-y-auto",
           "rounded-xl border border-edge-hover bg-raised p-1.5 shadow-lg outline-none",
           className
         )}

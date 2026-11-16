@@ -1,7 +1,7 @@
 "use client"
 
 import { AudioLines, Check, FileText, Mic, Paperclip, Send, X } from "lucide-react"
-import { Popover } from "radix-ui"
+import * as Popover from "@/lib/popover-primitive"
 import { useEffect, useId, useRef, useState } from "react"
 import { AimyMark } from "@/components/aimy-mark"
 import { CountBadge } from "@/components/count-badge"

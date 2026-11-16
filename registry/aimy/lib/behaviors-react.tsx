@@ -44,6 +44,15 @@ export function useLatest<T>(value: T) {
   return ref
 }
 
+/** A stable function that always calls the latest `fn` (for handlers read in effects and cleanups). */
+export function useCallbackRef<A extends unknown[], R>(fn: ((...args: A) => R) | undefined): (...args: A) => R | undefined {
+  const ref = useLatest(fn)
+  return useCallback((...args: A) => ref.current?.(...args), [ref])
+}
+
+/** Runs after the current commit (and React's own focus restore). */
+export const afterCommit = (fn: () => void) => void setTimeout(fn, 0)
+
 /** Re-renders on a behaviour's state. */
 export function useStore<T>(store: Pick<Store<T>, "get" | "subscribe">): T {
   return useSyncExternalStore(store.subscribe, store.get, store.get)
@@ -140,13 +149,18 @@ export function Slot({ children, ref, ...props }: AnyProps & { children?: ReactN
 
 // ── Portal and presence ─────────────────────────────────────
 
-/** Renders into document.body (or a container), after hydration. */
-export function Portal({ children, container }: { children: ReactNode; container?: Element | null }) {
-  const mounted = useSyncExternalStore(
+/** False on the server and during hydration, true after: for what only the browser renders. */
+export function useMounted() {
+  return useSyncExternalStore(
     noopSubscribe,
     () => true,
     () => false
   )
+}
+
+/** Renders into document.body (or a container), after hydration. */
+export function Portal({ children, container }: { children?: ReactNode; container?: Element | null }) {
+  const mounted = useMounted()
   if (!mounted) return null
   return createPortal(children, container ?? document.body)
 }
@@ -214,6 +228,7 @@ export function useFocusTrap(el: HTMLElement | null, active: boolean, options: F
         onMountFocus: (e) => latest.current.onMountFocus?.(e),
         onUnmountFocus: (e) => latest.current.onUnmountFocus?.(e),
         returnFocus: latest.current.returnFocus,
+        deferReturn: true,
       }),
     active
   )
@@ -256,7 +271,8 @@ export function useFloating(anchor: Element | null, floating: HTMLElement | null
         "--anchor-height": `${placement.anchorHeight}px`,
         "--transform-origin": placement.transformOrigin,
       }
-    : { position: "fixed", left: 0, top: 0, visibility: "hidden" }
+    : // Off screen until placed, not hidden: focus can't move into a hidden panel.
+      { position: "fixed", left: 0, top: 0, transform: "translate(0, -200%)" }
   return { placement, style }
 }
 
