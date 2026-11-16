@@ -85,6 +85,13 @@ Presentations:
 - Every moment has a date and a short chapter name; the timeline is drawn from them. A figure is a number with what it means, never a bare number.
 - Write slides in plain words, a headline and at most two lines under it. When there is more to say, add a moment.
 
+Behaviours (building a part the library doesn't have):
+
+- Take its behaviour from `@aimy/behaviors` (`@/lib/behaviors` and the hooks in `@/lib/behaviors-react`; in the package, `@flairstech-aimy/ui/behaviors`) and its look from the tokens. Keyboard, focus, selection, dragging, resizing, trees, layers and gestures are all there; never hand-write them.
+- Every pointer gesture needs a keyboard path (Space to pick up, the arrows, Space to drop, Escape to cancel), and the behaviour's announcement for screen readers.
+- A floating panel uses the primitives (`@aimy/popover-primitive`, `menu-primitive`, `select-primitive`, `tooltip-primitive`, `dialog-primitive`), never its own outside-click or Escape code.
+- Test it with `@aimy/behaviors-testing`: `ariaProblems` and `singleTabStopProblems` must come back empty.
+
 Never:
 
 - Never use a native `<select>`, an inline `onclick` string, a coloured left-edge stripe, gradient text, or a pulsing decorative dot.

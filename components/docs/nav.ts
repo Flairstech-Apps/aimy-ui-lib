@@ -26,6 +26,7 @@ const LIBRARY: NavGroup[] = [
       { href: "/foundations/icons/", label: "Icons" },
       { href: "/foundations/logo/", label: "Logo" },
       { href: "/foundations/focus/", label: "Focus" },
+      { href: "/foundations/behaviors/", label: "Behaviours" },
       { href: "/foundations/writing/", label: "Writing" },
     ],
   },

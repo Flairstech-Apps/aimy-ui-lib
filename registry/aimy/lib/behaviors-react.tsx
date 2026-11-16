@@ -64,6 +64,26 @@ function useOnce<T>(make: () => T): T {
   return v
 }
 
+/**
+ * One ref callback per key, the same function on every render, so a bound
+ * drag isn't unbound and rebound (and cut short) when the part re-renders.
+ */
+function useRefCache(make: (key: string) => RefCallback<HTMLElement>) {
+  const cache = useOnce(() => new Map<string, RefCallback<HTMLElement>>())
+  const latest = useLatest(make)
+  return useCallback(
+    (key: string) => {
+      let fn = cache.get(key)
+      if (!fn) {
+        fn = latest.current(key)
+        cache.set(key, fn)
+      }
+      return fn
+    },
+    [cache, latest]
+  )
+}
+
 /** Calls cleanup when the component unmounts. */
 function useDestroy(fn: () => void) {
   const latest = useLatest(fn)
@@ -436,7 +456,8 @@ export function useResize(options: ResizeOptions) {
   const r = useOnce(() => createResize({ ...options, onChange: (b) => latest.current.onChange?.(b), onCommit: (b) => latest.current.onCommit?.(b) }))
   const state = useStore(r)
   /** A ref for each handle: handle("se"). */
-  const handle = useCallback((edge: Edge): RefCallback<HTMLElement> => (node) => (node ? r.bindHandle(node, edge) : undefined), [r])
+  const cached = useRefCache((edge) => (node) => (node ? r.bindHandle(node, edge as Edge) : undefined))
+  const handle = (edge: Edge) => cached(edge)
   return { ...r, ...state, handle } as typeof r & { box: Box; edge: Edge | null; handle: typeof handle }
 }
 
@@ -494,12 +515,13 @@ export function useSpans(options: SpansOptions) {
     })
   )
   const state = useStore(s)
-  const track = useCallback((id: string): RefCallback<HTMLElement> => (node) => (node ? s.bindTrack(node, id) : undefined), [s])
-  const span = useCallback(
-    (id: string, part: "body" | "start" | "end" = "body"): RefCallback<HTMLElement> =>
-      (node) => (node ? s.bindSpan(node, id, part) : undefined),
-    [s]
-  )
+  const trackRef = useRefCache((id) => (node) => (node ? s.bindTrack(node, id) : undefined))
+  const spanRef = useRefCache((key) => {
+    const [id = "", part = "body"] = key.split("\u0000")
+    return (node) => (node ? s.bindSpan(node, id, part as "body" | "start" | "end") : undefined)
+  })
+  const track = (id: string) => trackRef(id)
+  const span = (id: string, part: "body" | "start" | "end" = "body") => spanRef(`${id}\u0000${part}`)
   return { ...s, ...state, track, span }
 }
 
@@ -665,7 +687,7 @@ export function useConnect(options: { ports: () => (Port & { el: HTMLElement })[
     createConnect({ ports: () => latest.current.ports(), canConnect: (a, b) => latest.current.canConnect?.(a, b) ?? true, onConnect: (a, b) => latest.current.onConnect(a, b) })
   )
   const state = useStore(c)
-  const port = useCallback((id: string): RefCallback<HTMLElement> => (node) => (node ? c.bindPort(node, id) : undefined), [c])
+  const port = useRefCache((id) => (node) => (node ? c.bindPort(node, id) : undefined))
   return { ...c, ...state, port }
 }
 
