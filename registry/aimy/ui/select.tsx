@@ -119,7 +119,7 @@ export function SelectItem({ value, children, disabled }: { value: string; child
       disabled={disabled}
       className={cn(
         "relative flex cursor-pointer items-center gap-2 rounded-sm px-2.5 py-1.5 text-xs font-semibold text-ink-secondary outline-none select-none",
-        "before:size-[5px] before:shrink-0 before:rounded-pill before:bg-transparent",
+        "transition-[background-color,color] duration-(--t-fast) ease-out before:size-[5px] before:shrink-0 before:rounded-pill before:bg-transparent before:transition-[background-color,scale] before:duration-(--t-base) before:ease-(--ease-spring) data-[state=unchecked]:before:scale-50",
         "data-highlighted:bg-w06 data-highlighted:text-ink",
         "data-[state=checked]:bg-brand-dim data-[state=checked]:text-ai-ink data-[state=checked]:before:bg-ai-ink",
         "data-disabled:cursor-not-allowed data-disabled:opacity-[0.38]"

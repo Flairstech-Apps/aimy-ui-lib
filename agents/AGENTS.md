@@ -90,6 +90,7 @@ Behaviours (building a part the library doesn't have):
 - Every pointer gesture needs a keyboard path (Space to pick up, the arrows, Space to drop, Escape to cancel), and the behaviour's announcement for screen readers.
 - A floating panel uses the primitives (`@aimy/popover-primitive`, `menu-primitive`, `select-primitive`, `tooltip-primitive`, `dialog-primitive`), never its own outside-click or Escape code.
 - Let AiMY work the screen through the agent bridge (`@aimy/agent-bridge`): wrap the page in `AgentProvider`, give each part AiMY may change an `agent` id, pass the person's Autonomy setting to `levelFor`, and hand `bridge.tools()` to the model. Every action returns its undo; what can't be undone is `undoable: false` and always asks. Never let AiMY change the page any other way.
+- Show changes the moment the person acts and save behind (`@aimy/feedback`): `useUndoable` for act-then-toast-with-Undo, `useOptimisticValue` for any controlled part with `SaveStatus` beside it, `ActionButton` for a button that reports its own progress. A failed save goes back and says why with Try again; throw `UserFacingError` when your message is already written for people.
 - Give every page one `CommandBar` (`@aimy/command-bar`) inside the `AgentProvider`; add the app's own commands with `useCommand` (they are AiMY's tools too). Ctrl+Z outside a field takes back the last change; never hand-write another undo.
 - When AiMY answers with interface, give the model `uiPrompt(AIMY_UI)` and `showUiTool(AIMY_UI)` and draw its answer with `GenerativeUI` (`@aimy/generative-ui`); never render model HTML or code. Send `onProblems` back to the model.
 - Test it with `@aimy/behaviors-testing`: `ariaProblems` and `singleTabStopProblems` must come back empty.
@@ -147,6 +148,7 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 ### Feedback & overlays
 
 - **Toast** (`@aimy/toast`): The confirmation every action ends with: act at once, then toast what happened with Undo. https://aimy-ui-lib.aimy.flairstech.com/components/toast/
+- **Confirmation & feedback** (`@aimy/feedback`): The first rung of AiMY's confirmation ladder made easy. https://aimy-ui-lib.aimy.flairstech.com/components/feedback/
 - **Dialog** (`@aimy/dialog`): Dialog: for ordered forms and changes with consequences, never to confirm what Undo can take back. https://aimy-ui-lib.aimy.flairstech.com/components/dialog/
 - **Sheet** (`@aimy/sheet`): A panel that slides in from the side over the page, with a scrim: the rail as a drawer below the rail rung, settings and connection sheets. https://aimy-ui-lib.aimy.flairstech.com/components/sheet/
 - **Notice** (`@aimy/notice`): A notice in the page: neutral, info, ok, warn or err. https://aimy-ui-lib.aimy.flairstech.com/components/notice/

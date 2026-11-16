@@ -4,7 +4,7 @@ import { ChevronRight } from "lucide-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { type CheckedState, createTreeCollection, toggleTreeChecked, treeCheckedStates, treeDataNodes } from "@/lib/behaviors"
 import { useAgentSurface } from "@/lib/behaviors-agent-react"
-import { useFlip, useTreeView } from "@/lib/behaviors-react"
+import { useLeaving, useTreeView } from "@/lib/behaviors-react"
 import { cn } from "@/lib/utils"
 
 // Nested items you open and close: folders and files, a team under a
@@ -161,14 +161,14 @@ export function Tree({ items, label, defaultExpanded, selected, onSelect, checka
     rootEl
   )
 
-  const flipRef = useFlip<HTMLUListElement>(view.rows.map((r) => r.id).join("\u0000"), { enter: true })
+  // Rows that just closed stay a moment to fold away; new ones grow in.
+  const display = useLeaving(view.rows, (r) => r.id)
 
   return (
     <ul
       ref={(node) => {
         root.current = node
         setRootEl(node)
-        flipRef(node)
       }}
       role="tree"
       aria-label={label}
@@ -177,15 +177,52 @@ export function Tree({ items, label, defaultExpanded, selected, onSelect, checka
       onKeyDown={view.onKeyDown}
       className={cn("flex flex-col", className)}
     >
-      {view.rows.map((r) => {
-        const item = tree.get(r.id)!.data
+      {display.map(({ item: r, leaving }) => {
+        const node = tree.get(r.id)
+        if (!node) return null
+        const item = node.data
         const state: CheckedState | undefined = states?.get(r.id)
         const isSelected = !checkable && selected === r.id
+        const row = (
+          <div
+            style={{ paddingInlineStart: `${(r.level - 1) * 16 + 4}px` }}
+            className={cn(
+              "flex min-h-8 items-center gap-2 rounded-md pr-2",
+              "transition-[background-color,color] duration-(--t-fast) ease-out group-hover/row:bg-w05",
+              isSelected && "bg-brand-dim text-ai-ink group-hover/row:bg-brand-dim"
+            )}
+          >
+            <span
+              aria-hidden="true"
+              onClick={(e) => {
+                if (r.expanded === undefined || leaving) return
+                e.stopPropagation()
+                view.setFocused(r.id)
+                view.toggle(r.id)
+              }}
+              className={cn("grid size-5 shrink-0 place-items-center rounded-sm text-ink-secondary", r.expanded === undefined && "invisible")}
+            >
+              <ChevronRight strokeWidth={2} className={cn("size-3.5 transition-transform duration-(--t-base) ease-out", r.expanded && "rotate-90")} />
+            </span>
+            {state !== undefined ? <TreeCheck state={state} /> : null}
+            {item.icon ? <span className="flex shrink-0 text-ink-secondary [&_svg]:size-4">{item.icon}</span> : null}
+            <span className="min-w-0 flex-1 truncate">{item.label}</span>
+            {item.meta ? <span className="shrink-0 text-2xs text-ink-secondary">{item.meta}</span> : null}
+          </div>
+        )
+        // Each row folds on its own height (grid rows 0fr to 1fr), so the rows
+        // below glide with it instead of jumping.
+        const fold = "grid transition-[grid-template-rows,opacity] duration-(--t-base) ease-out motion-reduce:transition-none"
+        if (leaving)
+          return (
+            <li key={r.id} aria-hidden="true" className={cn(fold, "pointer-events-none grid-rows-[0fr] text-xs text-ink opacity-0")}>
+              <div className="min-h-0 overflow-hidden">{row}</div>
+            </li>
+          )
         return (
           <li
             key={r.id}
             role="treeitem"
-            data-flip={r.id}
             data-tree-id={r.id}
             aria-level={r.level}
             aria-posinset={r.posInSet}
@@ -200,48 +237,50 @@ export function Tree({ items, label, defaultExpanded, selected, onSelect, checka
               if (r.expanded !== undefined && !checkable) view.toggle(r.id)
               else choose(r.id)
             }}
-            style={{ paddingInlineStart: `${(r.level - 1) * 16 + 4}px` }}
             className={cn(
-              "flex min-h-8 cursor-pointer items-center gap-2 rounded-md pr-2 text-xs text-ink outline-offset-[-2px] select-none",
-              "transition-[background-color] duration-(--t-fast) ease-out hover:bg-w05",
-              isSelected && "bg-brand-dim text-ai-ink hover:bg-brand-dim"
+              fold,
+              "group/row cursor-pointer grid-rows-[1fr] rounded-md text-xs text-ink outline-offset-[-2px] select-none starting:grid-rows-[0fr] starting:opacity-0"
             )}
           >
-            <span
-              aria-hidden="true"
-              onClick={(e) => {
-                if (r.expanded === undefined) return
-                e.stopPropagation()
-                view.setFocused(r.id)
-                view.toggle(r.id)
-              }}
-              className={cn("grid size-5 shrink-0 place-items-center rounded-sm text-ink-secondary", r.expanded === undefined && "invisible")}
-            >
-              <ChevronRight strokeWidth={2} className={cn("size-3.5 transition-transform duration-(--t-fast) ease-out", r.expanded && "rotate-90")} />
-            </span>
-            {state !== undefined ? (
-              <span
-                aria-hidden="true"
-                className={cn(
-                  "grid size-[1.0625rem] shrink-0 place-items-center rounded-xs border text-on-brand",
-                  state === "checked" ? "border-brand bg-brand" : state === "mixed" ? "border-brand bg-brand-dim" : "border-ink-rule bg-card"
-                )}
-              >
-                {state === "checked" ? (
-                  <svg viewBox="0 0 24 24" className="size-3">
-                    <path d="M20 6 9 17l-5-5" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                ) : state === "mixed" ? (
-                  <span className="block h-0.5 w-2 rounded-pill bg-brand" />
-                ) : null}
-              </span>
-            ) : null}
-            {item.icon ? <span className="flex shrink-0 text-ink-secondary [&_svg]:size-4">{item.icon}</span> : null}
-            <span className="min-w-0 flex-1 truncate">{item.label}</span>
-            {item.meta ? <span className="shrink-0 text-2xs text-ink-secondary">{item.meta}</span> : null}
+            <div className="min-h-0 overflow-hidden">{row}</div>
           </li>
         )
       })}
     </ul>
+  )
+}
+
+/** The tree's box: fills, then the tick draws in (transitions.dev 25); "some" is a dash that grows. */
+function TreeCheck({ state }: { state: CheckedState }) {
+  return (
+    <span
+      aria-hidden="true"
+      className={cn(
+        "relative grid size-[1.0625rem] shrink-0 place-items-center rounded-xs border text-on-brand",
+        "transition-[background-color,border-color] duration-(--t-fast) ease-out motion-reduce:transition-none",
+        state === "checked" ? "border-brand bg-brand" : state === "mixed" ? "border-brand bg-brand-dim" : "border-ink-rule bg-card"
+      )}
+    >
+      <svg viewBox="0 0 24 24" className="size-3">
+        <path
+          d="M20 6 9 17l-5-5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={3}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className={cn(
+            "[stroke-dasharray:24] transition-[stroke-dashoffset] ease-out motion-reduce:transition-none",
+            state === "checked" ? "[stroke-dashoffset:0] duration-(--duration-slow)" : "[stroke-dashoffset:24] duration-(--t-fast)"
+          )}
+        />
+      </svg>
+      <span
+        className={cn(
+          "absolute h-0.5 w-2 rounded-pill bg-brand transition-[scale,opacity] duration-(--t-base) ease-out motion-reduce:transition-none",
+          state === "mixed" ? "scale-x-100 opacity-100" : "scale-x-0 opacity-0"
+        )}
+      />
+    </span>
   )
 }

@@ -75,14 +75,18 @@ export function MenuItem({ children, description, leading, danger, className, ..
   )
 }
 
-const chosen = "data-[state=checked]:bg-[color-mix(in_srgb,var(--accent)_16%,transparent)] data-[state=checked]:data-highlighted:bg-[color-mix(in_srgb,var(--accent)_22%,transparent)]"
+// The tick grows in on the spring and shrinks out: choosing never snaps.
+const tick =
+  "flex transition-[opacity,scale] duration-(--t-base) ease-(--ease-spring) data-[state=unchecked]:scale-50 data-[state=unchecked]:opacity-0 data-[state=unchecked]:duration-(--t-fast) data-[state=unchecked]:ease-out motion-reduce:transition-none"
+
+const chosen = "transition-[background-color,color] duration-(--t-fast) ease-out data-[state=checked]:bg-[color-mix(in_srgb,var(--accent)_16%,transparent)] data-[state=checked]:data-highlighted:bg-[color-mix(in_srgb,var(--accent)_22%,transparent)]"
 
 export function MenuRadioItem({ children, description, leading, className, ...props }: Omit<React.ComponentProps<typeof Primitive.RadioItem>, "children"> & ItemText) {
   return (
     <Primitive.RadioItem className={cn(itemStyles, chosen, className)} {...props}>
       {leading}
       <Lines description={description}>{children}</Lines>
-      <Primitive.ItemIndicator>
+      <Primitive.ItemIndicator forceMount className={tick}>
         <Check aria-hidden="true" strokeWidth={2} className="text-accent-text!" />
       </Primitive.ItemIndicator>
     </Primitive.RadioItem>
@@ -108,7 +112,7 @@ export function MenuCheckboxItem({
     >
       {leading}
       <Lines description={description}>{children}</Lines>
-      <Primitive.ItemIndicator>
+      <Primitive.ItemIndicator forceMount className={tick}>
         <Check aria-hidden="true" strokeWidth={2} className="text-accent-text!" />
       </Primitive.ItemIndicator>
     </Primitive.CheckboxItem>

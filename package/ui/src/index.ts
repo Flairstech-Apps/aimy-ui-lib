@@ -244,3 +244,4 @@ export { AgentAsks, AgentLog, AgentProvider, useAgent, useAgentActivity, useAgen
 export { AIMY_UI, AIMY_UI_RENDER, GenerativeUI } from "../../../registry/aimy/ui/generative-ui"
 export { checkUi, parsePartialJson, showUiTool, uiPrompt, type UiCatalog, type UiField, type UiNode, type UiPart } from "../../../registry/aimy/lib/generative-ui"
 export { CommandBar } from "../../../registry/aimy/ui/command-bar"
+export { ActionButton, SaveStatus, useUndoable } from "../../../registry/aimy/ui/feedback"

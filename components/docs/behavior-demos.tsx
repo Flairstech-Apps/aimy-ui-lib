@@ -3,20 +3,11 @@
 // Live demos for the Behaviours page: each one is a behaviour hook driving
 // plain markup, so what you try here is the behaviour itself, not a part.
 
-import { ChevronRight } from "lucide-react"
-import { useEffect, useMemo, useRef, useState } from "react"
-import {
-  type Span,
-  createTreeCollection,
-  stackSpans,
-  toggleTreeChecked,
-  treeCheckedStates,
-  treeDataNodes,
-  treeFromPaths,
-  type PathItem,
-} from "@/lib/behaviors"
-import { useInlineEdit, useListbox, useResize, useSpans, useStickToBottom, useTreeView, useViewport } from "@/lib/behaviors-react"
+import { useMemo, useState } from "react"
+import { type PathItem, type Span, stackSpans, treeFromPaths } from "@/lib/behaviors"
+import { useInlineEdit, useListbox, useResize, useSpans, useStickToBottom, useViewport } from "@/lib/behaviors-react"
 import { SortableList } from "@/registry/aimy/ui/sortable-list"
+import { Tree, type TreeItem } from "@/registry/aimy/ui/tree"
 import { cn } from "@/lib/utils"
 
 const box = "rounded-lg border border-edge bg-card p-3"
@@ -39,52 +30,13 @@ export function ReorderDemo() {
 const FILES = ["app/page.tsx", "app/layout.tsx", "app/settings/page.tsx", "components/button.tsx", "components/menu.tsx", "lib/behaviors.ts", "README.md"]
 
 export function TreeDemo() {
-  const tree = useMemo(() => {
-    const { nodes, roots } = treeDataNodes<PathItem>(treeFromPaths(FILES), (n) => n.path, (n) => n.children)
-    return createTreeCollection(nodes, roots)
+  const items = useMemo(() => {
+    const toItem = (p: PathItem): TreeItem => ({ id: p.path, label: p.name, children: p.children.length ? p.children.map(toItem) : undefined })
+    return treeFromPaths(FILES).map(toItem)
   }, [])
-  const [checked, setChecked] = useState<Set<string>>(() => new Set(["components/menu.tsx"]))
-  const states = treeCheckedStates(tree, checked)
-  const name = (id: string) => tree.get(id)?.data.name ?? id
-  const view = useTreeView({ tree, text: name, defaultExpanded: ["app", "components"], onSelect: (id) => setChecked((c) => toggleTreeChecked(tree, c, id)) })
-  const root = useRef<HTMLUListElement>(null)
-  useEffect(() => {
-    if (root.current?.contains(document.activeElement)) root.current.querySelector<HTMLElement>(`[data-id="${view.focused}"]`)?.focus()
-  }, [view.focused])
-
   return (
     <div className={box}>
-      <ul ref={root} role="tree" aria-label="Files" aria-multiselectable="true" onKeyDown={view.onKeyDown} className="flex flex-col">
-        {view.rows.map((r) => {
-          const state = states.get(r.id)
-          return (
-            <li
-              key={r.id}
-              role="treeitem"
-              data-id={r.id}
-              aria-level={r.level}
-              aria-posinset={r.posInSet}
-              aria-setsize={r.setSize}
-              aria-expanded={r.expanded}
-              aria-checked={state === "mixed" ? "mixed" : state === "checked"}
-              tabIndex={r.id === view.focused ? 0 : -1}
-              onFocus={() => view.setFocused(r.id)}
-              onClick={() => (r.expanded === undefined ? setChecked((c) => toggleTreeChecked(tree, c, r.id)) : view.toggle(r.id))}
-              style={{ paddingInlineStart: `${(r.level - 1) * 16 + 4}px` }}
-              className="flex cursor-pointer items-center gap-2 rounded-sm py-1 pr-2 text-xs text-ink outline-offset-[-2px] hover:bg-w05"
-            >
-              <ChevronRight aria-hidden="true" strokeWidth={2} className={cn("size-3.5 text-ink-secondary transition-transform duration-(--t-fast)", r.expanded && "rotate-90", r.expanded === undefined && "invisible")} />
-              <span
-                aria-hidden="true"
-                className={cn("grid size-3.5 place-items-center rounded-xs border text-[10px] leading-none", state === "unchecked" ? "border-edge-hover" : "border-brand bg-brand text-on-status")}
-              >
-                {state === "checked" ? "✓" : state === "mixed" ? "–" : ""}
-              </span>
-              {name(r.id)}
-            </li>
-          )
-        })}
-      </ul>
+      <Tree label="Files" items={items} checkable defaultExpanded={["app", "components"]} defaultChecked={["components/menu.tsx"]} />
       <p className={hint}>Arrows move; Right opens a folder, Left closes it or goes up; * opens the siblings; letters jump; Space checks, and folders roll up.</p>
     </div>
   )
@@ -121,7 +73,7 @@ export function ListboxDemo() {
             aria-selected={chosen === p}
             onPointerMove={() => lb.highlight(p)}
             onClick={() => lb.select(p)}
-            className={cn("cursor-pointer rounded-sm px-2.5 py-1.5 text-xs text-ink", lb.highlighted === p && "bg-w07", chosen === p && "text-ai-ink")}
+            className={cn("cursor-pointer rounded-sm px-2.5 py-1.5 text-xs text-ink transition-[background-color,color] duration-(--t-fast) ease-out", lb.highlighted === p && "bg-w07", chosen === p && "text-ai-ink")}
           >
             {p}
           </li>

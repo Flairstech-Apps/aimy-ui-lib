@@ -79,6 +79,7 @@ const LIBRARY: NavGroup[] = [
     label: "Feedback & overlays",
     items: [
       { href: "/components/toast/", label: "Toast" },
+      { href: "/components/feedback/", label: "Confirmation & feedback" },
       { href: "/components/dialog/", label: "Dialog" },
       { href: "/components/sheet/", label: "Sheet" },
       { href: "/components/notice/", label: "Notice" },

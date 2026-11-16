@@ -1,6 +1,6 @@
 "use client"
 
-import { Pencil } from "lucide-react"
+import { LoaderCircle, Pencil } from "lucide-react"
 import { useEffect, useId, useRef, useState } from "react"
 import { controlStyles } from "@/components/field"
 import { useAgentSurface } from "@/lib/behaviors-agent-react"
@@ -75,6 +75,7 @@ export function InlineEdit({ value, onSave, label, validate, size = "text", plac
   }, [edit.editing])
 
   if (!edit.editing) {
+    const shown = edit.pending ?? value
     return (
       <button
         ref={(node) => {
@@ -84,18 +85,24 @@ export function InlineEdit({ value, onSave, label, validate, size = "text", plac
         type="button"
         data-slot="inline-edit"
         disabled={disabled}
-        aria-label={`${label}: ${value || placeholder}. Press to change.`}
+        aria-label={`${label}: ${shown || placeholder}.${edit.saving ? " Saving." : ""} Press to change.`}
+        aria-busy={edit.saving || undefined}
         onClick={edit.start}
         className={cn(
-          "group -mx-2 inline-flex max-w-full items-start gap-2 rounded-md px-2 py-1 text-left text-ink",
-          "transition-[background-color] duration-(--t-fast) ease-out hover:not-disabled:bg-w05 disabled:cursor-not-allowed",
+          "group -mx-2 inline-flex max-w-full items-start gap-2 rounded-md px-2 py-1 text-left text-ink starting:opacity-0",
+          "transition-[background-color,opacity] duration-(--t-fast) ease-out hover:not-disabled:bg-w05 disabled:cursor-not-allowed",
           sizes[size],
           className
         )}
       >
-        <span className={cn("min-w-0 break-words", !value && "text-ink-placeholder")}>{value || placeholder}</span>
+        <span className={cn("min-w-0 break-words", !shown && "text-ink-placeholder")}>{shown || placeholder}</span>
         <span aria-hidden="true" className="flex h-[1lh] shrink-0 items-center">
-          <Pencil strokeWidth={2} className="size-3.5 text-ink-secondary opacity-0 transition-opacity duration-(--t-fast) group-hover:opacity-100 group-focus-visible:opacity-100" />
+          {edit.saving ? (
+            // Saving behind: the new value is already shown.
+            <LoaderCircle strokeWidth={2} className="size-3.5 animate-spin text-ink-secondary motion-reduce:animate-none" />
+          ) : (
+            <Pencil strokeWidth={2} className="size-3.5 text-ink-secondary opacity-0 transition-opacity duration-(--t-fast) group-hover:opacity-100 group-focus-visible:opacity-100" />
+          )}
         </span>
       </button>
     )

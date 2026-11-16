@@ -369,12 +369,19 @@ export type InlineEditOptions = {
   onCancel?: () => void
 }
 
-export type InlineEditState = { editing: boolean; draft: string; error: string | null; saving: boolean }
+export type InlineEditState = {
+  editing: boolean
+  draft: string
+  error: string | null
+  saving: boolean
+  /** The value shown at rest while it saves (optimistic), or null. */
+  pending: string | null
+}
 
 /** Click (or Enter) to edit; Enter or leaving the field saves; Escape puts it back. */
 export function createInlineEdit(options: InlineEditOptions) {
   let o = options
-  const store = createStore<InlineEditState>({ editing: false, draft: options.value, error: null, saving: false })
+  const store = createStore<InlineEditState>({ editing: false, draft: options.value, error: null, saving: false, pending: null })
   const api = {
     ...store,
     setOptions: (next: Partial<InlineEditOptions>) => {
@@ -389,12 +396,16 @@ export function createInlineEdit(options: InlineEditOptions) {
       if (draft === o.value) return store.set({ editing: false, error: null })
       const error = o.validate?.(draft) ?? null
       if (error) return store.set({ error })
-      store.set({ saving: true })
+      // Optimistic: the new value shows at once and saves behind; if the
+      // save fails, the field opens again with what was typed and why.
+      const result = o.onCommit(draft)
+      if (!result || typeof (result as Promise<void>).then !== "function") return store.set({ editing: false, error: null })
+      store.set({ editing: false, saving: true, pending: draft })
       try {
-        await o.onCommit(draft)
-        store.set({ editing: false, saving: false })
+        await result
+        store.set({ saving: false, pending: null })
       } catch (e) {
-        store.set({ saving: false, error: e instanceof Error ? e.message : "Couldn't save. Try again." })
+        store.set({ editing: true, saving: false, pending: null, draft, error: e instanceof Error ? e.message : "Couldn't save. Try again." })
       }
     },
     cancel() {

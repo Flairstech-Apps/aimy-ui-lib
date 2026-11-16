@@ -66,6 +66,7 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 ### Feedback & overlays
 
 - **Toast** (`@aimy/toast`): The confirmation every action ends with: act at once, then toast what happened with Undo. https://aimy-ui-lib.aimy.flairstech.com/components/toast/
+- **Confirmation & feedback** (`@aimy/feedback`): The first rung of AiMY's confirmation ladder made easy. https://aimy-ui-lib.aimy.flairstech.com/components/feedback/
 - **Dialog** (`@aimy/dialog`): Dialog: for ordered forms and changes with consequences, never to confirm what Undo can take back. https://aimy-ui-lib.aimy.flairstech.com/components/dialog/
 - **Sheet** (`@aimy/sheet`): A panel that slides in from the side over the page, with a scrim: the rail as a drawer below the rail rung, settings and connection sheets. https://aimy-ui-lib.aimy.flairstech.com/components/sheet/
 - **Notice** (`@aimy/notice`): A notice in the page: neutral, info, ok, warn or err. https://aimy-ui-lib.aimy.flairstech.com/components/notice/

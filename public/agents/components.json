@@ -217,6 +217,13 @@
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/toast/"
   },
   {
+    "name": "feedback",
+    "title": "Confirmation & feedback",
+    "group": "Feedback & overlays",
+    "description": "The first rung of AiMY's confirmation ladder made easy. ActionButton shows its own progress (pending only when slow, a tick and the success word, a shake and the reason on failure) at a steady width. SaveStatus is the quiet Saving…, Saved, Couldn't save · Try again line beside anything that saves itself. useUndoable acts at once with a toast and Undo and, if the save behind fails, puts it back with Try again. With useOptimisticValue any part changes the moment the person acts.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/feedback/"
+  },
+  {
     "name": "dialog",
     "title": "Dialog",
     "group": "Feedback & overlays",

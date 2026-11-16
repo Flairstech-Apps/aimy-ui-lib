@@ -90,7 +90,7 @@
       "name": "behaviors",
       "type": "registry:lib",
       "title": "Behaviours",
-      "description": "How AiMY parts behave, written once: focus and keys (focus trap, roving focus, grid focus, typeahead, focus recovery, input hints), selection (ranges, lasso, cell ranges, copy and paste as spreadsheet text), drag and drop (reorder lists, grids and trees by pointer or keyboard, move between lists, auto-scroll, announcements), move and resize, swipe actions, hold and repeat, a two-axis pad, ranges on tracks, lists (listbox, virtualizer, stick to bottom, scroll picker, inline edit), trees (collection, tri-state checks, keyboard model), transitions and gestures (panels, findable hidden content, springs, rubber band), popups and layers (placement, a layer stack for Escape and outside presses, scroll lock, hiding the page from screen readers), preferences (colour scheme, pointer kind, pre-paint script) and canvas (pan, zoom, connecting ports). Plain TypeScript with React hooks in behaviors-react.",
+      "description": "How AiMY parts behave, written once: focus and keys (focus trap, roving focus, grid focus, typeahead, focus recovery, input hints), selection (ranges, lasso, cell ranges, copy and paste as spreadsheet text), drag and drop (reorder lists, grids and trees by pointer or keyboard, move between lists, auto-scroll, announcements), move and resize, swipe actions, hold and repeat, a two-axis pad, ranges on tracks, lists (listbox, virtualizer, stick to bottom, scroll picker, inline edit), trees (collection, tri-state checks, keyboard model), transitions and gestures (panels, findable hidden content, springs, rubber band), popups and layers (placement, a layer stack for Escape and outside presses, scroll lock, hiding the page from screen readers), preferences (colour scheme, pointer kind, pre-paint script), canvas (pan, zoom, connecting ports), and feedback: action states that never flicker and optimistic values that save behind and go back, saying why, when a save fails. Plain TypeScript with React hooks in behaviors-react.",
       "files": [
         {
           "path": "registry/aimy/lib/behaviors.ts",
@@ -138,6 +138,14 @@
         },
         {
           "path": "registry/aimy/lib/behaviors-canvas.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/behaviors-feedback.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/recovery-kinds.ts",
           "type": "registry:lib"
         },
         {
@@ -1072,6 +1080,28 @@
       "files": [
         {
           "path": "registry/aimy/ui/toast.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "feedback",
+      "type": "registry:component",
+      "title": "Feedback and optimistic UI",
+      "description": "The first rung of AiMY's confirmation ladder made easy. ActionButton shows its own progress (pending only when slow, a tick and the success word, a shake and the reason on failure) at a steady width. SaveStatus is the quiet Saving…, Saved, Couldn't save · Try again line beside anything that saves itself. useUndoable acts at once with a toast and Undo and, if the save behind fails, puts it back with Try again. With useOptimisticValue any part changes the moment the person acts.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/behaviors",
+        "@aimy/button",
+        "@aimy/toast"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/feedback.tsx",
           "type": "registry:component"
         }
       ]

@@ -29,6 +29,7 @@ import { type Box, type Edge, type MoveOptions, type ResizeOptions, type SpansOp
 import { type InlineEditOptions, type ListboxOptions, type VirtualizerOptions, bindScrollPicker, createInlineEdit, createListbox, createStickToBottom, createVirtualizer, matchWords } from "./behaviors-lists"
 import { type TreeCollection, createTreeNavigation, visibleTreeRows } from "./behaviors-tree"
 import { animationsDone, bindPanel } from "./behaviors-motion"
+import { type ActionStateOptions, type OptimisticOptions, createActionState, createOptimistic } from "./behaviors-feedback"
 import { type LayerOptions, type Placement, type PositionOptions, autoUpdate, bindLayer, bindPersistentLayer, hideOthers, lockScroll, position } from "./behaviors-layers"
 import { type ColorSchemeChoice, type PreferenceOptions, createColorScheme, createPointerKind, createPreference } from "./behaviors-prefs"
 import { type Port, type ViewportOptions, createConnect, createViewport } from "./behaviors-canvas"
@@ -271,6 +272,60 @@ export function useFlip<T extends HTMLElement = HTMLElement>(key: unknown, optio
   return useCallback((node: T | null) => {
     ref.current = node
   }, [])
+}
+
+/**
+ * Keeps items that just left the list on screen for one exit animation, in
+ * the place they were, so closing is as smooth as opening. Returns the list
+ * to render, each marked leaving or not; leaving ones go after `duration`.
+ */
+export function useLeaving<T>(items: readonly T[], key: (item: T) => string, duration = tokenMs("--duration-fast", 250)) {
+  const keyOf = useLatest(key)
+  const listKey = items.map(key).join("\u0000")
+  const [state, setState] = useState<{ prev: readonly T[]; prevKey: string; batch: number; leaving: { item: T; after: string | null; batch: number }[] }>({
+    prev: items,
+    prevKey: listKey,
+    batch: 0,
+    leaving: [],
+  })
+  // Compared by keys: a new array with the same items is not a change.
+  if (state.prevKey !== listKey) {
+    const k = keyOf.current
+    const now = new Set(items.map(k))
+    const prevKeys = state.prev.map(k)
+    const gone = state.prev
+      .map((item, i) => ({ item, i }))
+      .filter(({ item }) => !now.has(k(item)))
+      .map(({ item, i }) => {
+        // After the nearest earlier item that stayed, so it leaves from where it was.
+        let j = i - 1
+        while (j >= 0 && !now.has(prevKeys[j]!)) j--
+        return { item, after: j >= 0 ? prevKeys[j]! : null, batch: state.batch + 1 }
+      })
+    const kept = state.leaving.filter((l) => !now.has(k(l.item)))
+    setState({ prev: items, prevKey: listKey, batch: state.batch + 1, leaving: [...kept.filter((l) => !gone.some((g) => k(g.item) === k(l.item))), ...gone] })
+  }
+  useEffect(() => {
+    if (!state.leaving.length) return
+    const done = state.batch
+    const t = setTimeout(() => setState((s) => ({ ...s, leaving: s.leaving.filter((l) => l.batch > done) })), duration + 20)
+    return () => clearTimeout(t)
+  }, [state.leaving, state.batch, duration])
+
+  const out: { item: T; leaving: boolean }[] = []
+  const k = key
+  const byAfter = new Map<string | null, T[]>()
+  for (const l of state.leaving) {
+    const list = byAfter.get(l.after) ?? []
+    list.push(l.item)
+    byAfter.set(l.after, list)
+  }
+  for (const item of byAfter.get(null) ?? []) out.push({ item, leaving: true })
+  for (const item of items) {
+    out.push({ item, leaving: false })
+    for (const gone of byAfter.get(k(item)) ?? []) out.push({ item: gone, leaving: true })
+  }
+  return out
 }
 
 // ── Layers and focus ────────────────────────────────────────
@@ -730,6 +785,38 @@ export function usePanel(open: boolean, options: { findable?: boolean; onReveal?
   })
   useIsoLayoutEffect(() => panel?.set(open), [panel, open])
   return { ref, triggerRef }
+}
+
+// ── Feedback and optimistic UI ──────────────────────────────
+
+/** idle → pending → success or error for one action, timed so nothing flickers. */
+export function useActionFeedback(options: ActionStateOptions = {}) {
+  const a = useOnce(() => createActionState(options))
+  useDestroy(a.destroy)
+  const state = useStore(a)
+  return { ...state, run: a.run, reset: a.reset }
+}
+
+/**
+ * A value that changes the moment the person acts and saves behind: pass the
+ * server's value and how to save; use shown in the part and set from it.
+ * A failed save puts the value back and tells onError, with retry.
+ */
+export function useOptimisticValue<T>(value: T, save: (v: T) => Promise<unknown>, options: Omit<OptimisticOptions<T>, "value" | "save"> = {}) {
+  const latest = useLatest({ save, options })
+  const o = useOnce(() =>
+    createOptimistic<T>({
+      value,
+      equal: options.equal,
+      save: (v) => latest.current.save(v),
+      onError: (m, retry, v) => latest.current.options.onError?.(m, retry, v),
+      onSaved: (v) => latest.current.options.onSaved?.(v),
+    })
+  )
+  useIsoLayoutEffect(() => o.sync(value), [o, value])
+  useDestroy(o.destroy)
+  const state = useStore(o)
+  return { ...state, set: o.set }
 }
 
 // ── Canvas ──────────────────────────────────────────────────

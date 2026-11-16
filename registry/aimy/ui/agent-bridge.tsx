@@ -7,7 +7,7 @@ import { Button } from "@/components/button"
 import { toast } from "@/components/toast"
 import { type AgentActivity, type AgentBridge, type AgentRequest, type AutonomyLevel, createAgentBridge } from "@/lib/behaviors-agent"
 import { AgentContext, useAgent, useAgentActivity } from "@/lib/behaviors-agent-react"
-import { useFlip, useLatest } from "@/lib/behaviors-react"
+import { useFlip, useLatest, useLeaving } from "@/lib/behaviors-react"
 import { cn } from "@/lib/utils"
 
 // Lets AiMY see and work the screen. Wrap a page in AgentProvider; parts
@@ -69,6 +69,8 @@ export function AgentProvider({ children, levelFor, webmcp, bridge: given, undoS
   return <AgentContext value={bridge}>{children}</AgentContext>
 }
 
+const useLeavingAsks = (list: Pending[]) => useLeaving(list, (p) => String(p.id))
+
 /** What AiMY is waiting for the person to accept ("ask" actions), as cards with Accept and Not now. */
 export function AgentAsks({ className }: { className?: string }) {
   const [list, setList] = useState<Pending[]>(pending)
@@ -76,15 +78,27 @@ export function AgentAsks({ className }: { className?: string }) {
     listeners.add(setList)
     return () => void listeners.delete(setList)
   }, [])
-  if (!list.length) return null
+  const shown = useLeavingAsks(list)
+  if (!shown.length) return null
   const answer = (p: Pending, ok: boolean) => {
     p.resolve(ok)
     setPending(pending.filter((x) => x.id !== p.id))
   }
   return (
     <ul data-slot="agent-asks" aria-label="Waiting for your answer" className={cn("flex flex-col gap-2", className)}>
-      {list.map((p) => (
-        <li key={p.id} role="group" aria-label={p.sentence} className="flex items-start gap-3 rounded-lg border border-edge bg-brand-dim p-3 transition-[opacity,translate] duration-(--t-slow) ease-out starting:translate-y-1 starting:opacity-0">
+      {shown.map(({ item: p, leaving }) => (
+        <li
+          key={p.id}
+          role={leaving ? undefined : "group"}
+          aria-hidden={leaving || undefined}
+          aria-label={leaving ? undefined : p.sentence}
+          className={cn(
+            "grid transition-[grid-template-rows,opacity,translate] duration-(--t-slow) ease-out starting:translate-y-1 starting:opacity-0",
+            leaving ? "pointer-events-none grid-rows-[0fr] opacity-0" : "grid-rows-[1fr]"
+          )}
+        >
+          <div className="min-h-0 overflow-hidden">
+          <div className="flex items-start gap-3 rounded-lg border border-edge bg-brand-dim p-3">
           <span className="flex h-[1lh] shrink-0 items-center text-meta">
             <AimyMark title="" className="h-3.5 w-3" />
           </span>
@@ -98,6 +112,8 @@ export function AgentAsks({ className }: { className?: string }) {
                 Not now
               </Button>
             </div>
+          </div>
+          </div>
           </div>
         </li>
       ))}
@@ -124,7 +140,13 @@ export function AgentLog({ className, limit = 8, everyone }: { className?: strin
       {activity.slice(0, limit).map((a) => (
         <li key={a.id} data-flip={a.id} className="flex items-baseline gap-3 rounded-md px-2 py-1.5 text-meta">
           <span className="min-w-0 flex-1 text-ink">{a.sentence}</span>
-          <span className={cn("shrink-0 text-2xs font-semibold", a.status === "done" ? "text-ok-text" : a.status === "failed" || a.status === "refused" ? "text-err-text" : "text-ink-secondary")}>
+          <span
+            key={a.status}
+            className={cn(
+              "shrink-0 text-2xs font-semibold transition-[opacity,translate] duration-(--t-base) ease-out starting:translate-y-0.5 starting:opacity-0",
+              a.status === "done" ? "text-ok-text" : a.status === "failed" || a.status === "refused" ? "text-err-text" : "text-ink-secondary"
+            )}
+          >
             {WORDS[a.status]}
           </span>
           {a.status === "done" && a.undo ? (
