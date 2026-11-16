@@ -210,7 +210,16 @@ export function createSwipeActions(
     },
     onCancel: () => store.set({ offset: 0, open: null, swiping: false }),
   })
-  return { ...store, close: () => store.set({ offset: 0, open: null }), destroy: off }
+  return {
+    ...store,
+    /** Opens to one side (keyboard focus reaching an action does this). */
+    open: (side: SwipeSide) => {
+      const size = side === "leading" ? lead : trail
+      if (size) store.set({ offset: side === "leading" ? size : -size, open: side })
+    },
+    close: () => store.set({ offset: 0, open: null }),
+    destroy: off,
+  }
 }
 
 // ── Hold and repeat ─────────────────────────────────────────

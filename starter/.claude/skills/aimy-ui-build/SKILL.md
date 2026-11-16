@@ -44,6 +44,8 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 - **Inputs** (`@aimy/field`): Wraps a form control with its label above and help or an error below, and wires them up: the control gets the id, aria-describedby and aria-invalid. https://aimy-ui-lib.aimy.flairstech.com/components/field/
 - **Search field** (`@aimy/search-field`): Find-as-you-type with a search icon, a clear button that appears only when there is text, and Escape to clear. https://aimy-ui-lib.aimy.flairstech.com/components/search-field/
 - **Select** (`@aimy/select`): The only select control; never a native <select>. https://aimy-ui-lib.aimy.flairstech.com/components/select/
+- **Combobox** (`@aimy/combobox`): Choose one option by typing to narrow a long list (an owner, a company, a product). https://aimy-ui-lib.aimy.flairstech.com/components/combobox/
+- **Inline edit** (`@aimy/inline-edit`): Rename or change one value where it sits: at rest it reads as its text with a pencil on hover and focus; pressed, it becomes the box field in the same size. https://aimy-ui-lib.aimy.flairstech.com/components/inline-edit/
 - **Checkbox** (`@aimy/checkbox`): A 17px box: brand fill and a white tick when on, a dash for some (checked="indeterminate"). https://aimy-ui-lib.aimy.flairstech.com/components/checkbox/
 - **Switch** (`@aimy/switch`): An on/off switch, 36 by 20: the brand when on. https://aimy-ui-lib.aimy.flairstech.com/components/switch/
 - **Segmented** (`@aimy/segmented`): Two to five mutually exclusive options in a pill, as a radiogroup: arrow keys move and choose. https://aimy-ui-lib.aimy.flairstech.com/components/segmented/
@@ -58,6 +60,7 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 - **Tooltip & popover** (`@aimy/tooltip`): A short hint on hover or keyboard focus, after 80ms (transitions.dev tooltip, 17). https://aimy-ui-lib.aimy.flairstech.com/components/tooltip/
 - **Disclosure** (`@aimy/disclosure`): Show or hide one section in place: a header with an optional count and a chevron, the body sliding open with transitions.dev accordion (21). https://aimy-ui-lib.aimy.flairstech.com/components/disclosure/
 - **Pager** (`@aimy/pager`): Paging in words: 1–15 of 134 contacts, page 1 of 9, with Back and Next text actions that say how many. https://aimy-ui-lib.aimy.flairstech.com/components/pager/
+- **Resizable panels** (`@aimy/resizable-panels`): Side-by-side or stacked panels with a handle between each pair: a hairline that turns brand on hover, drag and focus. https://aimy-ui-lib.aimy.flairstech.com/components/resizable-panels/
 
 ### Feedback & overlays
 
@@ -98,6 +101,9 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 - **Timeline** (`@aimy/timeline`): Sales' history of one record on a rail: a dot per touchpoint in the tone of how it went, a larger accent node where a step was climbed, month headings, an end cap saying where it began. https://aimy-ui-lib.aimy.flairstech.com/components/timeline/
 - **Data table** (`@aimy/data-table`): Records in columns, in Knowledge's two forms: rows (each row a card, one height, the first column takes its own line below 46rem) and table (a real table, zebra rows, sub-labels, scrolls sideways). https://aimy-ui-lib.aimy.flairstech.com/components/data-table/
 - **Windowed list** (`@aimy/virtual-list`): Sales' windowed list for long lists: only the rows near the view exist, about thirty at a time. https://aimy-ui-lib.aimy.flairstech.com/components/virtual-list/
+- **Tree** (`@aimy/tree`): Nested items you open and close (folders, teams, collections). https://aimy-ui-lib.aimy.flairstech.com/components/tree/
+- **Sortable list** (`@aimy/sortable-list`): A list people put in their own order. https://aimy-ui-lib.aimy.flairstech.com/components/sortable-list/
+- **Swipe row** (`@aimy/swipe-row`): A row on a phone that slides to show an action behind it (archive, snooze), with fullSwipe to run it in one move. https://aimy-ui-lib.aimy.flairstech.com/components/swipe-row/
 
 ### Charts
 

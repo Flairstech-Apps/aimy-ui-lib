@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils"
 // Undo can take back (act, then toast). Knowledge's settings modal
 // (.set2-modal): the card ground with an edge, 10px corners, a 20px title,
 // a body that scrolls, and a footer on the raised ground with the actions at
-// the end. Radix supplies what the products missed in places: focus moves in
+// the end. The dialog primitive supplies what the products missed in places: focus moves in
 // and is trapped, Escape closes, focus returns, the page behind can't scroll.
 // Opens and closes with transitions.dev's modal (06).
 export const Dialog = Primitive.Root

@@ -24,7 +24,7 @@ export default function Page() {
         </div>
       </Section>
       <Source>
-        <p>Knowledge&apos;s <code>.v2-dropdown</code> as drawn after its override: a pill with an inset ring, a brand ring while open, a raised panel with 10px corners, the chosen option on a brand wash in the AI ink with a 5px dot. Weight 500 (Knowledge used 600). The keyboard model matches Knowledge&apos;s hand-written one, through Radix. The panel opens and closes with transitions.dev&apos;s menu dropdown (05). Sales&apos; pick menus (<code>.b-menu</code>) are a different control, a menu, and come with Batch C.</p>
+        <p>Knowledge&apos;s <code>.v2-dropdown</code> as drawn after its override: a pill with an inset ring, a brand ring while open, a raised panel with 10px corners, the chosen option on a brand wash in the AI ink with a 5px dot. Weight 500 (Knowledge used 600). The keyboard model matches Knowledge&apos;s hand-written one, through AiMY&apos;s own behaviours (the select primitive). The panel opens and closes with transitions.dev&apos;s menu dropdown (05). Sales&apos; pick menus (<code>.b-menu</code>) are a different control, a menu, and come with Batch C.</p>
       </Source>
       <A11y items={["A combobox with a listbox: arrow keys, Home, End, typeahead, Enter and Escape, and focus returns to the select.","Name it with label, or put it in a Field."]} />
     </>

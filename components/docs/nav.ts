@@ -53,6 +53,8 @@ const LIBRARY: NavGroup[] = [
       { href: "/components/field/", label: "Inputs" },
       { href: "/components/search-field/", label: "Search field" },
       { href: "/components/select/", label: "Select" },
+      { href: "/components/combobox/", label: "Combobox" },
+      { href: "/components/inline-edit/", label: "Inline edit" },
       { href: "/components/checkbox/", label: "Checkbox" },
       { href: "/components/switch/", label: "Switch" },
       { href: "/components/segmented/", label: "Segmented" },
@@ -69,6 +71,7 @@ const LIBRARY: NavGroup[] = [
       { href: "/components/tooltip/", label: "Tooltip & popover" },
       { href: "/components/disclosure/", label: "Disclosure" },
       { href: "/components/pager/", label: "Pager" },
+      { href: "/components/resizable-panels/", label: "Resizable panels" },
     ],
   },
   {
@@ -119,6 +122,9 @@ const LIBRARY: NavGroup[] = [
       { href: "/components/timeline/", label: "Timeline" },
       { href: "/components/data-table/", label: "Data table" },
       { href: "/components/virtual-list/", label: "Windowed list" },
+      { href: "/components/tree/", label: "Tree" },
+      { href: "/components/sortable-list/", label: "Sortable list" },
+      { href: "/components/swipe-row/", label: "Swipe row" },
     ],
   },
   {

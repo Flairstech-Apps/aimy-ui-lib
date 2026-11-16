@@ -673,6 +673,49 @@
       ]
     },
     {
+      "name": "combobox",
+      "type": "registry:component",
+      "title": "Combobox",
+      "description": "Choose one option by typing to narrow a long list (an owner, a company, a product). The box field with Select's raised panel and rows; focus stays in the field, aria-activedescendant follows the highlight, each option can have a second line. Arrows, Enter, Escape; says when nothing matches. Built on the listbox behaviour.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/behaviors",
+        "@aimy/field",
+        "@aimy/popper-primitive"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/combobox.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "inline-edit",
+      "type": "registry:component",
+      "title": "Inline edit",
+      "description": "Rename or change one value where it sits: at rest it reads as its text with a pencil on hover and focus; pressed, it becomes the box field in the same size. Enter or leaving saves, Escape puts it back, validate refuses a value with a reason, a rejected save keeps the field open with its message, and focus comes back to the text.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/behaviors",
+        "@aimy/field"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/inline-edit.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "checkbox",
       "type": "registry:component",
       "title": "Checkbox",
@@ -838,6 +881,23 @@
       "files": [
         {
           "path": "registry/aimy/ui/pager.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "resizable-panels",
+      "type": "registry:component",
+      "title": "Resizable panels",
+      "description": "Side-by-side or stacked panels with a handle between each pair: a hairline that turns brand on hover, drag and focus. Arrows (Shift for ten), Home and End resize from the keyboard; sizes are percentages inside each panel's minimum.",
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/behaviors"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/resizable-panels.tsx",
           "type": "registry:component"
         }
       ]
@@ -2155,6 +2215,63 @@
       "files": [
         {
           "path": "registry/aimy/ui/virtual-list.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "tree",
+      "type": "registry:component",
+      "title": "Tree",
+      "description": "Nested items you open and close (folders, teams, collections). One Tab stop; arrows, Right to open or step in, Left to close or step out, * for siblings, letters to jump. Single choice on the brand wash, or checkable rows whose folders show all, some or none.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/behaviors"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/tree.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "sortable-list",
+      "type": "registry:component",
+      "title": "Sortable list",
+      "description": "A list people put in their own order. Drag a row's grip, or focus it and press Space, the arrows, Space; Escape puts it back; every step is announced. The moving row lifts and the others make room; the page scrolls near its edges.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/behaviors"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/sortable-list.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "swipe-row",
+      "type": "registry:component",
+      "title": "Swipe row",
+      "description": "A row on a phone that slides to show an action behind it (archive, snooze), with fullSwipe to run it in one move. Tab reaches each action and slides the row open, so it is never pointer-only.",
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/behaviors"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/swipe-row.tsx",
           "type": "registry:component"
         }
       ]

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 // The only select control (never a native <select>). Knowledge's
 // .v2-dropdown as the products draw it after Knowledge's override: a pill
 // with an inset ring, a brand ring while open, a raised panel, and the chosen
-// option in the AI ink with its dot. Radix supplies the keyboard model the
+// option in the AI ink with its dot. The select primitive supplies the keyboard model the
 // hand-written one had: arrow keys, Home and End, typeahead, Escape, focus
 // return. The panel opens and closes with transitions.dev's menu dropdown (05).
 type SelectProps = {

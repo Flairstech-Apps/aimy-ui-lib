@@ -41,7 +41,7 @@ function UsageMark({ usage, badge }: { usage: Usage; badge?: number }) {
           onPointerEnter={() => hover && later(() => setOpen(true), 220)}
           onPointerLeave={() => hover && later(() => setOpen(false), 240)}
           onFocus={() => setOpen(true)}
-          // A press pins it open (Radix would toggle it shut after focus opened it).
+          // A press pins it open (a plain trigger would toggle it shut after focus opened it).
           onClick={(e) => {
             e.preventDefault()
             setOpen(true)

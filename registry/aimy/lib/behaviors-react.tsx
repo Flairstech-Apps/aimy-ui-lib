@@ -465,17 +465,17 @@ export function useSwipeActions(options: Parameters<typeof createSwipeActions>[1
   const [el, ref] = useElement()
   const latest = useLatest(options)
   const [state, setState] = useState({ offset: 0, open: null as "leading" | "trailing" | null, swiping: false })
-  const [api, setApi] = useState<{ close(): void } | null>(null)
+  const [api, setApi] = useState<{ close(): void; open(side: "leading" | "trailing"): void } | null>(null)
   useBind(el, (row) => {
     const s = createSwipeActions(row, { ...latest.current, onAction: (side) => latest.current.onAction?.(side) })
     const off = s.subscribe(setState)
-    setApi({ close: s.close })
+    setApi({ close: s.close, open: s.open })
     return () => {
       off()
       s.destroy()
     }
   })
-  return { ref, ...state, close: () => api?.close() }
+  return { ref, ...state, close: () => api?.close(), open: (side: "leading" | "trailing") => api?.open(side) }
 }
 
 export function useHold(options: Parameters<typeof bindHold>[1]) {

@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 // - MenuRadioGroup / MenuRadioItem: one answer (closes), like the persona list.
 // - MenuCheckboxItem: several answers; the menu stays open while you pick.
 // - MenuLabel: a caption at the top; MenuSearch filters long lists in place.
-// Radix supplies what Sales' menus lacked: arrow keys, Home and End,
+// The menu primitive supplies what Sales' menus lacked: arrow keys, Home and End,
 // typeahead, aria-expanded on the opener, and focus back on close.
 // Opens and closes with transitions.dev's menu dropdown (05), which is the
 // same timing Sales' own menus used.

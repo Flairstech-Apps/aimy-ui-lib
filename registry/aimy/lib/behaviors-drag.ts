@@ -92,6 +92,8 @@ export function bindDrag(el: HTMLElement, options: DragOptions): Cleanup {
     if (!dragging) {
       if (Math.hypot(i.delta.x, i.delta.y) < threshold) return
       dragging = true
+      // A drag is not a text selection: drop any the press began.
+      window.getSelection?.()?.removeAllRanges()
       el.setPointerCapture?.(e.pointerId)
       options.onStart?.(i, e)
     }

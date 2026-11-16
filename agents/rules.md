@@ -80,6 +80,8 @@ Presentations:
 
 Behaviours (building a part the library doesn't have):
 
+- First check the parts already built on them: `Combobox` (type to choose from a long list), `InlineEdit` (change one value where it sits), `Tree`, `SortableList` (people's own order), `SwipeRow` (phone row actions, never the only way), `ResizablePanels`.
+
 - Take its behaviour from `@aimy/behaviors` (`@/lib/behaviors` and the hooks in `@/lib/behaviors-react`; in the package, `@flairstech-aimy/ui/behaviors`) and its look from the tokens. Keyboard, focus, selection, dragging, resizing, trees, layers and gestures are all there; never hand-write them.
 - Every pointer gesture needs a keyboard path (Space to pick up, the arrows, Space to drop, Escape to cancel), and the behaviour's announcement for screen readers.
 - A floating panel uses the primitives (`@aimy/popover-primitive`, `menu-primitive`, `select-primitive`, `tooltip-primitive`, `dialog-primitive`), never its own outside-click or Escape code.
