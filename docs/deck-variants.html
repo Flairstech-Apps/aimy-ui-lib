@@ -84,8 +84,9 @@
   .sl-card.is-did .sl-card-label { color: var(--accent-text); }
 
   /* ═════════════════ REVEAL ═════════════════
-     transitions.dev 18 (text reveal), lines ordered by --i on the large stagger.
-     A line waits for the camera (fast) before it rises; leaving is quick. */
+     transitions.dev 18 (text reveal), lines ordered by --i on the large stagger;
+     titles arrive word by word (30). --lead is how long a line waits: the
+     camera's move, or the logo's whole flight when the logo is travelling. */
   .rv, .rv-w {
     opacity: 0; transform: translateY(var(--distance-medium)); filter: blur(var(--blur-medium));
     transition: opacity var(--duration-quick) var(--ease-smooth-out), transform var(--duration-quick) var(--ease-smooth-out), filter var(--duration-quick) var(--ease-smooth-out);
@@ -93,64 +94,62 @@
   [data-state="now"] .rv, [data-state="now"] .rv-w {
     opacity: 1; transform: none; filter: none;
     transition-duration: var(--duration-very-slow);
-    transition-delay: calc(var(--duration-fast) + var(--i, 0) * var(--duration-micro));
+    transition-delay: calc(var(--lead, var(--duration-fast)) + var(--i, 0) * var(--duration-micro));
   }
-  /* transitions.dev 30 (words): one word after another on the stagger step. */
   .rv-w { display: inline-block; }
-  [data-state="now"] .rv-w { transition-delay: calc(var(--duration-fast) + var(--w) * var(--duration-stagger) * 2); }
+  [data-state="now"] .rv-w { transition-delay: calc(var(--lead, var(--duration-fast)) + var(--w) * var(--duration-stagger) * 2); }
+  /* A card that lands rather than rises: the spring of a press that settles. */
+  .rv.is-pop { transform: translateY(var(--distance-medium)) scale(var(--scale-large)); }
+  [data-state="now"] .rv.is-pop { transform: none; transition-timing-function: var(--ease-spring); }
 
-  /* ═════════════════ A. TRACK ═════════════════ */
-  .trk-glow {
-    position: absolute; inset: -200px -900px -200px -200px;
-    background:
-      radial-gradient(ellipse at 15% 90%, rgba(var(--brand-rgb), 0.24), transparent 55%),
-      radial-gradient(ellipse at 70% 10%, rgba(var(--accent-rgb), 0.16), transparent 50%);
-    transition: transform var(--duration-very-slow) var(--ease-smooth-out);
-  }
-  .trk-strip { position: absolute; left: 0; top: 0; height: 1080px; transition: transform var(--duration-very-slow) var(--ease-smooth-out); }
-  .trk-line { position: absolute; left: -600px; top: 800px; height: 2px; background: var(--w12); }
-  .trk-fill { position: absolute; left: 0; top: 799px; height: 4px; border-radius: 2px; background: var(--ai); transform-origin: 0 50%; transition: transform var(--duration-very-slow) var(--ease-smooth-out); }
-  .trk-stop { position: absolute; top: 0; width: 1080px; height: 1080px; }
-  .trk-copy { position: absolute; left: 0; bottom: 340px; width: 1080px; }
-  .trk-copy .sl-display { font-size: 112px; }
-  .trk-dot { position: absolute; left: -14px; top: 787px; width: 28px; height: 28px; border-radius: 50%; background: var(--body-bg); box-shadow: inset 0 0 0 3px var(--w25); }
-  .trk-dot::after { content: ""; position: absolute; inset: -12px; border-radius: 50%; background: var(--brand-dim); box-shadow: 0 0 48px var(--brand-glow); opacity: 0; transform: scale(0.5); transition: opacity var(--duration-quick), transform var(--duration-quick) var(--ease-smooth-out); z-index: -1; }
-  [data-state="done"] > .trk-dot, [data-state="now"] > .trk-dot { background: var(--brand); box-shadow: none; }
-  [data-state="now"] > .trk-dot::after { opacity: 1; transform: none; transition-duration: var(--duration-very-slow); transition-delay: var(--duration-fast); }
-  .trk-label { position: absolute; left: 0; top: 844px; font-size: 28px; line-height: 1.3; color: var(--ink-secondary); white-space: nowrap; }
-  .trk-label b { font-weight: 600; color: var(--ink-primary); margin-right: 12px; }
-  [data-state="now"] > .trk-label { color: var(--ink-primary); }
+  /* ═════════════════ MOTION KIT ═════════════════
+     Borrowed from the Chrome extension (Knowledge/extension): the logo flight,
+     the thinking mark and the ambient field. */
 
-  /* ═════════════════ B. SPINE ═════════════════ */
-  .spn-glow { position: absolute; inset: 0; background: radial-gradient(ellipse at 90% 100%, rgba(var(--brand-rgb), 0.18), transparent 55%), radial-gradient(ellipse at 0% 0%, rgba(var(--cyan-rgb), 0.08), transparent 45%); }
-  .spn-list { position: absolute; left: 120px; top: 232px; width: 600px; margin: 0; padding: 0; list-style: none; }
-  .spn-rail, .spn-fill { position: absolute; left: 195px; top: 19px; width: 2px; height: calc((var(--rows) - 1) * 112px); background: var(--w12); }
-  .spn-fill { width: 4px; left: 194px; border-radius: 2px; background: linear-gradient(180deg, #0066ff, #45d3e6); transform-origin: 50% 0; transition: transform var(--duration-very-slow) var(--ease-smooth-out); }
-  .spn-row { position: relative; display: grid; grid-template-columns: 150px 92px 1fr; align-items: start; height: 112px; }
-  .spn-when { text-align: right; font-size: 24px; line-height: 39px; font-weight: 500; color: var(--ink-secondary); }
-  .spn-dot { justify-self: center; margin-top: 5.5px; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--body-bg); box-shadow: inset 0 0 0 3px var(--w25); color: var(--body-bg); }
-  .spn-dot svg { width: 16px; height: 16px; opacity: 0; }
-  .spn-name { font-size: 30px; line-height: 39px; font-weight: 500; color: var(--ink-secondary); }
-  .spn-name em { display: none; font-style: normal; font-size: 22px; line-height: 1.4; font-weight: 500; }
-  .spn-row[data-state="ahead"] .is-ahead, .spn-row[data-state="now"] .is-now, .spn-row[data-state="done"] .is-done { display: block; }
-  .spn-name .is-ahead { color: var(--ink-secondary); }
-  .spn-name .is-now { color: var(--ink-action); }
-  .spn-name .is-done { color: var(--ok-text); }
-  .spn-row[data-state="now"] .spn-name { color: var(--ink-primary); font-weight: 600; }
-  .spn-row[data-state="now"] .spn-when { color: var(--ink-primary); }
-  .spn-row[data-state="now"] .spn-dot { background: var(--brand); box-shadow: 0 0 0 10px var(--brand-dim), 0 0 40px var(--brand-glow); }
-  .spn-row[data-state="done"] .spn-dot { background: var(--ok); box-shadow: none; }
-  .spn-row[data-state="done"] .spn-dot svg { opacity: 1; }
-  .spn-pane { position: absolute; left: 820px; right: 120px; top: 180px; bottom: 120px; }
-  .spn-panel { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; }
-  .spn-panel .sl-display { font-size: 100px; }
-  .spn-panel .sl-title { font-size: 76px; }
-  .spn-panel .sl-body { font-size: 32px; }
-  .spn-figure { display: flex; align-items: baseline; gap: 36px; margin-top: 16px; }
-  .spn-figure .sl-figure { font-size: 200px; }
-  .spn-figure .sl-lede { margin: 0; font-size: 36px; max-width: 520px; }
-  .spn-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
-  .spn-pair .sl-card { font-size: 28px; }
+  /* The header lockup, split so the mark can land and the word can follow.
+     Sizes are the lockup's own geometry at 44px: the word is 68.54/147.66 of
+     the mark's height, 14.1 units after it, its top 39.6 units down. */
+  .brand { display: flex; align-items: flex-start; }
+  .brand-anchor { position: relative; width: 45.1px; height: 44px; flex: none; }
+  .brand-icon { display: block; width: 100%; height: 100%; opacity: 0; }
+  .brand-anchor.is-on .brand-icon { opacity: 1; }
+  .brand-anchor.is-landing .brand-icon { animation: mk-land 260ms var(--ease-spring); }
+  @keyframes mk-land { from { transform: scale(1.14); } to { transform: scale(1); } }
+  .brand-think { position: absolute; left: -12px; top: -12px; width: 69px; height: 68px; opacity: 0; pointer-events: none; }
+  .brand-anchor.is-thinking .brand-icon { opacity: 0; }
+  .brand-anchor.is-thinking .brand-think { opacity: 1; }
+  .brand-word { display: block; width: 75.6px; height: 20.4px; margin: 11.8px 0 0 4.2px; clip-path: inset(0 100% 0 0); }
+  /* Wipes out from behind the mark rather than fading in place (the extension's word-reveal). */
+  .brand-word.is-on { animation: mk-word 380ms ease-out 60ms forwards; }
+  @keyframes mk-word { from { clip-path: inset(0 100% 0 0); transform: translateX(-6px); opacity: 0.35; } to { clip-path: inset(0 -2px 0 0); transform: none; opacity: 1; } }
+
+  /* The mark in flight, moved by the Web Animations API, and the places it rests. */
+  .mk-fly { position: absolute; z-index: 8; left: 0; top: 0; visibility: hidden; transform-origin: center; will-change: transform; pointer-events: none; }
+  .mk-fly svg { display: block; width: 100%; height: 100%; }
+  .mk-spot { position: relative; display: block; flex: none; width: 150px; height: 146.3px; margin-bottom: 36px; }
+  .mk-halo { position: absolute; inset: -80px; border-radius: 50%; background: radial-gradient(closest-side, rgba(76, 90, 249, 0.34), transparent); }
+
+  /* The ambient field: two blooms on 29s and 37s (coprime, so they never fall
+     into a beat) and dust rising on its own cycles. */
+  .sl { --mote: rgba(226, 238, 255, 0.85); }
+  [data-theme="light"] .sl { --mote: rgba(29, 78, 216, 0.55); --o-mul: 0.8; }
+  .mk-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  [data-theme="light"] .mk-field { opacity: 0.6; }
+  .mk-bloom { position: absolute; inset: -20%; will-change: transform, opacity; }
+  .mk-bloom.is-a { background: radial-gradient(ellipse at 30% 50%, rgba(0, 102, 255, 0.36) 0%, rgba(97, 173, 241, 0.2) 28%, transparent 60%); animation: mk-drift-a 29s var(--ease-smooth-out) infinite alternate; }
+  .mk-bloom.is-b { background: radial-gradient(ellipse at 75% 70%, rgba(111, 223, 226, 0.2) 0%, rgba(139, 79, 244, 0.14) 38%, transparent 60%); animation: mk-drift-b 37s var(--ease-smooth-out) infinite alternate; }
+  @keyframes mk-drift-a { from { transform: translate3d(-9%, -5%, 0) scale(1); opacity: 0.72; } to { transform: translate3d(10%, 6%, 0) scale(1.32); opacity: 1; } }
+  @keyframes mk-drift-b { from { transform: translate3d(7%, 8%, 0) scale(1.26); opacity: 0.55; } to { transform: translate3d(-10%, -6%, 0) scale(1); opacity: 0.95; } }
+  .mk-mote { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); border-radius: 50%; background: var(--mote); opacity: 0; will-change: transform, opacity; animation: mk-mote var(--d) linear infinite; animation-delay: calc(var(--i) * -1.7s); }
+  @keyframes mk-mote { 0% { transform: translate3d(0, 0, 0); opacity: 0; } 18% { opacity: calc(var(--o) * var(--o-mul, 1)); } 76% { opacity: calc(var(--o) * var(--o-mul, 1)); } 100% { transform: translate3d(var(--dx), var(--t), 0); opacity: 0; } }
+
+  /* A moment arriving: its mark rings once (badge pop timing). */
+  @keyframes mk-ping { from { transform: scale(1); opacity: 0.8; } to { transform: scale(3.4); opacity: 0; } }
+
+  /* A light that runs along the timeline to the next moment, head first. */
+  .mk-comet { position: absolute; z-index: 3; left: 0; top: 0; width: 240px; height: 6px; margin: -3px 0 0 -240px; border-radius: 3px; transform-origin: 100% 50%; opacity: 0; pointer-events: none; background: linear-gradient(90deg, transparent, rgba(var(--cyan-rgb), 0.9) 70%, var(--comet-head)); box-shadow: 0 0 18px rgba(var(--cyan-rgb), 0.6); }
+  .sl { --comet-head: #fff; }
+  [data-theme="light"] .sl { --comet-head: var(--brand); }
 
   /* ═════════════════ C. HORIZON ═════════════════
      The landing footer's orb horizon (app/globals.css .horizon-glow and
@@ -163,8 +162,6 @@
     --lat2: color-mix(in oklab, var(--accent-text) 22%, transparent);
     --lat3: color-mix(in oklab, var(--accent-text) 13%, transparent);
     background:
-      radial-gradient(24% 8% at 50% 0%, color-mix(in oklab, var(--accent) 30%, transparent), transparent),
-      radial-gradient(14% 4% at 50% 0%, color-mix(in oklab, var(--brand) 26%, transparent), transparent),
       radial-gradient(closest-side,
         transparent 64.8%, var(--lat3) 65%, transparent 65.25%,
         transparent 77.3%, var(--lat2) 77.5%, transparent 77.72%,
@@ -176,80 +173,60 @@
     border-top: 1px solid color-mix(in oklab, var(--accent-text) 70%, transparent);
     box-shadow: 0 -1px 16px color-mix(in oklab, var(--accent) 55%, transparent), 0 -40px 120px -24px color-mix(in oklab, var(--brand) 45%, transparent);
   }
-  .hzn-orb { position: absolute; z-index: 1; left: 0; top: 0; width: 600px; height: 600px; transition: transform var(--duration-very-slow) var(--ease-smooth-out); }
+  /* The orb's light on the ground follows the orb (the ground's own reflection, made movable). */
+  .hzn-reflect { position: absolute; z-index: 2; left: 0; top: var(--line); width: 900px; height: 150px; margin: -10px 0 0 -450px; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, color-mix(in oklab, var(--accent) 34%, transparent), color-mix(in oklab, var(--brand) 14%, transparent) 55%, transparent); transition: transform 760ms var(--ease-smooth-out); }
+  .hzn-orb { position: absolute; z-index: 1; left: 0; top: 0; width: 600px; height: 600px; will-change: transform; }
   .hzn-orb canvas { display: block; width: 100%; height: 100%; }
   .hzn-ticks { position: absolute; z-index: 3; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
-  .hzn-tick { position: absolute; top: var(--line); width: 280px; translate: -50% 0; text-align: center; }
-  .hzn-mark { display: block; width: 12px; height: 12px; margin: -6px auto 0; border-radius: 50%; background: var(--accent-text); }
+  .hzn-tick { position: absolute; width: 280px; translate: -50% 0; text-align: center; }
+  .hzn-mark { position: relative; display: block; width: 12px; height: 12px; margin: -6px auto 0; border-radius: 50%; background: var(--accent-text); }
+  .hzn-mark::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--ai-ink); opacity: 0; }
+  .hzn-tick[data-state="now"] .hzn-mark::after { animation: mk-ping 900ms var(--ease-smooth-out) var(--lead, 250ms) both; }
   .hzn-tick b { display: block; margin-top: 28px; font-size: 26px; line-height: 1.3; font-weight: 600; color: var(--ink-secondary); }
   .hzn-tick span { display: block; font-size: 24px; line-height: 1.4; color: var(--ink-secondary); }
   .hzn-tick[data-state="now"] b, .hzn-tick[data-state="now"] span { color: var(--ink-primary); }
   .hzn-tick[data-state="done"] .hzn-mark { background: var(--ai-ink); }
-  .hzn-panel { position: absolute; z-index: 3; left: 160px; right: 160px; top: 190px; display: flex; flex-direction: column; align-items: center; text-align: center; pointer-events: none; }
-  .hzn-panel .sl-display { max-width: 1400px; }
-  .hzn-panel .sl-body { max-width: 1100px; }
-  .hzn-panel .sl-lede { max-width: 1100px; }
+  .hzn-panel { position: absolute; z-index: 3; left: 160px; right: 160px; top: 150px; display: flex; flex-direction: column; align-items: center; text-align: center; pointer-events: none; }
+  .hzn-panel .sl-display { max-width: 1400px; font-size: 104px; }
+  .hzn-panel .sl-body, .hzn-panel .sl-lede { max-width: 1100px; }
+  .hzn-panel .sl-title { max-width: 1500px; }
 
   /* ═════════════════ D. TWO LANES ═════════════════ */
   .lns-axis { position: absolute; left: 0; right: 0; top: 540px; height: 2px; background: var(--w12); transition: opacity var(--duration-medium) var(--ease-smooth-out); }
-  .lns[data-edge] .lns-axis { opacity: 0; }
-  .lns-glow { position: absolute; inset: 0; background: radial-gradient(ellipse at 100% 0%, rgba(var(--brand-rgb), 0.16), transparent 50%), radial-gradient(ellipse at 100% 100%, rgba(var(--accent-rgb), 0.14), transparent 50%); }
-  .lns-strip { position: absolute; left: 0; top: 0; height: 1080px; transition: transform var(--duration-very-slow) var(--ease-smooth-out); }
+  .lns-strip { position: absolute; left: 0; top: 0; height: 1080px; transition: transform var(--duration-very-slow) var(--ease-smooth-out), opacity var(--duration-medium) var(--ease-smooth-out); }
+  .lns-fill { position: absolute; left: 12px; top: 539px; height: 4px; border-radius: 2px; background: var(--ai); transform-origin: 0 50%; transition: transform var(--duration-very-slow) var(--ease-smooth-out); }
+  .lns-comet { top: 541px; }
+  .lns[data-edge] .lns-axis, .lns[data-edge] .lns-strip, .lns[data-edge] .lns-lane { opacity: 0; }
   .lns-col { position: absolute; top: 0; width: 560px; height: 1080px; }
   .lns-up { position: absolute; left: 0; bottom: 600px; width: 560px; }
   .lns-down { position: absolute; left: 0; top: 600px; width: 560px; }
   .lns-dot { position: absolute; left: 0; top: 529px; width: 24px; height: 24px; border-radius: 50%; background: var(--body-bg); box-shadow: inset 0 0 0 3px var(--w25); }
+  .lns-dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--brand); opacity: 0; }
   .lns-col[data-state="now"] .lns-dot { background: var(--brand); box-shadow: 0 0 0 10px var(--brand-dim), 0 0 40px var(--brand-glow); }
+  .lns-col[data-state="now"] .lns-dot::after { animation: mk-ping 900ms var(--ease-smooth-out) var(--lead, 250ms) both; }
   .lns-col[data-state="done"] .lns-dot { background: var(--brand); box-shadow: none; }
   .lns-when { position: absolute; left: 36px; top: 541px; translate: 0 -50%; padding: 0 14px; background: var(--body-bg); font-size: 26px; line-height: 1.3; font-weight: 600; color: var(--ink-secondary); white-space: nowrap; }
   .lns-col[data-state="now"] .lns-when { color: var(--ink-primary); }
   .lns-link { position: absolute; left: 260px; top: 486px; width: 40px; height: 108px; overflow: visible; }
   .lns-link path { fill: none; stroke: var(--accent-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset var(--duration-quick) var(--ease-smooth-out); }
-  .lns-col[data-state="now"] .lns-link path { stroke-dashoffset: 0; transition-duration: var(--duration-very-slow); transition-delay: calc(var(--duration-fast) + var(--duration-micro) * 3); }
+  .lns-col[data-state="now"] .lns-link path { stroke-dashoffset: 0; transition-duration: var(--duration-very-slow); transition-delay: calc(var(--lead, var(--duration-fast)) + var(--duration-micro) * 2); }
   .lns-col[data-state="done"] .lns-link path { stroke-dashoffset: 0; stroke: var(--w25); }
   /* Past columns stay in the story at full strength, on a plain ground. */
   .lns-col[data-state="done"] .rv { opacity: 1; transform: none; filter: none; }
   .lns-col[data-state="done"] .sl-card { background: var(--w03); border-color: var(--w07); }
   .lns-col[data-state="done"] .sl-card .sl-card-label { color: var(--ink-secondary); }
-  .lns-figure { display: block; font-size: 120px; line-height: 1; font-weight: 600; letter-spacing: -0.04em; margin-bottom: 8px; }
-  .lns-gutter { position: absolute; z-index: 3; left: 0; top: 0; bottom: 0; width: 400px; background: var(--body-bg); }
-  .lns-gutter .sl-lockup { position: absolute; left: 120px; top: 72px; }
+  .lns-figure { display: block; font-size: 120px; line-height: 1; font-weight: 600; letter-spacing: -0.04em; margin-bottom: 8px; font-variant-numeric: tabular-nums; }
+  /* Columns travel in a window right of the lane labels, so they clip there without a solid band over the field. */
+  .lns-view { position: absolute; left: 400px; right: 0; top: 0; bottom: 0; overflow: hidden; }
+  .lns-gutter { position: absolute; z-index: 3; left: 0; top: 0; bottom: 0; width: 400px; }
   .lns-lane { position: absolute; left: 120px; width: 250px; font-size: 20px; line-height: 1.35; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; transition: opacity var(--duration-medium); }
   .lns-lane.is-up { bottom: 560px; color: var(--ink-action); }
   .lns-lane.is-down { top: 560px; color: var(--accent-text); }
-  .lns[data-edge] .lns-lane { opacity: 0; }
-  .lns-panel { position: absolute; z-index: 4; left: 440px; width: 1200px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; pointer-events: none; }
-
-  /* ═════════════════ E. RUN ═════════════════ */
-  .run-glow { position: absolute; inset: 0; background: radial-gradient(ellipse at 100% 100%, rgba(var(--brand-rgb), 0.18), transparent 55%), radial-gradient(ellipse at 60% 0%, rgba(var(--accent-rgb), 0.12), transparent 50%); }
-  .run-card { position: absolute; left: 96px; top: 96px; bottom: 96px; width: 680px; box-sizing: border-box; padding: 40px; display: flex; flex-direction: column; border-radius: 28px; background: var(--card-bg); border: 1px solid var(--card-border); box-shadow: var(--shadow-lg); }
-  .run-top { display: flex; align-items: center; gap: 16px; }
-  .run-tile { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: var(--aimy-tile); box-shadow: inset 0 0 0 1px var(--aimy-tile-edge); }
-  .run-tile svg { width: 30px; height: 30px; }
-  .run-top b { font-size: 30px; font-weight: 600; }
-  .run-status { margin-left: auto; padding: 6px 18px; border-radius: 9999px; font-size: 22px; font-weight: 500; background: var(--brand-dim); color: var(--ink-action); }
-  .run-status[data-done] { background: var(--ok-bg); color: var(--ok-text); }
-  .run-ask { align-self: flex-end; max-width: 480px; margin: 40px 0 36px; padding: 18px 24px; border-radius: 20px 4px 20px 20px; background: var(--accent-dim); border: 1px solid rgba(var(--accent-rgb), 0.22); font-size: 28px; line-height: 1.4; }
-  .run-steps { margin: 0; padding: 0; list-style: none; }
-  .run-step { display: grid; grid-template-columns: 52px 1fr auto; align-items: start; padding: 22px 0; border-top: 1px solid var(--w07); }
-  .run-icon { width: 32px; height: 32px; margin-top: 3.5px; border-radius: 50%; display: grid; place-items: center; box-shadow: inset 0 0 0 3px var(--w25); color: var(--body-bg); box-sizing: border-box; }
-  .run-icon svg { width: 18px; height: 18px; opacity: 0; }
-  .run-name { font-size: 28px; line-height: 39px; color: var(--ink-secondary); }
-  .run-when { font-size: 22px; line-height: 39px; color: var(--ink-secondary); }
-  .run-step[data-state="now"] .run-name, .run-step[data-state="done"] .run-name { color: var(--ink-primary); }
-  .run-step[data-state="now"] .run-name { font-weight: 600; }
-  .run-step[data-state="now"] .run-icon { box-shadow: none; border: 3px solid var(--brand-dim); border-top-color: var(--brand); animation: run-spin calc(var(--duration-very-slow) * 2) var(--ease-linear) infinite; }
-  .run-step[data-state="done"] .run-icon { background: var(--ok); box-shadow: none; }
-  .run-step[data-state="done"] .run-icon svg { opacity: 1; }
-  @keyframes run-spin { to { transform: rotate(1turn); } }
-  .run-pane { position: absolute; left: 880px; right: 120px; top: 96px; bottom: 96px; }
-  .run-panel { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; }
-  .run-panel .sl-display { font-size: 104px; }
-  .run-panel .sl-title { font-size: 80px; }
-  .run-from { margin-top: 56px; }
+  .lns-panel { position: absolute; z-index: 4; left: 440px; width: 1200px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; pointer-events: none; }
 
   @media (prefers-reduced-motion: reduce) {
     .dk-stage *, .dk-stage *::after { transition-duration: 0ms !important; transition-delay: 0ms !important; animation: none !important; }
+    .brand-word.is-on { clip-path: none; }
   }
 </style>
 </head>
@@ -259,53 +236,38 @@
     <radialGradient id="aimy-rg" cx="75.72" cy="73.83" fx="75.72" fy="73.83" r="70.54" gradientUnits="userSpaceOnUse"><stop offset="0.26" stop-color="#8c4ff4"/><stop offset="0.36" stop-color="#8250f4"/><stop offset="0.51" stop-color="#6954f6"/><stop offset="0.7" stop-color="#3f5bf9"/><stop offset="0.92" stop-color="#0764fe"/><stop offset="0.95" stop-color="#0066ff"/></radialGradient>
     <symbol id="aimy-mark" viewBox="0 0 151.43 147.66"><path fill="var(--aimy-mark, url(#aimy-rg))" d="m84.2,6.76c1.09-2.9,3.26-3.67,6.2-3.46,3.04.21,6.12-.04,9.17.09,3.09.13,4.19,1.99,2.72,4.73-2.8,5.23-5.69,10.4-8.64,15.54-.91,1.59-1.31,2.9-.3,4.69,1.09,1.94,1.68,4.16,2.47,6.27.56,1.48,1.14,2.9,3.1,2.84,2.03-.06,2.38-1.54,2.71-3.11,1.1-5.1,2.22-10.19,3.39-15.28.66-2.88,1.64-3.2,3.7-1.18,3.15,3.08,6.22,6.25,9.37,9.33,1.29,1.26,1.36,2.4.1,3.7-1.25,1.29-2.47,2.62-3.66,3.97-.61.69-1.13,1.49-.46,2.42.68.94,1.55.61,2.42.27,4.51-1.8,9.04-3.53,13.53-5.39,1.83-.76,3.32-.47,4.67.87,2.49,2.47,5.04,4.9,7.42,7.47,2.54,2.73,1.91,4.74-1.77,5.82-5.69,1.67-11.39,3.26-17.1,4.85-1.37.38-2.26.89-2.75,2.47-.76,2.47-2.02,4.8-3.1,7.17-.61,1.35-.72,2.59.51,3.68,1.25,1.11,2.44.75,3.68-.05,4.53-2.92,9.07-5.83,13.64-8.69,2.5-1.57,3.33-1.08,3.36,1.91.04,4.22-.08,8.45.05,12.67.07,2.39-.98,3.24-3.21,3.2-1.53-.03-3.06.06-4.59.14-1.02.06-2.06.26-2.2,1.52-.13,1.15.81,1.46,1.65,1.82,4.29,1.85,8.54,3.8,12.88,5.53,2.16.86,3.1,2.23,3.06,4.5-.06,3.33.02,6.65-.04,9.98-.08,3.82-1.88,4.89-5.2,3.07-5.2-2.84-10.38-5.72-15.53-8.66-1.34-.76-2.38-1.03-3.92-.2-2.28,1.22-4.82,1.95-7.26,2.86-1.4.53-2.29,1.38-2.17,3,.13,1.67,1.24,2.19,2.69,2.5,5.27,1.12,10.53,2.27,15.78,3.49,2.92.67,3.16,1.56,1.07,3.69-3.09,3.14-6.26,6.21-9.33,9.38-1.27,1.3-2.36,1.38-3.66.09-1.27-1.27-2.63-2.45-3.98-3.65-.69-.62-1.48-1.14-2.42-.5-.97.66-.64,1.53-.29,2.4,1.76,4.42,3.43,8.88,5.28,13.26.95,2.24.47,3.9-1.24,5.51-2.23,2.09-4.32,4.33-6.51,6.47-3.13,3.06-5.22,2.5-6.45-1.76-1.58-5.52-3.13-11.05-4.64-16.59-.4-1.48-1.02-2.39-2.66-2.9-2.39-.74-4.62-1.97-6.92-3.01-1.43-.65-2.78-.8-3.9.57-1.05,1.29-.54,2.46.25,3.69,2.88,4.45,5.73,8.92,8.55,13.41,1.65,2.62,1.17,3.48-1.98,3.52-4.14.05-8.28-.06-12.41.06-2.47.07-3.33-1.01-3.38-3.37-.04-1.94.39-3.96-.55-5.82-1.74-2.18-2.36-.35-2.92.91-1.76,3.94-3.56,7.87-5.08,11.9-1.11,2.96-2.92,4.25-6.1,4.03-2.77-.2-5.57-.01-8.36-.06-4.27-.07-5.4-1.95-3.37-5.63,2.74-4.95,5.49-9.9,8.31-14.8.9-1.56,1.33-2.86.29-4.67-1.15-2-1.75-4.32-2.56-6.51-.53-1.44-1.25-2.6-3.04-2.53-1.83.08-2.32,1.31-2.64,2.85-1.1,5.18-2.24,10.36-3.44,15.52-.67,2.88-1.65,3.17-3.72,1.13-3.08-3.02-6.08-6.14-9.19-9.14-1.49-1.44-1.54-2.68-.06-4.1,1.1-1.06,2.11-2.22,3.13-3.36.73-.81,1.57-1.72.72-2.83-.76-1-1.8-.44-2.72-.08-4.27,1.69-8.56,3.31-12.78,5.1-2.23.95-3.93.54-5.56-1.18-2.29-2.42-4.75-4.67-7.02-7.1-2.34-2.51-1.78-4.64,1.49-5.62,5.6-1.67,11.22-3.27,16.86-4.79,1.77-.48,2.96-1.11,3.53-3.1.67-2.31,1.91-4.45,2.9-6.66.65-1.44.72-2.79-.65-3.89-1.32-1.05-2.45-.47-3.67.32-4.36,2.84-8.76,5.65-13.17,8.41-2.76,1.73-3.71,1.23-3.74-1.95-.04-4.14.09-8.28-.03-12.41-.06-2.34.89-3.26,3.18-3.21,1.7.04,3.41-.17,5.12-.3.87-.06,1.62-.4,1.76-1.36.15-1-.58-1.41-1.36-1.75-4.37-1.89-8.7-3.87-13.12-5.63-2.25-.9-3.23-2.35-3.19-4.71.06-3.33-.07-6.66.04-9.98.12-3.56,2.07-4.64,5.2-2.93,5.13,2.79,10.23,5.62,15.3,8.52,1.5.86,2.72,1.22,4.44.29,2.12-1.15,4.5-1.81,6.77-2.67,1.47-.55,2.53-1.38,2.37-3.15-.15-1.68-1.35-2.16-2.76-2.46-5.19-1.13-10.37-2.25-15.55-3.44-2.86-.66-3.17-1.67-1.16-3.73,3.02-3.09,6.14-6.07,9.13-9.19,1.44-1.51,2.67-1.53,4.1-.06,1.07,1.09,2.21,2.12,3.36,3.12.8.7,1.66,1.64,2.81.74,1-.78.45-1.8.08-2.71-1.69-4.27-3.3-8.56-5.1-12.78-.97-2.26-.48-3.92,1.19-5.56,2.24-2.2,4.29-4.6,6.51-6.82,2.52-2.52,5.28-1.85,6.29,1.53,1.68,5.69,3.31,11.4,4.86,17.13.42,1.53,1.09,2.38,2.7,2.9,2.47.8,4.79,2.05,7.17,3.11,1.38.61,2.62.55,3.64-.69.98-1.19.61-2.32-.13-3.46-2.82-4.38-5.65-8.75-8.42-13.17-.58-.93-1.69-1.87-.93-3.15.68-1.15,1.94-.76,2.97-.77,4.13-.04,8.27.06,12.4-.03,2.07-.04,2.97.78,2.95,2.84-.01,1.71.14,3.41.26,5.12.07.94.34,1.85,1.47,1.96.98.1,1.41-.63,1.73-1.42,1.76-4.23,3.52-8.46,5.28-12.68Zm-22.36,61.41c-3.34,1.86-6.31,1.33-9.12-1.21-2.13-1.92-4.4-3.7-6.68-5.44-1.37-1.05-5.46-.12-5.88,1.48-.4,1.51,1.45,1.62,2.35,2.26,2.26,1.62,2.42,2.82.44,4.99-1.2,1.31-1.86,2.77-.81,4.36,1.07,1.61,2.68,2.01,4.5,1.25,1.66-.69,3.35-1.31,4.95-2.11,3.35-1.67,6.39-1.47,9.13,1.21,2.48,5.78.4,9.43-5.84,10.19-2.94.36-5.9.59-8.84.99-1.71.24-3.72,3.37-3.04,4.99.74,1.75,2.14.27,3.18.13,2.82-.39,3.74.25,3.89,3.17.09,1.76.6,3.29,2.48,3.69,2.06.43,3.44-.64,4.21-2.52.82-1.99,1.6-4,2.44-5.99,1.06-2.53,2.86-4.12,5.72-4.2,2.6-.07,4.55,1.12,5.68,3.4,1.22,2.48.87,4.87-.94,7.03-1.56,1.86-3.06,3.77-4.61,5.63-2.97,3.57-2.9,4.91.52,8.4.47-.79.92-1.56,1.38-2.32,1.77-2.93,2.86-3.11,5.4-.87,1.35,1.19,2.84,1.7,4.39.59,1.5-1.08,1.78-2.66,1.12-4.34-.89-2.26-1.96-4.45-2.77-6.73-1.32-3.73.56-7.35,4.17-8.3,3.57-.94,7.08,1.37,7.7,5.21.4,2.48.6,5,.8,7.5.41,4.94.97,5.53,5.99,5.97.04.05.08.11.13.14.01,0,.07-.05.11-.08-.09,0-.19,0-.28,0,.48-1.21-.26-2.26-.46-3.37-.48-2.69.29-3.75,2.95-3.8,1.88-.03,3.52-.5,3.93-2.51.45-2.19-.81-3.54-2.79-4.32-2.01-.78-4.01-1.57-5.99-2.42-2.45-1.05-3.89-2.93-3.98-5.6-.08-2.55,1.12-4.54,3.41-5.68,2.38-1.18,4.72-.92,6.82.76,1.9,1.51,3.77,3.05,5.64,4.6,3.87,3.21,4.66,3.2,8.75-.27-1.04-.61-2.07-1.14-3.02-1.79-2.24-1.53-2.4-2.82-.54-4.79,1.28-1.36,2.12-2.83.94-4.56-1.2-1.75-2.96-1.85-4.82-1.09-2.08.86-4.11,1.83-6.22,2.59-3.73,1.35-7.49-.5-8.38-4.02-.96-3.81,1.3-7.23,5.33-7.83,2.48-.37,5-.59,7.51-.78,4.75-.36,5.44-1.05,5.77-6.3-1.15.29-2.24.62-3.35.82-2.62.49-3.71-.35-3.78-3.03-.05-1.89-.52-3.49-2.57-3.85-2.07-.36-3.39.78-4.14,2.67-.83,2.09-1.62,4.2-2.57,6.23-1.68,3.6-5.57,4.91-8.76,3.05-3.36-1.96-4.18-6.1-1.75-9.32,1.57-2.08,3.27-4.06,4.93-6.07,2.94-3.56,2.89-4.57-.43-8.15-.08.02-.2.01-.23.06-.3.44-.6.89-.88,1.35-2.3,3.81-2.75,3.89-6.21,1.3-1.24-.93-2.61-1.34-3.97-.31-1.33,1.02-1.89,2.42-1.26,4.06.84,2.18,1.74,4.33,2.67,6.47,1.16,2.67.88,5.12-1.13,7.24-1.79,1.89-4.12,2.26-6.47,1.44-2.61-.91-3.96-2.91-4.18-5.72-.25-3.13-.61-6.26-1.01-9.38-.24-1.92-3.07-4.03-5.03-3.37-2.01.68-.22,2.24-.11,3.34.27,2.74-.36,3.64-3.35,3.81-1.79.1-3.25.69-3.58,2.6-.31,1.81.57,3.15,2.24,3.88,1.73.76,3.5,1.42,5.24,2.15,5.82,2.41,6.87,6.44,2.99,11.41Z"/></symbol>
     <symbol id="aimy-lockup" viewBox="0 0 418.18 147.66"><g fill="#0366ff"><path d="m209.6,97.25h-25.58l-4.1,12.11h-17.48l24.8-68.54h19.33l24.8,68.54h-17.67l-4.1-12.11Zm-4.3-12.89l-8.49-25.09-8.4,25.09h16.89Z"/><path d="m255.58,40.82v68.54h-16.7V40.82h16.7Z"/><path d="m345.31,40.82v68.54h-16.7v-41.1l-15.33,41.1h-13.47l-15.43-41.2v41.2h-16.7V40.82h19.72l19.23,47.45,19.04-47.45h19.63Z"/><path d="m416.1,40.82l-23.73,45.89v22.65h-16.7v-22.65l-23.73-45.89h18.94l13.28,28.71,13.18-28.71h18.75Z"/></g><path fill="var(--aimy-mark, url(#aimy-rg))" d="m81.08,8.02c1.09-2.9,3.26-3.67,6.2-3.46,3.04.21,6.12-.04,9.17.09,3.09.13,4.19,1.99,2.72,4.73-2.8,5.23-5.69,10.4-8.64,15.54-.91,1.59-1.31,2.9-.3,4.69,1.09,1.94,1.68,4.16,2.47,6.27.56,1.48,1.14,2.9,3.1,2.84,2.03-.06,2.38-1.54,2.71-3.11,1.1-5.1,2.22-10.19,3.39-15.28.66-2.88,1.64-3.2,3.7-1.18,3.15,3.08,6.22,6.25,9.37,9.33,1.29,1.26,1.36,2.4.1,3.7-1.25,1.29-2.47,2.62-3.66,3.97-.61.69-1.13,1.49-.46,2.42.68.94,1.55.61,2.42.27,4.51-1.8,9.04-3.53,13.53-5.39,1.83-.76,3.32-.47,4.67.87,2.49,2.47,5.04,4.9,7.42,7.47,2.54,2.73,1.91,4.74-1.77,5.82-5.69,1.67-11.39,3.26-17.1,4.85-1.37.38-2.26.89-2.75,2.47-.76,2.47-2.02,4.8-3.1,7.17-.61,1.35-.72,2.59.51,3.68,1.25,1.11,2.44.75,3.68-.05,4.53-2.92,9.07-5.83,13.64-8.69,2.5-1.57,3.33-1.08,3.36,1.91.04,4.22-.08,8.45.05,12.67.07,2.39-.98,3.24-3.21,3.2-1.53-.03-3.06.06-4.59.14-1.02.06-2.06.26-2.2,1.52-.13,1.15.81,1.46,1.65,1.82,4.29,1.85,8.54,3.8,12.88,5.53,2.16.86,3.1,2.23,3.06,4.5-.06,3.33.02,6.65-.04,9.98-.08,3.82-1.88,4.89-5.2,3.07-5.2-2.84-10.38-5.72-15.53-8.66-1.34-.76-2.38-1.03-3.92-.2-2.28,1.22-4.82,1.95-7.26,2.86-1.4.53-2.29,1.38-2.17,3,.13,1.67,1.24,2.19,2.69,2.5,5.27,1.12,10.53,2.27,15.78,3.49,2.92.67,3.16,1.56,1.07,3.69-3.09,3.14-6.26,6.21-9.33,9.38-1.27,1.3-2.36,1.38-3.66.09-1.27-1.27-2.63-2.45-3.98-3.65-.69-.62-1.48-1.14-2.42-.5-.97.66-.64,1.53-.29,2.4,1.76,4.42,3.43,8.88,5.28,13.26.95,2.24.47,3.9-1.24,5.51-2.23,2.09-4.32,4.33-6.51,6.47-3.13,3.06-5.22,2.5-6.45-1.76-1.58-5.52-3.13-11.05-4.64-16.59-.4-1.48-1.02-2.39-2.66-2.9-2.39-.74-4.62-1.97-6.92-3.01-1.43-.65-2.78-.8-3.9.57-1.05,1.29-.54,2.46.25,3.69,2.88,4.45,5.73,8.92,8.55,13.41,1.65,2.62,1.17,3.48-1.98,3.52-4.14.05-8.28-.06-12.41.06-2.47.07-3.33-1.01-3.38-3.37-.04-1.94.39-3.96-.55-5.82-1.74-2.18-2.36-.35-2.92.91-1.76,3.94-3.56,7.87-5.08,11.9-1.11,2.96-2.92,4.25-6.1,4.03-2.77-.2-5.57-.01-8.36-.06-4.27-.07-5.4-1.95-3.37-5.63,2.74-4.95,5.49-9.9,8.31-14.8.9-1.56,1.33-2.86.29-4.67-1.15-2-1.75-4.32-2.56-6.51-.53-1.44-1.25-2.6-3.04-2.53-1.83.08-2.32,1.31-2.64,2.85-1.1,5.18-2.24,10.36-3.44,15.52-.67,2.88-1.65,3.17-3.72,1.13-3.08-3.02-6.08-6.14-9.19-9.14-1.49-1.44-1.54-2.68-.06-4.1,1.1-1.06,2.11-2.22,3.13-3.36.73-.81,1.57-1.72.72-2.83-.76-1-1.8-.44-2.72-.08-4.27,1.69-8.56,3.31-12.78,5.1-2.23.95-3.93.54-5.56-1.18-2.29-2.42-4.75-4.67-7.02-7.1-2.34-2.51-1.78-4.64,1.49-5.62,5.6-1.67,11.22-3.27,16.86-4.79,1.77-.48,2.96-1.11,3.53-3.1.67-2.31,1.91-4.45,2.9-6.66.65-1.44.72-2.79-.65-3.89-1.32-1.05-2.45-.47-3.67.32-4.36,2.84-8.76,5.65-13.17,8.41-2.76,1.73-3.71,1.23-3.74-1.95-.04-4.14.09-8.28-.03-12.41-.06-2.34.89-3.26,3.18-3.21,1.7.04,3.41-.17,5.12-.3.87-.06,1.62-.4,1.76-1.36.15-1-.58-1.41-1.36-1.75-4.37-1.89-8.7-3.87-13.12-5.63-2.25-.9-3.23-2.35-3.19-4.71.06-3.33-.07-6.66.04-9.98.12-3.56,2.07-4.64,5.2-2.93,5.13,2.79,10.23,5.62,15.3,8.52,1.5.86,2.72,1.22,4.44.29,2.12-1.15,4.5-1.81,6.77-2.67,1.47-.55,2.53-1.38,2.37-3.15-.15-1.68-1.35-2.16-2.76-2.46-5.19-1.13-10.37-2.25-15.55-3.44-2.86-.66-3.17-1.67-1.16-3.73,3.02-3.09,6.14-6.07,9.13-9.19,1.44-1.51,2.67-1.53,4.1-.06,1.07,1.09,2.21,2.12,3.36,3.12.8.7,1.66,1.64,2.81.74,1-.78.45-1.8.08-2.71-1.69-4.27-3.3-8.56-5.1-12.78-.97-2.26-.48-3.92,1.19-5.56,2.24-2.2,4.29-4.6,6.51-6.82,2.52-2.52,5.28-1.85,6.29,1.53,1.68,5.69,3.31,11.4,4.86,17.13.42,1.53,1.09,2.38,2.7,2.9,2.47.8,4.79,2.05,7.17,3.11,1.38.61,2.62.55,3.64-.69.98-1.19.61-2.32-.13-3.46-2.82-4.38-5.65-8.75-8.42-13.17-.58-.93-1.69-1.87-.93-3.15.68-1.15,1.94-.76,2.97-.77,4.13-.04,8.27.06,12.4-.03,2.07-.04,2.97.78,2.95,2.84-.01,1.71.14,3.41.26,5.12.07.94.34,1.85,1.47,1.96.98.1,1.41-.63,1.73-1.42,1.76-4.23,3.52-8.46,5.28-12.68Zm-22.36,61.41c-3.34,1.86-6.31,1.33-9.12-1.21-2.13-1.92-4.4-3.7-6.68-5.44-1.37-1.05-5.46-.12-5.88,1.48-.4,1.51,1.45,1.62,2.35,2.26,2.26,1.62,2.42,2.82.44,4.99-1.2,1.31-1.86,2.77-.81,4.36,1.07,1.61,2.68,2.01,4.5,1.25,1.66-.69,3.35-1.31,4.95-2.11,3.35-1.67,6.39-1.47,9.13,1.21,2.48,5.78.4,9.43-5.84,10.19-2.94.36-5.9.59-8.84.99-1.71.24-3.72,3.37-3.04,4.99.74,1.75,2.14.27,3.18.13,2.82-.39,3.74.25,3.89,3.17.09,1.76.6,3.29,2.48,3.69,2.06.43,3.44-.64,4.21-2.52.82-1.99,1.6-4,2.44-5.99,1.06-2.53,2.86-4.12,5.72-4.2,2.6-.07,4.55,1.12,5.68,3.4,1.22,2.48.87,4.87-.94,7.03-1.56,1.86-3.06,3.77-4.61,5.63-2.97,3.57-2.9,4.91.52,8.4.47-.79.92-1.56,1.38-2.32,1.77-2.93,2.86-3.11,5.4-.87,1.35,1.19,2.84,1.7,4.39.59,1.5-1.08,1.78-2.66,1.12-4.34-.89-2.26-1.96-4.45-2.77-6.73-1.32-3.73.56-7.35,4.17-8.3,3.57-.94,7.08,1.37,7.7,5.21.4,2.48.6,5,.8,7.5.41,4.94.97,5.53,5.99,5.97.04.05.08.11.13.14.01,0,.07-.05.11-.08-.09,0-.19,0-.28,0,.48-1.21-.26-2.26-.46-3.37-.48-2.69.29-3.75,2.95-3.8,1.88-.03,3.52-.5,3.93-2.51.45-2.19-.81-3.54-2.79-4.32-2.01-.78-4.01-1.57-5.99-2.42-2.45-1.05-3.89-2.93-3.98-5.6-.08-2.55,1.12-4.54,3.41-5.68,2.38-1.18,4.72-.92,6.82.76,1.9,1.51,3.77,3.05,5.64,4.6,3.87,3.21,4.66,3.2,8.75-.27-1.04-.61-2.07-1.14-3.02-1.79-2.24-1.53-2.4-2.82-.54-4.79,1.28-1.36,2.12-2.83.94-4.56-1.2-1.75-2.96-1.85-4.82-1.09-2.08.86-4.11,1.83-6.22,2.59-3.73,1.35-7.49-.5-8.38-4.02-.96-3.81,1.3-7.23,5.33-7.83,2.48-.37,5-.59,7.51-.78,4.75-.36,5.44-1.05,5.77-6.3-1.15.29-2.24.62-3.35.82-2.62.49-3.71-.35-3.78-3.03-.05-1.89-.52-3.49-2.57-3.85-2.07-.36-3.39.78-4.14,2.67-.83,2.09-1.62,4.2-2.57,6.23-1.68,3.6-5.57,4.91-8.76,3.05-3.36-1.96-4.18-6.1-1.75-9.32,1.57-2.08,3.27-4.06,4.93-6.07,2.94-3.56,2.89-4.57-.43-8.15-.08.02-.2.01-.23.06-.3.44-.6.89-.88,1.35-2.3,3.81-2.75,3.89-6.21,1.3-1.24-.93-2.61-1.34-3.97-.31-1.33,1.02-1.89,2.42-1.26,4.06.84,2.18,1.74,4.33,2.67,6.47,1.16,2.67.88,5.12-1.13,7.24-1.79,1.89-4.12,2.26-6.47,1.44-2.61-.91-3.96-2.91-4.18-5.72-.25-3.13-.61-6.26-1.01-9.38-.24-1.92-3.07-4.03-5.03-3.37-2.01.68-.22,2.24-.11,3.34.27,2.74-.36,3.64-3.35,3.81-1.79.1-3.25.69-3.58,2.6-.31,1.81.57,3.15,2.24,3.88,1.73.76,3.5,1.42,5.24,2.15,5.82,2.41,6.87,6.44,2.99,11.41Z"/></symbol>
+    <symbol id="aimy-word" viewBox="162.44 40.82 253.66 68.54"><g fill="#0366ff"><path d="m209.6,97.25h-25.58l-4.1,12.11h-17.48l24.8-68.54h19.33l24.8,68.54h-17.67l-4.1-12.11Zm-4.3-12.89l-8.49-25.09-8.4,25.09h16.89Z"/><path d="m255.58,40.82v68.54h-16.7V40.82h16.7Z"/><path d="m345.31,40.82v68.54h-16.7v-41.1l-15.33,41.1h-13.47l-15.43-41.2v41.2h-16.7V40.82h19.72l19.23,47.45,19.04-47.45h19.63Z"/><path d="m416.1,40.82l-23.73,45.89v22.65h-16.7v-22.65l-23.73-45.89h18.94l13.28,28.71,13.18-28.71h18.75Z"/></g></symbol>
   </defs>
 </svg>
 
 <main class="pv-page">
   <div class="pv-top">
     <div>
-      <h1 class="pv-h1">Presentations: storytelling on a timeline</h1>
-      <p class="pv-lead">Five ways to tell a story as a deck in AiMY's look. Each one tells <b>the same story</b>, the library's own from 27 October to now, so you can compare them on the same words. Every deck works: click it, then use the arrow keys or Space, or press Present to see it full screen.</p>
+      <h1 class="pv-h1">Presentations: two storytelling templates</h1>
+      <p class="pv-lead">Horizon and Two lanes, both going into the library as separate templates, now with motion graphics. Each tells <b>the same story</b>, the library's own from 27 October to now. Every deck works: click it, then use the arrow keys or Space, or press Present to see it full screen.</p>
     </div>
     <button class="pv-btn" type="button" id="pvTheme">Light theme</button>
   </div>
 
   <ul class="pv-view">
-    <li><b>All five share one engine.</b> A fixed 16:9 stage, scaled whole to any screen, so a slide looks the same on a laptop, a projector or a phone. Arrows, Space, Page Up and Down, Home and End move through it.</li>
-    <li><b>Motion uses the library's tokens only.</b> The camera moves in 500ms (very slow, the longest token we have), lines rise on transitions.dev's text reveal, and nothing dims to show it is past: past and next are said in words and colour.</li>
-    <li><b>My pick is A, Track, as the library's deck, with B, Spine, as its reading form.</b> Track is the clearest story on a big screen; Spine is the same timeline turned on its side for a deck people read alone. Both can take C's orb horizon for the cover and the close, and B already carries D's "what we learned, what we did" pair.</li>
-    <li><b>I need your call on two things.</b> Whether 500ms is enough for a camera move across a slide (a longer "scene" token would be new), and which variant, or which mix, goes into the library.</li>
+    <li><b>The logo moves the way it does in the extension.</b> On the cover the mark sits large in its halo. Leaving the cover, it winds up, flies to the top left in an arc with one full turn, lands with a small spring, and the word AiMY wipes out from behind it. It flies back for the close, so the deck opens and ends on the mark.</li>
+    <li><b>AiMY thinks between moments.</b> Each time you move on, the header mark comes apart into dots, turns once, and gathers back: the extension's thinking mark, cut to about a second.</li>
+    <li><b>The timeline moves with you.</b> In Horizon the orb hops along the horizon to the next mark, its light slides across the ground, a light runs along the horizon ahead of it and the mark rings when it arrives. In Two lanes the same light runs along the axis, the line fills behind you, the arrow draws from what we learned to what we did, and that card lands with a spring.</li>
+    <li><b>Underneath: the extension's ambient field.</b> Two blooms drift on 29 and 37 second cycles and dust rises through the slide. In Horizon the dust rises out of the horizon.</li>
+    <li><b>Numbers count up</b> to their value when their slide arrives, then hold. Titles arrive word by word.</li>
+    <li><b>One call for you: motion timing.</b> The UI tokens stop at 500ms. The flight uses the extension's own 720ms, the orb's hop 760ms and the count 1.1s. I'd make these a small set of deck motion values in the library rather than stretch the UI ones.</li>
   </ul>
-
-  <article class="pv-var" id="vA">
-    <div class="pv-var-head"><span class="pv-var-key">A</span><h3 class="pv-var-name">Track: one line through the whole story</h3></div>
-    <p class="pv-var-say">The timeline runs along the foot of every slide and the camera travels along it. The line fills in AiMY's gradient behind you, and the next moment's date waits at the right edge. <b>Good:</b> the audience always knows where they are and what comes next; it reads as one continuous story. <b>Weak:</b> one idea per slide, so detail goes to the speaker.</p>
-    <div class="dk" data-deck="track"></div>
-  </article>
-
-  <article class="pv-var" id="vB">
-    <div class="pv-var-head"><span class="pv-var-key">B</span><h3 class="pv-var-name">Spine: the agenda is the timeline</h3></div>
-    <p class="pv-var-say">A vertical spine on the left lists every chapter with its state in words: Done, Now, Ahead. The moment reads on the right with what we learned and what we did. <b>Good:</b> holds the most; works as a deck people read on their own after the meeting. <b>Weak:</b> the least cinematic of the five.</p>
-    <div class="dk" data-deck="spine"></div>
-  </article>
 
   <article class="pv-var" id="vC">
     <div class="pv-var-head"><span class="pv-var-key">C</span><h3 class="pv-var-name">Horizon: the orb is now</h3></div>
-    <p class="pv-var-say">The landing page's orb horizon, as a timeline. The orb rises on the cover, then sits on each moment's mark along the horizon as the story moves left to right. <b>Good:</b> the most AiMY of the five; made for a stage and a big screen. <b>Weak:</b> a headline and a line or two per slide, no more.</p>
+    <p class="pv-var-say">The landing page's orb horizon as a timeline. The orb rises on the cover, then hops along the horizon from mark to mark as the story moves left to right. <b>For:</b> keynotes, launches and all-hands, a headline and a line or two per slide.</p>
     <div class="dk" data-deck="horizon"></div>
   </article>
 
   <article class="pv-var" id="vD">
     <div class="pv-var-head"><span class="pv-var-key">D</span><h3 class="pv-var-name">Two lanes: knowledge to action, drawn</h3></div>
-    <p class="pv-var-say">The brand line as a layout. Each moment is a column on one time axis: what we learned above, what we did below, and a line drawn from one to the other. Past columns stay on screen at full strength. <b>Good:</b> every insight visibly comes with its next step, which is AiMY's promise. <b>Weak:</b> every moment needs both halves written.</p>
+    <p class="pv-var-say">Each moment is a column on one time axis: what we learned above, what we did below, and an arrow drawn from one to the other. Past columns stay on screen at full strength. <b>For:</b> reviews, retrospectives and updates, where every insight needs its next step.</p>
     <div class="dk" data-deck="lanes"></div>
-  </article>
-
-  <article class="pv-var" id="vE">
-    <div class="pv-var-head"><span class="pv-var-key">E</span><h3 class="pv-var-name">Run: told the way AiMY works</h3></div>
-    <p class="pv-var-say">Someone asks; AiMY works through the steps on the left, each ticking done, and each slide is the answer for one step, its words arriving one after another. <b>Good:</b> shows the product's own behaviour while telling the story; strong for demos and updates. <b>Weak:</b> the frame suits progress stories, less so a pitch.</p>
-    <div class="dk" data-deck="run"></div>
   </article>
 </main>
 
@@ -560,158 +522,310 @@ const COUNT = M.length + 2;
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const rv = (i, html, cls = '', tag = 'div') => `<${tag} class="rv ${cls}" style="--i:${i}">${html}</${tag}>`;
 const words = (text, from = 0) => text.split(' ').map((w, k) => `<span class="rv-w" style="--w:${k + from}">${esc(w)}</span>`).join(' ');
-const mark = (cls = '') => `<svg class="${cls}" viewBox="0 0 151.43 147.66" aria-hidden="true"><use href="#aimy-mark"/></svg>`;
-const lockup = () => `<svg class="sl-lockup" viewBox="0 0 418.18 147.66" role="img" aria-label="AiMY"><use href="#aimy-lockup"/></svg>`;
-const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
-const closeTitle = 'Knowledge to <span class="sl-ai">Action.</span>';
+const closeTitle = `${words('Knowledge to')} <span class="rv-w sl-ai" style="--w:2">Action.</span>`;
 const cta = (center) => `<div class="sl-cta${center ? ' is-center' : ''}"><span class="sl-cta-btn">${CLOSE.action}</span><span class="sl-cta-where">${CLOSE.where}</span></div>`;
+const reduced = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+const moment = (k) => k > 0 && k < LAST;
 
-/* ═════════════════ A. TRACK ═════════════════ */
-const GAP = 1180;
-const track = {
-  build: () => `<div class="sl trk">
-    <div class="trk-glow"></div>
-    <header class="sl-head">${lockup()}<span class="sl-head-meta">${COVER.kicker}</span></header>
-    <div class="trk-strip">
-      <div class="trk-line" style="width:${(COUNT - 1) * GAP + 2400}px"></div>
-      <div class="trk-fill" style="width:${(COUNT - 1) * GAP}px"></div>
-      <section class="trk-stop" data-n="0" style="left:0">
-        <div class="trk-copy">${rv(0, COVER.title, 'sl-display', 'h2')}${rv(1, COVER.sub, 'sl-lede', 'p')}</div>
-        <span class="trk-dot"></span><span class="trk-label"><b>${COVER.when}</b></span>
-      </section>
-      ${M.map((s, k) => `<section class="trk-stop" data-n="${k + 1}" style="left:${(k + 1) * GAP}px">
-        <div class="trk-copy">${s.figure
-          ? rv(0, s.figure.value, 'sl-figure') + rv(1, s.figure.means, 'sl-lede', 'p') + rv(2, s.title + ' ' + s.body, 'sl-body', 'p')
-          : rv(0, esc(s.title), 'sl-title', 'h2') + rv(1, esc(s.body), 'sl-body', 'p')}</div>
-        <span class="trk-dot"></span><span class="trk-label"><b>${s.when}</b>${s.chapter}</span>
-      </section>`).join('')}
-      <section class="trk-stop" data-n="${LAST}" style="left:${LAST * GAP}px">
-        <div class="trk-copy">${rv(0, closeTitle, 'sl-display', 'h2')}${rv(1, CLOSE.sub, 'sl-lede', 'p')}${rv(2, cta())}</div>
-        <span class="trk-dot"></span><span class="trk-label"><b>Next</b>Your product</span>
-      </section>
-    </div>
-  </div>`,
-  go: (st, i) => {
-    st.querySelector('.trk-strip').style.transform = `translateX(${240 - i * GAP}px)`;
-    st.querySelector('.trk-fill').style.transform = `scaleX(${i / (COUNT - 1)})`;
-    st.querySelector('.trk-glow').style.transform = `translateX(${-i * 90}px)`;
-  },
-};
+/* ═════════════════ MOTION KIT ═════════════════ */
 
-/* ═════════════════ B. SPINE ═════════════════ */
-const spine = {
-  build: () => {
-    const rows = [...M.map((s) => [s.when, s.chapter]), ['Next', 'Your product']];
-    return `<div class="sl spn">
-    <div class="spn-glow"></div>
-    <header class="sl-head">${lockup()}</header>
-    <ol class="spn-list" style="--rows:${rows.length}">
-      <span class="spn-rail"></span><span class="spn-fill"></span>
-      ${rows.map(([w, c], k) => `<li class="spn-row" data-n="${k + 1}">
-        <span class="spn-when">${w}</span><span class="spn-dot">${CHECK}</span>
-        <span class="spn-name">${c}<em class="is-done">Done</em><em class="is-now">Now</em><em class="is-ahead">Ahead</em></span>
-      </li>`).join('')}
-    </ol>
-    <div class="spn-pane">
-      <section class="spn-panel" data-n="0">${rv(0, COVER.kicker, 'sl-kicker')}${rv(1, COVER.title, 'sl-display', 'h2')}${rv(2, COVER.sub, 'sl-lede', 'p')}${rv(3, COVER.when, 'sl-meta')}</section>
-      ${M.map((s, k) => `<section class="spn-panel" data-n="${k + 1}">
-        ${rv(0, `${s.when} · ${s.chapter}`, 'sl-kicker')}
-        ${s.figure ? rv(1, `<span class="sl-figure">${s.figure.value}</span><span class="sl-lede">${s.figure.means}</span>`, 'spn-figure') : rv(1, esc(s.title), 'sl-title', 'h2')}
-        ${rv(2, esc(s.figure ? s.title + ' ' + s.body : s.body), 'sl-body', 'p')}
-        <div class="spn-pair">
-          ${rv(3, `<span class="sl-card-label">What we learned</span>${esc(s.learned)}`, 'sl-card is-learned')}
-          ${rv(4, `<span class="sl-card-label">What we did</span>${esc(s.did)}`, 'sl-card is-did')}
-        </div>
-      </section>`).join('')}
-      <section class="spn-panel" data-n="${LAST}">${rv(0, closeTitle, 'sl-display', 'h2')}${rv(1, CLOSE.sub, 'sl-lede', 'p')}${rv(2, cta())}</section>
-    </div>
-  </div>`;
-  },
-  go: (st, i) => {
-    const rows = M.length + 1;
-    st.querySelector('.spn-fill').style.transform = `scaleY(${i === 0 ? 0 : (i - 1) / (rows - 1)})`;
-  },
-};
+/* The logo flight: Knowledge/extension/popup.js buildKeyframes, line for line,
+   with the wind-up dip scaled to the stage (7px in a 400px panel, 20 here).
+   A wind-up so it reads as a push-off, a genuine arc, and a spin that ends
+   ahead of the travel so the mark arrives upright. */
+const WINDUP = 0.14, SPIN_DONE = 0.85, WINDUP_DIP_PX = 20, SAMPLES = 40, FLIGHT_MS = 720;
+function flightFrames({ dx, dy, scale }) {
+  const cx = dx * 0.22, cy = dy * 1.18;
+  const frames = [];
+  for (let i = 0; i < SAMPLES; i += 1) {
+    const t = i / SAMPLES;
+    let x = 0, y = 0, s = 1, r = 0;
+    if (t < WINDUP) {
+      const w = easeInOutCubic(t / WINDUP);
+      y = WINDUP_DIP_PX * w; s = 1 - 0.07 * w; r = -10 * w;
+    } else {
+      const u = (t - WINDUP) / (1 - WINDUP);
+      const p = easeInOutCubic(u);
+      x = 2 * (1 - p) * p * cx + p * p * dx;
+      y = Math.pow(1 - p, 2) * WINDUP_DIP_PX + 2 * (1 - p) * p * cy + p * p * dy;
+      s = 0.93 + (scale - 0.93) * p;
+      r = -10 + 370 * easeOutCubic(Math.min(1, u / SPIN_DONE));
+    }
+    frames.push({ transform: `translate(${x}px, ${y}px) scale(${s}) rotate(${r}deg)`, offset: t });
+  }
+  frames.push({ transform: `translate(${dx}px, ${dy}px) scale(${scale}) rotate(360deg)`, offset: 1 });
+  return frames;
+}
+
+/* The thinking mark: Knowledge's sampleMark and thinkFrame (via the extension).
+   The mark becomes about ninety dots coloured from its own gradient, which come
+   apart into an orbit and gather back. One short cycle per page turn. */
+const THINK_N = 90, T_SCATTER = 420, T_ORBIT = 280, T_GATHER = 520;
+const T_THINK = T_SCATTER + T_ORBIT + T_GATHER;
+const THINK_POINTS = (() => {
+  const path = document.querySelector('#aimy-mark path');
+  const g = document.getElementById('aimy-rg');
+  if (!path || !g || typeof Path2D === 'undefined') return [];
+  const hex = (h) => { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  const stops = [...g.querySelectorAll('stop')].map((s) => ({ o: +s.getAttribute('offset'), c: hex(s.getAttribute('stop-color')) }));
+  const colour = (o) => {
+    if (o <= stops[0].o) return stops[0].c;
+    for (let i = 1; i < stops.length; i += 1) {
+      if (o <= stops[i].o) { const a = stops[i - 1], b = stops[i], t = (o - a.o) / (b.o - a.o || 1); return a.c.map((ch, k) => Math.round(ch + (b.c[k] - ch) * t)); }
+    }
+    return stops[stops.length - 1].c;
+  };
+  const VW = 151.43, VH = 147.66, CX = 75.72, CY = 73.83, R = 70.54;
+  const ctx = document.createElement('canvas').getContext('2d');
+  const shape = new Path2D(path.getAttribute('d'));
+  const step = Math.sqrt((VW * VH) / (THINK_N * 2.2));
+  const pts = [];
+  for (let y = step / 2; y < VH; y += step) {
+    for (let x = step / 2; x < VW; x += step) {
+      const jx = x + (((x * 7 + y * 13) % 10) / 10 - 0.5) * step * 0.8;
+      const jy = y + (((x * 11 + y * 5) % 10) / 10 - 0.5) * step * 0.8;
+      if (!ctx.isPointInPath(shape, jx, jy)) continue;
+      pts.push({ x: jx / VW - 0.5, y: jy / VH - 0.5, c: `rgb(${colour(Math.hypot(jx - CX, jy - CY) / R).join(',')})` });
+    }
+  }
+  pts.forEach((p, i) => {
+    const a = Math.atan2(p.y, p.x) + (i % 5) * 0.21, r = 0.34 + ((i * 37) % 11) / 55;
+    p.ox = Math.cos(a) * r; p.oy = Math.sin(a) * r;
+    p.sp = 0.6 + ((i * 17) % 7) / 10; p.sz = 0.7 + ((i * 23) % 5) / 8;
+  });
+  return pts;
+})();
+
+function thinkFrame(canvas, ms, markPx) {
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const W = Math.round(canvas.clientWidth * dpr) || 138, H = Math.round(canvas.clientHeight * dpr) || 136;
+  if (canvas.width !== W) { canvas.width = W; canvas.height = H; }
+  ctx.clearRect(0, 0, W, H);
+  const M = markPx * dpr * (W / dpr / canvas.clientWidth || 1);
+  let mix = 0;
+  if (ms < T_SCATTER) mix = easeInOutCubic(ms / T_SCATTER);
+  else if (ms < T_SCATTER + T_ORBIT) mix = 1;
+  else mix = 1 - easeInOutCubic(Math.min(1, (ms - T_SCATTER - T_ORBIT) / T_GATHER));
+  const spin = (ms / 2600) * Math.PI * 2;
+  for (const p of THINK_POINTS) {
+    const a = spin * p.sp;
+    const ox = p.ox * Math.cos(a) - p.oy * Math.sin(a), oy = p.ox * Math.sin(a) + p.oy * Math.cos(a);
+    ctx.globalAlpha = 0.45 + (1 - mix) * 0.55;
+    ctx.fillStyle = p.c;
+    ctx.beginPath();
+    ctx.arc((p.x + (ox - p.x) * mix) * M + W / 2, (p.y + (oy - p.y) * mix) * M + H / 2, Math.max(0.6, p.sz * (M / 26) * (1 - mix * 0.25)), 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+/* Where the mark is: on the cover, in the header, or on the close. It flies
+   between them; a key pressed mid-flight snaps it to where it was going. */
+function brandKit(stage) {
+  const root = stage.querySelector('.sl');
+  const fly = root.querySelector('.mk-fly');
+  const anchor = root.querySelector('.brand-anchor');
+  const word = root.querySelector('.brand-word');
+  const canvas = root.querySelector('.brand-think');
+  const spots = { cover: root.querySelector('[data-spot="cover"]'), close: root.querySelector('[data-spot="close"]'), head: anchor };
+  let at = null, run = null, goingTo = null, thinkRAF = 0;
+  const box = (el) => {
+    const s = stage.getBoundingClientRect(), r = el.getBoundingClientRect(), k = s.width / 1920;
+    return { x: (r.left - s.left) / k, y: (r.top - s.top) / k, w: r.width / k, h: r.height / k };
+  };
+  const rest = (where) => {
+    at = where;
+    if (where === 'head') { fly.style.visibility = 'hidden'; anchor.classList.add('is-on'); word.classList.add('is-on'); return; }
+    const b = box(spots[where]);
+    Object.assign(fly.style, { left: `${b.x}px`, top: `${b.y}px`, width: `${b.w}px`, height: `${b.h}px`, visibility: 'visible' });
+    anchor.classList.remove('is-on', 'is-thinking');
+    word.classList.remove('is-on');
+  };
+  const land = () => {
+    anchor.classList.remove('is-landing');
+    void anchor.offsetWidth;
+    anchor.classList.add('is-landing');
+  };
+  return {
+    to(where, animate) {
+      if (run) { run.onfinish = null; run.cancel(); run = null; rest(goingTo); }
+      if (where === at) return;
+      if (!animate || at === null || reduced()) { rest(where); return; }
+      const a = box(spots[at]), b = box(spots[where]);
+      cancelAnimationFrame(thinkRAF);
+      Object.assign(fly.style, { left: `${a.x}px`, top: `${a.y}px`, width: `${a.w}px`, height: `${a.h}px`, visibility: 'visible' });
+      anchor.classList.remove('is-on', 'is-thinking');
+      word.classList.remove('is-on');
+      goingTo = where;
+      run = fly.animate(flightFrames({ dx: b.x + b.w / 2 - (a.x + a.w / 2), dy: b.y + b.h / 2 - (a.y + a.h / 2), scale: b.w / a.w }), { duration: FLIGHT_MS, easing: 'linear', fill: 'forwards' });
+      run.onfinish = () => { const r = run; run = null; rest(where); r.cancel(); if (where === 'head') land(); };
+    },
+    think() {
+      if (at !== 'head' || run || reduced() || !THINK_POINTS.length) return;
+      cancelAnimationFrame(thinkRAF);
+      const t0 = performance.now();
+      anchor.classList.add('is-thinking');
+      const frame = (now) => {
+        const ms = now - t0;
+        thinkFrame(canvas, Math.min(ms, T_THINK), 44);
+        if (ms < T_THINK) thinkRAF = requestAnimationFrame(frame);
+        else anchor.classList.remove('is-thinking');
+      };
+      thinkRAF = requestAnimationFrame(frame);
+    },
+    /* Fonts landing late move the cover's layout; put a resting mark back on its spot. */
+    refit() { if (!run && at && at !== 'head') rest(at); },
+  };
+}
+
+/* The extension's dust table: [x%, y%, size px, peak opacity, rise vh, sideways vw, seconds],
+   scaled to the stage (sizes x2.4, rise and drift in stage pixels). */
+const DUST = [
+  [4, 82, 2.0, 0.30, -62, 1.4, 31], [11, 96, 1.4, 0.20, -74, -0.9, 38], [17, 71, 2.6, 0.34, -55, 2.1, 25], [23, 88, 1.2, 0.16, -68, -1.6, 41],
+  [29, 63, 1.8, 0.26, -49, 0.7, 28], [34, 92, 2.2, 0.31, -71, -2.3, 34], [40, 77, 1.3, 0.18, -58, 1.9, 43], [45, 99, 2.8, 0.36, -80, -1.1, 22],
+  [51, 68, 1.6, 0.23, -52, 2.6, 37], [56, 85, 2.1, 0.29, -66, -0.6, 26], [62, 94, 1.1, 0.15, -76, 1.2, 40], [67, 73, 2.4, 0.33, -54, -2.8, 29],
+  [73, 90, 1.7, 0.24, -70, 0.4, 35], [78, 66, 2.0, 0.28, -47, 1.7, 23], [84, 97, 1.5, 0.21, -79, -1.4, 42], [89, 79, 2.5, 0.35, -60, 2.2, 27],
+  [94, 87, 1.3, 0.17, -67, -0.8, 39], [98, 70, 1.9, 0.27, -51, 1.0, 32], [8, 61, 1.6, 0.22, -45, -1.9, 36], [20, 99, 2.3, 0.32, -83, 0.9, 24],
+  [37, 58, 1.2, 0.14, -42, 2.4, 44], [48, 81, 1.9, 0.25, -63, -1.3, 30], [59, 60, 2.7, 0.34, -44, 1.5, 21], [70, 98, 1.4, 0.19, -81, -2.0, 45],
+  [81, 64, 1.8, 0.26, -48, 0.6, 33], [92, 93, 2.2, 0.30, -73, -1.7, 28], [14, 75, 1.1, 0.13, -57, 2.8, 46], [65, 84, 1.5, 0.20, -64, -0.5, 20],
+];
+const field = (blooms) => `<div class="mk-field">${blooms ? '<div class="mk-bloom is-a"></div><div class="mk-bloom is-b"></div>' : ''}${DUST.map((m, i) =>
+  `<span class="mk-mote" style="--x:${m[0]}%;--y:${m[1]}%;--s:${(m[2] * 2.4).toFixed(1)}px;--o:${m[3]};--t:${Math.round(m[4] * 10.8)}px;--dx:${Math.round(m[5] * 19.2)}px;--d:${m[6]}s;--i:${i}"></span>`).join('')}</div>`;
+
+const brandHead = (meta = '') => `<header class="sl-head">
+  <span class="brand" role="img" aria-label="AiMY">
+    <span class="brand-anchor"><svg class="brand-icon" viewBox="0 0 151.43 147.66" aria-hidden="true"><use href="#aimy-mark"/></svg><canvas class="brand-think" aria-hidden="true"></canvas></span>
+    <svg class="brand-word" viewBox="0 0 253.66 68.54" aria-hidden="true"><use href="#aimy-word"/></svg>
+  </span>${meta ? `<span class="sl-head-meta">${meta}</span>` : ''}</header>`;
+const flyer = () => `<div class="mk-fly" aria-hidden="true"><svg viewBox="0 0 151.43 147.66"><use href="#aimy-mark"/></svg></div>`;
+const spot = (name) => `<span class="mk-spot" data-spot="${name}">${rv(0, '', 'mk-halo', 'span')}</span>`;
+
+/* A number that counts up to itself when its slide arrives. */
+function countUp(stage, i, lead) {
+  stage.querySelectorAll(`[data-n="${i}"] [data-count]`).forEach((el) => {
+    const end = +el.dataset.count;
+    if (reduced()) { el.textContent = end; return; }
+    const t0 = performance.now() + lead, dur = 1100;
+    el.textContent = '0';
+    const f = (now) => {
+      const t = Math.max(0, Math.min(1, (now - t0) / dur));
+      el.textContent = Math.round(end * easeOutCubic(t));
+      if (t < 1) requestAnimationFrame(f);
+    };
+    requestAnimationFrame(f);
+  });
+}
+
+/* A light running along a path of points, head first. */
+function comet(el, points, ms) {
+  if (reduced()) return;
+  const n = points.length - 1;
+  el.animate(points.map((p, k) => {
+    const t = k / n;
+    return { transform: `translate(${p.x}px, ${p.y}px) rotate(${p.r}deg)`, opacity: t < 0.12 ? t / 0.12 : t > 0.8 ? (1 - t) / 0.2 : 1, offset: t };
+  }), { duration: ms, easing: 'linear' });
+}
+
+const figure = (s, cls) => `<span class="${cls}" data-count="${s.figure.value}">${s.figure.value}</span>`;
 
 /* ═════════════════ C. HORIZON ═════════════════ */
 const LINE = 800, TICK0 = 360, TICK_GAP = 300;
+/* The ground is a 4400x1400 ellipse whose top is the horizon: how far it has
+   fallen away from the line at x, so marks and the orb sit on the curve. */
+const curve = (x) => 700 * (1 - Math.sqrt(1 - ((x - 960) / 2200) ** 2));
+const tickX = (k) => TICK0 + k * TICK_GAP;
+const orbPose = (i) => {
+  const on = moment(i);
+  const x = on ? tickX(i - 1) : 960;
+  return { x, y: LINE + (on ? curve(x) : 0), s: on ? 0.6 : i === 0 ? 1 : 0.8 };
+};
+const orbT = (p) => `translate(${p.x - 300}px, ${p.y - 300}px) scale(${p.s})`;
+
 const horizon = {
   build: () => `<div class="sl hzn">
     <div class="hzn-glow"></div>
+    ${field(false)}
     <div class="hzn-orb"><canvas></canvas></div>
     <div class="hzn-ground"></div>
-    <header class="sl-head">${lockup()}<span class="sl-head-meta">${COVER.when}</span></header>
-    <ol class="hzn-ticks">${M.map((s, k) => `<li class="hzn-tick" data-n="${k + 1}" style="left:${TICK0 + k * TICK_GAP}px"><span class="hzn-mark"></span><b>${s.when}</b><span>${s.chapter}</span></li>`).join('')}</ol>
-    <section class="hzn-panel" data-n="0">${rv(0, COVER.kicker, 'sl-kicker')}${rv(1, COVER.title, 'sl-display', 'h2')}</section>
+    <div class="hzn-reflect"></div>
+    <div class="mk-comet"></div>
+    ${brandHead(COVER.when)}
+    <ol class="hzn-ticks">${M.map((s, k) => `<li class="hzn-tick" data-n="${k + 1}" style="left:${tickX(k)}px;top:${(LINE + curve(tickX(k))).toFixed(1)}px"><span class="hzn-mark"></span><b>${s.when}</b><span>${s.chapter}</span></li>`).join('')}</ol>
+    <section class="hzn-panel" data-n="0">${spot('cover')}${rv(1, COVER.kicker, 'sl-kicker')}<h2 class="sl-display">${words(COVER.title)}</h2></section>
     ${M.map((s, k) => `<section class="hzn-panel" data-n="${k + 1}">${rv(0, `${s.when} · ${s.chapter}`, 'sl-kicker')}${s.figure
-      ? rv(1, s.figure.value, 'sl-figure') + rv(2, s.figure.means, 'sl-lede', 'p')
-      : rv(1, esc(s.title), 'sl-title', 'h2') + rv(2, esc(s.body), 'sl-body', 'p')}</section>`).join('')}
-    <section class="hzn-panel" data-n="${LAST}">${rv(0, closeTitle, 'sl-display', 'h2')}${rv(1, CLOSE.sub, 'sl-lede', 'p')}${rv(2, cta(true))}</section>
+      ? rv(1, figure(s, ''), 'sl-figure') + rv(2, s.figure.means, 'sl-lede', 'p')
+      : `<h2 class="sl-title">${words(s.title)}</h2>` + rv(4, esc(s.body), 'sl-body', 'p')}</section>`).join('')}
+    <section class="hzn-panel" data-n="${LAST}">${spot('close')}<h2 class="sl-display">${closeTitle}</h2>${rv(4, CLOSE.sub, 'sl-lede', 'p')}${rv(5, cta(true))}</section>
+    ${flyer()}
   </div>`,
   init: (st) => {
     const silk = window.makeSilk && makeSilk(st.querySelector('.hzn-orb canvas'));
     if (silk) { silk.phase('listening'); silk.start(); }
     return silk;
   },
-  go: (st, i, silk) => {
-    const onTick = i > 0 && i < LAST;
-    const cx = onTick ? TICK0 + (i - 1) * TICK_GAP : 960;
-    const s = onTick ? 0.6 : i === 0 ? 1.3 : 0.95; /* the close keeps clear of its button */
-    st.querySelector('.hzn-orb').style.transform = `translate(${cx - 300}px, ${LINE - 300}px) scale(${s})`;
+  go: (st, i, silk, prev) => {
+    const orb = st.querySelector('.hzn-orb');
+    const to = orbPose(i);
+    orb.getAnimations().forEach((a) => a.cancel());
+    orb.style.transform = orbT(to);
+    st.querySelector('.hzn-reflect').style.transform = `translate(${to.x}px, ${(to.y - LINE).toFixed(1)}px)`;
+    if (prev >= 0 && !reduced()) {
+      /* A hop, not a slide: up and over to the next mark. */
+      const from = orbPose(prev);
+      const mid = { x: (from.x + to.x) / 2, y: Math.min(from.y, to.y) - 110, s: Math.max(from.s, to.s) * 1.06 };
+      orb.animate([
+        { transform: orbT(from), easing: 'cubic-bezier(0.33, 0, 0.2, 1)' },
+        { transform: orbT(mid), offset: 0.42, easing: 'cubic-bezier(0.4, 0, 0.2, 1)' },
+        { transform: orbT(to) },
+      ], { duration: 760 });
+      if (moment(prev) && moment(i)) {
+        const x0 = tickX(prev - 1), x1 = tickX(i - 1), dir = Math.sign(x1 - x0);
+        comet(st.querySelector('.mk-comet'), Array.from({ length: 15 }, (_, k) => {
+          const x = x0 + (x1 - x0) * easeInOutCubic(k / 14);
+          const slope = (Math.atan2(curve(x + 1) - curve(x - 1), 2) * 180) / Math.PI;
+          return { x, y: LINE + curve(x), r: dir > 0 ? slope : 180 + slope };
+        }), 680);
+      }
+    }
     silk?.phase(i === 0 ? 'listening' : 'speaking');
   },
 };
 
 /* ═════════════════ D. TWO LANES ═════════════════ */
-const COL = 640, COL_X = 1100;
+const COL = 640, COL_X = 700; /* inside .lns-view, which starts at 400 */
 const lanes = {
   build: () => `<div class="sl lns">
-    <div class="lns-glow"></div>
+    ${field(true)}
     <div class="lns-axis"></div>
-    <div class="lns-strip">
+    <div class="lns-view"><div class="lns-strip">
+      <div class="lns-fill" style="width:${(M.length - 1) * COL}px"></div>
       ${M.map((s, k) => `<section class="lns-col" data-n="${k + 1}" style="left:${k * COL}px">
-        <div class="lns-up">${rv(0, `<span class="sl-card-label">${s.chapter}</span>${s.figure ? `<span class="lns-figure">${s.figure.value}</span>${s.figure.means}` : esc(s.learned)}`, 'sl-card is-learned')}</div>
+        <div class="lns-up">${rv(0, `<span class="sl-card-label">${s.chapter}</span>${s.figure ? `${figure(s, 'lns-figure')}${s.figure.means}` : esc(s.learned)}`, 'sl-card is-learned')}</div>
         <span class="lns-dot"></span><span class="lns-when">${s.when}</span>
         <svg class="lns-link" viewBox="0 0 40 108" aria-hidden="true"><path pathLength="1" d="M20 4 V98 M10 88 L20 100 L30 88"/></svg>
-        <div class="lns-down">${rv(4, esc(s.did), 'sl-card is-did')}</div>
+        <div class="lns-down">${rv(5, esc(s.did), 'sl-card is-did is-pop')}</div>
       </section>`).join('')}
-    </div>
-    <aside class="lns-gutter">${lockup()}<span class="lns-lane is-up">What we learned</span><span class="lns-lane is-down">What we did</span></aside>
-    <section class="lns-panel" data-n="0">${rv(0, COVER.kicker, 'sl-kicker')}${rv(1, COVER.title, 'sl-display', 'h2')}${rv(2, 'Every step, told as what we learned and what we did about it.', 'sl-lede', 'p')}</section>
-    <section class="lns-panel" data-n="${LAST}">${rv(0, closeTitle, 'sl-display', 'h2')}${rv(1, CLOSE.sub, 'sl-lede', 'p')}${rv(2, cta())}</section>
+      <div class="mk-comet lns-comet"></div>
+    </div></div>
+    <aside class="lns-gutter"><span class="lns-lane is-up">What we learned</span><span class="lns-lane is-down">What we did</span></aside>
+    ${brandHead()}
+    <section class="lns-panel" data-n="0">${spot('cover')}${rv(1, COVER.kicker, 'sl-kicker')}<h2 class="sl-display">${words(COVER.title)}</h2>${rv(5, 'Every step, told as what we learned and what we did about it.', 'sl-lede', 'p')}</section>
+    <section class="lns-panel" data-n="${LAST}">${spot('close')}<h2 class="sl-display">${closeTitle}</h2>${rv(4, CLOSE.sub, 'sl-lede', 'p')}${rv(5, cta())}</section>
+    ${flyer()}
   </div>`,
-  go: (st, i) => {
-    const x = i === 0 ? 2000 : i === LAST ? -3400 : COL_X - (i - 1) * COL;
-    st.querySelector('.lns-strip').style.transform = `translateX(${x}px)`;
+  go: (st, i, _, prev) => {
     const root = st.querySelector('.lns');
-    if (i === 0 || i === LAST) root.dataset.edge = ''; else delete root.dataset.edge;
-  },
-};
-
-/* ═════════════════ E. RUN ═════════════════ */
-const run = {
-  build: () => `<div class="sl run">
-    <div class="run-glow"></div>
-    <aside class="run-card">
-      <div class="run-top"><span class="run-tile">${mark()}</span><b>AiMY</b><span class="run-status"></span></div>
-      <p class="run-ask">${COVER.ask}</p>
-      <ol class="run-steps">${M.map((s, k) => `<li class="run-step" data-n="${k + 1}"><span class="run-icon">${CHECK}</span><span class="run-name">${s.step}</span><span class="run-when">${s.when}</span></li>`).join('')}</ol>
-    </aside>
-    <div class="run-pane">
-      <section class="run-panel" data-n="0">${rv(0, COVER.kicker, 'sl-kicker')}<h2 class="sl-display">${words(COVER.title)}</h2>${rv(5, COVER.sub, 'sl-lede', 'p')}</section>
-      ${M.map((s, k) => `<section class="run-panel" data-n="${k + 1}">${rv(0, `${s.when} · ${s.chapter}`, 'sl-kicker')}${s.figure
-        ? rv(1, s.figure.value, 'sl-figure') + rv(2, s.figure.means, 'sl-lede', 'p')
-        : `<h2 class="sl-title">${words(s.title)}</h2>` + rv(5, esc(s.body), 'sl-body', 'p')}
-        ${rv(7, `<span class="sl-card-label">What we did</span>${esc(s.did)}`, 'sl-card is-did run-from')}</section>`).join('')}
-      <section class="run-panel" data-n="${LAST}"><h2 class="sl-display">${words('Knowledge to')} <span class="rv-w sl-ai" style="--w:2">Action.</span></h2>${rv(4, CLOSE.sub, 'sl-lede', 'p')}${rv(5, cta())}</section>
-    </div>
-  </div>`,
-  go: (st, i) => {
-    const s = st.querySelector('.run-status');
-    s.textContent = i === 0 ? 'Ready' : i === LAST ? 'Done' : `Step ${i} of ${M.length}`;
-    if (i === LAST) s.dataset.done = ''; else delete s.dataset.done;
-    /* The last step is done once the close is up. */
-    st.querySelectorAll('.run-step').forEach((el) => { if (i === LAST) el.dataset.state = 'done'; });
+    const k = moment(i) ? i - 1 : i === 0 ? 0 : M.length - 1;
+    st.querySelector('.lns-strip').style.transform = `translateX(${COL_X - k * COL}px)`;
+    st.querySelector('.lns-fill').style.transform = `scaleX(${moment(i) ? (i - 1) / (M.length - 1) : 0})`;
+    if (moment(i)) delete root.dataset.edge; else root.dataset.edge = '';
+    if (prev >= 0 && moment(prev) && moment(i)) {
+      const x0 = (prev - 1) * COL + 12, x1 = (i - 1) * COL + 12;
+      comet(st.querySelector('.lns-comet'), Array.from({ length: 9 }, (_, n) => ({ x: x0 + (x1 - x0) * easeInOutCubic(n / 8), y: 0, r: x1 > x0 ? 0 : 180 })), 620);
+    }
   },
 };
 
@@ -721,7 +835,7 @@ const ICON = {
   next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
   full: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/><path d="M9 21H3v-6"/></svg>',
 };
-const DECKS = { track, spine, horizon, lanes, run };
+const DECKS = { horizon, lanes };
 
 document.querySelectorAll('[data-deck]').forEach((root) => {
   const def = DECKS[root.dataset.deck];
@@ -738,10 +852,10 @@ document.querySelectorAll('[data-deck]').forEach((root) => {
   const frame = root.querySelector('.dk-frame');
   const stage = root.querySelector('.dk-stage');
   const count = root.querySelector('.pv-count');
-  const prev = root.querySelector('[data-prev]');
-  const next = root.querySelector('[data-next]');
+  const prevBtn = root.querySelector('[data-prev]');
+  const nextBtn = root.querySelector('[data-next]');
   const extra = def.init?.(stage);
-  let i = 0;
+  let i = 0, started = false;
 
   const fit = () => {
     const w = frame.clientWidth, h = frame.clientHeight;
@@ -752,17 +866,29 @@ document.querySelectorAll('[data-deck]').forEach((root) => {
   addEventListener('resize', fit);
   document.addEventListener('fullscreenchange', fit);
   fit();
+  const brand = brandKit(stage);
 
   const go = (n) => {
+    const prev = i;
     i = Math.max(0, Math.min(COUNT - 1, n));
+    if (started && i === prev) return;
+    /* The logo travels when we leave or reach the cover or the close; then
+       the words wait for it to land. */
+    const flies = started && ((prev === 0) !== (i === 0) || (prev === LAST) !== (i === LAST));
+    const lead = flies ? 780 : 250;
+    stage.style.setProperty('--lead', `${lead}ms`);
     stage.querySelectorAll('[data-n]').forEach((el) => {
       const k = +el.dataset.n;
       el.dataset.state = k === i ? 'now' : k < i ? 'done' : 'ahead';
     });
-    def.go?.(stage, i, extra);
+    def.go?.(stage, i, extra, started ? prev : -1);
+    brand.to(i === 0 ? 'cover' : i === LAST ? 'close' : 'head', started);
+    if (started && moment(prev) && moment(i)) brand.think();
+    countUp(stage, i, lead);
     count.textContent = `${i + 1} of ${COUNT}`;
-    prev.disabled = i === 0;
-    next.disabled = i === COUNT - 1;
+    prevBtn.disabled = i === 0;
+    nextBtn.disabled = i === COUNT - 1;
+    started = true;
   };
 
   frame.addEventListener('keydown', (e) => {
@@ -778,10 +904,11 @@ document.querySelectorAll('[data-deck]').forEach((root) => {
     go(e.clientX - r.left < r.width / 3 ? i - 1 : i + 1);
     frame.focus();
   });
-  prev.addEventListener('click', () => go(i - 1));
-  next.addEventListener('click', () => go(i + 1));
+  prevBtn.addEventListener('click', () => go(i - 1));
+  nextBtn.addEventListener('click', () => go(i + 1));
   root.querySelector('[data-full]').addEventListener('click', () => frame.requestFullscreen().then(() => frame.focus()));
   go(0);
+  document.fonts?.ready.then(() => brand.refit());
 });
 
 /* ═════════════════ THEME ═════════════════ */
