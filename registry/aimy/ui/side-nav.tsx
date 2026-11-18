@@ -31,7 +31,9 @@ import { cn } from "@/lib/utils"
 // head's button collapses it and the mark's button opens it again; the choice
 // is remembered. Below 1100px of the shell (`breakpoint`) it stays collapsed, and opening
 // it brings the open form in as a drawer over a scrim: Escape, the scrim or a
-// link closes it, and focus goes back to where it was.
+// link closes it, and focus goes back to where it was. order="fixed" keeps
+// the pages where they are given, the current one marked in its own place,
+// for a product with no findings to lead with (User Management, 18 Nov).
 //
 //   <AppShell topnav={…} nav={<SideNav variant="qa" title="AiMY" summary="6 insights" pages={pages} />}>
 
@@ -83,6 +85,8 @@ type SideNavProps = {
   onNavigate?: (href: string) => void
   /** qa: the shell width, in px, below which it stays collapsed and opens as a drawer. 1100, QA's. */
   breakpoint?: number
+  /** qa: "current-first" (the default, QA's) moves the page you are on to the top; "fixed" keeps the pages in the order given, in both forms, so the list never reshuffles. */
+  order?: "current-first" | "fixed"
   className?: string
 }
 
@@ -241,6 +245,7 @@ function QaSideNav({
   storageKey = "aimy-side-nav",
   onNavigate,
   breakpoint = 1100,
+  order = "current-first",
   className,
 }: Omit<SideNavProps, "variant">) {
   const ref = useRef<HTMLElement>(null)
@@ -256,8 +261,8 @@ function QaSideNav({
   const drawerId = useId()
 
   const mode = !narrow && pref === "open" ? "open" : "collapsed"
-  // The current page leads, in both forms.
-  const ordered = [...pages.filter((p) => p.current), ...pages.filter((p) => !p.current)]
+  // The current page leads, in both forms, unless the order is fixed.
+  const ordered = order === "fixed" ? pages : [...pages.filter((p) => p.current), ...pages.filter((p) => !p.current)]
 
   const expand = () => {
     if (narrow) {

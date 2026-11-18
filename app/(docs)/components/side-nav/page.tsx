@@ -22,7 +22,7 @@ export default function Page() {
           <li>
             <b>QA&apos;s form (variant=&quot;qa&quot;)</b> for a product with many pages and nested flows, where each page
             needs its own headline figures and the list has to collapse to icons. It is its own column in
-            AppShell&apos;s <code className="font-mono">nav</code> slot. Only QA uses it today.
+            AppShell&apos;s <code className="font-mono">nav</code> slot. QA and User Management use it.
           </li>
           <li>Never both in one product, and never QA&apos;s form for a handful of pages.</li>
         </ul>
@@ -67,6 +67,12 @@ export default function Page() {
           Findings are optional: without them each page is one line. Pass{" "}
           <code className="font-mono text-ink">onNavigate</code> to either form to route with your app&apos;s router
           instead of following the link.
+        </p>
+        <p data-ai="p" className="mt-3 max-w-[46rem] text-meta text-ink-secondary">
+          QA&apos;s form moves the page you are on to the top, to lead with its findings. With no findings to lead
+          with, pass <code className="font-mono text-ink">order=&quot;fixed&quot;</code>: the pages stay in the order
+          given, open and collapsed, and the current one keeps its card and &ldquo;You&apos;re here&rdquo; in its own
+          place, so the list never reshuffles under someone&apos;s pointer.
         </p>
       </Section>
       <Section title="Rules">

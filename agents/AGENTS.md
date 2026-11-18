@@ -60,7 +60,7 @@ Writing:
 Moving between pages:
 
 - A product with a few pages (four or five) uses `SideNav`, Sales' tabs, as the first card of the `Rail`: a row per page with its count, and the current page holding AiMY's reading of it (`SideNavRead`). Most AiMY products are this.
-- A product with many pages and nested flows uses `SideNav variant="qa"` in AppShell's `nav` slot: each page with its headline figures, collapsing to icons. Only QA uses it today. Never use it for a handful of pages, and never put both forms in one product.
+- A product with many pages and nested flows uses `SideNav variant="qa"` in AppShell's `nav` slot: each page with its headline figures, collapsing to icons. QA and User Management use it. With no findings to lead with, pass `order="fixed"` so the pages keep their order and the list never reshuffles. Never use it for a handful of pages, and never put both forms in one product.
 - Every product sits on the products' ambient wash. AppShell draws it (`AmbientBackground`, on by default); an app without the shell puts `<AmbientBackground />` first in the body. Never add a second glow, hang one on a card, or animate it.
 
 Phones:

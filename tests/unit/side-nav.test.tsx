@@ -105,6 +105,21 @@ describe("SideNav", () => {
     expect(localStorage.getItem("t-nav")).toBe("open")
   })
 
+  it('keeps the order given with order="fixed", in both forms, the current page marked in its place', async () => {
+    const { container } = render(<SideNav variant="qa" order="fixed" pages={PAGES} label="QA pages" storageKey="t-fixed" breakpoint={0} />)
+    const sections = container.querySelectorAll(".snav-section")
+    expect([...sections].map((s) => s.querySelector(".snav-section-head")?.textContent)).toEqual([
+      expect.stringContaining("Settings"),
+      expect.stringContaining("Dashboard"),
+    ])
+    expect(sections[1]).toHaveClass("is-current")
+    expect(sections[1]).toHaveTextContent("You're here")
+    await userEvent.click(screen.getByRole("button", { name: "Collapse the pages" }))
+    const icons = screen.getAllByRole("link").map((l) => l.getAttribute("aria-label") ?? l.textContent)
+    expect(icons[0]).toMatch(/^Settings/)
+    expect(icons[1]).toMatch(/^Dashboard.*you're here/)
+  })
+
   it("routes through onNavigate instead of following the link", async () => {
     const went: string[] = []
     render(<SideNav variant="qa" pages={PAGES} onNavigate={(href) => went.push(href)} breakpoint={0} />)
