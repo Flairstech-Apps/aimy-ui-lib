@@ -17,6 +17,12 @@ export default function Page() {
       <Install name="combobox" exports="Combobox" />
       <Section title="Use it">
         <CodeBlock>{"<Field label=\"Company\">\n  <Combobox\n    options={[{ value: \"kestrel\", label: \"Kestrel Logistics\", description: \"Freight, 1,200 people\" }]}\n    value={company}\n    onValueChange={setCompany}\n  />\n</Field>"}</CodeBlock>
+        <p data-ai="p" className="mt-3 max-w-[46rem] text-body text-ink-secondary">
+          For a server search, fetch with the words from <code>onQueryChange</code>, pass what comes back as{" "}
+          <code>options</code>, and set <code>filter=&#123;false&#125;</code> so the words don&apos;t narrow the answer
+          again. <code>autoFocus</code> puts focus in the field when it first shows.
+        </p>
+        <CodeBlock>{"<Combobox label=\"Person\" options={people} filter={false}\n  onQueryChange={(q) => search(q).then(setPeople)} onValueChange={setPerson} />"}</CodeBlock>
       </Section>
       <Section title="Rules">
         <div className="flex flex-col gap-3">

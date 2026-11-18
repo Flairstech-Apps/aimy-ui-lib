@@ -33,6 +33,21 @@ const c = (name: string) => `/components/${name}/`
 
 const ENTRIES: Entry[] = [
   {
+    label: "2.0.2",
+    type: "Patch",
+    date: "18 Nov 2026",
+    title: "Fixes from User Management",
+    items: [
+      { kind: "fixed", name: "Disclosure", href: c("disclosure"), text: "A closed one inside an open one stays closed." },
+      { kind: "fixed", name: "Combobox", href: c("combobox"), text: "Options from a server show as soon as they arrive." },
+      { kind: "new", name: "Combobox", href: c("combobox"), text: "autoFocus, onQueryChange for server search, filter={false}." },
+      { kind: "fixed", name: "Checkbox", href: "/adopt/", text: "Tailwind apps @source the package, so a tick shows." },
+      { kind: "changed", name: "Agent rules", href: "/start/", text: "Every session checks for a release and takes it first." },
+    ],
+    before: "If your app runs Tailwind and imports the package, add @source for its dist (see How to adopt).",
+    run: BOTH,
+  },
+  {
     label: "2.0.1",
     type: "Patch",
     date: "18 Nov 2026",
