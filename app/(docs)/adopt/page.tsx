@@ -26,7 +26,11 @@ export default function Adopt() {
             <b className="text-ink">Import the package</b> if your app does not use Tailwind, or you would rather import
             than copy: <Code>import {"{ Button }"} from &quot;@flairstech-aimy/ui&quot;</Code> and one stylesheet,{" "}
             <Code>@flairstech-aimy/ui/styles.css</Code>. Its styles are in CSS layers, so your app&apos;s own unlayered
-            styles win where they meet. Versioned, so you choose when to upgrade.
+            styles win where they meet. Versioned, so you choose when to upgrade. If your app runs Tailwind itself,
+            also point it at the package, <Code>@source &quot;../node_modules/@flairstech-aimy/ui/dist&quot;;</Code>{" "}
+            (the path from your CSS file), so the components&apos; checked, open and selected styles are built beside
+            your own classes. Without it, a class your app also uses, such as <Code>bg-card</Code> or{" "}
+            <Code>hidden</Code>, outranks them: a ticked checkbox stays white.
           </li>
           <li>
             <b className="text-ink">Use the tokens only</b> for anything that renders HTML, React or not:{" "}
@@ -87,7 +91,8 @@ export default function Adopt() {
             you use. Pin the tokens to the version the components were written against.
           </li>
           <li>
-            Refresh the agent rules with <Code>npx shadcn@latest add @aimy/init --overwrite</Code>.
+            Refresh the agent rules with <Code>npx shadcn@latest add @aimy/init --overwrite</Code>. The rules tell
+            Claude Code and Copilot to check for a new release at the start of every session and take it first.
           </li>
         </ul>
       </Section>

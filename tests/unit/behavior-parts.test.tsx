@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs"
+import path from "node:path"
 import { act, render, screen, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { useState } from "react"
@@ -49,6 +51,40 @@ describe("Combobox", () => {
     expect(input).toHaveAttribute("aria-expanded", "false")
     await userEvent.tab()
     expect(input).toHaveValue("Data")
+  })
+
+  it("shows options that arrive after typing (a server search), unfiltered, and reports the words", async () => {
+    const onQueryChange = vi.fn()
+    function Search() {
+      const [options, setOptions] = useState<typeof PRODUCTS>([])
+      return (
+        <Combobox
+          label="Person"
+          autoFocus
+          filter={false}
+          options={options}
+          onQueryChange={(q) => {
+            onQueryChange(q)
+            // The server answers later, with matches the words alone would not keep.
+            setTimeout(() => setOptions(q ? [{ value: "amelia", label: "Amelia Taylor" }] : []), 0)
+          }}
+        />
+      )
+    }
+    render(<Search />)
+    const input = screen.getByRole("combobox", { name: "Person" })
+    expect(input).toHaveFocus()
+    await userEvent.type(input, "ataylor")
+    expect(onQueryChange).toHaveBeenLastCalledWith("ataylor")
+    await waitFor(() => expect(screen.getAllByRole("option").map((o) => o.textContent)).toEqual(["Amelia Taylor"]))
+    expect(input.getAttribute("aria-activedescendant")).toBe(screen.getByRole("option").id)
+  })
+})
+
+describe("Disclosure", () => {
+  it("keeps a closed Disclosure closed inside an open one", () => {
+    const css = readFileSync(path.resolve(__dirname, "../../package/tokens/transitions.css"), "utf8")
+    for (const rule of css.match(/\.t-acc\[data-open="true"\][^{]*/g) ?? []) expect(rule).toMatch(/^\.t-acc\[data-open="true"\] > /)
   })
 })
 

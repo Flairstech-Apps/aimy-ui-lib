@@ -15,6 +15,10 @@
  *   app that runs Tailwind (a reset can't strip a component), below the
  *   app's own utilities (a className passed to a component still wins), and
  *   below any unlayered app CSS.
+ * - An app that runs Tailwind itself also adds
+ *   `@source "<path>/node_modules/@flairstech-aimy/ui/dist";`. Otherwise a
+ *   class it uses too (bg-card, hidden) is built in its utilities layer and
+ *   outranks a component's state classes here (a ticked checkbox stays white).
  */
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);

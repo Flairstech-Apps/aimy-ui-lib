@@ -11,16 +11,17 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 
 ## Steps
 
-1. **Read the brief.** List the parts the screen needs: the shell, the page head, lists, forms, figures, AI answers, actions. Note the states it must handle: empty, loading, error, long content, narrow width.
-2. **Map each part to a component.** Use the index below, or the docs at https://aimy-ui-lib.aimy.flairstech.com. Prefer a whole part (`AppShell`, `PageHead`, `DataTable`, `DocPage`, `Canvas`) over assembling small ones. If an AiMY UI MCP server is connected, `search_components` and `get_component` give the same answers with the code.
-3. **Stop at a gap.** If a part has no component, say which part, name the closest components, and stop. Do not build a lookalike.
-4. **Install what is missing**, the way the project already does it: check `components.json` and `package.json` first.
+1. **Take the latest AiMY UI first**, once per session, before anything else: compare the project's `@flairstech-aimy/ui` with `npm view @flairstech-aimy/ui version`; if it is behind, read https://aimy-ui-lib.aimy.flairstech.com/whats-new/ for anything to do first, update ui and tokens together (`pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest`, or the project's package manager), and take copied-in components with the `aimy-ui-upgrade` skill. Say which version it was on and which it is on now.
+2. **Read the brief.** List the parts the screen needs: the shell, the page head, lists, forms, figures, AI answers, actions. Note the states it must handle: empty, loading, error, long content, narrow width.
+3. **Map each part to a component.** Use the index below, or the docs at https://aimy-ui-lib.aimy.flairstech.com. Prefer a whole part (`AppShell`, `PageHead`, `DataTable`, `DocPage`, `Canvas`) over assembling small ones. If an AiMY UI MCP server is connected, `search_components` and `get_component` give the same answers with the code.
+4. **Stop at a gap.** If a part has no component, say which part, name the closest components, and stop. Do not build a lookalike.
+5. **Install what is missing**, the way the project already does it: check `components.json` and `package.json` first.
    - Copy in: `npx shadcn@latest add @aimy/<name>`, or by address with no setup: `npx shadcn@latest add https://aimy-ui-lib.aimy.flairstech.com/r/<name>.json`.
    - Or import from `@flairstech-aimy/ui`.
-5. **Compose.** The shell first (`AppShell`, `Topnav`, `Rail`, `Page`), then the content. Any spacing between parts comes from the theme's tokens.
-6. **Wire the doctrine.** Each action declares its entry mode and each item its work state. What AiMY proposes is shown for Accept, Edit or Reject; a direct action ends in a toast with Undo. AI is marked with `AimyMark`.
-7. **Write the copy.** Plain English, a verb on every button, errors that say what to do next.
-8. **Check it.** Both themes, 1536px and phone width, the keyboard alone. If the `aimy-ui-review` skill is present, run it on what you built.
+6. **Compose.** The shell first (`AppShell`, `Topnav`, `Rail`, `Page`), then the content. Any spacing between parts comes from the theme's tokens.
+7. **Wire the doctrine.** Each action declares its entry mode and each item its work state. What AiMY proposes is shown for Accept, Edit or Reject; a direct action ends in a toast with Undo. AI is marked with `AimyMark`.
+8. **Write the copy.** Plain English, a verb on every button, errors that say what to do next.
+9. **Check it.** Both themes, 1536px and phone width, the keyboard alone. If the `aimy-ui-review` skill is present, run it on what you built.
 
 ## Which component
 

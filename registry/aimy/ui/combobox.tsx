@@ -1,7 +1,7 @@
 "use client"
 
 import { Check, ChevronDown } from "lucide-react"
-import { useId, useState } from "react"
+import { useEffect, useId, useState } from "react"
 import { controlStyles, useField, useShake } from "@/components/field"
 import { focus } from "@/lib/behaviors"
 import { useAgentSurface } from "@/lib/behaviors-agent-react"
@@ -40,6 +40,12 @@ type ComboboxProps = {
   className?: string
   /** Shows this part to AiMY under this id (inside an AgentProvider), so it can read it and act on it. */
   agent?: string
+  /** Puts focus in the field when it first shows. */
+  autoFocus?: boolean
+  /** The words as they are typed, for a server search: fetch with them and pass what comes back as options. */
+  onQueryChange?: (query: string) => void
+  /** false when the options are already narrowed (by a server search), so the typed words don't narrow them again. */
+  filter?: boolean
 }
 
 export function Combobox({
@@ -54,6 +60,9 @@ export function Combobox({
   name,
   className,
   agent,
+  autoFocus,
+  onQueryChange,
+  filter = true,
 }: ComboboxProps) {
   const field = useField()
   const shake = useShake<HTMLDivElement>(field?.error)
@@ -72,6 +81,7 @@ export function Combobox({
     items: () => options,
     key: (o) => o.value,
     text: (o) => `${o.label} ${o.description ?? ""}`,
+    filter: filter ? undefined : null,
     disabled: (o) => !!o.disabled,
     onSelect: (o) => {
       setValue(o.value)
@@ -122,6 +132,15 @@ export function Combobox({
   }
   useLayer(panel, open && !!panel, { onDismiss: close, branches: () => [anchor] })
 
+  // New options while the list is open (a server search answering): keep the
+  // highlight if it still shows, otherwise light the first match, as typing does.
+  const { setQuery, query } = lb
+  useEffect(() => {
+    if (open) setQuery(query)
+    // Only when the options change, not on every keystroke.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [options])
+
   const visible = lb.visible()
   const shown = typing ? lb.query : (chosen?.label ?? "")
 
@@ -153,9 +172,11 @@ export function Combobox({
         disabled={disabled}
         placeholder={placeholder}
         value={shown}
+        autoFocus={autoFocus}
         onChange={(e) => {
           setTyping(true)
           lb.setQuery(e.target.value)
+          onQueryChange?.(e.target.value)
           setOpen(true)
         }}
         onClick={openList}

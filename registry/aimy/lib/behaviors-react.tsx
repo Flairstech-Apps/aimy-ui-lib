@@ -669,7 +669,11 @@ export function useListbox<T>(options: ListboxOptions<T>) {
   )
   useDestroy(l.destroy)
   const state = useStore(l)
-  return { ...l, ...state }
+  // In render, narrow this render's items: the ref the handlers read only
+  // catches up after commit, so options that just arrived (a server search)
+  // would otherwise show one render late.
+  const visible = () => l.visibleOf(options.items())
+  return { ...l, ...state, visible }
 }
 
 export function useVirtualizer(options: VirtualizerOptions) {

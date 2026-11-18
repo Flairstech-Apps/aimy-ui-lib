@@ -48,11 +48,12 @@ export function createListbox<T>(options: ListboxOptions<T>) {
   const filter = options.filter === undefined ? (i: T, q: string) => matchWords(options.text(i), q) : options.filter
   const enabled = (i: T) => !options.disabled?.(i)
 
-  const visible = (): T[] => {
+  /** These items, narrowed by the query. */
+  const visibleOf = (all: readonly T[]): T[] => {
     const q = store.get().query.trim()
-    const all = options.items()
     return q && filter ? all.filter((i) => filter(i, q)) : [...all]
   }
+  const visible = (): T[] => visibleOf(options.items())
   const highlight = (key: string | null) => {
     store.set({ highlighted: key })
     options.onHighlight?.(key)
@@ -80,6 +81,7 @@ export function createListbox<T>(options: ListboxOptions<T>) {
   const api = {
     ...store,
     visible,
+    visibleOf,
     highlight,
     highlighted: () => byKey(store.get().highlighted),
     next: () => step(1),

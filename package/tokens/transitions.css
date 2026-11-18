@@ -306,7 +306,8 @@
   grid-template-rows: 0fr;
   transition: grid-template-rows var(--acc-collapse) var(--acc-ease);
 }
-.t-acc[data-open="true"] .t-acc-panel {
+/* Child steps only, so a closed Disclosure inside an open one stays closed. */
+.t-acc[data-open="true"] > .t-acc-panel {
   grid-template-rows: 1fr;
   transition: grid-template-rows var(--acc-expand) var(--acc-ease);
 }
@@ -318,7 +319,7 @@
     opacity var(--acc-collapse) var(--acc-ease),
     filter var(--acc-collapse) var(--acc-ease);
 }
-.t-acc[data-open="true"] .t-acc-panel-inner {
+.t-acc[data-open="true"] > .t-acc-panel > .t-acc-panel-inner {
   opacity: 1;
   filter: blur(0);
   transition:
@@ -332,7 +333,7 @@
   transition: transform var(--acc-chevron) var(--acc-ease);
 }
 .t-acc-chevron path { vector-effect: non-scaling-stroke; }
-.t-acc[data-open="true"] .t-acc-chevron {
+.t-acc[data-open="true"] > :not(.t-acc-panel) .t-acc-chevron {
   transform: scaleY(-1);
 }
 

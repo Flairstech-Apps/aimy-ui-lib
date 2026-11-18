@@ -8,12 +8,22 @@ AiMY UI is the component library for AiMY products at FlairsTech. Every componen
 
 Docs, with every component's preview, rules and source notes: https://aimy-ui-lib.aimy.flairstech.com. A plain index for agents is at `/llms.txt` on the same site.
 
+## First, take the latest
+
+At the start of every session that works with AiMY UI, before building or changing anything, check for an update and take it:
+
+1. Read the latest version from the registry: `npm view @flairstech-aimy/ui version` (or `dist-tags.latest` at https://aimy-ui-lib.aimy.flairstech.com/npm/@flairstech-aimy/ui/), and compare it with the version in the project's `package.json` or lockfile.
+2. If the project is behind, read the entries since its version on https://aimy-ui-lib.aimy.flairstech.com/whats-new/ and do what any "before you update" line says.
+3. Update both packages together with the project's own package manager: `pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest` (or the npm or yarn equivalent).
+4. If the project copied components in with shadcn, take the new release with the `aimy-ui-upgrade` skill, so the app's own edits survive. Refresh these rules and the skills with `npx shadcn@latest add https://aimy-ui-lib.aimy.flairstech.com/r/init.json`.
+5. Say which version the project was on and which it is on now. If the check can't reach the registry, say so and carry on with the installed version.
+
 ## Installing
 
 Installing needs no token. The shadcn commands take everything from the site, including the tokens package. Installing `@flairstech-aimy` packages by name needs one line in the project's `.npmrc`: `@flairstech-aimy:registry=https://aimy-ui-lib.aimy.flairstech.com/npm/`.
 
 - Copy a component into the project (the shadcn way): `npx shadcn@latest add @aimy/<name>`. The project's `components.json` must list the `@aimy` registry.
-- Or import from the package: `import { Button } from "@flairstech-aimy/ui"` and `import "@flairstech-aimy/ui/styles.css"`.
+- Or import from the package: `import { Button } from "@flairstech-aimy/ui"` and `import "@flairstech-aimy/ui/styles.css"`. If the app runs Tailwind itself, also add `@source "<path to>/node_modules/@flairstech-aimy/ui/dist";` to its CSS, or a class the app also uses (`bg-card`, `hidden`) outranks the components' state styles.
 - Tokens only (any HTML): `@flairstech-aimy/tokens`.
 
 ## Tools for agents
