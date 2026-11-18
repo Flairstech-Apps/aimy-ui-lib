@@ -128,4 +128,16 @@ export const PATCHES = [
       dark.set("--topbar-height", "calc(3.75rem + var(--safe-top))")
     },
   },
+  {
+    id: "ambient",
+    why: "the wash Sales and Knowledge draw behind the app (QA my-profile.html, Sales sales.css 1056-1090, Knowledge knowledge.css 2064-2105): --grad-ellipse-* re-centred at center with the products' own stops, and the dark ground they are calibrated on (#171a1c, QA's); --grad-ellipse-* stay as the design system tunes them for its docs column",
+    apply({ dark, light }) {
+      dark.set("--ambient-1", "radial-gradient(ellipse at center, rgba(0,102,255,0.18) 0%, rgba(97,173,241,0.1) 28%, transparent 60%)")
+      dark.set("--ambient-2", "radial-gradient(ellipse at center, rgba(111,223,226,0.1) 0%, rgba(139,79,244,0.07) 38%, transparent 60%)")
+      dark.set("--ambient-body", "#171a1c")
+      light.set("--ambient-1", "radial-gradient(ellipse at center, rgba(0,102,255,0.07) 0%, rgba(97,173,241,0.04) 28%, transparent 60%)")
+      light.set("--ambient-2", "radial-gradient(ellipse at center, rgba(111,223,226,0.05) 0%, rgba(139,79,244,0.035) 38%, transparent 60%)")
+      light.set("--ambient-body", light.get("--body-bg"))
+    },
+  },
 ]

@@ -46,7 +46,8 @@ export default function Page() {
           closes it and focus returns to the toggle. The rail is Sales&apos; column (<code>.app-rail</code>, sales.css
           4390-4459) with its gutter always kept, so nothing reflows when it grows a scrollbar, and Sales&apos; Console
           row at its foot. The page is Knowledge&apos;s: 1.5rem by 2rem padding, a 72.5rem measure, and a head with the
-          title, its stamp and controls on the right.
+          title, its stamp and controls on the right. Behind it all is the products&apos; ambient wash (AmbientBackground, on its own page under
+          Background), on by default; <code>ambient={"{false}"}</code> leaves the plain ground.
         </p>
       </Source>
       <A11y

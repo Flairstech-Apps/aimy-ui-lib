@@ -283,8 +283,15 @@
     "name": "app-shell",
     "title": "App shell",
     "group": "Shell",
-    "description": "The frame every AiMY product sits in: topnav, rail, page. Knowledge's widths on the shell's own width (rail a drawer below 1040, products to a menu below 900); the rail width a setting, 320px by default. useShell gives the rail state. Page and PageHead are Knowledge's page and head. On a phone (viewport-fit=cover) the topnav clears the status bar, the shell a landscape notch, and the page leaves room above the home indicator.",
+    "description": "The frame every AiMY product sits in: topnav, rail, page. Knowledge's widths on the shell's own width (rail a drawer below 1040, products to a menu below 900); the rail width a setting, 320px by default. useShell gives the rail state. Page and PageHead are Knowledge's page and head. The products' ambient wash sits behind it all (AmbientBackground; ambient={false} leaves the plain ground). On a phone (viewport-fit=cover) the topnav clears the status bar, the shell a landscape notch, and the page leaves room above the home indicator.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/app-shell/"
+  },
+  {
+    "name": "ambient-background",
+    "title": "Background",
+    "group": "Shell",
+    "description": "The wash Sales and Knowledge draw behind the whole app: two ellipse glows on the ground, below every surface (fixed, z-index 0, no pointer), with each theme's own alphas, and the dark ground they are calibrated on (#171a1c). It never moves. AppShell draws it by default (ambient={false} turns it off); without the shell, put it first in <body>.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/ambient-background/"
   },
   {
     "name": "topnav",

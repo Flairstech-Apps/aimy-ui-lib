@@ -94,6 +94,7 @@ const LIBRARY: NavGroup[] = [
     label: "Shell",
     items: [
       { href: "/components/app-shell/", label: "App shell" },
+      { href: "/components/ambient-background/", label: "Background" },
       { href: "/components/topnav/", label: "Top navigation" },
       { href: "/components/side-nav/", label: "Side navigation" },
       { href: "/components/scroll-dot/", label: "Scroll dot" },

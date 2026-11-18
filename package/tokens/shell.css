@@ -32,6 +32,35 @@
 }
 .app-shell-body { position: relative; display: flex; flex: 1; min-height: 0; }
 
+/* ── Ambient background ───────────────────────────────────────────────── */
+/* The wash Sales and Knowledge draw behind the whole app (#appEllipse,
+   sales.css 1056-1090, knowledge.css 2064-2105, both from QA's
+   my-profile.html): two ellipse glows on the ground, below every surface.
+   Nothing may depend on it, and it never moves. It is fixed, so it fills the
+   window; inside .app-shell it fills the shell (the shell's container query
+   makes it the box fixed things are placed in), which is the window in an
+   app and the frame in the docs. Whatever holds it takes the products' dark
+   ground, #171a1c, which the glows' alphas are calibrated against; light
+   keeps its own ground. Its siblings need a position (the shell's parts have
+   one) so they paint above it. */
+.ambient-bg {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0; overflow: hidden;
+}
+.ambient-bg::before {
+  content: ""; position: absolute;
+  top: 42%; left: 50%; transform: translate(-50%, -50%);
+  width: 81.25rem; height: 65.625rem;
+  background: var(--ambient-1);
+}
+.ambient-bg::after {
+  content: ""; position: absolute;
+  bottom: -8%; right: -4%;
+  width: 46.875rem; height: 40.625rem;
+  background: var(--ambient-2);
+}
+:has(> .ambient-bg) { --body-bg: var(--ambient-body); }
+
 /* ── Topnav ───────────────────────────────────────────────────────────── */
 .app-topnav {
   height: var(--topbar-height); flex-shrink: 0;

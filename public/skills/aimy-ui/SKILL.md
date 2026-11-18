@@ -54,6 +54,7 @@ Moving between pages:
 
 - A product with a few pages (four or five) uses `SideNav`, Sales' tabs, as the first card of the `Rail`: a row per page with its count, and the current page holding AiMY's reading of it (`SideNavRead`). Most AiMY products are this.
 - A product with many pages and nested flows uses `SideNav variant="qa"` in AppShell's `nav` slot: each page with its headline figures, collapsing to icons. Only QA uses it today. Never use it for a handful of pages, and never put both forms in one product.
+- Every product sits on the products' ambient wash. AppShell draws it (`AmbientBackground`, on by default); an app without the shell puts `<AmbientBackground />` first in the body. Never add a second glow, hang one on a card, or animate it.
 
 Phones:
 
@@ -164,6 +165,7 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 ### Shell
 
 - **App shell** (`@aimy/app-shell`): The frame every AiMY product sits in: topnav, rail, page. https://aimy-ui-lib.aimy.flairstech.com/components/app-shell/
+- **Background** (`@aimy/ambient-background`): The wash Sales and Knowledge draw behind the whole app: two ellipse glows on the ground, below every surface (fixed, z-index 0, no pointer), with each theme's own alphas, and the dark ground they are calibrated on (#171a1c). https://aimy-ui-lib.aimy.flairstech.com/components/ambient-background/
 - **Top navigation** (`@aimy/topnav`): The bar: Knowledge's markup with Sales' values. https://aimy-ui-lib.aimy.flairstech.com/components/topnav/
 - **Side navigation** (`@aimy/side-nav`): The pages of a product down the left, in two forms. https://aimy-ui-lib.aimy.flairstech.com/components/side-nav/
 - **Scroll dot** (`@aimy/scroll-dot`): QA's scroll indicator, opt-in per scrolling area: a translucent accent dot in place of the native bar that trails a flame sized by scroll speed and lands with a squash when the scroll stops. https://aimy-ui-lib.aimy.flairstech.com/components/scroll-dot/

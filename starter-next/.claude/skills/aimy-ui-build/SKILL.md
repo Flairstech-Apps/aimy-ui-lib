@@ -79,6 +79,7 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 ### Shell
 
 - **App shell** (`@aimy/app-shell`): The frame every AiMY product sits in: topnav, rail, page. https://aimy-ui-lib.aimy.flairstech.com/components/app-shell/
+- **Background** (`@aimy/ambient-background`): The wash Sales and Knowledge draw behind the whole app: two ellipse glows on the ground, below every surface (fixed, z-index 0, no pointer), with each theme's own alphas, and the dark ground they are calibrated on (#171a1c). https://aimy-ui-lib.aimy.flairstech.com/components/ambient-background/
 - **Top navigation** (`@aimy/topnav`): The bar: Knowledge's markup with Sales' values. https://aimy-ui-lib.aimy.flairstech.com/components/topnav/
 - **Side navigation** (`@aimy/side-nav`): The pages of a product down the left, in two forms. https://aimy-ui-lib.aimy.flairstech.com/components/side-nav/
 - **Scroll dot** (`@aimy/scroll-dot`): QA's scroll indicator, opt-in per scrolling area: a translucent accent dot in place of the native bar that trails a flame sized by scroll speed and lands with a squash when the scroll stops. https://aimy-ui-lib.aimy.flairstech.com/components/scroll-dot/

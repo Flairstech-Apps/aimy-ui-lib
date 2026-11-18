@@ -1,6 +1,7 @@
 "use client"
 
 import { createContext, useContext, useEffect, useId, useMemo, useState } from "react"
+import { AmbientBackground } from "@/components/ambient-background"
 import { cn } from "@/lib/utils"
 
 // The frame every AiMY product sits in: the topnav across the top, the rail
@@ -9,6 +10,8 @@ import { cn } from "@/lib/utils"
 // toggle for it), and the products leave the bar for a menu below 900. The
 // rail's width is a setting, 320px by default, Sales' width, so the diary and
 // Financials doors fit. Escape closes the drawer; opening it moves focus in.
+// Behind it all, the products' ambient wash (AmbientBackground); ambient=
+// {false} leaves the plain ground.
 //
 //   <AppShell topnav={<Topnav … />} rail={<Rail>…</Rail>}>
 //     <Page><PageHead title="Today" stamp="Read 09:12" />…</Page>
@@ -29,11 +32,13 @@ type AppShellProps = {
   rail?: React.ReactNode
   /** The rail's width as a column, e.g. "17rem". 20rem (320px) by default. */
   railWidth?: string
+  /** The products' ambient wash behind the whole shell (AmbientBackground), and the dark ground it is calibrated on. On by default. */
+  ambient?: boolean
   className?: string
   children: React.ReactNode
 }
 
-export function AppShell({ topnav, nav, rail, railWidth, className, children }: AppShellProps) {
+export function AppShell({ topnav, nav, rail, railWidth, ambient = true, className, children }: AppShellProps) {
   const railId = useId()
   const [railOpen, setRailOpen] = useState(false)
   const value = useMemo(() => ({ railOpen, setRailOpen, hasRail: !!rail, railId }), [railOpen, rail, railId])
@@ -52,6 +57,7 @@ export function AppShell({ topnav, nav, rail, railWidth, className, children }: 
         style={railWidth ? ({ "--rail-w": railWidth } as React.CSSProperties) : undefined}
         data-slot="app-shell"
       >
+        {ambient ? <AmbientBackground /> : null}
         {topnav}
         <div className="app-shell-body">
           {nav}
