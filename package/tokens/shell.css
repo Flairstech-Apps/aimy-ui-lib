@@ -37,16 +37,16 @@
    sales.css 1056-1090, knowledge.css 2064-2105, both from QA's
    my-profile.html): two ellipse glows on the ground, below every surface.
    Nothing may depend on it, and it never moves. It is fixed, so it fills the
-   window; inside .app-shell it fills the shell (the shell's container query
-   makes it the box fixed things are placed in), which is the window in an
-   app and the frame in the docs. Whatever holds it takes the products' dark
-   ground, #171a1c, which the glows' alphas are calibrated against; light
-   keeps its own ground. Its siblings need a position (the shell's parts have
-   one) so they paint above it. */
+   window; inside .app-shell it is placed on the shell instead (which never
+   scrolls), the window in an app and the frame in the docs. Whatever holds
+   it takes the products' dark ground, #171a1c, which the glows' alphas are
+   calibrated against; light keeps its own ground. Its siblings need a
+   position (the shell's parts have one) so they paint above it. */
 .ambient-bg {
   position: fixed; inset: 0;
   pointer-events: none; z-index: 0; overflow: hidden;
 }
+.app-shell > .ambient-bg { position: absolute; }
 .ambient-bg::before {
   content: ""; position: absolute;
   top: 42%; left: 50%; transform: translate(-50%, -50%);

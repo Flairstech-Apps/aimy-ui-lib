@@ -33,6 +33,18 @@ const c = (name: string) => `/components/${name}/`
 
 const ENTRIES: Entry[] = [
   {
+    label: "2.0.1",
+    type: "Patch",
+    date: "18 Nov 2026",
+    title: "The products' background",
+    items: [
+      { kind: "new", name: "AmbientBackground", href: c("ambient-background"), text: "The wash Sales and Knowledge draw behind the app." },
+      { kind: "changed", name: "AppShell", href: c("app-shell"), text: "Draws the wash by default; ambient={false} leaves the plain ground." },
+    ],
+    before: "If your app already draws its own glow behind the shell, remove it or pass ambient={false}.",
+    run: BOTH,
+  },
+  {
     label: "2.0.0",
     type: "Release",
     date: "16 Nov 2026",
