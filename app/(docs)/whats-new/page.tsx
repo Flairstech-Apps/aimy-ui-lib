@@ -33,6 +33,16 @@ const c = (name: string) => `/components/${name}/`
 
 const ENTRIES: Entry[] = [
   {
+    label: "2.0.3",
+    type: "Patch",
+    date: "18 Nov 2026",
+    title: "Side navigation that stays put",
+    items: [
+      { kind: "new", name: "SideNav", href: c("side-nav"), text: "QA's form takes order=\"fixed\": the pages keep their order." },
+    ],
+    run: BOTH,
+  },
+  {
     label: "2.0.2",
     type: "Patch",
     date: "18 Nov 2026",
