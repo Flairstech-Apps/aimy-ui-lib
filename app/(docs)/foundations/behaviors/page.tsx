@@ -81,6 +81,19 @@ import { useReorder } from "@flairstech-aimy/ui/behaviors"`}</CodeBlock>
 press("ArrowDown")
 expect(singleTabStopProblems(toolbar)).toEqual([])
 expect(ariaProblems(container)).toEqual([])`}</CodeBlock>
+        <p data-ai="p" className="mt-3 max-w-[46rem] text-body text-ink-secondary">
+          In a real browser, the visual audit measures what a person sees: icons against the capitals beside them,
+          pills and buttons of different heights in one row, edges and baselines that don&apos;t line up, content
+          spilling out or cut, text under 12px, targets under 24px, text under 4.5:1. Run it in Playwright, or load{" "}
+          <code>/agents/visual-audit.js</code> into any page from a browser tool.
+        </p>
+        <div className="mt-3">
+          <CodeBlock>{`import { visualProblems, describeVisualProblems } from "@flairstech-aimy/ui/testing"
+
+// In Playwright: page.evaluate, or page.addScriptTag({ url: ".../agents/visual-audit.js" })
+const problems = visualProblems(document.querySelector("main"))
+expect(describeVisualProblems(problems.filter((p) => p.severity === "fix"))).toEqual([])`}</CodeBlock>
+        </div>
       </Section>
 
       <Section title="Rules">

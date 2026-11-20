@@ -91,7 +91,7 @@ export function InlineEdit({ value, onSave, label, validate, size = "text", plac
         aria-busy={edit.saving || undefined}
         onClick={edit.start}
         className={cn(
-          "group/edit -mx-2 inline-flex max-w-full items-start gap-2 rounded-md px-2 py-1 text-left text-ink starting:opacity-0",
+          "group/edit -mx-2 inline-flex max-w-full items-start gap-2 rounded-md px-2 py-1 text-start text-ink starting:opacity-0",
           "transition-[background-color,opacity] duration-(--t-fast) ease-out hover:not-disabled:bg-w05 disabled:cursor-not-allowed",
           sizes[size],
           className

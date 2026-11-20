@@ -356,7 +356,7 @@
 
 /* The thinking line shares a left edge with the think-mark beside it; the
    snippet centres it (its own notes say to set this when lines should align). */
-[data-slot="thinking"] .t-think { text-align: left; }
+[data-slot="thinking"] .t-think { text-align: start; }
 
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
@@ -389,12 +389,12 @@
 }
 .aimy-msg-bubble.is-aimy {
   background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.07);
-  color: var(--d50); border-top-left-radius: 0.25rem;
+  color: var(--d50); border-start-start-radius: 0.25rem;
 }
 [data-theme="light"] .aimy-msg-bubble.is-aimy { background: #edf2f8; border-color: rgba(16,24,40,0.10); }
 .aimy-msg-bubble.is-you {
   background: var(--accent-dim); border-color: rgba(var(--accent-rgb),0.22);
-  color: var(--d100); border-top-right-radius: 0.25rem;
+  color: var(--d100); border-start-end-radius: 0.25rem;
 }
 @media (prefers-reduced-motion: reduce) { .aimy-msg-bubble { transition: none; } }
 /* ── Chat widgets wear AiMY's bubble ───────────────────────────────────────
@@ -406,7 +406,7 @@
 .aimy-widget-frame {
   overflow: hidden;
   background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 0.75rem; border-top-left-radius: 0.25rem;
+  border-radius: 0.75rem; border-start-start-radius: 0.25rem;
 }
 [data-theme="light"] .aimy-widget-frame { background: #edf2f8; border-color: rgba(16,24,40,0.10); }
 .aimy-msg-bubble .aimy-widget-frame,

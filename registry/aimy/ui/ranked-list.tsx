@@ -48,7 +48,7 @@ export function RankedList({ items, label, onOpen, className }: RankedListProps)
             {item.match !== undefined ? <Score value={item.match} label="Fit" /> : null}
           </>
         )
-        const row = "flex w-full items-start gap-4 px-4 py-3 text-left"
+        const row = "flex w-full items-start gap-4 px-4 py-3 text-start"
         return (
           <li key={item.id}>
             {onOpen ? (

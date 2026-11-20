@@ -21,7 +21,7 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 6. **Compose.** The shell first (`AppShell`, `Topnav`, `Rail`, `Page`), then the content. Any spacing between parts comes from the theme's tokens.
 7. **Wire the doctrine.** Each action declares its entry mode and each item its work state. What AiMY proposes is shown for Accept, Edit or Reject; a direct action ends in a toast with Undo. AI is marked with `AimyMark`.
 8. **Write the copy.** Plain English, a verb on every button, errors that say what to do next.
-9. **Check it.** Both themes, 1536px and phone width, the keyboard alone. If the `aimy-ui-review` skill is present, run it on what you built.
+9. **Check it.** Both themes, 1536px and phone width, the keyboard alone. If the `aimy-ui-review` and `aimy-ui-visual-review` skills are present, run both on what you built: one reads the code, the other looks at the screen.
 
 ## Which component
 
@@ -46,6 +46,8 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 - **Search field** (`@aimy/search-field`): Find-as-you-type with a search icon, a clear button that appears only when there is text, and Escape to clear. https://aimy-ui-lib.aimy.flairstech.com/components/search-field/
 - **Select** (`@aimy/select`): The only select control; never a native <select>. https://aimy-ui-lib.aimy.flairstech.com/components/select/
 - **Combobox** (`@aimy/combobox`): Choose one option by typing to narrow a long list (an owner, a company, a product). https://aimy-ui-lib.aimy.flairstech.com/components/combobox/
+- **Multi-select** (`@aimy/multi-select`): Several choices behind one trigger: Knowledge's .k-multi. https://aimy-ui-lib.aimy.flairstech.com/components/multi-select/
+- **Tag input** (`@aimy/tag-input`): Values typed in as tags: Knowledge's .tag-input. https://aimy-ui-lib.aimy.flairstech.com/components/tag-input/
 - **Inline edit** (`@aimy/inline-edit`): Rename or change one value where it sits: at rest it reads as its text with a pencil on hover and focus; pressed, it becomes the box field in the same size. https://aimy-ui-lib.aimy.flairstech.com/components/inline-edit/
 - **Checkbox** (`@aimy/checkbox`): A 17px box: brand fill and a white tick when on, a dash for some (checked="indeterminate"). https://aimy-ui-lib.aimy.flairstech.com/components/checkbox/
 - **Switch** (`@aimy/switch`): An on/off switch, 36 by 20: the brand when on. https://aimy-ui-lib.aimy.flairstech.com/components/switch/
@@ -113,6 +115,7 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 
 - **KPI widget** (`@aimy/kpi-widget`): Sales' floor widget: one measure over time against what was promised. https://aimy-ui-lib.aimy.flairstech.com/components/kpi-widget/
 - **Progress to target** (`@aimy/target-bar`): Sales' attainment bar: the figure of its target and the share in words, then one bar with what is in (solid accent), what AiMY expects could still come (hatched), the target crossing the bar and today's pace as a tick inside it. https://aimy-ui-lib.aimy.flairstech.com/components/target-bar/
+- **Bar list** (`@aimy/bar-list`): A bar per category, as QA's audit panel and the operations hub draw them. https://aimy-ui-lib.aimy.flairstech.com/components/bar-list/
 - **Funnel** (`@aimy/funnel`): Sales' funnel: a name, a pill bar and a right-aligned count a row. https://aimy-ui-lib.aimy.flairstech.com/components/funnel/
 - **Sparkline** (`@aimy/sparkline`): Knowledge's before-and-after line: the line before a change in the reading ink, after it in the brand, the change a dashed line in the action ink, named underneath. https://aimy-ui-lib.aimy.flairstech.com/components/sparkline/
 - **Score tile** (`@aimy/score-tile`): QA's quality-score summary: the score in its tone, how far from the goal, how it moved with a Lucide arrow, and a small curve of the period that is also the button opening the full trend (aria-expanded, aria-controls), with the data's source under it. https://aimy-ui-lib.aimy.flairstech.com/components/score-tile/
@@ -128,6 +131,7 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 - **Candidate profile** (`@aimy/candidate-profile`): One candidate in full inside a reply: header with the Fit badge, contact facts, About in three lines with Read all, work experience two jobs deep with Show all, skills, and Start outreach, Download CV, Add note. https://aimy-ui-lib.aimy.flairstech.com/components/candidate-profile/
 - **Chat table** (`@aimy/chat-table`): A tool's table in a chat reply: the DataTable with sentence-case headers and three-state sorting, placeholder rows while the tool runs, and the rows form instead of sideways scrolling when the widget is narrow. https://aimy-ui-lib.aimy.flairstech.com/components/chat-table/
 - **Ranked list** (`@aimy/ranked-list`): Results best first, one per row, each with its reason in two lines and the Fit badge; the row opens the result. https://aimy-ui-lib.aimy.flairstech.com/components/ranked-list/
+- **File drop** (`@aimy/file-drop`): Where files come in: drop them or press to choose. https://aimy-ui-lib.aimy.flairstech.com/components/file-drop/
 - **Upload results** (`@aimy/upload-results`): A batch counted by status (Added, Added with warnings, Not added), each a number, an icon and a word, filtering the rows below; it opens on what needs a person, and each row has its fix: Open, See warnings, Upload again. https://aimy-ui-lib.aimy.flairstech.com/components/upload-results/
 
 ### AI: conversation

@@ -167,6 +167,7 @@ export {
 export { VirtualList } from "../../../registry/aimy/ui/virtual-list"
 export { KpiWidgets, KpiWidget } from "../../../registry/aimy/ui/kpi-widget"
 export { TargetBar } from "../../../registry/aimy/ui/target-bar"
+export { BarList, type BarRow, type BarTone } from "../../../registry/aimy/ui/bar-list"
 export { Funnel, type FunnelRow } from "../../../registry/aimy/ui/funnel"
 export { Sparkline } from "../../../registry/aimy/ui/sparkline"
 export { TrendChart, type TrendRange } from "../../../registry/aimy/ui/trend-chart"
@@ -214,6 +215,7 @@ export { CandidateCard, CandidateCards, type Candidate } from "../../../registry
 export { CandidateProfile, type ExperienceItem } from "../../../registry/aimy/ui/candidate-profile"
 export { ChatTable, wrapCell } from "../../../registry/aimy/ui/chat-table"
 export { RankedList, type RankedItem } from "../../../registry/aimy/ui/ranked-list"
+export { FileDrop } from "../../../registry/aimy/ui/file-drop"
 export { UploadResults, type UploadItem, type UploadStatus } from "../../../registry/aimy/ui/upload-results"
 export {
   Deck,
@@ -236,6 +238,8 @@ export {
 export { HorizonDeck, type HorizonMoment, type HorizonStory } from "../../../registry/aimy/ui/horizon-deck"
 export { LanesDeck, type LanesMoment, type LanesStory } from "../../../registry/aimy/ui/lanes-deck"
 export { Combobox, type ComboboxOption } from "../../../registry/aimy/ui/combobox"
+export { MultiSelect, type MultiOption } from "../../../registry/aimy/ui/multi-select"
+export { TagInput } from "../../../registry/aimy/ui/tag-input"
 export { InlineEdit } from "../../../registry/aimy/ui/inline-edit"
 export { Tree, type TreeItem } from "../../../registry/aimy/ui/tree"
 export { SortableList } from "../../../registry/aimy/ui/sortable-list"

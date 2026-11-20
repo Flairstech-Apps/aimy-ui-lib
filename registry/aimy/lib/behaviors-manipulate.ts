@@ -3,7 +3,7 @@
 // and repeat, a two-axis pad, ranges on tracks (time on a calendar, segments
 // on a timeline) and trying a value before choosing it.
 
-import { type Cleanup, type Point, announce, clamp, cleanups, createStore, on, tokenMs } from "./behaviors-core"
+import { type Cleanup, type Point, announce, clamp, cleanups, createStore, isRtl, on, tokenMs } from "./behaviors-core"
 import { bindDrag } from "./behaviors-drag"
 import { rubberBand } from "./behaviors-motion"
 
@@ -181,6 +181,12 @@ export function createSwipeActions(
   const lead = () => options.leading ?? 0
   const trail = () => options.trailing ?? 0
   const width = () => row.getBoundingClientRect().width || 1
+  // offset is on screen (positive moves the row right). The leading side is the start of the row: the
+  // left in left to right, the right in right to left. These map between the two.
+  const rtl = () => isRtl(row)
+  const leftSize = () => (rtl() ? trail() : lead())
+  const rightSize = () => (rtl() ? lead() : trail())
+  const sideOf = (o: number): SwipeSide => ((o > 0) !== rtl() ? "leading" : "trailing")
 
   const off = bindDrag(row, {
     threshold: 8,
@@ -191,14 +197,14 @@ export function createSwipeActions(
     onMove: (i) => {
       if (Math.abs(i.delta.y) > Math.abs(i.delta.x) && !store.get().offset) return
       const raw = start + i.delta.x
-      const limit = raw > 0 ? (options.fullSwipe ? width() : lead()) : options.fullSwipe ? width() : trail()
+      const limit = raw > 0 ? (options.fullSwipe ? width() : leftSize()) : options.fullSwipe ? width() : rightSize()
       const over = Math.abs(raw) - limit
       const offset = over > 0 ? Math.sign(raw) * (limit + rubberBand(over, width())) : raw
-      store.set({ offset: raw > 0 && !lead() ? 0 : raw < 0 && !trail() ? 0 : offset })
+      store.set({ offset: raw > 0 && !leftSize() ? 0 : raw < 0 && !rightSize() ? 0 : offset })
     },
     onEnd: (i) => {
       const o = store.get().offset
-      const side: SwipeSide = o > 0 ? "leading" : "trailing"
+      const side: SwipeSide = sideOf(o)
       const size = side === "leading" ? lead() : trail()
       const flick = Math.abs(i.velocity.x) > 0.5 && Math.sign(i.velocity.x) === Math.sign(o)
       if (options.fullSwipe && Math.abs(o) > width() * 0.6) {
@@ -216,7 +222,7 @@ export function createSwipeActions(
     /** Opens to one side (keyboard focus reaching an action does this). */
     open: (side: SwipeSide) => {
       const size = side === "leading" ? lead() : trail()
-      if (size) store.set({ offset: side === "leading" ? size : -size, open: side })
+      if (size) store.set({ offset: (side === "leading") !== rtl() ? size : -size, open: side })
     },
     close: () => store.set({ offset: 0, open: null }),
     destroy: off,

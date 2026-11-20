@@ -112,6 +112,20 @@
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/combobox/"
   },
   {
+    "name": "multi-select",
+    "title": "Multi-select",
+    "group": "Forms",
+    "description": "Several choices behind one trigger: Knowledge's .k-multi. The Select pill, a panel of real checkboxes (Select all from five), the chosen names on the trigger in words, each choice sent with a form.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/multi-select/"
+  },
+  {
+    "name": "tag-input",
+    "title": "Tag input",
+    "group": "Forms",
+    "description": "Values typed in as tags: Knowledge's .tag-input. Enter, a comma or a paste adds; Backspace takes the last back; each tag has a named remove button; validate refuses one with a sentence; input methods are respected.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/tag-input/"
+  },
+  {
     "name": "inline-edit",
     "title": "Inline edit",
     "group": "Forms",
@@ -427,6 +441,13 @@
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/target-bar/"
   },
   {
+    "name": "bar-list",
+    "title": "Bar list",
+    "group": "Charts",
+    "description": "A bar per category, as QA's audit panel and the operations hub draw them. stacked: the name and its figures over a 4px bar, toned ok, warn or err, with an optional goal mark and a narrowed scale explained in a note. inline: name, short bar, value and share on one line. Rows with onClick open what they count.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/bar-list/"
+  },
+  {
     "name": "funnel",
     "title": "Funnel",
     "group": "Charts",
@@ -509,6 +530,13 @@
     "group": "Chat widgets",
     "description": "Results best first, one per row, each with its reason in two lines and the Fit badge; the row opens the result. For matched positions and any ranking that needs its why.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/ranked-list/"
+  },
+  {
+    "name": "file-drop",
+    "title": "File drop",
+    "group": "Chat widgets",
+    "description": "Where files come in: drop them or press to choose. Knowledge's settings drop with QA's words: card ground, a dashed edge that turns brand on hover and drag-over, what it takes (types, size) on it. Files that don't fit are named with the reason in an alert; the rest go to onFiles.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/file-drop/"
   },
   {
     "name": "upload-results",

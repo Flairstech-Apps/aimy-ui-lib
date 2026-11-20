@@ -19,7 +19,7 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 6. **Compose.** The shell first (`AppShell`, `Topnav`, `Rail`, `Page`), then the content. Any spacing between parts comes from the theme's tokens.
 7. **Wire the doctrine.** Each action declares its entry mode and each item its work state. What AiMY proposes is shown for Accept, Edit or Reject; a direct action ends in a toast with Undo. AI is marked with `AimyMark`.
 8. **Write the copy.** Plain English, a verb on every button, errors that say what to do next.
-9. **Check it.** Both themes, 1536px and phone width, the keyboard alone. If the `aimy-ui-review` skill is present, run it on what you built.
+9. **Check it.** Both themes, 1536px and phone width, the keyboard alone. If the `aimy-ui-review` and `aimy-ui-visual-review` skills are present, run both on what you built: one reads the code, the other looks at the screen.
 
 ## Which component
 

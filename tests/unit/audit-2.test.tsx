@@ -92,6 +92,31 @@ describe("AI surfaces", () => {
   })
 })
 
+describe("agent bridge: several steps and finding", () => {
+  it("does several actions in one call and stops at the first refusal", async () => {
+    let owner = ""
+    let stage = ""
+    const bridge = createAgentBridge({ approve: async () => false })
+    bridge.register({ id: "owner", kind: "select", label: "Owner", state: () => owner, actions: { choose: { description: "Choose", params: { who: { type: "string", description: "Owner", enum: ["Dana", "Rami"] } }, run: (p) => void (owner = String(p.who)) } } })
+    bridge.register({ id: "stage", kind: "select", label: "Stage", state: () => stage, actions: { set: { description: "Set", params: { to: { type: "string", description: "Stage" } }, run: (p) => void (stage = String(p.to)) } } })
+    bridge.register({ id: "deal", kind: "x", label: "Deal", state: () => null, actions: { close: { description: "Close", undoable: false, run: () => {} } } })
+    const ok = await bridge.act("do_steps", { steps: [{ tool: "owner__choose", input: { who: "Rami" } }, { tool: "stage__set", input: { to: "Won" } }] })
+    expect(ok.ok).toBe(true)
+    expect([owner, stage]).toEqual(["Rami", "Won"])
+    const stopped = await bridge.act("do_steps", { steps: [{ tool: "deal__close" }, { tool: "owner__choose", input: { who: "Dana" } }] })
+    expect(stopped.ok).toBe(false)
+    expect(stopped.message).toMatch(/Stopped at step 1 of 2/)
+    expect(owner).toBe("Rami")
+  })
+
+  it("finds a field's choices by words without opening anything", async () => {
+    const bridge = createAgentBridge()
+    bridge.register({ id: "company", kind: "combobox", label: "Company", state: () => null, actions: { choose: { description: "Choose", params: { name: { type: "string", description: "Company", enum: ["Atlas Energy", "Kestrel Logistics", "Atlas Foods"] } }, run: () => {} } } })
+    const r = await bridge.act("find", { words: "atlas" })
+    expect(r.ok && (r.state as { options?: string[] }[])[0]?.options).toEqual(["Atlas Energy", "Atlas Foods"])
+  })
+})
+
 describe("DocEditor", () => {
   it("keeps the editor's tags and drops anything that could run", () => {
     const box = document.createElement("div")

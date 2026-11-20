@@ -92,7 +92,7 @@ export function Canvas({
               ?.focus()
           }}
           className={cn(
-            "aimy-overlay fixed inset-x-0 top-(--topbar-height) bottom-0 z-(--z-modal) flex pr-[var(--safe-right,0px)] pl-[var(--safe-left,0px)] outline-none",
+            "aimy-overlay fixed inset-x-0 top-(--topbar-height) bottom-0 z-(--z-modal) flex pe-[var(--safe-right,0px)] ps-[var(--safe-left,0px)] outline-none",
             className
           )}
         >
@@ -101,7 +101,7 @@ export function Canvas({
           {chats ? (
             <aside
               aria-label="Chats"
-              className="w-60 shrink-0 overflow-y-auto border-r border-(--glass-border) px-3 py-5 max-column:hidden"
+              className="w-60 shrink-0 overflow-y-auto border-e border-(--glass-border) px-3 py-5 max-column:hidden"
             >
               {chats}
             </aside>
@@ -114,7 +114,7 @@ export function Canvas({
                   <button
                     type="button"
                     aria-label="Show chats"
-                    className="overlay-close absolute top-5 left-5 z-1 hidden size-9 place-items-center rounded-lg max-column:grid"
+                    className="overlay-close absolute top-5 start-5 z-1 hidden size-9 place-items-center rounded-lg max-column:grid"
                   >
                     <PanelLeft className="size-4" aria-hidden="true" />
                   </button>
@@ -129,7 +129,7 @@ export function Canvas({
               <button
                 type="button"
                 aria-label="Close the canvas"
-                className="overlay-close absolute top-5 right-5 z-1 grid size-9 place-items-center rounded-lg"
+                className="overlay-close absolute top-5 end-5 z-1 grid size-9 place-items-center rounded-lg"
               >
                 <X className="size-4" aria-hidden="true" />
               </button>
@@ -161,7 +161,7 @@ export function Canvas({
                   aria-label="Conversation"
                   className={cn(
                     "flex flex-1 flex-col gap-4 overflow-y-auto pb-4 [scrollbar-gutter:stable]",
-                    "pr-[max(0.1875rem,calc((100%-53rem)/2-0.3125rem))] pl-[max(0.5rem,calc((100%-53rem)/2))]",
+                    "pe-[max(0.1875rem,calc((100%-53rem)/2-0.3125rem))] ps-[max(0.5rem,calc((100%-53rem)/2))]",
                     hasBasis ? "pt-4" : "pt-[5rem]"
                   )}
                 >

@@ -119,3 +119,74 @@ export function useAgentActivity() {
 
 const EMPTY: { activity: AgentActivity[]; acting: string | null; surfaces: number } = { activity: [], acting: null, surfaces: 0 }
 const NONE = { get: () => EMPTY, subscribe: () => () => {} }
+
+/**
+ * Sets a native field's value the way typing does, so a React onChange (controlled or not) hears it.
+ * Returns the value it replaced.
+ */
+export function setFieldValue(el: HTMLInputElement | HTMLTextAreaElement, value: string): string {
+  const prev = el.value
+  const proto = el instanceof HTMLTextAreaElement ? HTMLTextAreaElement.prototype : HTMLInputElement.prototype
+  Object.getOwnPropertyDescriptor(proto, "value")?.set?.call(el, value)
+  el.dispatchEvent(new Event("input", { bubbles: true }))
+  return prev
+}
+
+/** Shows a text field to AiMY: it reads the value and types a new one (undoable). Never a password. */
+export function useAgentTextField(id: string | undefined, el: HTMLInputElement | HTMLTextAreaElement | null) {
+  const secret = el instanceof HTMLInputElement && (el.type === "password" || el.autocomplete?.includes("password"))
+  useAgentSurface(
+    secret ? undefined : id,
+    {
+      kind: el instanceof HTMLTextAreaElement ? "text area" : "text field",
+      label: "",
+      state: () => ({ value: el?.value ?? "", ...(el?.disabled ? { disabled: true } : {}) }),
+      actions: {
+        write: {
+          description: "Write a new value",
+          keywords: "fill type enter set change replace",
+          params: { text: { type: "string", description: "The new value" } },
+          say: (p) => `wrote “${String(p.text)}”`,
+          run: (p) => {
+            if (!el || el.disabled || el.readOnly) throw new Error("This field can't be changed now.")
+            const prev = setFieldValue(el, String(p.text ?? ""))
+            return () => void setFieldValue(el, prev)
+          },
+        },
+      },
+    },
+    el
+  )
+}
+
+/** Shows a checkbox or switch to AiMY: it reads whether it's on and turns it on or off (undoable). */
+export function useAgentToggle(id: string | undefined, el: HTMLElement | null, kind: "checkbox" | "switch") {
+  const isOn = () => el?.getAttribute("data-state") === "checked" || el?.getAttribute("aria-checked") === "true"
+  useAgentSurface(
+    id,
+    {
+      kind,
+      label: "",
+      state: () => ({ on: isOn(), ...(el?.hasAttribute("disabled") ? { disabled: true } : {}) }),
+      actions: {
+        set: {
+          description: "Turn it on or off",
+          keywords: "check uncheck tick enable disable toggle",
+          params: { on: { type: "boolean", description: "On or off" } },
+          say: (p) => (p.on ? "turned on" : "turned off"),
+          run: (p) => {
+            if (!el || el.hasAttribute("disabled")) throw new Error("This can't be changed now.")
+            if (isOn() === !!p.on) return () => {}
+            el.click()
+            // Undo puts it back only if it is still as AiMY left it.
+            return () => {
+              if (isOn() === !!p.on) el.click()
+            }
+          },
+        },
+      },
+    },
+    el
+  )
+}
+

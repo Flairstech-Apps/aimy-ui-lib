@@ -1,0 +1,137 @@
+/* The person's own settings: what changes when Windows or the browser asks for it. Nothing here applies
+   by default; every rule sits inside a media query the person turned on (Nour, 20 Nov: accessibility
+   never changes the UI, it works behind the scenes or under the person's settings).
+
+   - forced-colors: active     Windows High Contrast and other forced palettes
+   - prefers-reduced-motion    loops that run on their own hold still
+   - prefers-contrast: more    stronger inks, edges and rules
+   - prefers-reduced-transparency: reduce   solid grounds instead of glass and blur */
+
+/* ── Forced colours ──────────────────────────────────────────────────────
+   The browser replaces colours with the person's palette and drops backgrounds and shadows, so a
+   state drawn only with a tinted ground or a glow disappears. Outlines and borders survive (even
+   transparent ones become visible), and the system colours Highlight, SelectedItem, CanvasText and
+   ButtonText follow the person's palette. forced-color-adjust: none only where a part must draw a
+   system colour itself (a filled track, a chart). */
+@media (forced-colors: active) {
+  /* Focus: everywhere, an outline, even where a part draws focus as a glow or an inner ring. */
+  :focus-visible { outline: 2px solid Highlight !important; outline-offset: 2px; }
+
+  /* The chosen, current or checked one: the palette's selection colours. */
+  [role="option"][aria-selected="true"],
+  [role="treeitem"][aria-selected="true"],
+  [role="tab"][aria-selected="true"],
+  [role="radio"][aria-checked="true"],
+  [role="menuitemradio"][aria-checked="true"],
+  [role="grid"] button[aria-selected="true"],
+  [aria-current="page"],
+  button[aria-pressed="true"] {
+    forced-color-adjust: none;
+    background: SelectedItem;
+    color: SelectedItemText;
+  }
+  [role="grid"] button[aria-current="date"] { outline: 1px solid CanvasText; outline-offset: -3px; }
+
+  /* Switch: a track with an edge, filled when on, and a thumb that shows either way. */
+  .t-toggle { forced-color-adjust: none; background: Canvas; border: 1px solid CanvasText; }
+  .t-toggle[data-state="checked"] { background: Highlight; border-color: Highlight; }
+  .t-toggle-thumb { forced-color-adjust: none; background: CanvasText; }
+  .t-toggle[data-state="checked"] .t-toggle-thumb { background: HighlightText; }
+
+  /* Checkbox: "some" is a dash drawn as a filled bar. */
+  [data-slot="checkbox"] { border-color: CanvasText; }
+  [data-slot="checkbox"][data-state="checked"] { forced-color-adjust: none; background: Highlight; color: HighlightText; border-color: Highlight; }
+  [data-slot="checkbox"] [data-state="indeterminate"] > span { forced-color-adjust: none; background: CanvasText; }
+
+  /* Fields and the composer show focus with a glow: an outline instead. */
+  [data-slot="composer"]:focus-within,
+  .t-input:focus-within { outline: 2px solid Highlight; outline-offset: 2px; }
+
+  /* Bars and meters are filled grounds: draw them in the palette. */
+  [data-slot="progress"] { forced-color-adjust: none; background: Canvas; outline: 1px solid CanvasText; }
+  [data-slot="progress"] > div { background: Highlight; }
+  [role="meter"] { forced-color-adjust: none; outline: 1px solid CanvasText; }
+  [role="meter"] > i { background: Highlight; }
+
+  /* Charts keep their own colours: their series are told apart by colour, and the browser's single
+     palette would merge them. Each chart also says its figures in words or a table. */
+  [data-slot="donut"], [data-slot="sparkline"], [data-slot="trend-chart"], [data-slot="funnel"],
+  [data-slot="heatmap"], [data-slot="score"], [data-slot="kpi-widget"] svg, .slv-score svg, .s-att-track {
+    forced-color-adjust: none;
+  }
+
+  /* Glass panels and popups lose their shadow: an edge keeps them apart from the page. */
+  [role="dialog"], [role="menu"], [role="listbox"], [data-slot="toaster"] > *, [data-slot="toaster-alert"] > * {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────
+   Most parts already hold still under this setting; these loops ran on their own and didn't. A
+   loading spinner keeps turning (it says something is happening); decoration stops. */
+@media (prefers-reduced-motion: reduce) {
+  .t-think-text::before,
+  .b-cur-step.is-live .b-cur-label,
+  .b-cur-step.is-live .b-cur-pin::after,
+  .b-about-g.is-checking::before,
+  .nt-rec,
+  .dk-bloom,
+  .dk-mote {
+    animation: none !important;
+  }
+}
+
+/* ── More contrast ───────────────────────────────────────────────────────
+   Secondary and quiet ink step up to the primary ink's neighbours, and edges and rules get stronger,
+   from the tokens, so every part follows. */
+@media (prefers-contrast: more) {
+  :root,
+  [data-theme="dark"] {
+    --ink-secondary: var(--d100);
+    --ink-quiet: var(--d200);
+    --ink-placeholder: var(--d200);
+    --card-border: var(--w18);
+    --card-border-hover: rgba(255, 255, 255, 0.32);
+    --glass-border: var(--w18);
+    --w07: rgba(255, 255, 255, 0.16);
+    --w08: rgba(255, 255, 255, 0.18);
+  }
+  [data-theme="light"] {
+    --ink-secondary: #1e293b;
+    --ink-quiet: #334155;
+    --ink-placeholder: #475569;
+    --card-border: rgba(15, 23, 42, 0.32);
+    --card-border-hover: rgba(15, 23, 42, 0.48);
+    --glass-border: rgba(15, 23, 42, 0.32);
+    --w07: rgba(15, 23, 42, 0.18);
+    --w08: rgba(15, 23, 42, 0.2);
+  }
+}
+
+/* ── Less transparency ───────────────────────────────────────────────────
+   Glass and blur become solid grounds; scrims stay (they say a panel is open). */
+@media (prefers-reduced-transparency: reduce) {
+  :root,
+  [data-theme="dark"] {
+    --glass-bg: var(--card-bg-raised);
+    --glass-strong: var(--card-bg-raised);
+    --glass-soft: var(--card-bg-raised);
+    --panel-bg: var(--card-bg-raised);
+    --topbar-bg: var(--body-bg);
+    --panel-veil: var(--body-bg);
+  }
+  [data-theme="light"] {
+    --glass-bg: #ffffff;
+    --glass-strong: #ffffff;
+    --glass-soft: #ffffff;
+    --panel-bg: #ffffff;
+    --topbar-bg: var(--body-bg);
+    --panel-veil: var(--body-bg);
+  }
+  *,
+  *::before,
+  *::after {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}

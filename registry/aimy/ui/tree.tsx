@@ -187,7 +187,7 @@ export function Tree({ items, label, defaultExpanded, selected, onSelect, checka
           <div
             style={{ paddingInlineStart: `${(r.level - 1) * 16 + 4}px` }}
             className={cn(
-              "flex min-h-8 items-center gap-2 rounded-md pr-2",
+              "flex min-h-8 items-center gap-2 rounded-md pe-2",
               "transition-[background-color,color] duration-(--t-fast) ease-out group-hover/row:bg-w05",
               isSelected && "bg-brand-dim text-ai-ink group-hover/row:bg-brand-dim"
             )}
@@ -202,7 +202,7 @@ export function Tree({ items, label, defaultExpanded, selected, onSelect, checka
               }}
               className={cn("grid size-5 shrink-0 place-items-center rounded-sm text-ink-secondary", r.expanded === undefined && "invisible")}
             >
-              <ChevronRight strokeWidth={2} className={cn("size-3.5 transition-transform duration-(--t-base) ease-out", r.expanded && "rotate-90")} />
+              <ChevronRight strokeWidth={2} className={cn("size-3.5 transition-transform duration-(--t-base) ease-out", r.expanded && "rotate-90 rtl:-rotate-90")} />
             </span>
             {state !== undefined ? <TreeCheck state={state} /> : null}
             {item.icon ? <span className="flex shrink-0 text-ink-secondary [&_svg]:size-4">{item.icon}</span> : null}

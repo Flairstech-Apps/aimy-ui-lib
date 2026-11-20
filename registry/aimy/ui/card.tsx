@@ -37,7 +37,7 @@ export function CardHead({ className, ...props }: React.ComponentProps<"div">) {
 
 /** The record's type, in words: Contact, Campaign, Policy. */
 export function CardType({ className, ...props }: React.ComponentProps<"span">) {
-  return <span data-slot="card-type" className={cn("ml-auto text-xs font-semibold text-ink-quiet", className)} {...props} />
+  return <span data-slot="card-type" className={cn("ms-auto text-xs font-semibold text-ink-quiet", className)} {...props} />
 }
 
 type CardTitleProps = React.ComponentProps<"button"> & {
@@ -57,7 +57,7 @@ export function CardTitle({ asChild = false, level = 3, className, ...props }: C
         data-slot="card-title"
         type={asChild ? undefined : "button"}
         className={cn(
-          "text-left text-lg leading-tight font-bold text-ink [overflow-wrap:anywhere] transition-[color] duration-(--t-fast) ease-out hover:text-accent-text",
+          "text-start text-lg leading-tight font-bold text-ink [overflow-wrap:anywhere] transition-[color] duration-(--t-fast) ease-out hover:text-accent-text",
           "after:absolute after:inset-0 after:rounded-xl after:content-['']",
           className
         )}

@@ -16,6 +16,7 @@ const SKILLS = {
   "aimy-ui-build": "Build a screen, panel or flow from a screenshot, a mock-up or a description, using only AiMY UI.",
   "aimy-ui-review": "Review a screen, component or diff against AiMY UI's rules and report each break with its fix.",
   "aimy-ui-upgrade": "Bring an app up to the latest AiMY UI release without losing its own edits.",
+  "aimy-ui-visual-review": "Check how a screen looks, rendered: alignment, spacing, overflow, contrast, both themes, desk and phone widths, measured in pixels.",
 }
 const SKILL_ARG = {
   "aimy-ui-build": {
@@ -27,6 +28,10 @@ const SKILL_ARG = {
     description: "What to review: files, a diff, or a screen. Leave empty for the current diff.",
   },
   "aimy-ui-upgrade": null,
+  "aimy-ui-visual-review": {
+    name: "target",
+    description: "Which screen to look at: its URL, and any state to set up first.",
+  },
 }
 
 const TOOLS = [
@@ -63,7 +68,7 @@ const TOOLS = [
   {
     name: "get_skill",
     description:
-      "Get one of the AiMY UI task skills as instructions: aimy-ui-build (build a screen from a brief), aimy-ui-review (check a screen against the rules) or aimy-ui-upgrade (take a new release).",
+      "Get one of the AiMY UI task skills as instructions: aimy-ui-build (build a screen from a brief), aimy-ui-review (check a screen's code against the rules), aimy-ui-visual-review (check how a screen looks, rendered) or aimy-ui-upgrade (take a new release).",
     inputSchema: {
       type: "object",
       properties: { name: { type: "string", enum: Object.keys(SKILLS), description: "Which skill." } },

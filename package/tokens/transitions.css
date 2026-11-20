@@ -167,7 +167,7 @@
 
 .t-tabs-pill {
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   width: 0;
   transform: translateX(0);
   transition:
@@ -229,6 +229,8 @@
 .t-toggle { transition: background var(--toggle-track) var(--toggle-ease); }
 .t-toggle-thumb { translate: 0 0; will-change: translate; }
 .t-toggle[data-on="true"] .t-toggle-thumb { translate: var(--toggle-travel) 0; }
+/* Right to left: on is to the left, so the thumb travels the other way, overshoot included. */
+.t-toggle:dir(rtl) { --toggle-travel: -16px; --toggle-ov1: -1px; --toggle-ov2: -0px; }
 .t-toggle.is-init[data-on="true"] .t-toggle-thumb { animation: t-toggle-on var(--toggle-dur) var(--toggle-ease) both; }
 .t-toggle.is-init[data-on="false"] .t-toggle-thumb { animation: t-toggle-off var(--toggle-dur) var(--toggle-ease) both; }
 @keyframes t-toggle-on {
@@ -601,8 +603,8 @@
 .t-think-text {
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
   display: block;
   color: var(--think-base);
   white-space: nowrap;

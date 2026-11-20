@@ -228,7 +228,7 @@ function ThinkLine({ states }: { states: string[] }) {
   const text = current
   const longest = states.reduce((a, b) => (b.length > a.length ? b : a), "")
   return (
-    <span className="t-think text-left text-sm font-semibold">
+    <span className="t-think text-start text-sm font-semibold">
       <span className="t-think-sizer" aria-hidden="true">
         {longest}
       </span>

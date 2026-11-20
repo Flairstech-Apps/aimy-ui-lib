@@ -220,7 +220,7 @@ export function SortableList<T>({ items, getKey, getLabel, onReorder, renderItem
             data-lifted={lifted ? "" : undefined}
             style={shift ? { transform: `translate3d(0, ${shift}px, 0)` } : undefined}
             className={cn(
-              "relative flex items-center gap-2 rounded-lg border bg-card py-1.5 pr-3 pl-1.5 text-xs text-ink",
+              "relative flex items-center gap-2 rounded-lg border bg-card py-1.5 pe-3 ps-1.5 text-xs text-ink",
               "transition-[box-shadow,border-color,background-color,scale] duration-(--t-fast) ease-out",
               // Rows making room glide; the held row follows the pointer exactly.
               holding && !lifted && drag?.phase === "dragging" && "transition-[transform,box-shadow,border-color,background-color] duration-(--t-base)",

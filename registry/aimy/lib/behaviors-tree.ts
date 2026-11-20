@@ -4,6 +4,7 @@
 // (Up and Down, Right opens or enters, Left closes or goes to the parent,
 // Home, End, * opens the siblings, letters type ahead).
 
+import { readingKey } from "./behaviors-core"
 import { createTypeahead } from "./behaviors-focus"
 
 export type TreeNode<T = unknown> = {
@@ -182,7 +183,7 @@ export function createTreeNavigation<T>(options: {
     onMatch: (r) => options.onFocus(r.id),
   })
   return {
-    onKeyDown(e: { key: string; preventDefault(): void; ctrlKey?: boolean; metaKey?: boolean; altKey?: boolean }): boolean {
+    onKeyDown(e: { key: string; preventDefault(): void; ctrlKey?: boolean; metaKey?: boolean; altKey?: boolean; target?: EventTarget | null; currentTarget?: EventTarget | null }): boolean {
       const rows = options.rows()
       const id = options.focused()
       const i = rows.findIndex((r) => r.id === id)
@@ -210,7 +211,8 @@ export function createTreeNavigation<T>(options: {
         Enter: () => row && options.onSelect?.(row.id),
         " ": () => row && options.onSelect?.(row.id),
       }
-      const fn = act[e.key]
+      // Right to left: ArrowLeft opens and goes in, ArrowRight closes and goes up.
+      const fn = act[readingKey(e)]
       if (fn && !(e.key === " " && typeahead.active())) {
         e.preventDefault()
         fn()

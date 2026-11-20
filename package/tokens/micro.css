@@ -27,7 +27,7 @@
 .t-badge {
   position: absolute;
   top: -6px;
-  right: -8px;
+  inset-inline-end: -8px;
   pointer-events: none;
   will-change: transform;
 }
@@ -83,7 +83,7 @@
 }
 .aimy-tip.is-on { opacity: 1; transform: none; transition-duration: var(--t-base); }
 .aimy-tip::before {
-  content: ""; position: absolute; top: -0.3125rem; left: calc(var(--tip-x, 50%) - 0.3125rem);
+  content: ""; position: absolute; top: -0.3125rem; inset-inline-start: calc(var(--tip-x, 50%) - 0.3125rem);
   width: 0.625rem; height: 0.625rem; background: var(--card-bg); transform: rotate(45deg);
   border-radius: 0.125rem 0 0 0; box-shadow: -0.0625rem -0.0625rem 0 var(--card-border-hover);
 }

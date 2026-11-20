@@ -2,6 +2,7 @@
 
 import { RadioGroup } from "radix-ui"
 import { useCallback, useLayoutEffect, useRef, useState } from "react"
+import { useAgentSurface } from "@/lib/behaviors-agent-react"
 import { cn } from "@/lib/utils"
 
 // Knowledge's .seg after its override: a pill track with an inset ring, the
@@ -23,13 +24,19 @@ type SegmentedProps = {
   disabled?: boolean
   required?: boolean
   className?: string
+  /** Shows this part to AiMY under this id (inside an AgentProvider), so it can read it and choose. */
+  agent?: string
 }
 
-export function Segmented({ options, value, defaultValue, onValueChange, label, name, disabled, required, className }: SegmentedProps) {
+export function Segmented({ options, value, defaultValue, onValueChange, label, name, disabled, required, className, agent }: SegmentedProps) {
   const [inner, setInner] = useState(defaultValue)
   // Options that arrive after the first render still start on the first one.
   const current = value ?? inner ?? options[0]?.value
-  const bar = useRef<HTMLDivElement>(null)
+  const bar = useRef<HTMLDivElement | null>(null)
+  // Radix reads direction only from its own provider; this reads the page's, so the arrow keys follow
+  // right to left without one.
+  const [dir, setDir] = useState<"ltr" | "rtl" | undefined>(undefined)
+  const [node, setNode] = useState<HTMLDivElement | null>(null)
   const pill = useRef<HTMLSpanElement>(null)
 
   const place = useCallback((animate: boolean) => {
@@ -74,9 +81,44 @@ export function Segmented({ options, value, defaultValue, onValueChange, label, 
     return () => ro.disconnect()
   }, [place, options.length])
 
+  const nameOf = (o: Option) => (typeof o.label === "string" ? o.label : o.value)
+  const pick = (next: string) => {
+    if (value === undefined) setInner(next)
+    onValueChange?.(next)
+  }
+  useAgentSurface(
+    agent,
+    {
+      kind: "segmented",
+      label,
+      state: () => ({ chosen: nameOf(options.find((o) => o.value === current) ?? options[0]!), options: options.map(nameOf) }),
+      actions: {
+        choose: {
+          description: "Choose an option",
+          keywords: "pick select show switch",
+          params: { option: { type: "string", description: "The option's name as shown", enum: options.map(nameOf) } },
+          say: (p) => `chose ${String(p.option)}`,
+          run: (p) => {
+            const next = options.find((o) => nameOf(o) === p.option)
+            if (!next || disabled) throw new Error("That option can't be chosen now.")
+            const prev = current
+            pick(next.value)
+            return () => void (prev !== undefined && pick(prev))
+          },
+        },
+      },
+    },
+    node
+  )
+
   return (
     <RadioGroup.Root
-      ref={bar}
+      ref={(el) => {
+        bar.current = el
+        if (el !== node) setNode(el)
+        if (el && getComputedStyle(el).direction === "rtl" && dir !== "rtl") setDir("rtl")
+      }}
+      dir={dir}
       data-slot="segmented"
       aria-label={label}
       value={current}

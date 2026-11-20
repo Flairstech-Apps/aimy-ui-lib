@@ -1,7 +1,8 @@
 "use client"
 
 import { Checkbox as Primitive } from "radix-ui"
-import { useId } from "react"
+import { useId, useState } from "react"
+import { useAgentToggle } from "@/lib/behaviors-agent-react"
 import { cn } from "@/lib/utils"
 import { useField } from "@/components/field"
 
@@ -11,13 +12,18 @@ import { useField } from "@/components/field"
 type CheckboxProps = Omit<React.ComponentProps<typeof Primitive.Root>, "children"> & {
   /** Words beside the box. Clicking them toggles it. */
   label?: React.ReactNode
+  /** Shows this to AiMY under this id (inside an AgentProvider), so it can read it and turn it on or off. */
+  agent?: string
 }
 
-export function Checkbox({ label, className, id, ...props }: CheckboxProps) {
+export function Checkbox({ label, className, id, agent, ...props }: CheckboxProps) {
   const auto = useId()
   const field = useField()
+  const [node, setNode] = useState<HTMLButtonElement | null>(null)
+  useAgentToggle(agent, node, "checkbox")
   const box = (
     <Primitive.Root
+      ref={setNode}
       // Inside a Field, its hint and error reach it (a Field can hold several, so each keeps its own id).
       id={id ?? auto}
       aria-invalid={field?.invalid || undefined}

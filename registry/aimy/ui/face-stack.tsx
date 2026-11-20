@@ -59,7 +59,7 @@ export function FaceStack({ people, max = 4, menu, className }: FaceStackProps) 
       {shown.map((p, i) => (
         <span
           key={p.id}
-          className={cn("relative inline-flex rounded-pill", i > 0 && (menu ? "-ml-2" : "-ml-1.5"))}
+          className={cn("relative inline-flex rounded-pill", i > 0 && (menu ? "-ms-2" : "-ms-1.5"))}
           style={{ zIndex: shown.length - i }}
         >
           <Avatar name={p.name} src={p.src} size="xs" className="shadow-[0_0_0_2px_var(--face-ring,var(--card-bg))]" />
@@ -70,7 +70,7 @@ export function FaceStack({ people, max = 4, menu, className }: FaceStackProps) 
           className={cn(
             "relative inline-grid size-6 shrink-0 place-items-center rounded-pill border border-edge bg-raised text-2xs font-bold text-ink tabular-nums",
             "shadow-[0_0_0_2px_var(--face-ring,var(--card-bg))]",
-            menu ? "-ml-2" : "-ml-1.5"
+            menu ? "-ms-2" : "-ms-1.5"
           )}
         >
           {/* Three digits don't fit the 24px circle: past 99 it says 99+, and a screen reader hears the count. */}
@@ -95,7 +95,7 @@ export function FaceStack({ people, max = 4, menu, className }: FaceStackProps) 
       data-slot="face-stack"
       aria-label={menu.label}
       className={cn(
-        "inline-flex items-center gap-2 rounded-pill border border-edge bg-w05 py-0.5 pr-2 pl-1 text-ink-secondary",
+        "inline-flex items-center gap-2 rounded-pill border border-edge bg-w05 py-0.5 pe-2 ps-1 text-ink-secondary",
         "transition-[background-color,border-color,color] duration-(--t-fast) ease-out hover:border-edge-hover hover:text-ink",
         "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand",
         className

@@ -195,7 +195,7 @@
 .vx-read {
   display: flex; align-items: center; gap: 0.5rem;
   flex: 1; min-width: 0;
-  padding-left: 0.25rem;
+  padding-inline-start: 0.25rem;
 }
 .vx-wave {
   display: flex; align-items: center; justify-content: flex-end; gap: 0.125rem;
@@ -212,7 +212,7 @@
 .vx-clock {
   flex: none; min-width: 2.25em;   /* Poppins has no tabular figures */
   font-size: var(--ty-meta); font-weight: var(--fw-semibold);
-  font-variant-numeric: tabular-nums; text-align: right;
+  font-variant-numeric: tabular-nums; text-align: end;
   color: var(--err);
   line-height: 1;
 }
@@ -222,7 +222,7 @@
 .vx-note {
   display: flex; align-items: center; gap: 0.5rem;
   flex: 1; min-width: 0;
-  padding-left: 0.25rem;
+  padding-inline-start: 0.25rem;
 }
 .vx-note-t {
   flex: 1; min-width: 0;

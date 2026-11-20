@@ -177,6 +177,26 @@ export function createAgentBridge(options: AgentBridgeOptions = {}) {
           description: `Read what is on the screen: every part ${who} can work with, the state it shows, and the actions it takes.`,
           input_schema: { type: "object", properties: {}, required: [] },
         },
+        {
+          name: "do_steps",
+          description: `Do several of these actions in one call, in order: fill a form, set three fields. Each step is a tool name from this list and its input. It stops at the first step that fails or that the person refuses, and says which; the ones before it stay done (each can be undone).`,
+          input_schema: {
+            type: "object",
+            properties: {
+              steps: {
+                type: "array",
+                description: "The actions, in order.",
+                items: { type: "object", properties: { tool: { type: "string", description: "A tool name from this list." }, input: { type: "object", description: "Its input." } }, required: ["tool"] },
+              },
+            },
+            required: ["steps"],
+          },
+        },
+        {
+          name: "find",
+          description: `Find things on the screen by words, without opening anything: the choices a field accepts (a company, an owner) and the parts whose name or state mention the words. Use it before choosing, instead of reading the whole screen.`,
+          input_schema: { type: "object", properties: { words: { type: "string", description: "What to look for." } }, required: ["words"] },
+        },
       ]
       for (const s of surfaces.values()) {
         for (const [name, a] of Object.entries(s.actions)) {
@@ -196,6 +216,37 @@ export function createAgentBridge(options: AgentBridgeOptions = {}) {
     async act(name: string | { surface: string; action: string }, input: Record<string, unknown> = {}, opts: { by?: "aimy" | "person" } = {}): Promise<AgentResult> {
       const person = opts.by === "person"
       if (name === "read_screen") return { ok: true, message: "Here is the screen.", state: bridge.snapshot() }
+      if (name === "do_steps") {
+        // Several actions in one call: one round trip for a whole form. Each still goes through the
+        // ladder (asking where it must), and a refusal or a failure stops the rest.
+        const steps = Array.isArray(input.steps) ? (input.steps as { tool?: unknown; input?: unknown }[]) : []
+        if (!steps.length) return { ok: false, message: "Give the steps to do, each a tool name and its input." }
+        const done: { tool: string; ok: boolean; message: string }[] = []
+        for (const step of steps) {
+          const tool = typeof step.tool === "string" ? step.tool : ""
+          if (!tool || tool === "do_steps") return { ok: false, message: `Step ${done.length + 1} has no tool to run.` }
+          const r = await bridge.act(tool, (step.input && typeof step.input === "object" ? step.input : {}) as Record<string, unknown>, opts)
+          done.push({ tool, ok: r.ok, message: r.message })
+          if (!r.ok) return { ok: false, message: `Stopped at step ${done.length} of ${steps.length} (${tool}): ${r.message} The steps before it are done.` }
+        }
+        return { ok: true, message: `Did all ${steps.length} steps.`, state: { steps: done, screen: bridge.snapshot() } }
+      }
+      if (name === "find") {
+        const words = String(input.words ?? "").toLowerCase().trim()
+        if (!words) return { ok: false, message: "Say what to look for." }
+        const hits: { surface: string; label: string; tool?: string; param?: string; options?: string[]; state?: unknown }[] = []
+        for (const s of surfaces.values()) {
+          for (const [action, a] of Object.entries(s.actions))
+            for (const [param, p] of Object.entries(a.params ?? {})) {
+              const options = (p.enum ?? []).filter((o) => o.toLowerCase().includes(words)).slice(0, 50)
+              if (options.length) hits.push({ surface: s.id, label: s.label, tool: toolName(s.id, action), param, options })
+            }
+          const state = s.state()
+          if (s.label.toLowerCase().includes(words) || JSON.stringify(state ?? "").toLowerCase().includes(words)) hits.push({ surface: s.id, label: s.label, state })
+          if (hits.length >= 50) break
+        }
+        return { ok: true, message: hits.length ? `Found ${hits.length} match${hits.length === 1 ? "" : "es"}.` : "Nothing on the screen matches. Try fewer words.", state: hits }
+      }
       let surface: AgentSurface | undefined
       let actionName = ""
       if (typeof name === "string") {

@@ -31,7 +31,7 @@
   background: var(--panel-bg); border: 1px solid var(--glass-border);
   border-radius: var(--r-lg); box-shadow: var(--shadow-xl);
   -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
-  padding: 0.6875rem 0.75rem; text-align: left;
+  padding: 0.6875rem 0.75rem; text-align: start;
 }
 /* Opens and closes with transitions.dev's tooltip (17), the plan's motion for
    citation previews: in after its short delay, out at once. */
@@ -45,15 +45,15 @@
 .cp-head { display: flex; align-items: center; gap: 0.4375rem; flex-wrap: wrap; margin-bottom: 0.4375rem; }
 .cp-title { font-size: 0.875rem; font-weight: var(--fw-bold); color: var(--d50); line-height: 1.4;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 10.9375rem; }
-.cp-head .trust-state { margin-left: auto; }
+.cp-head .trust-state { margin-inline-start: auto; }
 .cp-passage {
   margin: 0; font-size: 0.875rem; line-height: 1.65; color: var(--ink-secondary);
   max-height: 6rem; overflow: hidden; position: relative;
-  padding-left: 0.5625rem; border-left: 2px solid var(--card-border);
+  padding-inline-start: 0.5625rem; border-inline-start: 2px solid var(--card-border);
 }
 .cp-foot { display: flex; align-items: center; gap: 0.375rem; margin-top: 0.5625rem;
   padding-top: 0.5rem; border-top: 1px solid var(--w07); }
-.cp-src { font-size: 0.875rem; color: var(--ink-secondary); margin-right: auto;
+.cp-src { font-size: 0.875rem; color: var(--ink-secondary); margin-inline-end: auto;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cp-src .tc-kind { display: inline-flex; align-items: center; gap: 0.25rem; }
 .cp-src .tc-kind svg { width: 0.625rem; height: 0.625rem; }
@@ -76,7 +76,7 @@
 .source-item {
   display: flex; align-items: center; gap: 0.5625rem; padding: 0.5rem 0.6875rem;
   border-radius: var(--r-md); background: var(--card-bg-raised); border: 1px solid var(--card-border);
-  font-size: 0.875rem; font-weight: var(--fw-semibold); color: var(--d200); cursor: pointer; text-align: left;
+  font-size: 0.875rem; font-weight: var(--fw-semibold); color: var(--d200); cursor: pointer; text-align: start;
   transition: border-color var(--t-fast) var(--ease-out);
 }
 .source-item:hover { border-color: var(--card-border-hover); }
@@ -120,14 +120,14 @@
 [data-theme="light"] .ts-unverified { background: rgba(16,24,40,0.05); }
 .ts-superseded  { background: var(--info-bg); color: var(--ink-info); border-color: color-mix(in srgb, var(--info) 24%, transparent); }
 /* Excluded from answers: the consequence is on the badge, not only in a title. */
-.trust-state.is-excluded { padding-right: 0.4375rem; }
+.trust-state.is-excluded { padding-inline-end: 0.4375rem; }
 .trust-state .ts-excluded {
-  padding-left: 0.375rem; margin-left: 0.0625rem; border-left: 1px solid currentColor;
+  padding-inline-start: 0.375rem; margin-inline-start: 0.0625rem; border-inline-start: 1px solid currentColor;
 }
 /* Set by hand carries a marker wherever it shows. */
 .pin-dot {
   width: 0.3125rem; height: 0.3125rem; border-radius: 50%;
-  background: currentColor; margin-left: 0.125rem; flex-shrink: 0;
+  background: currentColor; margin-inline-start: 0.125rem; flex-shrink: 0;
 }
 
 /* ── Trust disclosure ──────────────────────────────────── */
@@ -194,20 +194,20 @@
 .b-conf.is-gap, .b-conf.is-none { color: var(--info-text); border-color: color-mix(in srgb, currentColor 35%, transparent); }
 .b-conf.is-busy { padding: 0; color: var(--ink-secondary); }
 .b-wait-pop {
-  position: absolute; z-index: 60; top: calc(100% + 8px); right: 0;
+  position: absolute; z-index: 60; top: calc(100% + 8px); inset-inline-end: 0;
   width: max-content; max-width: min(20rem, calc(100vw - 2rem)); padding: 12px 14px; /* never wider than a phone */
   border-radius: var(--r-lg); border: 1px solid var(--card-border-hover);
   background: var(--panel-bg); box-shadow: var(--shadow-lg);
   -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
   font-size: var(--fs-xs); font-weight: var(--fw-regular, 400); color: var(--d100);
-  line-height: var(--lh-base); white-space: normal; text-align: left;
+  line-height: var(--lh-base); white-space: normal; text-align: start;
   opacity: 0; visibility: hidden;
   transform: translateY(-4px) scale(0.98); transform-origin: top right;
   transition: opacity 150ms ease-out, transform 150ms ease-out, visibility 0s linear 150ms;
 }
 /* The 8px between the badge and the popover is bridged, so the pointer can
    cross to the button without the popover closing under it. */
-.b-wait-pop::before { content: ''; position: absolute; left: 0; right: 0; top: -9px; height: 9px; }
+.b-wait-pop::before { content: ''; position: absolute; inset-inline-start: 0; inset-inline-end: 0; top: -9px; height: 9px; }
 .b-wait-pop b { color: var(--d50); font-weight: var(--fw-semibold); }
 .b-wait-pop .b-pop-act { display: flex; margin-top: 8px; }
 /* In after a short intent delay, out at once: the tooltip timing. */

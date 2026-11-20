@@ -78,7 +78,7 @@
 .b-cal-day[aria-selected="true"] .b-cal-num { color: var(--d50); font-weight: var(--fw-bold); }
 .b-cal-day.is-today .b-cal-num::after {
   content: ""; position: absolute; left: 50%; bottom: -9px; width: 4px; height: 4px;
-  margin-left: -2px; border-radius: var(--r-pill); background: var(--accent);
+  margin-inline-start: -2px; border-radius: var(--r-pill); background: var(--accent);
 }
 .b-cal-day.is-today[aria-selected="true"] .b-cal-num::after { display: none; }
 .b-cal-dots { position: relative; display: flex; gap: 4px; height: 7px; align-items: center; }
@@ -92,7 +92,7 @@
 .k-callback { background: var(--cyan); }
 .k-owed { background: var(--d400); }
 
-.b-cal-side { min-width: 0; padding-left: 18px; margin-left: 18px; border-left: 1px solid var(--card-border); }
+.b-cal-side { min-width: 0; padding-inline-start: 18px; margin-inline-start: 18px; border-inline-start: 1px solid var(--card-border); }
 .b-cal-cap {
   margin: 0; padding: 0 8px 8px;
   font-size: var(--fs-2xs); font-weight: var(--fw-medium); letter-spacing: 0.08em;
@@ -101,7 +101,7 @@
 .b-cal-agenda { display: flex; flex-direction: column; }
 .b-cal-ev {
   display: flex; flex-direction: column; align-items: stretch; gap: 3px;
-  width: 100%; text-align: left; padding: 9px 8px; border: 0; border-radius: var(--r-md);
+  width: 100%; text-align: start; padding: 9px 8px; border: 0; border-radius: var(--r-md);
   background: none; cursor: pointer; font-family: inherit; color: inherit;
   transition: background-color var(--t-fast);
 }
@@ -131,7 +131,7 @@
 .b-cal-add:hover .b-cal-plus { transform: rotate(90deg); border-color: var(--card-border-hover); }
 .b-cal-next { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--card-border); }
 .b-cal-nrow {
-  display: flex; align-items: center; gap: 9px; width: 100%; text-align: left;
+  display: flex; align-items: center; gap: 9px; width: 100%; text-align: start;
   padding: 7px 8px; border: 0; border-radius: var(--r-md);
   background: none; cursor: pointer; font-family: inherit; color: inherit;
   transition: background-color var(--t-fast);
@@ -152,7 +152,7 @@
 /* The month and the day stack on a narrower diary. */
 @container (max-width: 1023.98px) {
   .b-cal-panel { grid-template-columns: minmax(0, 1fr); }
-  .b-cal-side { padding-left: 0; margin-left: 0; padding-top: 12px; margin-top: 12px; border-left: 0; border-top: 1px solid var(--card-border); }
+  .b-cal-side { padding-inline-start: 0; margin-inline-start: 0; padding-top: 12px; margin-top: 12px; border-inline-start: 0; border-top: 1px solid var(--card-border); }
   .b-cal-day { height: 60px; }
 }
 @container (max-width: 559.98px) {
@@ -164,12 +164,12 @@
 
 /* ── Missing details: the meetings nobody wrote up (.b-loop) ──────────── */
 .b-loop { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--card-border); }
-.b-loop-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; padding-right: 10px; }
+.b-loop-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; padding-inline-end: 10px; }
 .b-loop-cap { margin: 0; font-size: var(--fs-2xs); font-weight: var(--fw-medium); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-secondary); }
 .b-loop .b-aimy { max-width: 35rem; margin-bottom: 10px; }
 .b-loop-row {
   display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px;
-  width: 100%; text-align: left; padding: 9px 10px; border: 0; border-radius: var(--r-md);
+  width: 100%; text-align: start; padding: 9px 10px; border: 0; border-radius: var(--r-md);
   background: none; cursor: pointer; font-family: inherit; color: inherit;
   transition: background-color var(--t-fast);
 }
@@ -178,7 +178,7 @@
 .b-loop-when { width: 84px; flex: none; font-size: var(--fs-xs); color: var(--d200); }
 .b-loop-who { flex: 1; min-width: min(180px, 100%); display: flex; flex-direction: column; gap: 2px; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--d50); }
 .b-loop-what { font-size: var(--fs-xs); font-weight: var(--fw-medium); color: var(--d200); }
-.b-loop-go { flex: none; margin-left: auto; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--accent-text); }
+.b-loop-go { flex: none; margin-inline-start: auto; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--accent-text); }
 
 @media (prefers-reduced-motion: reduce) {
   .b-cal-bg, .b-cal-plus, .b-cal-btn { transition: none; }

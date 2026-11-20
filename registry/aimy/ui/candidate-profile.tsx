@@ -51,7 +51,7 @@ function Section({ title, count, children }: { title: string; count?: number; ch
     <div className="border-t border-hairline pt-4">
       <h4 className="mb-2 text-xs font-semibold text-ink">
         {title}
-        {count !== undefined ? <span className="ml-1.5 font-medium text-ink-secondary">{count}</span> : null}
+        {count !== undefined ? <span className="ms-1.5 font-medium text-ink-secondary">{count}</span> : null}
       </h4>
       {children}
     </div>

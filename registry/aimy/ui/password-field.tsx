@@ -28,7 +28,7 @@ export function PasswordField({ variant = "box", secretName = "the password", cl
         aria-describedby={field?.describedBy}
         autoComplete="off"
         spellCheck={false}
-        className={cn(controlStyles.base, controlStyles[variant], variant === "box" && "min-h-9", "pr-10 font-mono", className)}
+        className={cn(controlStyles.base, controlStyles[variant], variant === "box" && "min-h-9", "pe-10 font-mono", className)}
         {...props}
       />
       <button
@@ -37,7 +37,7 @@ export function PasswordField({ variant = "box", secretName = "the password", cl
         aria-label={shown ? `Hide ${secretName}` : `Show ${secretName}`}
         title={shown ? `Hide ${secretName}` : `Show ${secretName}`}
         onClick={() => setShown((v) => !v)}
-        className="absolute top-1/2 right-1 grid size-7 -translate-y-1/2 place-items-center rounded-md text-ink-secondary transition-[background-color,color] duration-(--t-fast) ease-out hover:bg-w07 hover:text-ink"
+        className="absolute top-1/2 end-1 grid size-7 -translate-y-1/2 place-items-center rounded-md text-ink-secondary transition-[background-color,color] duration-(--t-fast) ease-out hover:bg-w07 hover:text-ink"
       >
         <span className="t-icon-swap" data-state={shown ? "b" : "a"}>
           <Eye className="t-icon size-4" data-icon="a" strokeWidth={2} aria-hidden="true" />

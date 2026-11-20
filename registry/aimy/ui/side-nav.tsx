@@ -315,7 +315,7 @@ function QaSideNav({
         <button
           ref={inDrawer ? drawerCollapseRef : collapseRef}
           type="button"
-          className={cn("snav-collapse", !summary && "ml-auto")}
+          className={cn("snav-collapse", !summary && "ms-auto")}
           aria-label={inDrawer ? "Close the pages" : "Collapse the pages"}
           aria-expanded="true"
           aria-controls={inDrawer ? drawerId : undefined}

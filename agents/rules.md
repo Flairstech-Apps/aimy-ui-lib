@@ -25,7 +25,7 @@ Installing needs no token. The shadcn commands take everything from the site, in
 ## Tools for agents
 
 - The AiMY UI MCP server: `claude mcp add --transport http aimy-ui https://aimy-ui-lib.aimy.flairstech.com/mcp`. It searches the components, returns a component's code and install commands, and gives these rules.
-- The skills, installed with the rules by `npx shadcn@latest add https://aimy-ui-lib.aimy.flairstech.com/r/init.json`: `aimy-ui` (these rules and the component index), `aimy-ui-build` (build a screen from a brief), `aimy-ui-review` (check a screen against these rules) and `aimy-ui-upgrade` (take a new release without losing the app's edits).
+- The skills, installed with the rules by `npx shadcn@latest add https://aimy-ui-lib.aimy.flairstech.com/r/init.json`: `aimy-ui` (these rules and the component index), `aimy-ui-build` (build a screen from a brief), `aimy-ui-review` (check a screen's code against these rules), `aimy-ui-visual-review` (check how a screen looks, rendered: alignment, spacing, overflow, contrast, both themes, desk and phone widths, measured with `https://aimy-ui-lib.aimy.flairstech.com/agents/visual-audit.js`) and `aimy-ui-upgrade` (take a new release without losing the app's edits).
 
 ## The rules every screen follows
 
@@ -57,6 +57,7 @@ Moving between pages:
 
 - A product with a few pages (four or five) uses `SideNav`, Sales' tabs, as the first card of the `Rail`: a row per page with its count, and the current page holding AiMY's reading of it (`SideNavRead`). Most AiMY products are this.
 - A product with many pages and nested flows uses `SideNav variant="qa"` in AppShell's `nav` slot: each page with its headline figures, collapsing to icons. QA and User Management use it. With no findings to lead with, pass `order="fixed"` so the pages keep their order and the list never reshuffles. Never use it for a handful of pages, and never put both forms in one product.
+- Right to left: set `dir="rtl"` (and `lang`) on the page; every part mirrors its layout, arrow keys, drags and arrows. In the app's own classes write the logical forms (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`, `text-start`, `border-s`, `border-e`), never left and right.
 - Every product sits on the products' ambient wash. AppShell draws it (`AmbientBackground`, on by default); an app without the shell puts `<AmbientBackground />` first in the body. Never add a second glow, hang one on a card, or animate it.
 
 Phones:

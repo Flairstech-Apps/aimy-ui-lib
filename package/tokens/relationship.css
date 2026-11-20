@@ -16,7 +16,7 @@
   color: var(--ai-ink); border-bottom: 1px solid var(--w07);
 }
 .mem-head svg { width: 11px; height: 11px; }
-.mem-age { margin-left: auto; color: var(--ink-secondary); letter-spacing: 0.02em; text-transform: none; font-weight: var(--fw-semibold); }
+.mem-age { margin-inline-start: auto; color: var(--ink-secondary); letter-spacing: 0.02em; text-transform: none; font-weight: var(--fw-semibold); }
 .mem-thread { padding: 11px 13px; display: flex; flex-direction: column; gap: 7px; margin: 0; list-style: none; }
 .mem-line { display: flex; align-items: flex-start; gap: 8px; font-size: var(--fs-xs); line-height: 1.5; color: var(--ink-secondary); }
 .mem-who { font-weight: var(--fw-bold); min-width: 34px; color: var(--ink-secondary); }
@@ -64,8 +64,8 @@
 .bcard-ack-btn:active { transform: scale(0.97); }
 .bcard-ack-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 .bcard-ack-btn.is-acked { color: var(--ok-text); background: var(--ok-bg); border-color: color-mix(in srgb, var(--ok) 24%, transparent); }
-.bcard-ack-btn.is-undo { color: var(--ai-ink); margin-left: auto; }
-.bcard-dismiss-picker { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-left: auto; }
+.bcard-ack-btn.is-undo { color: var(--ai-ink); margin-inline-start: auto; }
+.bcard-dismiss-picker { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-inline-start: auto; }
 .bcard-dismiss-reason {
   font-size: var(--fs-xs); font-weight: var(--fw-bold); color: var(--ink-secondary);
   padding: 3px 8px; border-radius: var(--r-pill); background: rgba(255,255,255,0.04); border: 1px solid var(--card-border); cursor: pointer;
@@ -97,7 +97,7 @@
 }
 .agg-row > span:not(.agg-bar) { position: relative; }
 .agg-val { font-weight: var(--fw-bold); font-variant-numeric: tabular-nums; color: var(--d100); }
-.agg-unit { margin-left: 3px; font-weight: var(--fw-semibold); color: var(--ink-secondary); }
+.agg-unit { margin-inline-start: 3px; font-weight: var(--fw-semibold); color: var(--ink-secondary); }
 .agg-more { padding: 5px 8px 0; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--ink-secondary); }
 
 /* ── Usage: the ring on the composer's mark ─────────────── */
@@ -138,6 +138,8 @@
 .use-pop-a:hover { background: var(--card-bg-raised); color: var(--ink-action); }
 .use-pop-a svg { width: 15px; height: 15px; transition: transform var(--t-fast) var(--ease-out); }
 .use-pop-a:hover svg { transform: translateX(2px); }
+.use-pop-a svg:dir(rtl) { scale: -1 1; }
+.use-pop-a:hover svg:dir(rtl) { transform: translateX(-2px); }
 
 /* ── Model picker ───────────────────────────────────────── */
 .model-picker {
@@ -177,7 +179,7 @@
   letter-spacing: -0.02em;
   line-height: 1.1;
 }
-.slv-time { margin-left: auto; font-size: var(--fs-xs); color: var(--ink-secondary); }
+.slv-time { margin-inline-start: auto; font-size: var(--fs-xs); color: var(--ink-secondary); }
 .slv-body { min-width: 0; max-width: 72ch; }
 .slv-line { font-size: var(--fs-base); color: var(--d100); line-height: var(--lh-base); margin: 0; }
 .slv-line + .slv-line { margin-top: 8px; }
@@ -229,7 +231,7 @@
   align-items: flex-start;
   gap: 4px;
   min-width: 0;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
   padding: 12px;
   border-radius: var(--r-lg);

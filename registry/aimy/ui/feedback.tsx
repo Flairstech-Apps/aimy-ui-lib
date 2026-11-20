@@ -135,7 +135,7 @@ export function SaveStatus({ status, error, onRetry, className }: SaveStatusProp
           <CircleAlert aria-hidden="true" strokeWidth={2} className="size-3.5" />
           {error ?? "Couldn't save."}
           {onRetry ? (
-            <Button variant="text" size="sm" onClick={onRetry} className="ml-1">
+            <Button variant="text" size="sm" onClick={onRetry} className="ms-1">
               <RotateCcw aria-hidden="true" strokeWidth={2} />
               Try again
             </Button>

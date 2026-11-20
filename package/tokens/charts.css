@@ -429,3 +429,51 @@ button.qa-lead-row:hover { background: var(--w04); }
   .qa-donut-arc, .qa-hm-cell, .slv-score-toggle-action { transition: none; }
   .qa-hm-cell:hover { transform: none; }
 }
+
+/* ── Bar list ────────────────────────────────────────────────────────────
+   QA's audit bars (.eval-bar-row, index.html 5134-5233) and the operations hub's breakdown rows
+   (.bk-row, index.html 653-660). Changed: words at 12px at least (QA's share was 10px) and never
+   faded (QA's names were d300, the share d400: here secondary ink); sides are logical, so a list
+   reads right to left with the page. */
+.bl-stack { display: flex; flex-direction: column; gap: 0.625rem; margin: 0; padding: 0; list-style: none; }
+.bl-row {
+  display: flex; flex-direction: column; gap: 0.25rem; width: 100%; padding: 0.25rem 0.375rem;
+  border: 0; border-radius: var(--r-md); background: none; font: inherit; color: inherit; text-align: start;
+  transition: background-color var(--t-fast) var(--ease-out);
+}
+button.bl-row { cursor: pointer; }
+button.bl-row:hover { background: var(--w03); }
+.bl-top { display: flex; align-items: center; justify-content: space-between; gap: 0.375rem; min-width: 0; }
+.bl-label {
+  display: flex; align-items: center; gap: 0.375rem; min-width: 0;
+  font-size: var(--fs-2xs); font-weight: var(--fw-semibold); color: var(--ink-secondary); overflow-wrap: anywhere;
+}
+.bl-dot { width: 0.4375rem; height: 0.4375rem; border-radius: 50%; flex-shrink: 0; }
+.bl-right { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; font-size: var(--fs-2xs); }
+.bl-figure { font-weight: var(--fw-semibold); color: var(--ink-secondary); white-space: nowrap; }
+.bl-value { min-width: 2.5rem; font-weight: var(--fw-bold); text-align: end; font-variant-numeric: tabular-nums; }
+.bl-track { position: relative; display: block; height: 4px; border-radius: 2px; background: var(--w06); overflow: hidden; }
+.bl-track.has-goal { overflow: visible; }
+.bl-fill {
+  display: block; height: 100%; border-radius: inherit; transform-origin: left center;
+  transition: scale 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.bl-fill:dir(rtl) { transform-origin: right center; }
+@starting-style { .bl-fill { scale: 0 1; } }
+.bl-goal { position: absolute; top: -3px; bottom: -3px; width: 2px; margin-inline-start: -1px; border-radius: 1px; background: var(--ok); opacity: 0.75; pointer-events: none; }
+.bl-note { margin: 0; padding: 0.5rem 0.375rem 0; font-size: var(--fs-2xs); line-height: 1.5; color: var(--ink-secondary); }
+.bl-note b { color: var(--ok-text); font-weight: var(--fw-bold); }
+
+.bl-inline { margin: 0; padding: 0; list-style: none; }
+.bl-irow {
+  display: flex; align-items: center; gap: 0.75rem; width: 100%; padding: 0.6875rem 0;
+  border: 0; border-bottom: 1px solid var(--card-border); background: none; font: inherit; color: inherit; text-align: start;
+}
+.bl-inline li:last-child .bl-irow { border-bottom: 0; }
+button.bl-irow { cursor: pointer; }
+button.bl-irow:hover .bl-ilabel { color: var(--ink-primary); }
+.bl-ilabel { flex: 1 1 auto; min-width: 0; font-size: var(--ty-body, var(--fs-xs)); font-weight: var(--fw-medium); color: var(--ink-secondary); overflow-wrap: anywhere; }
+.bl-itrack { flex: 0 1 6rem; min-width: 3rem; height: 4px; border-radius: 99px; background: var(--w06); overflow: hidden; }
+.bl-ival { min-width: 3.625rem; flex-shrink: 0; font-size: var(--ty-body, var(--fs-xs)); font-weight: var(--fw-bold); color: var(--ink-primary); text-align: end; font-variant-numeric: tabular-nums; }
+.bl-ipct { min-width: 2.375rem; flex-shrink: 0; font-size: var(--fs-2xs); font-weight: var(--fw-semibold); color: var(--ink-secondary); text-align: end; font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { .bl-fill { transition: none; } }

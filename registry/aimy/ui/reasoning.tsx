@@ -35,7 +35,7 @@ export function Reasoning({ steps, summary = "How this was answered", defaultOpe
       defaultOpen={defaultOpen}
       className={cn("text-2xs", className)}
     >
-      <ol className="ml-1.5 flex flex-col gap-2 border-l border-hairline pl-3">
+      <ol className="ms-1.5 flex flex-col gap-2 border-s border-hairline ps-3">
         {steps.map((s, i) => (
           <li key={i} className="flex flex-col gap-0.5 text-2xs">
             <span className="font-semibold text-ink">{s.what}</span>

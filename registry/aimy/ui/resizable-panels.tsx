@@ -70,7 +70,9 @@ export function ResizablePanels({ children, direction = "horizontal", defaultSiz
       onMove: (info) => {
         const r = el.getBoundingClientRect()
         const total = latest.current.horizontal ? r.width : r.height
-        const px = latest.current.horizontal ? info.delta.x : info.delta.y
+        // Right to left, the first panel is on the right: moving the handle left grows it.
+        const flip = latest.current.horizontal && getComputedStyle(el).direction === "rtl" ? -1 : 1
+        const px = latest.current.horizontal ? info.delta.x * flip : info.delta.y
         latest.current.setSizes(latest.current.shift(start, index, (px / (total || 1)) * 100))
       },
       onStart: () => el.setAttribute("data-dragging", ""),
@@ -99,7 +101,10 @@ export function ResizablePanels({ children, direction = "horizontal", defaultSiz
             const fwd = horizontal ? "ArrowRight" : "ArrowDown"
             const step = e.shiftKey ? 10 : 1
             const map: Record<string, number> = { [back]: -step, [fwd]: step, Home: -100, End: 100 }
-            const d = map[e.key]
+            // Right to left, ArrowLeft grows the panel before the handle, as the page reads.
+            const rtl = horizontal && getComputedStyle(e.currentTarget).direction === "rtl"
+            const key = rtl && (e.key === "ArrowLeft" || e.key === "ArrowRight") ? (e.key === "ArrowLeft" ? "ArrowRight" : "ArrowLeft") : e.key
+            const d = map[key]
             if (d === undefined) return
             e.preventDefault()
             setSizes(shift(sizes, i, d))
@@ -161,7 +166,7 @@ function PanelAndHandle({
             className={cn(
               "absolute bg-hairline transition-[background-color,transform] duration-(--t-fast) ease-out",
               "group-hover/handle:bg-brand group-focus-visible/handle:bg-brand group-active/handle:bg-brand",
-              horizontal ? "inset-y-0 left-0 w-px group-hover/handle:scale-x-[3] group-focus-visible/handle:scale-x-[3]" : "inset-x-0 top-0 h-px group-hover/handle:scale-y-[3] group-focus-visible/handle:scale-y-[3]"
+              horizontal ? "inset-y-0 start-0 w-px group-hover/handle:scale-x-[3] group-focus-visible/handle:scale-x-[3]" : "inset-x-0 top-0 h-px group-hover/handle:scale-y-[3] group-focus-visible/handle:scale-y-[3]"
             )}
           />
         </div>

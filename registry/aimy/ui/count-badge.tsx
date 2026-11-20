@@ -19,7 +19,7 @@ export function CountBadge({ count, max = 99, label, className, ...props }: Coun
     <span
       data-slot="count-badge"
       className={cn(
-        "absolute -top-1.5 -right-1.5 grid h-4.5 min-w-4.5 place-items-center rounded-pill border-2 border-body bg-badge px-1 text-2xs leading-none font-bold text-on-brand",
+        "absolute -top-1.5 -end-1.5 grid h-4.5 min-w-4.5 place-items-center rounded-pill border-2 border-body bg-badge px-1 text-2xs leading-none font-bold text-on-brand",
         className
       )}
       {...props}

@@ -34,7 +34,7 @@
       "name": "init",
       "type": "registry:item",
       "title": "Init",
-      "description": "Starts AiMY UI in an existing React app in one command: the theme and fonts, cn, the theme toggle, toast with undo, and the rules for AI agents (AGENTS.md, the aimy-ui Claude skill, and the build, review and upgrade skills), so the first screen an agent builds already follows AiMY's doctrine.",
+      "description": "Starts AiMY UI in an existing React app in one command: the theme and fonts, cn, the theme toggle, toast with undo, and the rules for AI agents (AGENTS.md, the aimy-ui Claude skill, and the build, review, visual review and upgrade skills), so the first screen an agent builds already follows AiMY's doctrine.",
       "dependencies": [],
       "registryDependencies": [
         "@aimy/theme",
@@ -67,6 +67,11 @@
           "path": "starter/.claude/skills/aimy-ui-upgrade/SKILL.md",
           "type": "registry:file",
           "target": "~/.claude/skills/aimy-ui-upgrade/SKILL.md"
+        },
+        {
+          "path": "starter/.claude/skills/aimy-ui-visual-review/SKILL.md",
+          "type": "registry:file",
+          "target": "~/.claude/skills/aimy-ui-visual-review/SKILL.md"
         }
       ]
     },
@@ -161,10 +166,14 @@
       "name": "behaviors-testing",
       "type": "registry:lib",
       "title": "Behaviour testing kit",
-      "description": "For unit tests with jsdom: press keys, press Tab the way a browser does, drag with the pointer, and check a part's ARIA, Tab stops and focus return. Problems come back as plain sentences.",
+      "description": "For unit tests with jsdom: press keys, press Tab the way a browser does, drag with the pointer, and check a part's ARIA, Tab stops and focus return. In a real browser, visualProblems measures what a person sees: icons against the capitals, pill heights, shared edges and baselines, overflow, text under 12px, targets under 24px, contrast. Problems come back as plain sentences.",
       "files": [
         {
           "path": "registry/aimy/lib/behaviors-testing.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/aimy/lib/visual-audit.ts",
           "type": "registry:lib"
         }
       ],
@@ -644,7 +653,9 @@
       "registryDependencies": [
         "@aimy/theme",
         "@aimy/utils",
-        "@aimy/field"
+        "@aimy/field",
+        "@aimy/behaviors",
+        "@aimy/behaviors-agent"
       ],
       "files": [
         {
@@ -662,7 +673,9 @@
       "registryDependencies": [
         "@aimy/theme",
         "@aimy/utils",
-        "@aimy/field"
+        "@aimy/field",
+        "@aimy/behaviors",
+        "@aimy/behaviors-agent"
       ],
       "files": [
         {
@@ -711,6 +724,24 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "multi-select",
+      "type": "registry:component",
+      "title": "MultiSelect",
+      "description": "Several choices behind one trigger: Knowledge's .k-multi. The Select pill, a panel of real checkboxes (Select all from five), the chosen names on the trigger in words, each choice sent with a form.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["@aimy/theme", "@aimy/utils", "@aimy/checkbox", "@aimy/field", "@aimy/popover"],
+      "files": [{ "path": "registry/aimy/ui/multi-select.tsx", "type": "registry:component" }]
+    },
+    {
+      "name": "tag-input",
+      "type": "registry:component",
+      "title": "TagInput",
+      "description": "Values typed in as tags: Knowledge's .tag-input. Enter, a comma or a paste adds; Backspace takes the last back; each tag has a named remove button; validate refuses one with a sentence; input methods are respected.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["@aimy/theme", "@aimy/utils", "@aimy/field"],
+      "files": [{ "path": "registry/aimy/ui/tag-input.tsx", "type": "registry:component" }]
     },
     {
       "name": "combobox",
@@ -768,7 +799,9 @@
       "registryDependencies": [
         "@aimy/theme",
         "@aimy/utils",
-        "@aimy/field"
+        "@aimy/field",
+        "@aimy/behaviors",
+        "@aimy/behaviors-agent"
       ],
       "files": [
         {
@@ -788,7 +821,9 @@
       "registryDependencies": [
         "@aimy/theme",
         "@aimy/utils",
-        "@aimy/field"
+        "@aimy/field",
+        "@aimy/behaviors",
+        "@aimy/behaviors-agent"
       ],
       "files": [
         {
@@ -807,7 +842,9 @@
       ],
       "registryDependencies": [
         "@aimy/theme",
-        "@aimy/utils"
+        "@aimy/utils",
+        "@aimy/behaviors",
+        "@aimy/behaviors-agent"
       ],
       "files": [
         {
@@ -885,7 +922,9 @@
       ],
       "registryDependencies": [
         "@aimy/theme",
-        "@aimy/utils"
+        "@aimy/utils",
+        "@aimy/behaviors",
+        "@aimy/behaviors-agent"
       ],
       "files": [
         {
@@ -1059,7 +1098,9 @@
         "@aimy/theme",
         "@aimy/utils",
         "@aimy/calendar",
-        "@aimy/popover"
+        "@aimy/popover",
+        "@aimy/behaviors",
+        "@aimy/behaviors-agent"
       ],
       "files": [
         {
@@ -2329,6 +2370,25 @@
       ]
     },
     {
+      "name": "file-drop",
+      "type": "registry:component",
+      "title": "FileDrop",
+      "description": "Where files come in: drop them or press to choose. Knowledge's settings drop with QA's words: card ground, a dashed edge that turns brand on hover and drag-over, what it takes (types, size) on it. Files that don't fit are named with the reason in an alert; the rest go to onFiles.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/file-drop.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "upload-results",
       "type": "registry:component",
       "title": "Upload results",
@@ -2455,6 +2515,23 @@
       "files": [
         {
           "path": "registry/aimy/ui/target-bar.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "bar-list",
+      "type": "registry:component",
+      "title": "BarList",
+      "description": "A bar per category, as QA's audit panel and the operations hub draw them. stacked: the name and its figures over a 4px bar, toned ok, warn or err, with an optional goal mark and a narrowed scale explained in a note. inline: name, short bar, value and share on one line. Rows with onClick open what they count.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/bar-list.tsx",
           "type": "registry:component"
         }
       ]

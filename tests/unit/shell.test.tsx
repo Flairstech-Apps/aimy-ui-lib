@@ -44,6 +44,19 @@ function Shell({ onDiary = () => {} }: { onDiary?: () => void }) {
 }
 
 describe("AppShell, Topnav, Rail", () => {
+  it("F6 and Shift+F6 move between the bar, the rail and the page", async () => {
+    render(<Shell />)
+    // jsdom has no layout; give every region a box so it counts as shown.
+    for (const el of document.querySelectorAll<HTMLElement>(".app-topnav, .app-shell-body > *")) el.getClientRects = () => [new DOMRect(0, 0, 10, 10)] as unknown as DOMRectList
+    screen.getByRole("link", { name: "Knowledge" }).focus()
+    await userEvent.keyboard("{F6}")
+    expect(screen.getByRole("complementary", { name: "Briefing" }).contains(document.activeElement)).toBe(true)
+    await userEvent.keyboard("{F6}")
+    expect(document.querySelector("main")!.contains(document.activeElement)).toBe(true)
+    await userEvent.keyboard("{Shift>}{F6}{/Shift}")
+    expect(screen.getByRole("complementary", { name: "Briefing" }).contains(document.activeElement)).toBe(true)
+  })
+
   it("marks the current product, says which aren't open, and names its parts", async () => {
     const { container } = render(<Shell />)
     const nav = screen.getByRole("navigation", { name: "Products" })

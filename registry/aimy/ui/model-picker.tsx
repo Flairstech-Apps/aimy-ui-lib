@@ -38,7 +38,7 @@ export function ModelPicker({ models, value, onValueChange }: ModelPickerProps) 
           {models.map((m) => (
             <MenuRadioItem key={m.id} value={m.id} description={m.description}>
               {m.name}
-              {m.tag ? <span className="model-tag ml-2">{m.tag}</span> : null}
+              {m.tag ? <span className="model-tag ms-2">{m.tag}</span> : null}
             </MenuRadioItem>
           ))}
         </MenuRadioGroup>

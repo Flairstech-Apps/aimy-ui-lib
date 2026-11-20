@@ -2,6 +2,7 @@
 
 import { Switch as Primitive } from "radix-ui"
 import { useId, useState } from "react"
+import { useAgentToggle } from "@/lib/behaviors-agent-react"
 import { cn } from "@/lib/utils"
 import { useField } from "@/components/field"
 
@@ -15,16 +16,21 @@ type SwitchProps = Omit<React.ComponentProps<typeof Primitive.Root>, "children">
   label?: React.ReactNode
   /** Why it can't be changed, shown as a tooltip when disabled. */
   lockedReason?: string
+  /** Shows this to AiMY under this id (inside an AgentProvider), so it can read it and turn it on or off. */
+  agent?: string
 }
 
-export function Switch({ label, lockedReason, className, id, checked, defaultChecked, onCheckedChange, disabled, ...props }: SwitchProps) {
+export function Switch({ label, lockedReason, className, id, checked, defaultChecked, onCheckedChange, disabled, agent, ...props }: SwitchProps) {
   const auto = useId()
   const field = useField()
+  const [node, setNode] = useState<HTMLButtonElement | null>(null)
+  useAgentToggle(agent, node, "switch")
   const [inner, setInner] = useState(defaultChecked ?? false)
   const [moved, setMoved] = useState(false)
   const on = checked ?? inner
   const track = (
     <Primitive.Root
+      ref={setNode}
       // Inside a Field, its hint and error reach it (a Field can hold several, so each keeps its own id).
       id={id ?? auto}
       aria-invalid={field?.invalid || undefined}
@@ -49,7 +55,7 @@ export function Switch({ label, lockedReason, className, id, checked, defaultChe
     >
       <Primitive.Thumb
         className={cn(
-          "t-toggle-thumb absolute top-[3px] left-[3px] block size-3.5 rounded-pill bg-on-brand shadow-sm",
+          "t-toggle-thumb absolute top-[3px] start-[3px] block size-3.5 rounded-pill bg-on-brand shadow-sm",
           disabled && "bg-d300 shadow-none"
         )}
       />

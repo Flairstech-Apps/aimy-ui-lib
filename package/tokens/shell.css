@@ -55,7 +55,7 @@
 }
 .ambient-bg::after {
   content: ""; position: absolute;
-  bottom: -8%; right: -4%;
+  bottom: -8%; inset-inline-end: -4%;
   width: 46.875rem; height: 40.625rem;
   background: var(--ambient-2);
 }
@@ -100,7 +100,7 @@
 .topnav-tab[aria-disabled="true"]:hover { background: none; color: var(--d200); }
 .topnav-tab svg { width: 0.8125rem; height: 0.875rem; flex-shrink: 0; }
 /* Not open yet: said in a word beside the name, not by fading it. */
-.topnav-tab-soon { margin-left: 0.25rem; font-size: var(--fs-2xs); font-weight: var(--fw-medium); color: var(--ink-secondary); }
+.topnav-tab-soon { margin-inline-start: 0.25rem; font-size: var(--fs-2xs); font-weight: var(--fw-medium); color: var(--ink-secondary); }
 .topnav-tab:active { transform: scale(0.97); }
 .topnav-tab:focus-visible { outline: 0.125rem solid var(--brand); outline-offset: 0.125rem; }
 .topnav-right { display: flex; align-items: center; justify-content: flex-end; gap: 0.75rem; }
@@ -123,7 +123,7 @@
 
 /* The account pill. */
 .topnav-user {
-  display: flex; align-items: center; gap: 0.5rem; text-align: left;
+  display: flex; align-items: center; gap: 0.5rem; text-align: start;
   padding: 0.25rem 0.75rem 0.25rem 0.25rem; border-radius: 1.25rem;
   background: var(--w04); border: 0.0625rem solid var(--w08, rgba(255, 255, 255, 0.08));
   font-family: inherit; color: inherit; cursor: pointer;
@@ -162,7 +162,7 @@
 }
 @container shell (max-width: 1040px) {
   /* inline-grid, as IconButton draws it, so the icon stays centred. */
-  .rail-toggle { display: inline-grid; margin-right: 0.5rem; }
+  .rail-toggle { display: inline-grid; margin-inline-end: 0.5rem; }
 }
 @container shell (max-width: 900px) {
   .app-topnav { padding: 0 0.75rem; gap: 0.5rem; }
@@ -170,10 +170,10 @@
   .topnav-logo-link svg { height: 1.75rem; }
   .topnav-tabs { display: none; }
   .prod-chev { display: inline-flex; }
-  .topnav-right { margin-left: auto; }
+  .topnav-right { margin-inline-start: auto; }
 }
 @container shell (max-width: 354.98px) {
-  .app-topnav { padding-left: 0.5rem; padding-right: 0.5rem; }
+  .app-topnav { padding-inline-start: 0.5rem; padding-inline-end: 0.5rem; }
   .topnav-logo { gap: 0.375rem; }
   .topnav-user > svg { display: none; }
 }
@@ -187,20 +187,22 @@
   width: var(--rail-w); flex-shrink: 0;
   display: flex; flex-direction: column;
   padding: 1rem; overflow-y: auto; scrollbar-gutter: stable;
-  background: transparent; border-right: 0.0625rem solid var(--hairline);
+  background: transparent; border-inline-end: 0.0625rem solid var(--hairline);
 }
 .rail-scrim { display: none; }
 @container shell (max-width: 1040px) {
   .app-rail {
-    position: absolute; z-index: 700; top: 0; bottom: 0; left: 0;
+    position: absolute; z-index: 700; top: 0; bottom: 0; inset-inline-start: 0;
     width: min(var(--rail-w), calc(100cqw - 3.5rem));
     background: var(--panel-bg);
-    border-right: 0.0625rem solid var(--glass-border);
+    border-inline-end: 0.0625rem solid var(--glass-border);
     box-shadow: var(--shadow-xl);
     -webkit-backdrop-filter: blur(1.125rem); backdrop-filter: blur(1.125rem);
     transform: translateX(-100%); visibility: hidden;
   }
   .app-rail.is-open { transform: none; visibility: visible; }
+  /* Right to left: the drawer comes in from the right, the side it sits on. */
+  .app-rail:dir(rtl):not(.is-open) { transform: translateX(100%); }
   .rail-scrim {
     display: block; position: absolute; z-index: 690; inset: 0;
     background: rgba(10, 14, 18, 0.5); opacity: 0; pointer-events: none; border: 0; padding: 0;
@@ -220,7 +222,7 @@
 .rail-console {
   display: flex; align-items: center; gap: 0.625rem; width: 100%;
   padding: 0.5rem 0.625rem; border: 0; border-radius: var(--r-md);
-  background: none; font-family: inherit; text-align: left; text-decoration: none;
+  background: none; font-family: inherit; text-align: start; text-decoration: none;
   color: var(--ink-secondary); cursor: pointer;
   transition: transform var(--t-press) var(--ease-out), background-color var(--t-fast), color var(--t-fast);
 }
@@ -237,7 +239,7 @@
 .rail-doors { display: grid; gap: 0.625rem; margin-top: 0.75rem; }
 .b-door {
   display: flex; flex-direction: column; gap: 0.75rem; width: 100%; height: 100%; min-width: 0;
-  text-align: left; padding: 1.125rem 1.25rem 1.25rem; font-family: inherit; color: inherit;
+  text-align: start; padding: 1.125rem 1.25rem 1.25rem; font-family: inherit; color: inherit;
   border: 1px solid var(--card-border); border-radius: var(--r-2xl);
   background: var(--card-bg);
   box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.045);
@@ -252,8 +254,8 @@
   font-size: var(--fs-3xl); font-weight: var(--fw-extrabold, 800); color: var(--d50);
   line-height: var(--lh-tight); letter-spacing: var(--ls-tight); font-variant-numeric: tabular-nums;
 }
-.b-door-of { font-size: var(--fs-xs); font-weight: var(--fw-medium); color: var(--d200); letter-spacing: 0; margin-left: 0.125rem; }
-.b-door-clock { display: inline-flex; align-items: center; margin-right: 0.3em; vertical-align: baseline; color: var(--ink-secondary); }
+.b-door-of { font-size: var(--fs-xs); font-weight: var(--fw-medium); color: var(--d200); letter-spacing: 0; margin-inline-start: 0.125rem; }
+.b-door-clock { display: inline-flex; align-items: center; margin-inline-end: 0.3em; vertical-align: baseline; color: var(--ink-secondary); }
 .b-door-clock svg { width: 0.62em; height: 0.62em; }
 .b-door-who { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; min-width: 0; font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--d100); }
 .b-door-fig + .b-door-who { margin-top: -0.25rem; }
@@ -268,6 +270,9 @@
 .b-door-go { display: inline-flex; align-items: center; gap: 0.3125rem; margin-top: auto; padding-top: 2px; font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--accent-text); }
 .b-door-go svg { width: 13px; height: 13px; transition: transform 160ms var(--ease-out); }
 .b-door:hover .b-door-go svg { transform: translateX(2px); }
+/* Right to left: the arrow points the way the page reads, and nudges that way. */
+.b-door-go svg:dir(rtl) { scale: -1 1; }
+.b-door:hover .b-door-go svg:dir(rtl) { transform: translateX(-2px); }
 /* In the rail: the smaller size. */
 .app-rail .b-door { padding: 0.8125rem 0.875rem 0.875rem; gap: 0.5rem; }
 .app-rail .b-door-fig { font-size: var(--fs-xl); }
@@ -292,7 +297,7 @@
   font-size: 1.75rem; font-weight: var(--fw-extrabold, 800);
   letter-spacing: var(--ls-tight); color: var(--d50); line-height: var(--lh-tight);
 }
-.page-head-end { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+.page-head-end { margin-inline-start: auto; display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
 .page-stamp { font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--ink-secondary); }
 .page-lead { margin: 0.375rem 0 0; font-size: var(--fs-base); color: var(--d200); max-width: 72ch; }
 
@@ -301,7 +306,7 @@
 .ntf-panel {
   width: 22.5rem; max-width: calc(100vw - 2rem);
   max-height: min(70vh, 32.5rem); overflow-y: auto;
-  padding: 6px; text-align: left; font-family: var(--font-sans);
+  padding: 6px; text-align: start; font-family: var(--font-sans);
   background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 14px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 0, 0, 0.2);
   scrollbar-width: thin; scrollbar-color: var(--w07) transparent;
@@ -310,7 +315,7 @@
 .ntf-head b { font-family: var(--font-display, var(--font-sans)); font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--d50); }
 .ntf-count { font-size: var(--fs-2xs); font-weight: var(--fw-bold); padding: 2px 8px; border-radius: var(--r-pill); background: var(--accent-dim); color: var(--accent-text); font-variant-numeric: tabular-nums; }
 .ntf-clear {
-  margin-left: auto; background: none; border: 0; padding: 2px 4px; cursor: pointer;
+  margin-inline-start: auto; background: none; border: 0; padding: 2px 4px; cursor: pointer;
   font-family: inherit; font-size: var(--fs-2xs); font-weight: var(--fw-semibold);
   color: var(--ink-secondary); border-radius: var(--r-xs); transition: color var(--t-fast);
 }
@@ -329,7 +334,7 @@
 .ntf-row-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
 .ntf-row-type { font-size: var(--fs-xs); font-weight: var(--fw-bold); color: var(--d50); }
 .ntf-row.is-read .ntf-row-type { font-weight: var(--fw-semibold); color: var(--d100); }
-.ntf-row-when { margin-left: auto; font-size: var(--fs-xs); color: var(--ink-secondary); flex-shrink: 0; }
+.ntf-row-when { margin-inline-start: auto; font-size: var(--fs-xs); color: var(--ink-secondary); flex-shrink: 0; }
 .ntf-row-body { margin: 0 0 8px; font-size: var(--fs-xs); line-height: var(--lh-base); color: var(--d200); }
 .ntf-row-cta {
   font-family: inherit; font-size: var(--fs-xs); font-weight: var(--fw-bold); cursor: pointer;
@@ -372,6 +377,6 @@
    .app-shell-body).
    BOTTOM: the page leaves room under its last row. Last in the file, so the
    container-query rules above that reset the bar's padding keep this. */
-.app-shell { padding-left: var(--safe-left); padding-right: var(--safe-right); }
+.app-shell { padding-inline-start: var(--safe-left); padding-inline-end: var(--safe-right); }
 .app-topnav { box-sizing: border-box; padding-top: var(--safe-top); }
 .page-scroll { padding-bottom: calc(6rem + var(--safe-bottom)); }

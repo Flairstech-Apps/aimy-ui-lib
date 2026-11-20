@@ -10,6 +10,7 @@ export default tseslint.config(
       ".next/",
       "out/",
       "public/r/",
+      "public/agents/visual-audit.js", // generated from registry/aimy/lib/visual-audit.ts, which is linted
       "next-env.d.ts",
       "demo/",
       "starter/",

@@ -60,7 +60,7 @@ export function Field({ label, help, error, optional, id: given, className, chil
       <div data-slot="field" className={cn("flex flex-col gap-1.5", className)}>
         <label htmlFor={id} className="text-xs font-semibold text-ink-secondary">
           {label}
-          {optional ? <span className="ml-1.5 font-medium text-ink-quiet">Optional</span> : null}
+          {optional ? <span className="ms-1.5 font-medium text-ink-quiet">Optional</span> : null}
         </label>
         {children}
         {error ? (

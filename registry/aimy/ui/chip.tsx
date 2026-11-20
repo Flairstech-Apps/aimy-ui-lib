@@ -29,7 +29,7 @@ export function Chip({ className, selected = false, onRemove, removeLabel, child
           ? "border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-accent-dim text-accent-text"
           : "border-w08 bg-w04 text-ink-secondary hover:bg-w07 hover:text-ink",
         // Beside its remove control it may shrink, so the × always stays on screen.
-        onRemove && "min-w-0 shrink pr-1.5",
+        onRemove && "min-w-0 shrink pe-1.5",
         className
       )}
       title={typeof children === "string" ? children : undefined}

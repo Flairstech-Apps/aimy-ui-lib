@@ -19,6 +19,10 @@ const SKILLS: [string, string][] = [
     "Checks a screen or a diff against the rules (doctrine, accessibility, writing) and reports each break with the file, what a person would notice, and the fix.",
   ],
   [
+    "aimy-ui-visual-review",
+    "Looks at the screen rendered, not its code: measures icons against the capitals, pill heights, shared edges and baselines, overflow, contrast and small text, in both themes at desk and phone widths, and reports each problem in pixels with a zoomed screenshot.",
+  ],
+  [
     "aimy-ui-upgrade",
     "Takes a new release: updates the packages and the copied components, then puts back the app's own edits that still apply.",
   ],
@@ -127,6 +131,12 @@ export default function AiTools() {
                 <b className="text-ink">To review:</b> &quot;Review my changes against AiMY&apos;s rules.&quot; It uses
                 aimy-ui-review and lists each break with the file, what a person would notice, and the fix. It only
                 changes code if you ask.
+              </li>
+              <li>
+                <b className="text-ink">To check how it looks:</b> &quot;Do a visual review of the contacts
+                page.&quot; It uses aimy-ui-visual-review: it opens the page in a browser, runs AiMY&apos;s visual audit
+                in both themes at 1536px and 390px, zooms in on each finding, and reports what a person sees, in
+                pixels, with the fix.
               </li>
               <li>
                 <b className="text-ink">To upgrade:</b> &quot;Upgrade AiMY UI to the latest release.&quot; It uses

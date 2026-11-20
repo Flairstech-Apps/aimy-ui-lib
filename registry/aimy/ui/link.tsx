@@ -20,7 +20,7 @@ export function Link({ className, variant = "default", asChild = false, ...props
       className={cn(
         "rounded-xs font-semibold text-link decoration-1 underline-offset-[3px]",
         "transition-[text-decoration-color,color] duration-(--t-fast) ease-out",
-        "[&_svg]:ml-0.5 [&_svg]:inline [&_svg]:size-3.5 [&_svg]:align-[-2px]",
+        "[&_svg]:ms-0.5 [&_svg]:inline [&_svg]:size-3.5 [&_svg]:align-[-2px]",
         variant === "inline" ? "underline" : "no-underline hover:underline",
         className
       )}

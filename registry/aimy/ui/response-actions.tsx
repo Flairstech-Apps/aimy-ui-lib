@@ -100,7 +100,7 @@ export function ResponseActions({
           {sources} {sources === 1 ? "source" : "sources"}
         </button>
       ) : null}
-      <span className="ml-auto flex items-center gap-1">
+      <span className="ms-auto flex items-center gap-1">
         <button
           type="button"
           className={act}

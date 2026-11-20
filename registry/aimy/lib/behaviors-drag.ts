@@ -4,7 +4,7 @@
 // screen reader hears at each step. Every drag has a keyboard path: pick up
 // with Space, move with the arrows, drop with Space, cancel with Escape.
 
-import { type Cleanup, type Point, type Rect, announce, cleanups, createStore, on, rectOf } from "./behaviors-core"
+import { type Cleanup, type Point, type Rect, announce, cleanups, createStore, on, readingKey, rectOf } from "./behaviors-core"
 
 /** Pixels a pointer moves before a press becomes a drag. */
 export const dragThreshold = 3
@@ -254,7 +254,7 @@ export function createReorder(options: ReorderOptions) {
       cancel,
     },
     /** Keyboard model for an item's handle. Returns true when it used the key. */
-    onKeyDown(index: number, e: { key: string; preventDefault(): void }) {
+    onKeyDown(index: number, e: { key: string; preventDefault(): void; target?: EventTarget | null; currentTarget?: EventTarget | null }) {
       const s = store.get()
       if (e.key === " " || e.key === "Enter") {
         e.preventDefault()
@@ -280,7 +280,7 @@ export function createReorder(options: ReorderOptions) {
         this.moveTo(e.key === "Home" ? 0 : options.count() - 1)
         return true
       }
-      const step = steps[e.key]
+      const step = steps[readingKey(e)] // right to left: ArrowLeft moves forward
       if (step === undefined) return false
       e.preventDefault()
       this.moveTo(s.to + step)
@@ -430,7 +430,7 @@ export function createTreeReorder(options: {
       say("cancel")
       store.set({ id: null, at: null, level: null, origin: null })
     },
-    onKeyDown(id: string, e: { key: string; preventDefault(): void }) {
+    onKeyDown(id: string, e: { key: string; preventDefault(): void; target?: EventTarget | null; currentTarget?: EventTarget | null }) {
       const s = store.get()
       if (e.key === " ") {
         e.preventDefault()
@@ -447,7 +447,7 @@ export function createTreeReorder(options: {
         Escape: () => api.cancel(),
         Enter: () => api.drop(),
       }
-      const fn = map[e.key]
+      const fn = map[readingKey(e)] // right to left: ArrowLeft indents, the way the tree reads
       if (!fn) return false
       e.preventDefault()
       fn()

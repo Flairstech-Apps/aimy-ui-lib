@@ -77,7 +77,7 @@ export function Select({ placeholder = "Choose", label, className, children, age
         aria-invalid={field?.invalid || undefined}
         aria-describedby={field?.describedBy}
         className={cn(
-          "t-input group/select inline-flex min-h-8 max-w-full items-center justify-between gap-1.5 rounded-pill bg-transparent py-1 pr-2 pl-3 text-xs font-semibold text-ink-secondary",
+          "t-input group/select inline-flex min-h-8 max-w-full items-center justify-between gap-1.5 rounded-pill bg-transparent py-1 pe-2 ps-3 text-xs font-semibold text-ink-secondary",
           "shadow-[inset_0_0_0_1px_var(--card-border-hover)] transition-[background-color,box-shadow,color] duration-(--t-fast) ease-out",
           "hover:not-disabled:bg-raised hover:not-disabled:text-ink data-[state=open]:text-ink data-[state=open]:shadow-[inset_0_0_0_1px_var(--brand)]",
           "aria-invalid:shadow-[inset_0_0_0_1px_var(--err)] data-placeholder:text-ink-placeholder",

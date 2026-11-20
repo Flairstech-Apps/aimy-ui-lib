@@ -29,7 +29,7 @@ Installing needs no token. The shadcn commands take everything from the site, in
 ## Tools for agents
 
 - The AiMY UI MCP server: `claude mcp add --transport http aimy-ui https://aimy-ui-lib.aimy.flairstech.com/mcp`. It searches the components, returns a component's code and install commands, and gives these rules.
-- The skills, installed with the rules by `npx shadcn@latest add https://aimy-ui-lib.aimy.flairstech.com/r/init.json`: `aimy-ui` (these rules and the component index), `aimy-ui-build` (build a screen from a brief), `aimy-ui-review` (check a screen against these rules) and `aimy-ui-upgrade` (take a new release without losing the app's edits).
+- The skills, installed with the rules by `npx shadcn@latest add https://aimy-ui-lib.aimy.flairstech.com/r/init.json`: `aimy-ui` (these rules and the component index), `aimy-ui-build` (build a screen from a brief), `aimy-ui-review` (check a screen's code against these rules), `aimy-ui-visual-review` (check how a screen looks, rendered: alignment, spacing, overflow, contrast, both themes, desk and phone widths, measured with `https://aimy-ui-lib.aimy.flairstech.com/agents/visual-audit.js`) and `aimy-ui-upgrade` (take a new release without losing the app's edits).
 
 ## The rules every screen follows
 
@@ -61,6 +61,7 @@ Moving between pages:
 
 - A product with a few pages (four or five) uses `SideNav`, Sales' tabs, as the first card of the `Rail`: a row per page with its count, and the current page holding AiMY's reading of it (`SideNavRead`). Most AiMY products are this.
 - A product with many pages and nested flows uses `SideNav variant="qa"` in AppShell's `nav` slot: each page with its headline figures, collapsing to icons. QA and User Management use it. With no findings to lead with, pass `order="fixed"` so the pages keep their order and the list never reshuffles. Never use it for a handful of pages, and never put both forms in one product.
+- Right to left: set `dir="rtl"` (and `lang`) on the page; every part mirrors its layout, arrow keys, drags and arrows. In the app's own classes write the logical forms (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`, `text-start`, `border-s`, `border-e`), never left and right.
 - Every product sits on the products' ambient wash. AppShell draws it (`AmbientBackground`, on by default); an app without the shell puts `<AmbientBackground />` first in the body. Never add a second glow, hang one on a card, or animate it.
 
 Phones:
@@ -138,6 +139,8 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 - **Search field** (`@aimy/search-field`): Find-as-you-type with a search icon, a clear button that appears only when there is text, and Escape to clear. https://aimy-ui-lib.aimy.flairstech.com/components/search-field/
 - **Select** (`@aimy/select`): The only select control; never a native <select>. https://aimy-ui-lib.aimy.flairstech.com/components/select/
 - **Combobox** (`@aimy/combobox`): Choose one option by typing to narrow a long list (an owner, a company, a product). https://aimy-ui-lib.aimy.flairstech.com/components/combobox/
+- **Multi-select** (`@aimy/multi-select`): Several choices behind one trigger: Knowledge's .k-multi. https://aimy-ui-lib.aimy.flairstech.com/components/multi-select/
+- **Tag input** (`@aimy/tag-input`): Values typed in as tags: Knowledge's .tag-input. https://aimy-ui-lib.aimy.flairstech.com/components/tag-input/
 - **Inline edit** (`@aimy/inline-edit`): Rename or change one value where it sits: at rest it reads as its text with a pencil on hover and focus; pressed, it becomes the box field in the same size. https://aimy-ui-lib.aimy.flairstech.com/components/inline-edit/
 - **Checkbox** (`@aimy/checkbox`): A 17px box: brand fill and a white tick when on, a dash for some (checked="indeterminate"). https://aimy-ui-lib.aimy.flairstech.com/components/checkbox/
 - **Switch** (`@aimy/switch`): An on/off switch, 36 by 20: the brand when on. https://aimy-ui-lib.aimy.flairstech.com/components/switch/
@@ -205,6 +208,7 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 
 - **KPI widget** (`@aimy/kpi-widget`): Sales' floor widget: one measure over time against what was promised. https://aimy-ui-lib.aimy.flairstech.com/components/kpi-widget/
 - **Progress to target** (`@aimy/target-bar`): Sales' attainment bar: the figure of its target and the share in words, then one bar with what is in (solid accent), what AiMY expects could still come (hatched), the target crossing the bar and today's pace as a tick inside it. https://aimy-ui-lib.aimy.flairstech.com/components/target-bar/
+- **Bar list** (`@aimy/bar-list`): A bar per category, as QA's audit panel and the operations hub draw them. https://aimy-ui-lib.aimy.flairstech.com/components/bar-list/
 - **Funnel** (`@aimy/funnel`): Sales' funnel: a name, a pill bar and a right-aligned count a row. https://aimy-ui-lib.aimy.flairstech.com/components/funnel/
 - **Sparkline** (`@aimy/sparkline`): Knowledge's before-and-after line: the line before a change in the reading ink, after it in the brand, the change a dashed line in the action ink, named underneath. https://aimy-ui-lib.aimy.flairstech.com/components/sparkline/
 - **Score tile** (`@aimy/score-tile`): QA's quality-score summary: the score in its tone, how far from the goal, how it moved with a Lucide arrow, and a small curve of the period that is also the button opening the full trend (aria-expanded, aria-controls), with the data's source under it. https://aimy-ui-lib.aimy.flairstech.com/components/score-tile/
@@ -220,6 +224,7 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 - **Candidate profile** (`@aimy/candidate-profile`): One candidate in full inside a reply: header with the Fit badge, contact facts, About in three lines with Read all, work experience two jobs deep with Show all, skills, and Start outreach, Download CV, Add note. https://aimy-ui-lib.aimy.flairstech.com/components/candidate-profile/
 - **Chat table** (`@aimy/chat-table`): A tool's table in a chat reply: the DataTable with sentence-case headers and three-state sorting, placeholder rows while the tool runs, and the rows form instead of sideways scrolling when the widget is narrow. https://aimy-ui-lib.aimy.flairstech.com/components/chat-table/
 - **Ranked list** (`@aimy/ranked-list`): Results best first, one per row, each with its reason in two lines and the Fit badge; the row opens the result. https://aimy-ui-lib.aimy.flairstech.com/components/ranked-list/
+- **File drop** (`@aimy/file-drop`): Where files come in: drop them or press to choose. https://aimy-ui-lib.aimy.flairstech.com/components/file-drop/
 - **Upload results** (`@aimy/upload-results`): A batch counted by status (Added, Added with warnings, Not added), each a number, an icon and a word, filtering the rows below; it opens on what needs a person, and each row has its fix: Open, See warnings, Upload again. https://aimy-ui-lib.aimy.flairstech.com/components/upload-results/
 
 ### AI: conversation

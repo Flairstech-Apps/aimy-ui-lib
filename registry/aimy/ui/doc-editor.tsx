@@ -65,14 +65,23 @@ export function cleanHtml(html: string): Node[] {
 export type Format = "bold" | "italic" | "underline" | "h3" | "h4" | "ul" | "ol" | "quote" | "code" | "p"
 type Active = Partial<Record<Format, boolean>>
 
+// Right to left, ArrowLeft goes forward and ArrowRight back, as the page reads.
+const readingKey = (e: React.KeyboardEvent) =>
+  (e.key === "ArrowLeft" || e.key === "ArrowRight") && getComputedStyle(e.currentTarget).direction === "rtl"
+    ? e.key === "ArrowLeft"
+      ? "ArrowRight"
+      : "ArrowLeft"
+    : e.key
+
 /** A row that moves with the arrow keys, Home and End. */
 const rove = (e: React.KeyboardEvent<HTMLElement>, keys: [string, string] = ["ArrowLeft", "ArrowRight"]) => {
   const items = [...e.currentTarget.querySelectorAll<HTMLElement>("button:not([disabled])")]
   const i = items.indexOf(document.activeElement as HTMLElement)
+  const key = readingKey(e)
   const to =
-    e.key === keys[1]
+    key === keys[1]
       ? i + 1
-      : e.key === keys[0]
+      : key === keys[0]
         ? i - 1
         : e.key === "Home"
           ? 0

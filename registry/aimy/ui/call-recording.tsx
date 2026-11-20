@@ -139,7 +139,7 @@ export function CallRecording({ id, seconds, src, kind = "call", className }: Ca
       aria-label={`${kind === "message" ? "Play the message they left" : "Play the recording of the call"}, ${clock(seconds)}`}
       onClick={() => (playing ? stop() : start())}
       className={cn(
-        "flex h-10 w-full max-w-[340px] cursor-pointer items-center gap-2.5 rounded-pill border-0 pr-3 pl-2 text-left",
+        "flex h-10 w-full max-w-[340px] cursor-pointer items-center gap-2.5 rounded-pill border-0 pe-3 ps-2 text-start",
         "bg-[color-mix(in_srgb,var(--accent)_6%,transparent)] transition-[background-color] duration-(--t-fast) ease-out hover:bg-[color-mix(in_srgb,var(--accent)_12%,transparent)] motion-reduce:transition-none",
         className
       )}
@@ -167,7 +167,7 @@ export function CallRecording({ id, seconds, src, kind = "call", className }: Ca
           {drawBars(true)}
         </span>
       </span>
-      <span className="min-w-8 flex-none text-right text-2xs font-semibold text-ink-secondary tabular-nums">
+      <span className="min-w-8 flex-none text-end text-2xs font-semibold text-ink-secondary tabular-nums">
         {/* Idle, the clock is the length as given now, even if it arrived after the first render. */}
         {clock(playing ? left : seconds)}
       </span>

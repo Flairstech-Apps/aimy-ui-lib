@@ -54,7 +54,7 @@ export function SwipeRow({ children, leading, trailing, fullSwipe, className }: 
         a.onAction()
       }}
       style={{ width: WIDTH }}
-      className={cn("absolute inset-y-0 flex flex-col items-center justify-center gap-1 text-2xs font-semibold [&_svg]:size-4", side === "leading" ? "left-0" : "right-0", tones[a.tone ?? "info"])}
+      className={cn("absolute inset-y-0 flex flex-col items-center justify-center gap-1 text-2xs font-semibold [&_svg]:size-4", side === "leading" ? "start-0" : "end-0", tones[a.tone ?? "info"])}
     >
       {a.icon}
       {a.label}

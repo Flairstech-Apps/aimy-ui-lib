@@ -250,7 +250,7 @@ export function CommandBar({ onAsk, open: openProp, onOpenChange, shortcut = tru
             <span className="flex items-center gap-1.5">
               <Kbd keys={["Esc"]} /> close
             </span>
-            <span className="ml-auto flex items-center gap-1.5">
+            <span className="ms-auto flex items-center gap-1.5">
               <Kbd keys={["Ctrl", "Z"]} /> undo
             </span>
           </div>

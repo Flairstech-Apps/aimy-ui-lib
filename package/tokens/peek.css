@@ -10,7 +10,7 @@
  */
 .aimy-peek {
   --peek-tuck: 14px; --peek-lip: 40px;
-  position: absolute; bottom: calc(100% + 6px); left: 0; right: 0;
+  position: absolute; bottom: calc(100% + 6px); inset-inline-start: 0; inset-inline-end: 0;
   display: flex; justify-content: center; pointer-events: none; z-index: 1;
   clip-path: inset(-64px -64px calc(-1 * var(--peek-tuck)) -64px);
 }
@@ -30,7 +30,7 @@
 @keyframes aimy-peek-in {
   from { opacity: 0; transform: translate3d(0, 10px, 0) scale(0.985); filter: blur(6px); }
 }
-.aimy-peek-lip { position: absolute; top: 0; left: 0; right: 0; height: 14px; z-index: 1; }
+.aimy-peek-lip { position: absolute; top: 0; inset-inline-start: 0; inset-inline-end: 0; height: 14px; z-index: 1; }
 .aimy-peek-grip {
   position: absolute; inset: 0; display: grid; place-items: center; padding: 0; border: 0;
   border-radius: 23px 23px 0 0; background: none; cursor: grab; touch-action: none;
@@ -45,7 +45,7 @@
 }
 .aimy-peek-grip:hover .aimy-peek-grip-bar { width: 48px; background: var(--d300); }
 .aimy-peek-x {
-  position: absolute; top: 6px; right: 6px; z-index: 2; width: 26px; height: 26px;
+  position: absolute; top: 6px; inset-inline-end: 6px; z-index: 2; width: 26px; height: 26px;
   display: grid; place-items: center; border: 0; border-radius: 50%; background: none;
   color: var(--ink-secondary); cursor: pointer;
   transition: color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out), transform var(--t-press) var(--ease-out);
@@ -58,7 +58,7 @@
 .aimy-peek-main { transition: opacity var(--t-fast) var(--ease-out) 160ms; }
 .aimy-peek-open {
   display: grid; width: 100%; padding: 12px 44px 12px 16px; border: 0; border-radius: 20px;
-  background: none; text-align: left; cursor: pointer; color: inherit; font: inherit;
+  background: none; text-align: start; cursor: pointer; color: inherit; font: inherit;
   transition: background-color var(--t-fast) var(--ease-out), transform 120ms var(--ease-out);
 }
 .aimy-peek-open:hover { background: rgba(var(--accent-rgb), 0.07); }
@@ -70,7 +70,7 @@
 }
 .aimy-peek-body b { color: var(--d50); font-weight: var(--fw-semibold); }
 .aimy-peek.is-clipped .aimy-peek-body::after {
-  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.7em;
+  content: ""; position: absolute; inset-inline-start: 0; inset-inline-end: 0; bottom: 0; height: 1.7em;
   background: linear-gradient(to bottom, transparent, #1e2428);
 }
 [data-theme="light"] .aimy-peek.is-clipped .aimy-peek-body::after { background: linear-gradient(to bottom, transparent, #fafcfe); }
@@ -81,9 +81,9 @@
 .aimy-peek-open:has(+ .aimy-peek-acts:not(:empty)) { padding-bottom: 8px; }
 /* Shut: tucked into the bar, the lip and its grip still in reach. */
 .aimy-peek.is-shut .aimy-peek-card { transform: translate3d(0, calc(100% - var(--peek-lip) + var(--peek-tuck)), 0); max-width: min(38rem, 80%); }
-.aimy-peek.is-shut .aimy-peek-lip { top: 5px; left: 5px; right: 5px; height: 26px; display: flex; align-items: center; justify-content: flex-end; }
+.aimy-peek.is-shut .aimy-peek-lip { top: 5px; inset-inline-start: 5px; inset-inline-end: 5px; height: 26px; display: flex; align-items: center; justify-content: flex-end; }
 .aimy-peek.is-shut .aimy-peek-grip { border-radius: 19px 19px 0 0; }
-.aimy-peek.is-shut .aimy-peek-x { top: 0; right: 2px; }
+.aimy-peek.is-shut .aimy-peek-x { top: 0; inset-inline-end: 2px; }
 .aimy-peek.is-shut .aimy-peek-main { opacity: 0; transition-delay: 0s; }
 .aimy-peek.is-dragging .aimy-peek-card { transition: none; max-width: 47.5rem; }
 .aimy-peek.is-dragging .aimy-peek-main { opacity: 1; }

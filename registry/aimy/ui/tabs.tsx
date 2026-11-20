@@ -1,7 +1,8 @@
 "use client"
 
 import { Tabs as Primitive } from "radix-ui"
-import { createContext, useCallback, useContext, useLayoutEffect, useRef } from "react"
+import { createContext, useCallback, useContext, useLayoutEffect, useRef, useState } from "react"
+import { useAgentSurface } from "@/lib/behaviors-agent-react"
 import { cn } from "@/lib/utils"
 
 // Two tab strips the products draw, as one control with two sizes:
@@ -15,12 +16,63 @@ import { cn } from "@/lib/utils"
 type Size = "page" | "section"
 const SizeContext = createContext<Size>("section")
 
-type TabsProps = React.ComponentProps<typeof Primitive.Root> & { size?: Size }
+type TabsProps = React.ComponentProps<typeof Primitive.Root> & {
+  size?: Size
+  /** Shows the tabs to AiMY under this id (inside an AgentProvider), so it can read which is open and open another. */
+  agent?: string
+}
 
-export function Tabs({ size = "section", className, ...props }: TabsProps) {
+export function Tabs({ size = "section", className, agent, ...props }: TabsProps) {
+  const [dir, setDir] = useState<"ltr" | "rtl" | undefined>(undefined)
+  const [node, setNode] = useState<HTMLDivElement | null>(null)
+  // The tabs' names are read from the page each time, so tabs added later are offered too.
+  const tabs = () => Array.from(node?.querySelectorAll<HTMLElement>('[role="tab"]') ?? []).filter((t) => t.closest("[data-slot=tabs]") === node)
+  const nameOf = (t: HTMLElement) => (t.getAttribute("aria-label") ?? t.textContent ?? "").replace(/\s+/g, " ").trim()
+  // Opening a tab the way a press does (Radix opens on pointer down), without moving the person's focus.
+  const press = (t: HTMLElement) => t.dispatchEvent(new MouseEvent("mousedown", { bubbles: true, cancelable: true, button: 0 }))
+  useAgentSurface(
+    agent,
+    {
+      kind: "tabs",
+      label: "",
+      state: () => {
+        const open = tabs().find((t) => t.getAttribute("aria-selected") === "true")
+        return { open: open ? nameOf(open) : null, tabs: tabs().map(nameOf) }
+      },
+      actions: {
+        open: {
+          description: "Open a tab",
+          keywords: "show switch go view",
+          get params() {
+            return { tab: { type: "string" as const, description: "The tab's name as shown", enum: tabs().map(nameOf) } }
+          },
+          say: (p) => `opened ${String(p.tab)}`,
+          run: (p) => {
+            const t = tabs().find((x) => nameOf(x) === p.tab)
+            if (!t || t.hasAttribute("disabled")) throw new Error("That tab can't be opened now.")
+            const prev = tabs().find((x) => x.getAttribute("aria-selected") === "true")
+            press(t)
+            return () => void (prev && press(prev))
+          },
+        },
+      },
+    },
+    node
+  )
   return (
     <SizeContext.Provider value={size}>
-      <Primitive.Root data-slot="tabs" className={cn("flex flex-col gap-4", className)} {...props} />
+      <Primitive.Root
+        data-slot="tabs"
+        className={cn("flex flex-col gap-4", className)}
+        {...props}
+        // Radix reads direction only from its own provider; this reads the page's, so the arrow keys
+        // follow right to left without one.
+        dir={props.dir ?? dir}
+        ref={(el: HTMLDivElement | null) => {
+          if (el !== node) setNode(el)
+          if (el && !props.dir && getComputedStyle(el).direction === "rtl" && dir !== "rtl") setDir("rtl")
+        }}
+      />
     </SizeContext.Provider>
   )
 }

@@ -159,3 +159,13 @@ export const intersects = (a: Rect, b: Rect) =>
   a.x < b.x + b.width && a.x + a.width > b.x && a.y < b.y + b.height && a.y + a.height > b.y
 
 export const isRtl = (el: Element) => getComputedStyle(el).direction === "rtl"
+
+/**
+ * The arrow key as the reading direction means it: under right to left, ArrowLeft goes forward (it
+ * reads as ArrowRight) and ArrowRight goes back. Other keys pass through.
+ */
+export const readingKey = (e: { key: string; target?: EventTarget | null; currentTarget?: EventTarget | null }) => {
+  if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return e.key
+  const el = e.currentTarget ?? e.target
+  return typeof Element !== "undefined" && el instanceof Element && isRtl(el) ? (e.key === "ArrowLeft" ? "ArrowRight" : "ArrowLeft") : e.key
+}

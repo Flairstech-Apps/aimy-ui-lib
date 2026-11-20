@@ -314,7 +314,7 @@ export function RecoveryState({
             <div className="mt-0.5 text-ink-secondary">
               {body}
               {retrying ? (
-                <span className="ml-2">
+                <span className="ms-2">
                   <Attempts attempt={attempt} of={maxAttempts} compact />
                 </span>
               ) : null}
@@ -337,7 +337,7 @@ export function RecoveryState({
             </button>
           ) : null}
           {buttons ? (
-            <div className="flex shrink-0 flex-wrap items-center gap-2 self-center @max-[30rem]:basis-full @max-[30rem]:pl-8">
+            <div className="flex shrink-0 flex-wrap items-center gap-2 self-center @max-[30rem]:basis-full @max-[30rem]:ps-8">
               {buttons}
             </div>
           ) : null}
@@ -360,7 +360,7 @@ export function RecoveryState({
         display === "page" && "min-h-[min(32rem,70dvh)] items-center justify-center gap-3 px-6 py-12 text-center",
         screen && "w-full max-w-[28rem] items-center gap-3 rounded-2xl border border-edge bg-card px-8 py-8 text-center shadow-xl max-phone:px-5",
         display === "section" && cn("items-center gap-3 rounded-2xl border bg-card px-8 py-10 text-center", tone.edge),
-        widget && "items-start gap-2 p-4 text-left",
+        widget && "items-start gap-2 p-4 text-start",
         !screen && className
       )}
     >
@@ -530,7 +530,7 @@ export function ErrorSummary({
         {title}
       </p>
       <p className="mt-0.5 text-meta text-ink-secondary">{message}</p>
-      <ul className="mt-2 flex list-disc flex-col gap-1 pl-5 text-meta text-ink">
+      <ul className="mt-2 flex list-disc flex-col gap-1 ps-5 text-meta text-ink">
         {errors.map((e) => (
           <li key={e.id}>
             <a

@@ -83,7 +83,7 @@ export function Message({ speaker, status = "done", author, thinkingLabel, after
           </div>
         )}
       </div>
-      {after && !thinking ? <div className={cn("flex flex-col gap-2", !aimy && "pr-10")}>{after}</div> : null}
+      {after && !thinking ? <div className={cn("flex flex-col gap-2", !aimy && "pe-10")}>{after}</div> : null}
     </div>
   )
 }

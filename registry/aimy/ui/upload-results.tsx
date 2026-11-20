@@ -67,7 +67,7 @@ export function UploadResults({ items, label, onAction, className }: UploadResul
               aria-checked={on}
               onClick={() => setShown(s)}
               className={cn(
-                "flex flex-col gap-0.5 border-r border-hairline px-4 py-3 text-left transition-[background-color] duration-(--t-fast) ease-out last:border-r-0",
+                "flex flex-col gap-0.5 border-e border-hairline px-4 py-3 text-start transition-[background-color] duration-(--t-fast) ease-out last:border-e-0",
                 on ? t.ground : "hover:bg-w03"
               )}
             >

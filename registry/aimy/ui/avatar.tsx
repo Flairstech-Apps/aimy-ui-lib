@@ -127,12 +127,12 @@ export function AvatarGroup({ people, max = 4, size = "md", className }: AvatarG
   return (
     <span data-slot="avatar-group" className={cn("inline-flex items-center", className)}>
       {shown.map((p, i) => (
-        <Avatar key={`${p.name}-${i}`} {...p} size={size} className={cn("ring-2 ring-card", i > 0 && "-ml-2.5")} />
+        <Avatar key={`${p.name}-${i}`} {...p} size={size} className={cn("ring-2 ring-card", i > 0 && "-ms-2.5")} />
       ))}
       {rest > 0 ? (
         <span
           className={cn(
-            "-ml-2.5 inline-grid shrink-0 place-items-center rounded-pill bg-raised font-bold text-ink-secondary ring-2 ring-card",
+            "-ms-2.5 inline-grid shrink-0 place-items-center rounded-pill bg-raised font-bold text-ink-secondary ring-2 ring-card",
             SIZES[size]
           )}
         >

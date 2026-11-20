@@ -31,6 +31,14 @@ const monthLabel = new Intl.DateTimeFormat("en-GB", { month: "long", year: "nume
 const dayLabel = new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
 const DOW = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
 
+// Right to left, ArrowLeft goes forward and ArrowRight back, as the page reads.
+const readingKey = (e: React.KeyboardEvent) =>
+  (e.key === "ArrowLeft" || e.key === "ArrowRight") && getComputedStyle(e.currentTarget).direction === "rtl"
+    ? e.key === "ArrowLeft"
+      ? "ArrowRight"
+      : "ArrowLeft"
+    : e.key
+
 export function Calendar(props: CalendarProps) {
   const today = day0(props.today ?? new Date())
   const selected = props.mode === "range" ? props.value?.from : props.value
@@ -87,7 +95,7 @@ export function Calendar(props: CalendarProps) {
       PageUp: addMonths(focus, -1),
       PageDown: addMonths(focus, 1),
     }
-    const next = map[e.key]
+    const next = map[readingKey(e)]
     if (next) {
       e.preventDefault()
       moveTo(next)

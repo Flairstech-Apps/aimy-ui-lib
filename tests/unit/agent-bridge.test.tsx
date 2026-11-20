@@ -19,8 +19,8 @@ describe("agent bridge core", () => {
     let v = "a"
     b.register({ id: "owner", kind: "select", label: "Owner", state: () => ({ v }), actions: { choose: { description: "Choose an owner", params: { who: { type: "string", description: "Name", enum: ["a", "b"] } }, run: (p) => void (v = String(p.who)) } } })
     const tools = b.tools()
-    expect(tools.map((t) => t.name)).toEqual(["read_screen", "owner__choose"])
-    expect(tools[1]!.input_schema).toEqual({ type: "object", properties: { who: { type: "string", description: "Name", enum: ["a", "b"] } }, required: ["who"] })
+    expect(tools.map((t) => t.name)).toEqual(["read_screen", "do_steps", "find", "owner__choose"])
+    expect(tools[3]!.input_schema).toEqual({ type: "object", properties: { who: { type: "string", description: "Name", enum: ["a", "b"] } }, required: ["who"] })
     expect(b.snapshot()[0]).toMatchObject({ id: "owner", label: "Owner", state: { v: "a" } })
   })
 
@@ -69,8 +69,8 @@ describe("agent bridge core", () => {
     b.register({ id: "x", kind: "k", label: "X", state: () => 1, actions: { go: { description: "Go", run: () => () => {} } } })
     const off = b.registerWebMCP()
     const tools = provideContext.mock.calls[0]![0].tools
-    expect(tools.map((t: { name: string }) => t.name)).toEqual(["read_screen", "x__go"])
-    const out = await tools[1].execute({})
+    expect(tools.map((t: { name: string }) => t.name)).toEqual(["read_screen", "do_steps", "find", "x__go"])
+    const out = await tools[3].execute({})
     expect(JSON.parse(out.content[0].text)).toMatchObject({ ok: true })
     off()
     // @ts-expect-error cleaning up the test double

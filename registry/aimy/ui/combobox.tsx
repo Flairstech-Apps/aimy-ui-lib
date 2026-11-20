@@ -216,7 +216,7 @@ export function Combobox({
           if (typing && !lb.query.trim()) setValue(null)
           close()
         }}
-        className={cn(controlStyles.base, controlStyles.box, "min-h-9 pr-8")}
+        className={cn(controlStyles.base, controlStyles.box, "min-h-9 pe-8")}
       />
       <button
         type="button"
@@ -231,7 +231,7 @@ export function Combobox({
             anchor?.querySelector("input")?.focus()
           }
         }}
-        className="absolute inset-y-0 right-0 grid w-8 place-items-center text-ink-secondary"
+        className="absolute inset-y-0 end-0 grid w-8 place-items-center text-ink-secondary"
       >
         <ChevronDown strokeWidth={2} className={cn("size-3.5 transition-transform duration-(--t-fast) ease-out", open && "rotate-180")} />
       </button>

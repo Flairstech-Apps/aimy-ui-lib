@@ -116,6 +116,7 @@ export function AgentAsks({ className }: { className?: string }) {
           </span>
           <div className="min-w-0 flex-1">
             <p className="text-meta text-ink">{p.sentence.replace(/\.$/, "")}?</p>
+            <AskValues ask={p} />
             <div className="mt-2 flex flex-wrap gap-2">
               <Button size="sm" variant="brand" onClick={() => answer(p, true)}>
                 Go ahead
@@ -130,6 +131,24 @@ export function AgentAsks({ className }: { className?: string }) {
         </li>
       ))}
     </ul>
+  )
+}
+
+/** Exactly what AiMY will set, field by field, so the person says yes to the values, not only a sentence. */
+function AskValues({ ask }: { ask: Pending }) {
+  const declared = Object.hasOwn(ask.surface.actions, ask.action) ? ask.surface.actions[ask.action]?.params : undefined
+  const rows = Object.entries(ask.params).filter(([, v]) => v !== undefined && v !== null && v !== "")
+  if (!rows.length) return null
+  const show = (v: unknown) => (typeof v === "string" ? v : typeof v === "number" || typeof v === "boolean" ? String(v) : JSON.stringify(v))
+  return (
+    <dl className="mt-1.5 grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-0.5 text-xs">
+      {rows.map(([k, v]) => (
+        <div key={k} className="contents">
+          <dt className="text-ink-secondary">{declared?.[k]?.description ?? k}</dt>
+          <dd className="font-semibold text-ink [overflow-wrap:anywhere]">{show(v)}</dd>
+        </div>
+      ))}
+    </dl>
   )
 }
 

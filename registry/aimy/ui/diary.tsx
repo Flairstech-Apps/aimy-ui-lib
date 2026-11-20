@@ -85,6 +85,14 @@ const onDay = (n: number) => (n ? plural(n, "thing") : "nothing on")
 const byTime = (a: DiaryEntry, b: DiaryEntry) =>
   a.date.localeCompare(b.date) || (a.time ?? "").localeCompare(b.time ?? "")
 
+// Right to left, ArrowLeft goes forward and ArrowRight back, as the page reads.
+const readingKey = (e: React.KeyboardEvent) =>
+  (e.key === "ArrowLeft" || e.key === "ArrowRight") && getComputedStyle(e.currentTarget).direction === "rtl"
+    ? e.key === "ArrowLeft"
+      ? "ArrowRight"
+      : "ArrowLeft"
+    : e.key
+
 export function Diary({
   entries,
   today,
@@ -138,10 +146,11 @@ export function Diary({
 
   const onKey = (e: React.KeyboardEvent, iso: string) => {
     const wd = (fromIso(iso).getDay() + 6) % 7
+    const key = readingKey(e)
     const to =
-      e.key === "ArrowLeft"
+      key === "ArrowLeft"
         ? addDays(iso, -1)
-        : e.key === "ArrowRight"
+        : key === "ArrowRight"
           ? addDays(iso, 1)
           : e.key === "ArrowUp"
             ? addDays(iso, -7)
