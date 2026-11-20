@@ -395,7 +395,7 @@
     "name": "data-table",
     "title": "Data table",
     "group": "Data display",
-    "description": "Records in columns, in Knowledge's two forms: rows (each row a card, one height, the first column takes its own line below 46rem) and table (a real table, zebra rows, sub-labels, scrolls sideways). Knowledge's three-state sort (up, down, back to the original order) with the arrow always drawn. From the design-system spec: a head that stays put while the body scrolls, and row selection with a select-all box. SortHeader and TableEmpty are exported for sort bars and empty states.",
+    "description": "Records in columns, in Knowledge's two forms: rows (each row a card, one height, the first column takes its own line below 46rem) and table (a real table in one card: a head band, a hairline between rows, a wash on hover, sub-labels, scrolls sideways). Knowledge's three-state sort (up, down, back to the original order) with the arrow always drawn. From the design-system spec: a head that stays put while the body scrolls, and row selection with a select-all box. SortHeader and TableEmpty are exported for sort bars and empty states.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/data-table/"
   },
   {

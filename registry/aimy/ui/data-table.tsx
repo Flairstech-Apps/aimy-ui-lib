@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 //          gap you can see, one height for every row, a head naming the
 //          columns. Below 46rem of its own width the first column takes a
 //          line and the rest share the next, and the head goes.
-//   table  Knowledge's preview table (.set2-pv): a real <table>, zebra rows,
+//   table  Knowledge's preview table (.set2-pv), ruled: a real <table> in one card, a head band, hairline rows,
 //          a sub-label under a header, scrolls sideways when it must.
 //
 // Sorting is Knowledge's three states: ascending, descending, and back to

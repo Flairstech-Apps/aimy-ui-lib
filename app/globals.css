@@ -261,9 +261,12 @@
   position: absolute;
   inset-inline: 0;
   top: 0;
-  height: var(--line);
+  /* The glow runs on past the line: the ground's top is a curve that falls away from the
+     middle, so a glow that stopped flat at the line left a hard edge beside the dock where
+     the curve had dropped below it. The ground hides what runs on under the curve. */
+  height: calc(var(--line) + 6rem);
   background: radial-gradient(
-    50% 80% at 50% 100%,
+    50% calc(var(--line) * 0.8) at 50% var(--line),
     color-mix(in oklab, var(--accent) 34%, transparent),
     color-mix(in oklab, var(--brand) 16%, transparent) 45%,
     transparent 78%

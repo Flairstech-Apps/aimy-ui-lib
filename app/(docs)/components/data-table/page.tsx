@@ -46,8 +46,10 @@ export default function Page() {
           Sales draws no tables, so this is Knowledge&apos;s console. Rows is the run history (<code>.set2-runs</code>,
           settings.css 1125-1201, 2963): every row its own card 6px apart, one height for every row (4.25rem), a head
           naming the columns; below 46rem of its own width the first column takes a line, the rest share the next, and
-          the head goes. Table is the preview table (<code>.set2-pv</code>, settings.css 1024-1039): zebra rows, a
-          sub-label under a header, sideways scroll. Sorting is Knowledge&apos;s <code>sortTh</code>: up, down, and back
+          the head goes. Table is the preview table (<code>.set2-pv</code>, settings.css 1024-1039) with a
+          sub-label under a header and sideways scroll, ruled since your pick on 20 Nov: one card with its edge, a head
+          band with a rule under it, a hairline between rows, a wash on hover, and the first column in primary ink. Its
+          old zebra was drawn with the raised ground, which light draws white, so light showed no rows at all. Sorting is Knowledge&apos;s <code>sortTh</code>: up, down, and back
           to the order the rows came in, with the arrow always drawn and lit only on the column doing the work. Your
           call on 28 Oct added the two gaps from the design-system spec (<code>.dtable</code>): a head that stays put
           while the body scrolls, and row selection, with the head&apos;s box selecting all or none and showing a dash
