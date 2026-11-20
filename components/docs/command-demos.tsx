@@ -20,8 +20,8 @@ const COMPANIES = [
 ]
 
 function PageCommands() {
-  useCommand("go-contacts", { group: "Go to", label: "Contacts", said: "opened Contacts", run: () => void toast("The app would open Contacts here") })
-  useCommand("go-pipeline", { group: "Go to", label: "Pipeline", said: "opened the pipeline", run: () => void toast("The app would open the pipeline here") })
+  useCommand("go-contacts", { group: "Go to", label: "Contacts", said: "opened Contacts", level: "tell", run: () => void toast("The app would open Contacts here") })
+  useCommand("go-pipeline", { group: "Go to", label: "Pipeline", said: "opened the pipeline", level: "tell", run: () => void toast("The app would open the pipeline here") })
   useCommand("new-deal", { group: "Create", label: "New deal", said: "started a new deal", run: () => void toast("The app would start a new deal here") })
   return null
 }

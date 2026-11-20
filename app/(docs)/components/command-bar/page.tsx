@@ -23,7 +23,8 @@ export default function Page() {
 </AgentProvider>
 
 // anywhere inside: a command for people and a tool for AiMY
-useCommand("go-contacts", { group: "Go to", label: "Contacts", said: "opened Contacts", run: () => router.push("/contacts") })`}</CodeBlock>
+// AiMY asks before running an app command; navigating is safe, so it says so.
+useCommand("go-contacts", { group: "Go to", label: "Contacts", said: "opened Contacts", level: "tell", run: () => router.push("/contacts") })`}</CodeBlock>
         <ul data-ai="ul" className="mt-3 flex max-w-[46rem] list-disc flex-col gap-1.5 pl-5 text-meta text-ink-secondary">
           <li data-ai="li">An action whose params are choices becomes one row per choice: Choose an option: Atlas Energy.</li>
           <li data-ai="li">An action that needs a value asks for it in the same field, then runs.</li>
