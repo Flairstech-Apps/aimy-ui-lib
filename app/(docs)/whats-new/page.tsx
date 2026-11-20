@@ -33,6 +33,16 @@ const c = (name: string) => `/components/${name}/`
 
 const ENTRIES: Entry[] = [
   {
+    label: "2.1.2",
+    type: "Patch",
+    date: "20 Nov 2026",
+    title: "The side nav without You're here",
+    items: [
+      { kind: "new", name: "SideNav", href: c("side-nav"), text: "QA's form takes here={false} to drop the You're here word, or a word of your own." },
+    ],
+    run: BOTH,
+  },
+  {
     label: "2.1.1",
     type: "Patch",
     date: "20 Nov 2026",

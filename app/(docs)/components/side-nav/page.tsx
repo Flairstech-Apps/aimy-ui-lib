@@ -74,6 +74,11 @@ export default function Page() {
           given, open and collapsed, and the current one keeps its card and &ldquo;You&apos;re here&rdquo; in its own
           place, so the list never reshuffles under someone&apos;s pointer.
         </p>
+        <p data-ai="p" className="mt-3 max-w-[46rem] text-meta text-ink-secondary">
+          <code className="font-mono text-ink">here=&#123;false&#125;</code> drops the &ldquo;You&apos;re here&rdquo;
+          word from the current page&apos;s card (User Management does); a string says another word. The page stays
+          marked as the current one for screen readers either way.
+        </p>
       </Section>
       <Section title="Rules">
         <div className="flex flex-col gap-3">

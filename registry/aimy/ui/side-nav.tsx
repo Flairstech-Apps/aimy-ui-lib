@@ -87,6 +87,9 @@ type SideNavProps = {
   breakpoint?: number
   /** qa: "current-first" (the default, QA's) moves the page you are on to the top; "fixed" keeps the pages in the order given, in both forms, so the list never reshuffles. */
   order?: "current-first" | "fixed"
+  /** qa: the word on the current page's card, "You're here" by default; false drops it. The page is still
+      marked aria-current="page", and the collapsed form still says "(you're here)" to screen readers. */
+  here?: string | false
   className?: string
 }
 
@@ -246,6 +249,7 @@ function QaSideNav({
   onNavigate,
   breakpoint = 1100,
   order = "current-first",
+  here = "You're here",
   className,
 }: Omit<SideNavProps, "variant">) {
   const ref = useRef<HTMLElement>(null)
@@ -333,7 +337,7 @@ function QaSideNav({
                   {p.icon}
                 </span>
                 <span className="snav-section-name">{p.label}</span>
-                <span className="snav-here">You&apos;re here</span>
+                {here ? <span className="snav-here">{here}</span> : null}
               </div>
             ) : (
               <a className="snav-section-head" href={p.href} onClick={follow(p.href)}>

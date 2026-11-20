@@ -2784,7 +2784,7 @@
       "name": "side-nav",
       "type": "registry:component",
       "title": "Side navigation",
-      "description": "The pages of a product down the left, in two forms. The default is Sales' tabs, for a product with a few pages: one card at the top of the Rail, a row per page with its icon and count, the current page tinted and holding AiMY's reading of it (SideNavRead). variant=\"qa\" is QA's navigation, for a product with many pages and nested flows: its own column in AppShell's nav slot, open (272px) with each page's headline figures or collapsed (64px) to icons with counts, a drawer below 1100px of the shell.",
+      "description": "The pages of a product down the left, in two forms. The default is Sales' tabs, for a product with a few pages: one card at the top of the Rail, a row per page with its icon and count, the current page tinted and holding AiMY's reading of it (SideNavRead). variant=\"qa\" is QA's navigation, for a product with many pages and nested flows: its own column in AppShell's nav slot, open (272px) with each page's headline figures or collapsed (64px) to icons with counts, a drawer below 1100px of the shell. here={false} drops QA's \"You're here\" word; the page stays aria-current.",
       "dependencies": [
         "lucide-react"
       ],

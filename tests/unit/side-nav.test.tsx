@@ -93,6 +93,17 @@ describe("SideNav", () => {
     expect(await a11yViolations(container)).toEqual([])
   })
 
+  it("drops the You're here word with here={false} and still marks the page as current", () => {
+    const { container } = render(<SideNav variant="qa" pages={PAGES} label="QA pages" breakpoint={0} here={false} />)
+    expect(container.querySelector(".snav-here")).toBeNull()
+    expect(container.querySelector('[aria-current="page"]')).toHaveTextContent("Dashboard")
+  })
+
+  it("says another word on the current page's card when given one", () => {
+    render(<SideNav variant="qa" pages={PAGES} label="QA pages" breakpoint={0} here="Open now" />)
+    expect(screen.getByText("Open now")).toHaveClass("snav-here")
+  })
+
   it("collapses to icons named with their figures, remembers it, and opens again", async () => {
     render(<SideNav variant="qa" pages={PAGES} count={6} label="QA pages" storageKey="t-nav" breakpoint={0} />)
     await userEvent.click(screen.getByRole("button", { name: "Collapse the pages" }))
