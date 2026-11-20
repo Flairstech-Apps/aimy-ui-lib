@@ -1,6 +1,6 @@
 "use client"
 
-import { Zap } from "lucide-react"
+import { ArrowDownRight, ArrowUpRight, Zap } from "lucide-react"
 import { useId, useState } from "react"
 import { Chip } from "@/components/chip"
 import { Segmented } from "@/components/segmented"
@@ -146,6 +146,10 @@ export function TrendChart({
   const lowI = s.indexOf(Math.min(...s))
   const lastI = n - 1
   const avg = s.reduce((a, b) => a + b, 0) / n
+  // The average against the period before, point for point, when there is one: says whether it moved.
+  const before = range.prev?.slice(0, n) ?? []
+  const prevAvg = before.length ? before.reduce((a, b) => a + b, 0) / before.length : null
+  const moved = prevAvg != null ? Math.round((avg - prevAvg) * 10) / 10 : null
   const near = (a: number, b: number) => Math.abs(x(a) - x(b)) < 8
   const showPeak = peakI !== lowI && !near(peakI, lowI) && !near(peakI, lastI)
   const showLow = lowI !== lastI && !near(lowI, lastI)
@@ -184,7 +188,15 @@ export function TrendChart({
       <div className="qa-trend-stats">
         <div className="qa-trend-stat">
           <span className="qa-trend-stat-l">Average</span>
-          <span className="qa-trend-stat-v">{format(Math.round(avg * 10) / 10)}</span>
+          <span className="qa-trend-stat-v">
+            {format(Math.round(avg * 10) / 10)}
+            {moved != null ? (
+              <span className={cn("qa-trend-delta", moved > 0 && "is-up", moved < 0 && "is-down")}>
+                {moved > 0 ? <ArrowUpRight aria-hidden="true" /> : moved < 0 ? <ArrowDownRight aria-hidden="true" /> : null}
+                {moved === 0 ? "Same as before" : `${moved > 0 ? "Up" : "Down"} ${format(Math.abs(moved))} on the period before`}
+              </span>
+            ) : null}
+          </span>
         </div>
         <div className="qa-trend-stat">
           <span className="qa-trend-stat-l">Peak · {range.labels[peakI]}</span>

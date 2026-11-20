@@ -4,7 +4,7 @@ import { useState } from "react"
 import { cn } from "@/lib/utils"
 
 // QA's pass, borderline and fail ring (.donut-*): the parts of a whole as
-// arcs from twelve o'clock, clockwise, end to end. The centre says the main
+// arcs from twelve o'clock, clockwise, with round ends and a gap between them. The centre says the main
 // share. Point at a part, or at its row in the key, or focus the row, and
 // that part thickens with a glow, the rest dim, and the centre says that
 // part in its own ink. The key beside it is the legend QA drew as bars: a
@@ -39,6 +39,10 @@ type DonutProps = {
 
 const R = 40
 const C = 2 * Math.PI * R
+// Round ends reach half the stroke past each end of an arc, so each arc is drawn that much shorter
+// at both ends plus a gap, and parts read as separate pieces. A part too small for that is a dot.
+const SW = 9
+const GAP = 3.5
 
 export function Donut({ parts, label, center, onPick, className }: DonutProps) {
   const [on, setOn] = useState<string | null>(null)
@@ -46,9 +50,17 @@ export function Donut({ parts, label, center, onPick, className }: DonutProps) {
   const pct = (v: number) => `${Math.round((v / total) * 100)}%`
   const first = parts[0]
   const active = parts.find((p) => p.key === on)
-  // Each arc starts where the ones before it end.
+  // Each arc starts where the ones before it end. Empty parts draw nothing; one part is a full ring.
   const lens = parts.map((p) => (p.value / total) * C)
-  const arcs = parts.map((p, i) => ({ p, len: lens[i] as number, off: -lens.slice(0, i).reduce((a, b) => a + b, 0) }))
+  const many = parts.filter((p) => p.value > 0).length > 1
+  const trim = many ? SW + GAP : 0
+  const arcs = parts
+    .map((p, i) => {
+      const len = lens[i] as number
+      const start = lens.slice(0, i).reduce((a, b) => a + b, 0)
+      return { p, len, off: -start, draw: Math.max(0.01, len - trim), drawOff: -(start + trim / 2) }
+    })
+    .filter((a) => a.len > 0)
   return (
     <div className={cn("qa-donut", className)} data-slot="donut">
       <div
@@ -58,15 +70,15 @@ export function Donut({ parts, label, center, onPick, className }: DonutProps) {
       >
         <svg viewBox="0 0 100 100" aria-hidden="true">
           <circle className="qa-donut-track" cx="50" cy="50" r={R} />
-          {arcs.map(({ p, len, off }) => (
+          {arcs.map(({ p, draw, drawOff }) => (
             <circle
               key={p.key}
               className={cn("qa-donut-arc", `tone-${p.tone}`, on === p.key && "is-on", on && on !== p.key && "is-dim")}
               cx="50"
               cy="50"
               r={R}
-              strokeDasharray={`${len} ${C}`}
-              strokeDashoffset={off}
+              strokeDasharray={`${draw} ${C}`}
+              strokeDashoffset={drawOff}
             />
           ))}
           {arcs.map(({ p, len, off }) => (

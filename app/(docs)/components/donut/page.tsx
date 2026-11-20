@@ -34,7 +34,7 @@ export default function Page() {
         <p>
           QA&apos;s pass, borderline and fail ring (<code>.donut-*</code>, QA index.html 5047-5130;{" "}
           <code>evalHover</code> 11405; the markup, since removed from QA, recovered from its history). A 100px ring,
-          radius 40, 10px arcs end to end from twelve o&apos;clock, clockwise. The centre says the main share. Point at
+          radius 40, 10px arcs end to end from twelve o&apos;clock, clockwise; since 20 Nov 9px arcs with round ends and a gap between them, as modern dashboards draw a ring. The centre says the main share. Point at
           a part, or at its row in the key, or tab to the row, and that part grows to 13px with a glow in its own
           colour, the others dim to a quarter, and the centre says that part in its ink. The key beside it stands in for
           QA&apos;s bars: a swatch, the name, the count and the share. Choosing a row calls <code>onPick</code> (QA asks

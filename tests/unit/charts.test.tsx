@@ -89,10 +89,15 @@ describe("Sparkline", () => {
       <Sparkline before={[3, 4, 3]} after={[2, 1]} label="About 3 before, about 1 after" at="Tone changed" />
     )
     expect(screen.getByRole("img", { name: "About 3 before, about 1 after" })).toBeInTheDocument()
-    expect(container.querySelector(".agv-spark-before")?.getAttribute("points")?.split(" ")).toHaveLength(3)
+    // Smooth curves: a start and one segment per further point.
+    const before = container.querySelector(".agv-spark-before")?.getAttribute("d") ?? ""
+    const after = container.querySelector(".agv-spark-after")?.getAttribute("d") ?? ""
+    expect(before.match(/C/g)).toHaveLength(2)
+    expect(after.match(/C/g)).toHaveLength(2)
     // After starts at the change, so the two halves join.
-    expect(container.querySelector(".agv-spark-after")?.getAttribute("points")?.split(" ")).toHaveLength(3)
+    expect(after.match(/^M([\d.]+,[\d.]+)/)?.[1]).toBe(before.split(" ").at(-1))
     expect(container.querySelector(".agv-spark-at")).toBeInTheDocument()
+    expect(container.querySelector(".agv-spark-end")).toBeInTheDocument()
   })
 })
 

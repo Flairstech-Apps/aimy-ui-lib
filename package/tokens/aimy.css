@@ -267,8 +267,8 @@
   --ok-bg: #e8f7f0;
   --ok-border: rgba(14,146,87,0.30);
   --ok-glow: rgba(14,146,87,0.18);
-  --warn: #b26205;
-  --warn-rgb: 178,98,5;
+  --warn: #c76a00;
+  --warn-rgb: 199,106,0;
   --warn-bg: #fef4e6;
   --warn-border: rgba(178,98,5,0.30);
   --err: #d92d20;

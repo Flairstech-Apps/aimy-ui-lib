@@ -168,6 +168,10 @@ export const PATCHES = [
       light.set("--ok-text", "#05764a")
       light.set("--warn-text", "#985600")
       light.set("--err-text", "#bb1a30")
+      // The amber fill (bars, arcs, dots; never words, which take --warn-text) as amber, not brown.
+      // 3.8:1 on white and 3.5:1 on the ground, past the 3:1 a shape needs.
+      light.set("--warn", "#c76a00")
+      light.set("--warn-rgb", "199,106,0")
       // Status grounds: a tint, not a fill, and solid: a see-through amber or red over the cool
       // grey ground turned beige and dusty pink, so each is its 10% tint already laid on white
       // and looks the same on the page, a card or a row.
