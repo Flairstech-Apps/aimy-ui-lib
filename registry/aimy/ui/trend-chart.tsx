@@ -1,8 +1,9 @@
 "use client"
 
 import { ArrowDownRight, ArrowUpRight, Zap } from "lucide-react"
-import { useId, useState } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import { Chip } from "@/components/chip"
+import type { HoverCardAction } from "@/components/hover-card"
 import { Segmented } from "@/components/segmented"
 import { cn } from "@/lib/utils"
 
@@ -47,6 +48,8 @@ type TrendChartProps = {
   format?: (v: number) => string
   /** A line in the readout under a point, e.g. what AiMY did about it. */
   pointNote?: (range: TrendRange, i: number) => React.ReactNode | undefined
+  /** An action in the readout of a point. The readout then stays open while the pointer travels into it. */
+  pointAction?: (range: TrendRange, i: number) => HoverCardAction | undefined
   /** Extra controls after Compare, e.g. Ask AiMY. */
   actions?: React.ReactNode
   defaultRange?: string
@@ -64,6 +67,7 @@ export function TrendChart({
   tick: tickProp,
   format = (v) => `${v}%`,
   pointNote,
+  pointAction,
   actions,
   defaultRange,
   arriving,
@@ -73,6 +77,20 @@ export function TrendChart({
   const [rangeKey, setRangeKey] = useState(defaultRange ?? ranges[0]?.key ?? "")
   const [compare, setCompare] = useState(false)
   const [at, setAt] = useState<number | null>(null)
+  // The readout closes a moment after the pointer leaves the plot, so it can be reached when it holds
+  // an action; moving into it keeps it.
+  const leave = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const actionRef = useRef<HTMLButtonElement | null>(null)
+  const plotRef = useRef<HTMLDivElement | null>(null)
+  const hold = () => {
+    if (leave.current) clearTimeout(leave.current)
+    leave.current = null
+  }
+  const release = () => {
+    hold()
+    leave.current = setTimeout(() => setAt(null), 220)
+  }
+  useEffect(() => hold, [])
   const range = ranges.find((r) => r.key === rangeKey) ?? ranges[0]
   // The scale fits the data, the period before and the goal, on round ticks.
   // QA fixed it at 0 to 100, which put every score in the top quarter.
@@ -173,6 +191,7 @@ export function TrendChart({
     setAt((a) => Math.max(0, Math.min(lastI, (a ?? lastI) + step)))
   }
   const atNote = at != null ? pointNote?.(range, at) : undefined
+  const atAction = at != null ? pointAction?.(range, at) : undefined
   const flags = (range.flags ?? []).filter((i) => i >= 0 && i < n)
   const said =
     `${typeof title === "string" ? title + ", " : ""}${range.label}: ${range.labels[0]} ${format(s[0] as number)}, ` +
@@ -225,10 +244,24 @@ export function TrendChart({
           role="img"
           aria-label={said}
           tabIndex={0}
-          onPointerMove={onMove}
-          onPointerLeave={() => setAt(null)}
-          onKeyDown={onKey}
-          onBlur={() => setAt(null)}
+          ref={plotRef}
+          onPointerMove={(e) => {
+            hold()
+            onMove(e)
+          }}
+          onPointerLeave={() => (pointAction ? release() : setAt(null))}
+          onKeyDown={(e) => {
+            // Into the readout from the keyboard, when it has something to press.
+            if (e.key === "Tab" && !e.shiftKey && atAction) {
+              e.preventDefault()
+              actionRef.current?.focus()
+              return
+            }
+            onKey(e)
+          }}
+          onBlur={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget as Node)) setAt(null)
+          }}
         >
           <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
             <defs>
@@ -293,8 +326,11 @@ export function TrendChart({
               <span className="qa-trend-hline" style={{ left: `${x(at)}%` }} />
               <span className="qa-trend-dot" style={{ left: `${x(at)}%`, top: `${y(s[at] as number)}%` }} />
               <div
-                className="qa-trend-tip"
+                className={cn("qa-trend-tip", atAction && "is-live")}
                 style={x(at) > 70 ? { right: `calc(${100 - x(at)}% + 14px)` } : { left: `calc(${x(at)}% + 14px)` }}
+                onPointerEnter={hold}
+                onPointerLeave={release}
+                onPointerMove={(e) => e.stopPropagation()}
               >
                 <div className="qa-trend-tip-m">{range.labels[at]}</div>
                 <div className="qa-trend-tip-r">
@@ -310,6 +346,25 @@ export function TrendChart({
                     <Zap aria-hidden="true" />
                     {atNote}
                   </div>
+                ) : null}
+                {atAction ? (
+                  <button
+                    ref={actionRef}
+                    type="button"
+                    className="qa-trend-tip-act"
+                    onClick={() => {
+                      setAt(null)
+                      atAction.onClick()
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Escape" || (e.key === "Tab" && e.shiftKey)) {
+                        e.preventDefault()
+                        plotRef.current?.focus()
+                      }
+                    }}
+                  >
+                    {atAction.label}
+                  </button>
                 ) : null}
               </div>
             </>

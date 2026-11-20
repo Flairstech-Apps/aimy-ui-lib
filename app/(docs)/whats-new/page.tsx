@@ -33,6 +33,21 @@ const c = (name: string) => `/components/${name}/`
 
 const ENTRIES: Entry[] = [
   {
+    label: "2.1.1",
+    type: "Patch",
+    date: "20 Nov 2026",
+    title: "Hover cards on chart marks, and QA's sizes back",
+    items: [
+      { kind: "new", name: "HoverCard", href: c("hover-card"), text: "A card on a mark you can move into and press; opens beside the mark." },
+      { kind: "new", name: "Donut, Funnel, TrendChart", href: c("donut"), text: "A part, row or point can carry detail and one action in a hover card." },
+      { kind: "fixed", name: "SideNav, note-taker", href: c("side-nav"), text: "QA's own label sizes again (You're here, the count, the badge)." },
+      { kind: "fixed", name: "Document toolbar", href: c("document"), text: "Pressed and AiMY buttons in the action ink again." },
+      { kind: "fixed", name: "DataTable", href: c("data-table"), text: "Ruled at 12px on 40px rows, so every column fits where it did." },
+      { kind: "fixed", name: "Button", href: c("button"), text: "A loading button shows the waiting cursor again." },
+    ],
+    run: BOTH,
+  },
+  {
     label: "2.1.0",
     type: "Release",
     date: "20 Nov 2026",

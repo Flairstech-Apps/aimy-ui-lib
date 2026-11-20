@@ -9,7 +9,7 @@
       "title": "AiMY theme",
       "description": "Install first. Adds the AiMY tokens (colour, type, spacing, radius, shadow, motion, layers), Poppins and JetBrains Mono, the transitions.dev snippets and base styles, and maps them to Tailwind v4 so classes read in AiMY's words (bg-card, text-ink, text-meta). Switches off Tailwind's own palette and type scale, so off-system values fail to build. Dark is the default; light is data-theme=\"light\". Installs the tokens package straight from this site, so it needs no .npmrc line.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^2.1.0"
+        "@flairstech-aimy/tokens@^2.1.1"
       ],
       "registryDependencies": [
         "@aimy/utils"
@@ -24,7 +24,7 @@
       "title": "Old token names",
       "description": "Optional, for Sales and Knowledge only: maps old names (--qa-accent, --hairline, --ai-text, --err-line, --teal-label) to the library's, so a product can adopt components without renaming. A new product never needs it.",
       "dependencies": [
-        "@flairstech-aimy/tokens@^2.1.0"
+        "@flairstech-aimy/tokens@^2.1.1"
       ],
       "css": {
         "@import \"@flairstech-aimy/tokens/aliases.css\"": {}
@@ -730,18 +730,42 @@
       "type": "registry:component",
       "title": "MultiSelect",
       "description": "Several choices behind one trigger: Knowledge's .k-multi. The Select pill, a panel of real checkboxes (Select all from five), the chosen names on the trigger in words, each choice sent with a form.",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["@aimy/theme", "@aimy/utils", "@aimy/checkbox", "@aimy/field", "@aimy/popover"],
-      "files": [{ "path": "registry/aimy/ui/multi-select.tsx", "type": "registry:component" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/checkbox",
+        "@aimy/field",
+        "@aimy/popover"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/multi-select.tsx",
+          "type": "registry:component"
+        }
+      ]
     },
     {
       "name": "tag-input",
       "type": "registry:component",
       "title": "TagInput",
       "description": "Values typed in as tags: Knowledge's .tag-input. Enter, a comma or a paste adds; Backspace takes the last back; each tag has a named remove button; validate refuses one with a sentence; input methods are respected.",
-      "dependencies": ["lucide-react"],
-      "registryDependencies": ["@aimy/theme", "@aimy/utils", "@aimy/field"],
-      "files": [{ "path": "registry/aimy/ui/tag-input.tsx", "type": "registry:component" }]
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/field"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/tag-input.tsx",
+          "type": "registry:component"
+        }
+      ]
     },
     {
       "name": "combobox",
@@ -1046,6 +1070,23 @@
       "files": [
         {
           "path": "registry/aimy/ui/tooltip.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "hover-card",
+      "type": "registry:component",
+      "title": "HoverCard",
+      "description": "A card on a chart mark that you can reach: it opens beside the mark after a short rest, stays open while the pointer travels into it, and closes a moment after it leaves, so an action inside can be pressed. A tap opens and closes it on touch; Tab goes into it from the mark when it has an action; Escape closes it. title, lines and one action. Use it only for what the mark doesn't already show.",
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils",
+        "@aimy/popover-primitive"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/hover-card.tsx",
           "type": "registry:component"
         }
       ]
@@ -2561,7 +2602,8 @@
       "dependencies": [],
       "registryDependencies": [
         "@aimy/theme",
-        "@aimy/utils"
+        "@aimy/utils",
+        "@aimy/hover-card"
       ],
       "files": [
         {
@@ -2599,7 +2641,8 @@
         "@aimy/theme",
         "@aimy/utils",
         "@aimy/chip",
-        "@aimy/segmented"
+        "@aimy/segmented",
+        "@aimy/hover-card"
       ],
       "files": [
         {
@@ -2635,7 +2678,8 @@
       "dependencies": [],
       "registryDependencies": [
         "@aimy/theme",
-        "@aimy/utils"
+        "@aimy/utils",
+        "@aimy/hover-card"
       ],
       "files": [
         {

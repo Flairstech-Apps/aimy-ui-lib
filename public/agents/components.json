@@ -203,6 +203,13 @@
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/tooltip/"
   },
   {
+    "name": "hover-card",
+    "title": "Hover card",
+    "group": "Containers & navigation",
+    "description": "A card on a chart mark that you can reach: it opens beside the mark after a short rest, stays open while the pointer travels into it, and closes a moment after it leaves, so an action inside can be pressed. A tap opens and closes it on touch; Tab goes into it from the mark when it has an action; Escape closes it. title, lines and one action. Use it only for what the mark doesn't already show.",
+    "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/hover-card/"
+  },
+  {
     "name": "disclosure",
     "title": "Disclosure",
     "group": "Containers & navigation",

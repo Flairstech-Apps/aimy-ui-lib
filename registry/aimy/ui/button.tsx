@@ -21,7 +21,7 @@ const buttonVariants = cva(
     "font-sans font-semibold whitespace-nowrap select-none",
     "transition-[background-color,border-color,color,scale] duration-(--t-fast) ease-out",
     "active:not-disabled:scale-(--press-scale) active:not-disabled:duration-(--t-press)",
-    "disabled:cursor-not-allowed disabled:opacity-[0.38] aria-disabled:not-aria-busy:cursor-not-allowed aria-disabled:not-aria-busy:opacity-[0.38] aria-busy:cursor-progress aria-busy:opacity-100 aria-disabled:pointer-events-none",
+    "disabled:cursor-not-allowed disabled:opacity-[0.38] aria-disabled:not-aria-busy:cursor-not-allowed aria-disabled:not-aria-busy:opacity-[0.38] aria-busy:cursor-progress aria-busy:opacity-100 aria-disabled:not-aria-busy:pointer-events-none",
     "[&_svg]:size-3.5 [&_svg]:shrink-0",
     "motion-reduce:transition-none motion-reduce:active:scale-100",
   ],

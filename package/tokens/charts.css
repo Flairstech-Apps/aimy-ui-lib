@@ -515,3 +515,18 @@ button.bl-irow:hover .bl-ilabel { color: var(--ink-primary); }
 
 /* Right to left: bars grow from the right, where the row starts. */
 .s-att-booked:dir(rtl), .s-att-fcast:dir(rtl), .b-fn-fill:dir(rtl) { transform-origin: right; }
+
+/* A point at the middle of a part's arc, where the donut's hover card is placed. */
+.qa-donut-anchor { position: absolute; width: 1px; height: 1px; pointer-events: none; }
+/* A bar with a hover card says so under the pointer and shows focus. */
+.b-fn-bar.is-detail { cursor: default; }
+.b-fn-bar.is-detail:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+/* A readout with an action can be reached and pressed. */
+.qa-trend-tip.is-live { pointer-events: auto; }
+.qa-trend-tip-act {
+  margin-top: 8px; padding: 0; border: 0; background: none; cursor: pointer;
+  font: inherit; font-size: var(--fs-2xs); font-weight: var(--fw-semibold); color: var(--ink-action);
+  text-underline-offset: 3px;
+}
+.qa-trend-tip-act:hover { text-decoration: underline; }
+.qa-trend-tip-act:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 2px; }

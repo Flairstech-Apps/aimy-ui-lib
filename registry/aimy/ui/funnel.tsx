@@ -1,3 +1,4 @@
+import { HoverCard, type HoverCardAction } from "@/components/hover-card"
 import { cn } from "@/lib/utils"
 
 // Sales' funnel (.b-funnel): a name, a bar and a count a row. As a funnel
@@ -18,6 +19,8 @@ export type FunnelRow = {
   /** Steps: this row's own whole. */
   of?: number
   tone?: "ok" | "warn" | "err" | "neutral" | "accent"
+  /** A hover card on the bar, only for what the row doesn't say: a share of the step before, an action. */
+  detail?: { lines?: React.ReactNode[]; action?: HoverCardAction }
 }
 
 type FunnelProps = {
@@ -63,12 +66,24 @@ export function Funnel({ rows, total, head, form = "funnel", label, arriving, cl
             <span className="b-fn-name" aria-hidden="true">
               {r.name}
             </span>
-            <span className="b-fn-bar" aria-hidden="true">
-              <span
-                className={cn("b-fn-fill", `tone-${r.tone ?? "neutral"}`)}
-                style={{ width: `${r.n > 0 ? Math.max(1, Math.min(100, pc)) : 0}%` }}
-              />
-            </span>
+            {r.detail ? (
+              // The bar opens the card beside it; it takes focus so the keyboard reaches it too.
+              <HoverCard title={r.name} lines={r.detail.lines} action={r.detail.action} align="start">
+                <span className="b-fn-bar is-detail" tabIndex={0} aria-label={`${r.name}, more`}>
+                  <span
+                    className={cn("b-fn-fill", `tone-${r.tone ?? "neutral"}`)}
+                    style={{ width: `${r.n > 0 ? Math.max(1, Math.min(100, pc)) : 0}%` }}
+                  />
+                </span>
+              </HoverCard>
+            ) : (
+              <span className="b-fn-bar" aria-hidden="true">
+                <span
+                  className={cn("b-fn-fill", `tone-${r.tone ?? "neutral"}`)}
+                  style={{ width: `${r.n > 0 ? Math.max(1, Math.min(100, pc)) : 0}%` }}
+                />
+              </span>
+            )}
             <span className="b-fn-n" aria-hidden="true">
               {r.n.toLocaleString("en-GB")}
             </span>

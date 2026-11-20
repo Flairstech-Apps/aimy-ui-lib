@@ -86,8 +86,18 @@ export function FunnelDemo() {
           { name: "Not called yet", n: 53, tone: "neutral" },
           { name: "Called", n: 187, tone: "neutral" },
           { name: "Talked", n: 92, tone: "neutral" },
-          { name: "Meeting set", n: 31, tone: "ok" },
-          { name: "No answer twice", n: 12, tone: "warn" },
+          {
+            name: "Meeting set",
+            n: 31,
+            tone: "ok",
+            detail: { lines: ["1 in 3 of those who talked", "9 more than last campaign"], action: { label: "See the 31", onClick: () => toast("Opens the 31 with a meeting") } },
+          },
+          {
+            name: "No answer twice",
+            n: 12,
+            tone: "warn",
+            detail: { lines: ["Most called before 10am"], action: { label: "Call them after lunch", onClick: () => toast("Moves the 12 to an afternoon slot") } },
+          },
         ]}
       />
       <div className="flex flex-col gap-2">
@@ -184,6 +194,7 @@ export function TrendChartDemo() {
       goal={{ value: 90, label: "SLA 90%" }}
       ranges={RANGES}
       pointNote={(r, i) => (r.flags?.includes(i) ? "AiMY looked into this dip" : undefined)}
+      pointAction={(r, i) => (r.flags?.includes(i) ? { label: "Read what AiMY found", onClick: () => toast("Opens AiMY's note on the dip") } : undefined)}
       actions={
         <Button size="sm" variant="text" onClick={() => toast("Asks AiMY about this chart")}>
           Ask AiMY about this chart
@@ -205,8 +216,22 @@ export function DonutDemo() {
       center={{ label: "Pass rate" }}
       parts={[
         { key: "pass", label: "Pass", value: 297, tone: "ok", center: "Pass rate" },
-        { key: "border", label: "Borderline", value: 45, tone: "warn", center: "Borderline" },
-        { key: "fail", label: "Fail", value: 70, tone: "err", center: "Fail rate" },
+        {
+          key: "border",
+          label: "Borderline",
+          value: 45,
+          tone: "warn",
+          center: "Borderline",
+          detail: { lines: ["Half are one point short of a pass"], action: { label: "Review the 45", onClick: () => toast("Opens the 45 borderline evaluations") } },
+        },
+        {
+          key: "fail",
+          label: "Fail",
+          value: 70,
+          tone: "err",
+          center: "Fail rate",
+          detail: { lines: ["Up 12 on last month", "31 of them on refunds"], action: { label: "See the 70", onClick: () => toast("Opens the 70 that failed") } },
+        },
       ]}
       onPick={(k) => toast(`Asks AiMY why: ${k}`)}
     />

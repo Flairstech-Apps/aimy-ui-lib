@@ -119,7 +119,7 @@
   background: var(--surface-sunken); box-shadow: inset 0 0 0 0.0625rem var(--card-border-hover); }
 .nt-yn > .nt-ic { color: var(--nt-brand-ink); margin-top: 0.125rem; }
 .nt-yn-h { display: flex; gap: 0.5rem; align-items: center; font-size: var(--ty-micro); color: var(--ink-secondary); }
-.nt-only { display: inline-flex; align-items: center; gap: 0.25rem; font-size: var(--fs-2xs); font-weight: var(--fw-semibold); color: var(--ink-secondary); }
+.nt-only { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.6875rem; font-weight: var(--fw-semibold); color: var(--ink-secondary); }
 .nt-q { align-self: flex-end; max-width: 85%; display: grid; gap: 0.125rem; padding: 0.4375rem 0.6875rem; border-radius: 0.875rem 0.875rem 0.25rem 0.875rem;
   background: var(--brand-dim); box-shadow: inset 0 0 0 0.0625rem rgba(var(--brand-rgb), 0.45); font-size: var(--ty-meta); color: var(--ink-primary); }
 .nt-q .nt-only { justify-self: end; }

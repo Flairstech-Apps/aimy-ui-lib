@@ -156,6 +156,7 @@ export { StatTiles, StatTile } from "../../../registry/aimy/ui/stat-tile"
 export { DescriptionList, FactGroup, FactGroups, type Fact } from "../../../registry/aimy/ui/description-list"
 export { Timeline, TimelineMonth, TimelineItem } from "../../../registry/aimy/ui/timeline"
 export { Journey, trimJourney, type JourneyStep, type JourneyTone } from "../../../registry/aimy/ui/journey"
+export { HoverCard, HoverCardPanel, useHoverIntent, type HoverCardAction, type HoverCardBody } from "../../../registry/aimy/ui/hover-card"
 export {
   DataTable,
   SortHeader,

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { HoverCardPanel, useHoverIntent, type HoverCardAction } from "@/components/hover-card"
 import { cn } from "@/lib/utils"
 
 // QA's pass, borderline and fail ring (.donut-*): the parts of a whole as
@@ -24,6 +25,8 @@ export type DonutPart = {
   tone: Tone
   /** What the centre calls this part when it is pointed at. */
   center?: string
+  /** A hover card on the part, only for what the ring and its key don't say: a comparison, an action. */
+  detail?: { lines?: React.ReactNode[]; action?: HoverCardAction }
 }
 
 type DonutProps = {
@@ -46,6 +49,9 @@ const GAP = 3.5
 
 export function Donut({ parts, label, center, onPick, className }: DonutProps) {
   const [on, setOn] = useState<string | null>(null)
+  // One card for the ring, on the part last pointed at, placed at the middle of that part's arc.
+  const [card, setCard] = useState<string | null>(null)
+  const intent = useHoverIntent()
   const total = parts.reduce((a, p) => a + p.value, 0) || 1
   const pct = (v: number) => `${Math.round((v / total) * 100)}%`
   const first = parts[0]
@@ -58,7 +64,16 @@ export function Donut({ parts, label, center, onPick, className }: DonutProps) {
     .map((p, i) => {
       const len = lens[i] as number
       const start = lens.slice(0, i).reduce((a, b) => a + b, 0)
-      return { p, len, off: -start, draw: Math.max(0.01, len - trim), drawOff: -(start + trim / 2) }
+      // The arc's middle, clockwise from twelve o'clock, as a share of the ring's box.
+      const mid = ((start + len / 2) / C) * 2 * Math.PI
+      return {
+        p,
+        len,
+        off: -start,
+        draw: Math.max(0.01, len - trim),
+        drawOff: -(start + trim / 2),
+        at: { left: `${50 + R * Math.sin(mid)}%`, top: `${50 - R * Math.cos(mid)}%` },
+      }
     })
     .filter((a) => a.len > 0)
   return (
@@ -90,12 +105,44 @@ export function Donut({ parts, label, center, onPick, className }: DonutProps) {
               r={R}
               strokeDasharray={`${len} ${C}`}
               strokeDashoffset={off}
-              onPointerEnter={() => setOn(p.key)}
-              onPointerLeave={() => setOn(null)}
-              onClick={() => onPick?.(p.key)}
+              onPointerEnter={(e) => {
+                setOn(p.key)
+                if (p.detail) {
+                  setCard(p.key)
+                  intent.bind.onPointerEnter(e)
+                }
+              }}
+              onPointerLeave={(e) => {
+                setOn(null)
+                if (p.detail) intent.bind.onPointerLeave(e)
+              }}
+              onPointerDown={intent.bind.onPointerDown}
+              onClick={() => {
+                if (p.detail) {
+                  setCard(p.key)
+                  intent.bind.onClick()
+                }
+                onPick?.(p.key)
+              }}
             />
           ))}
         </svg>
+        {arcs.map(({ p, at }) =>
+          p.detail && card === p.key ? (
+            <HoverCardPanel
+              key={p.key}
+              open={intent.open}
+              onOpenChange={intent.setOpen}
+              onHold={intent.hold}
+              onRelease={intent.hide}
+              title={p.label}
+              lines={p.detail.lines}
+              action={p.detail.action}
+            >
+              <span className="qa-donut-anchor" style={at} aria-hidden="true" />
+            </HoverCardPanel>
+          ) : null
+        )}
         <div className="qa-donut-center">
           <span className={cn("qa-donut-pct", active && `tone-${active.tone}`)}>
             {active ? pct(active.value) : (center?.value ?? (first ? pct(first.value) : ""))}
