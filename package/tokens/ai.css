@@ -54,8 +54,8 @@
   box-shadow: 0 0 0 3px rgba(var(--accent-rgb),0.12);
 }
 
-[data-theme="light"] .aimy-float-bar,
-[data-theme="light"] .overlay-input-bar {
+[data-theme="light"] .aimy-float-bar:not(:where([data-theme="light"] [data-theme="dark"] *)),
+[data-theme="light"] .overlay-input-bar:not(:where([data-theme="light"] [data-theme="dark"] *)) {
   background: #fafcfe;
   border-color: rgba(16,24,40,0.14);
   box-shadow: 0 8px 32px rgba(16,24,40,0.14), 0 0 0 1px rgba(16,24,40,0.03);
@@ -70,7 +70,7 @@
 }
 .aimy-float-icon svg { width: 1.125rem; height: 1.25rem; }
 .overlay-input-bar .aimy-float-icon svg { width: 1rem; height: 1.125rem; }
-[data-theme="light"] .aimy-float-icon {
+[data-theme="light"] .aimy-float-icon:not(:where([data-theme="light"] [data-theme="dark"] *)) {
   background: linear-gradient(135deg, #f2ecff, #e6efff);
   border-color: rgba(110,70,220,0.28);
   box-shadow: 0 0 12px rgba(110,70,220,0.15);
@@ -133,7 +133,7 @@
   border-radius: 2px;
   background: var(--d50);
 }
-[data-theme="light"] .aimy-stop-square { background: var(--d900); }
+[data-theme="light"] .aimy-stop-square:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: var(--d900); }
 .aimy-float-send > .vx-i-stop,
 .overlay-send > .vx-i-stop {
   transition: opacity var(--t-base) ease-in-out, transform var(--t-base) ease-in-out,
@@ -255,7 +255,7 @@
 .is-generating > .beam::before,
 .is-generating > .beam::after { animation: beam-hue 18s ease-in-out infinite; }
 
-[data-theme="light"] .beam {
+[data-theme="light"] .beam:not(:where([data-theme="light"] [data-theme="dark"] *)) {
   --beam-blobs:
     radial-gradient(ellipse 130px 30px at  16%  -8%, rgb(109, 40,217), transparent),
     radial-gradient(ellipse 104px 26px at  41%  -5%, rgb( 29, 78,216), transparent),
@@ -265,12 +265,12 @@
     radial-gradient(ellipse 168px 28px at  68% 104%, rgb(  0, 88,200), transparent),
     radial-gradient(ellipse  96px 24px at  31% 104%, rgb( 16,168,170), transparent);
 }
-[data-theme="light"] .beam::before {
+[data-theme="light"] .beam:not(:where([data-theme="light"] [data-theme="dark"] *))::before {
   opacity: 0.8;
   box-shadow: inset 0 0 9px 1px rgba(16,24,40,0.10);
 }
-[data-theme="light"] .beam::after { opacity: 0.7; }
-[data-theme="light"] .beam > i   { opacity: 0.4; }
+[data-theme="light"] .beam:not(:where([data-theme="light"] [data-theme="dark"] *))::after { opacity: 0.7; }
+[data-theme="light"] .beam > i:not(:where([data-theme="light"] [data-theme="dark"] *))   { opacity: 0.4; }
 
 @keyframes beam-spin {
   to { --beam-angle: 360deg; }
@@ -306,7 +306,7 @@
 @starting-style {
   .overlay-sugg-chip.aimy-sugg-in { opacity: 0; translate: 0 var(--distance-small); }
 }
-[data-theme="light"] .overlay-sugg-chip {
+[data-theme="light"] .overlay-sugg-chip:not(:where([data-theme="light"] [data-theme="dark"] *)) {
   background: rgba(255,255,255,0.60);
   border-color: rgba(16,24,40,0.14);
   -webkit-backdrop-filter: blur(8px);
@@ -328,7 +328,7 @@
 @starting-style { .aimy-overlay[data-state="open"] { opacity: 0; } }
 .aimy-overlay[data-state="closed"] { animation: aimy-overlay-out var(--t-medium) var(--ease-out) forwards; }
 @keyframes aimy-overlay-out { from { opacity: 1; } to { opacity: 0; } }
-[data-theme="light"] .aimy-overlay {
+[data-theme="light"] .aimy-overlay:not(:where([data-theme="light"] [data-theme="dark"] *)) {
   background: rgba(255,255,255,0.45);
   -webkit-backdrop-filter: blur(28px) saturate(1.5) brightness(1.06);
   backdrop-filter: blur(28px) saturate(1.5) brightness(1.06);
@@ -342,9 +342,9 @@
 .overlay-context-tag {
   background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
 }
-[data-theme="light"] .overlay-close,
-[data-theme="light"] .overlay-context-tag { background: rgba(16,24,40,0.05); border-color: rgba(16,24,40,0.12); }
-[data-theme="light"] .overlay-close:hover { background: rgba(16,24,40,0.1); border-color: rgba(16,24,40,0.2); }
+[data-theme="light"] .overlay-close:not(:where([data-theme="light"] [data-theme="dark"] *)),
+[data-theme="light"] .overlay-context-tag:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16,24,40,0.05); border-color: rgba(16,24,40,0.12); }
+[data-theme="light"] .overlay-close:hover:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16,24,40,0.1); border-color: rgba(16,24,40,0.2); }
 
 /* ── Thinking states (28) in AiMY ink ──
    The snippet's greys become the ink ladder: the line holds in secondary ink,
@@ -391,7 +391,7 @@
   background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.07);
   color: var(--d50); border-start-start-radius: 0.25rem;
 }
-[data-theme="light"] .aimy-msg-bubble.is-aimy { background: #edf2f8; border-color: rgba(16,24,40,0.10); }
+[data-theme="light"] .aimy-msg-bubble.is-aimy:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: #edf2f8; border-color: rgba(16,24,40,0.10); }
 .aimy-msg-bubble.is-you {
   background: var(--accent-dim); border-color: rgba(var(--accent-rgb),0.22);
   color: var(--d100); border-start-end-radius: 0.25rem;
@@ -408,9 +408,9 @@
   background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
   border-radius: 0.75rem; border-start-start-radius: 0.25rem;
 }
-[data-theme="light"] .aimy-widget-frame { background: #edf2f8; border-color: rgba(16,24,40,0.10); }
+[data-theme="light"] .aimy-widget-frame:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: #edf2f8; border-color: rgba(16,24,40,0.10); }
 .aimy-msg-bubble .aimy-widget-frame,
-[data-theme="light"] .aimy-msg-bubble .aimy-widget-frame {
+[data-theme="light"] .aimy-msg-bubble .aimy-widget-frame:not(:where([data-theme="light"] [data-theme="dark"] *)) {
   background: var(--card-bg); border-color: var(--card-border); border-radius: var(--r-lg);
 }
 /* ── Agent bridge: what AiMY is working on lights up ──────────

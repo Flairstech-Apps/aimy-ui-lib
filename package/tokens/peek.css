@@ -23,7 +23,7 @@
   transition: transform var(--t-slow) var(--ease-out), max-width var(--t-base) var(--ease-out);
   animation: aimy-peek-in var(--t-slow) var(--ease-out);
 }
-[data-theme="light"] .aimy-peek-card {
+[data-theme="light"] .aimy-peek-card:not(:where([data-theme="light"] [data-theme="dark"] *)) {
   background: #fafcfe; border-color: rgba(16,24,40,0.14);
   box-shadow: 0 4px 16px rgba(16,24,40,0.09), 0 0 0 1px rgba(16,24,40,0.03);
 }
@@ -73,7 +73,7 @@
   content: ""; position: absolute; inset-inline-start: 0; inset-inline-end: 0; bottom: 0; height: 1.7em;
   background: linear-gradient(to bottom, transparent, #1e2428);
 }
-[data-theme="light"] .aimy-peek.is-clipped .aimy-peek-body::after { background: linear-gradient(to bottom, transparent, #fafcfe); }
+[data-theme="light"] .aimy-peek.is-clipped .aimy-peek-body:not(:where([data-theme="light"] [data-theme="dark"] *))::after { background: linear-gradient(to bottom, transparent, #fafcfe); }
 .aimy-peek.is-thinking .aimy-peek-body { max-height: none; }
 .aimy-peek-acts { display: block; padding: 0 16px 12px; }
 .aimy-peek-acts:empty { display: none; }

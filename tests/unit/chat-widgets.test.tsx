@@ -103,7 +103,10 @@ describe("UploadResults", () => {
     expect(screen.getByText("The PDF is a scan.")).toBeInTheDocument()
     await userEvent.click(screen.getByRole("button", { name: "Upload again" }))
     expect(act).toHaveBeenCalledWith(files[0])
-    await userEvent.click(within(group).getByRole("radio", { name: /^1Added$/ }))
+    // The headline says how the batch went, and the split is one bar with its words.
+    expect(container).toHaveTextContent(/of \d+ files added/)
+    expect(screen.getByRole("img", { name: /added/ })).toBeInTheDocument()
+    await userEvent.click(within(group).getByRole("radio", { name: /^1 Added$/ }))
     expect(screen.getByText("Hana Mansour")).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Open" })).toBeInTheDocument()
     expect(await a11yViolations(container)).toEqual([])

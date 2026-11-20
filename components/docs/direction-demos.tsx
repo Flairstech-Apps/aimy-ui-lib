@@ -28,7 +28,10 @@ function Side({ rtl }: { rtl: boolean }) {
     : { tabs: ["Overview", "Calls", "Notes"], show: "Show", all: "All", mine: "Mine", email: "Email", hint: "We'll send the invite here.", notify: "Tell me when they reply", chip: "Sent", tree: "Files", done: "Done" }
   return (
     <div dir={rtl ? "rtl" : "ltr"} lang={rtl ? "ar" : "en"} className="flex flex-col gap-5 rounded-xl border border-edge bg-body p-5 text-ink">
-      <p className="text-2xs font-semibold text-ink-secondary">{rtl ? 'Right to left: dir="rtl"' : "Left to right"}</p>
+      {/* The frame's own caption is English: it keeps its own direction. */}
+      <p dir="ltr" className="text-2xs font-semibold text-ink-secondary">
+        {rtl ? 'Right to left: dir="rtl"' : "Left to right"}
+      </p>
       <Tabs defaultValue="0" size="section">
         <TabsList>
           {t.tabs.map((label, i) => (

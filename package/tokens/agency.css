@@ -19,17 +19,17 @@
   border: 1px solid transparent;
   --ws-mix: 15%;
 }
-[data-theme="light"] .work-state { --ws-mix: 11%; }
+[data-theme="light"] .work-state:not(:where([data-theme="light"] [data-theme="dark"] *)) { --ws-mix: 11%; }
 .ws-detected    { --ws: var(--info);         color: var(--ws); background: color-mix(in srgb, var(--ws) var(--ws-mix), transparent); }
 .ws-recommended { --ws: var(--accent-label); color: var(--ws); background: color-mix(in srgb, var(--ws) var(--ws-mix), transparent); }
 .ws-drafted     { --ws: var(--cyan);         color: var(--ws); background: color-mix(in srgb, var(--ws) var(--ws-mix), transparent); }
 .ws-staged      { --ws: var(--warn);         color: var(--ws); background: color-mix(in srgb, var(--ws) var(--ws-mix), transparent); }
 .ws-completed   { --ws: var(--ok);           color: var(--ws); background: color-mix(in srgb, var(--ws) var(--ws-mix), transparent); }
 .ws-failed      { --ws: var(--err);          color: var(--ws); background: color-mix(in srgb, var(--ws) var(--ws-mix), transparent); }
-[data-theme="light"] .ws-detected  { color: var(--info-text); }
-[data-theme="light"] .ws-staged    { color: var(--warn-text); }
-[data-theme="light"] .ws-completed { color: var(--ok-text); }
-[data-theme="light"] .ws-failed    { color: var(--err-text); }
+[data-theme="light"] .ws-detected:not(:where([data-theme="light"] [data-theme="dark"] *))  { color: var(--info-text); }
+[data-theme="light"] .ws-staged:not(:where([data-theme="light"] [data-theme="dark"] *))    { color: var(--warn-text); }
+[data-theme="light"] .ws-completed:not(:where([data-theme="light"] [data-theme="dark"] *)) { color: var(--ok-text); }
+[data-theme="light"] .ws-failed:not(:where([data-theme="light"] [data-theme="dark"] *))    { color: var(--err-text); }
 
 /* ── Entry actions: four modes on Sales' three tiers ───── */
 .entry-action {
@@ -54,8 +54,8 @@
   border-color: rgba(255,255,255,0.1); min-height: 28px; padding: 0 12px; gap: 4px;
 }
 .entry-action.em-review:hover { background: rgba(255,255,255,0.09); color: var(--d50); border-color: rgba(255,255,255,0.16); }
-[data-theme="light"] .entry-action.em-review { background: rgba(16,24,40,0.05); border-color: rgba(16,24,40,0.12); }
-[data-theme="light"] .entry-action.em-review:hover { background: rgba(16,24,40,0.09); border-color: rgba(16,24,40,0.18); }
+[data-theme="light"] .entry-action.em-review:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16,24,40,0.05); border-color: rgba(16,24,40,0.12); }
+[data-theme="light"] .entry-action.em-review:hover:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16,24,40,0.09); border-color: rgba(16,24,40,0.18); }
 /* Tier 3, tertiary: opens a conversation, part of a sentence. */
 .entry-action.em-prompt, .entry-action.em-investigate {
   background: none; border: 0; padding: 0; min-height: 24px;
@@ -84,7 +84,9 @@
 .b-cur-sum:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; border-radius: var(--r-xs); }
 .b-cur-sum > svg { flex: none; width: 16px; height: 16px; color: var(--d200); transition: transform 250ms var(--ease-out); }
 .b-cur[open] > .b-cur-sum > svg { transform: rotate(180deg); }
-.b-cur-time { font-size: var(--fs-xs); font-weight: var(--fw-medium); color: var(--d200); font-variant-numeric: tabular-nums; }
+/* Digits are all one width (the tabular Poppins digits in fonts.css), and the box holds "10.0s" from
+   the start, so the chevron beside the clock never moves while it ticks. */
+.b-cur-time { min-width: 5ch; font-size: var(--fs-xs); font-weight: var(--fw-medium); color: var(--d200); font-variant-numeric: tabular-nums; }
 .b-cur-time:empty { display: none; }
 /* The words that are still happening: a light passes across them, readable at every frame. */
 .b-cur.is-live .b-cur-say,
@@ -260,7 +262,7 @@
   padding: 0.6875rem 0.8125rem; border-radius: var(--r-md);
   background: rgba(0,0,0,0.16); border: 1px solid var(--card-border);
 }
-[data-theme="light"] .ss-preview { background: rgba(16,24,40,0.03); }
+[data-theme="light"] .ss-preview:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16,24,40,0.03); }
 .ss-preview-head {
   margin: 0 0 0.5rem; font-size: var(--ty-micro); font-weight: var(--fw-medium); letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--ink-secondary);
@@ -304,7 +306,7 @@ button.ver-item:focus-visible { outline: 2px solid var(--brand); outline-offset:
   background: rgba(255,255,255,0.05); color: var(--ink-secondary);
   font-size: var(--ty-micro); font-weight: var(--fw-bold);
 }
-[data-theme="light"] .ver-mark { background: rgba(16,24,40,0.05); }
+[data-theme="light"] .ver-mark:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16,24,40,0.05); }
 .ver-item.is-ai .ver-mark { background: rgba(0,102,255,0.12); color: var(--ai-ink); }
 .ver-mark svg { width: 10px; height: 11px; }
 .ver-main { min-width: 0; }
@@ -356,7 +358,7 @@ button.ver-item:focus-visible { outline: 2px solid var(--brand); outline-offset:
   width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center;
   background: rgba(255,255,255,0.05); color: var(--ink-secondary);
 }
-[data-theme="light"] .audit-ico { background: rgba(16,24,40,0.05); }
+[data-theme="light"] .audit-ico:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16,24,40,0.05); }
 .audit-ico svg { width: 11px; height: 11px; }
 .audit-entry.is-ok .audit-ico { background: var(--ok-bg); color: var(--ok-text); }
 .audit-entry.is-warn .audit-ico { background: var(--warn-bg); color: var(--warn-text); }

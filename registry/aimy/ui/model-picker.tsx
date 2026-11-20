@@ -32,13 +32,19 @@ export function ModelPicker({ models, value, onValueChange }: ModelPickerProps) 
           <ChevronDown aria-hidden="true" strokeWidth={2.5} />
         </button>
       </MenuTrigger>
-      <MenuContent align="start">
+      <MenuContent align="start" className="min-w-[17rem]">
         <MenuLabel>Answer with</MenuLabel>
         <MenuRadioGroup value={value} onValueChange={onValueChange}>
           {models.map((m) => (
-            <MenuRadioItem key={m.id} value={m.id} description={m.description}>
-              {m.name}
-              {m.tag ? <span className="model-tag ms-2">{m.tag}</span> : null}
+            <MenuRadioItem
+              key={m.id}
+              value={m.id}
+              description={m.description}
+              // Each model's dot: the AI gradient for the one answering now, an outline for the others.
+              leading={<span aria-hidden="true" className={m.id === value ? "model-dot" : "model-dot is-other"} />}
+            >
+              <span>{m.name}</span>
+              {m.tag ? <span className="model-tag">{m.tag}</span> : null}
             </MenuRadioItem>
           ))}
         </MenuRadioGroup>

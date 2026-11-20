@@ -42,6 +42,31 @@ export default function FocusPage() {
           />
         </div>
       </Section>
+      <Section
+        title="Your settings"
+        lead="Nothing changes by default. When a person turns a setting on in Windows or the browser, every part follows it (settings.css)."
+      >
+        <ul data-ai="li" className="flex max-w-[46rem] list-disc flex-col gap-1.5 ps-5 text-body text-ink-secondary">
+          <li>
+            <b className="text-ink">High contrast</b> (forced colours): focus is always an outline; the chosen, current or
+            checked item takes the system&apos;s selection colours; switches, checkboxes, bars and meters keep an edge;
+            charts keep their own colours.
+          </li>
+          <li>
+            <b className="text-ink">Reduced motion</b>: nothing moves on its own; a loading spinner still turns.
+          </li>
+          <li>
+            <b className="text-ink">More contrast</b>: secondary and quiet ink step up, edges and rules get stronger.
+          </li>
+          <li>
+            <b className="text-ink">Less transparency</b>: glass and blur become solid grounds.
+          </li>
+          <li>
+            <b className="text-ink">Keys</b>: F6 and Shift+F6 move between the bar, the side navigation, the rail and the
+            page.
+          </li>
+        </ul>
+      </Section>
     </>
   )
 }

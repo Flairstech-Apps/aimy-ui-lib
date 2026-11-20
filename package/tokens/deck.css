@@ -32,7 +32,7 @@
   --mote: color-mix(in oklab, var(--d50) 85%, transparent);
   --comet-head: var(--d50);
 }
-[data-theme="light"] .dk-slide, .dk-slide[data-theme="light"] {
+[data-theme="light"] .dk-slide:not(:where([data-theme="light"] [data-theme="dark"] *)), .dk-slide[data-theme="light"] {
   --mote: color-mix(in oklab, var(--brand) 55%, transparent);
   --comet-head: var(--brand);
   --o-mul: 0.8;
@@ -102,7 +102,7 @@
 /* ═════════════════ AMBIENT FIELD ═════════════════
    Two blooms drifting on coprime cycles and dust rising on its own. */
 .dk-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
-[data-theme="light"] .dk-field { opacity: 0.6; }
+[data-theme="light"] .dk-field:not(:where([data-theme="light"] [data-theme="dark"] *)) { opacity: 0.6; }
 .dk-bloom { position: absolute; inset: -20%; will-change: transform, opacity; }
 .dk-bloom.is-a { background: radial-gradient(ellipse at 30% 50%, rgba(var(--ai-rgb), 0.36) 0%, rgba(var(--ai-ink-rgb), 0.2) 28%, transparent 60%); animation: dk-drift-a var(--deck-drift-a) var(--ease-smooth-out) infinite alternate; }
 .dk-bloom.is-b { background: radial-gradient(ellipse at 75% 70%, rgba(var(--cyan-rgb), 0.2) 0%, rgba(var(--accent-rgb), 0.14) 38%, transparent 60%); animation: dk-drift-b var(--deck-drift-b) var(--ease-smooth-out) infinite alternate; }

@@ -173,7 +173,7 @@ export function Toaster({ offset = "1.5rem" }: ToasterProps) {
           <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[2.5px]">
             <span
               key={`${shown.id}-bar`}
-              className={cn("aimy-countdown block h-full origin-left", err ? "bg-err" : "bg-[image:var(--ai)]")}
+              className={cn("aimy-countdown block h-full origin-left rtl:origin-right", err ? "bg-err" : "bg-[image:var(--ai)]")}
               style={{ animationDuration: `${life(shown)}ms`, animationPlayState: paused || !open ? "paused" : "running" }}
             />
           </span>

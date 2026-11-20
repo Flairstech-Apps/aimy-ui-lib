@@ -70,7 +70,7 @@
   background: transparent;
   border-bottom: 0.0625rem solid var(--w07);
 }
-[data-theme="light"] .app-topnav { border-bottom-color: var(--card-border); }
+[data-theme="light"] .app-topnav:not(:where([data-theme="light"] [data-theme="dark"] *)) { border-bottom-color: var(--card-border); }
 /* The two flanks share the room equally, so the strip sits on the centre. */
 .topnav-logo, .topnav-right { flex: 1 1 0; min-width: 0; }
 .topnav-logo { display: flex; align-items: center; gap: 0.5rem; position: relative; }
@@ -82,7 +82,7 @@
   display: flex; align-items: center; gap: 0.125rem;
   border: 0.046875rem solid var(--d600); border-radius: 1.5rem; padding: 0.25rem;
 }
-[data-theme="light"] .topnav-tabs-inner { border-color: rgba(16, 24, 40, 0.22); }
+[data-theme="light"] .topnav-tabs-inner:not(:where([data-theme="light"] [data-theme="dark"] *)) { border-color: rgba(16, 24, 40, 0.22); }
 .topnav-tab {
   display: flex; align-items: center; gap: 0.25rem;
   padding: 0.375rem 1rem; border-radius: 1.25rem; border: 0.0625rem solid transparent;
@@ -91,7 +91,7 @@
   transition: background-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out), transform var(--t-press) var(--ease-out);
 }
 .topnav-tab:hover { background: var(--w05, rgba(255, 255, 255, 0.05)); color: var(--d100); }
-[data-theme="light"] .topnav-tab:hover { background: rgba(16, 24, 40, 0.05); }
+[data-theme="light"] .topnav-tab:hover:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16, 24, 40, 0.05); }
 /* The current product: a step in weight as well as the accent, so colour
    is never the only thing that carries it. */
 .topnav-tab[aria-current="page"] { color: var(--accent-text); font-weight: var(--fw-bold); cursor: default; }
@@ -117,21 +117,22 @@
 .topnav-sq:hover { background: var(--w08, rgba(255, 255, 255, 0.08)); color: var(--d100); }
 .topnav-sq:focus-visible { outline: 0.125rem solid var(--brand); outline-offset: 0.125rem; }
 .topnav-sq svg { width: 1rem; height: 1rem; }
-[data-theme="light"] .topnav-sq { background: rgba(16, 24, 40, 0.04); border-color: rgba(16, 24, 40, 0.10); }
-[data-theme="light"] .topnav-sq:hover { background: rgba(16, 24, 40, 0.07); }
+[data-theme="light"] .topnav-sq:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16, 24, 40, 0.04); border-color: rgba(16, 24, 40, 0.10); }
+[data-theme="light"] .topnav-sq:hover:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16, 24, 40, 0.07); }
 .rail-toggle { display: none; }
 
 /* The account pill. */
 .topnav-user {
   display: flex; align-items: center; gap: 0.5rem; text-align: start;
-  padding: 0.25rem 0.75rem 0.25rem 0.25rem; border-radius: 1.25rem;
+  /* 3px around the 28px avatar and a 1px edge: 36px, the height of the buttons beside it. */
+  padding: 0.1875rem 0.75rem 0.1875rem 0.1875rem; border-radius: 1.25rem;
   background: var(--w04); border: 0.0625rem solid var(--w08, rgba(255, 255, 255, 0.08));
   font-family: inherit; color: inherit; cursor: pointer;
   transition: border-color var(--t-fast) var(--ease-out), background-color var(--t-fast) var(--ease-out), transform var(--t-press) var(--ease-out);
 }
 .topnav-user:hover { border-color: rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.07); }
-[data-theme="light"] .topnav-user { background: rgba(16, 24, 40, 0.04); border-color: rgba(16, 24, 40, 0.10); }
-[data-theme="light"] .topnav-user:hover { background: rgba(16, 24, 40, 0.07); }
+[data-theme="light"] .topnav-user:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16, 24, 40, 0.04); border-color: rgba(16, 24, 40, 0.10); }
+[data-theme="light"] .topnav-user:hover:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16, 24, 40, 0.07); }
 .topnav-user:active { transform: scale(0.97); }
 .topnav-user:focus-visible { outline: 0.125rem solid var(--brand); outline-offset: 0.125rem; }
 .topnav-user-info { display: flex; flex-direction: column; gap: 0.125rem; min-width: 0; max-width: 12rem; }
@@ -209,7 +210,7 @@
   }
   .rail-scrim.is-open { opacity: 1; pointer-events: auto; }
 }
-[data-theme="light"] .rail-scrim { background: rgba(16, 24, 40, 0.28); }
+[data-theme="light"] .rail-scrim:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16, 24, 40, 0.28); }
 @media (prefers-reduced-motion: no-preference) {
   .app-rail { transition: transform var(--t-medium) var(--ease-out), visibility var(--t-medium) var(--ease-out); }
   .app-rail.is-open { transition: transform var(--t-slow) var(--ease-out), visibility 0s; }

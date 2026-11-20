@@ -36,8 +36,8 @@
 }
 .snav-head-mark { display: inline-flex; flex-shrink: 0; }
 .snav-head-mark svg { width: 0.875rem; height: 1rem; }
-.snav-head-label { font-size: 0.6875rem; font-weight: var(--fw-bold); letter-spacing: 0.02em; color: var(--ink-action); }
-.snav-head-count { margin-inline-start: auto; color: var(--d300); font-size: 0.625rem; white-space: nowrap; }
+.snav-head-label { font-size: var(--fs-2xs); font-weight: var(--fw-bold); letter-spacing: 0.02em; color: var(--ink-action); }
+.snav-head-count { margin-inline-start: auto; color: var(--ink-secondary); font-size: var(--fs-2xs); white-space: nowrap; }
 .snav-collapse {
   display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
   width: 1.75rem; height: 1.75rem; padding: 0; border: 0; border-radius: 0.375rem;
@@ -84,7 +84,8 @@ a.snav-section-head:hover .snav-chevron:dir(rtl) { transform: translateX(-0.125r
 .snav-here {
   flex-shrink: 0; padding: 0.125rem 0.4375rem; border-radius: 999px;
   background: rgba(var(--accent-rgb), 0.28); color: var(--d50);
-  font-size: 0.59375rem; font-weight: var(--fw-bold); letter-spacing: 0.06em; text-transform: uppercase;
+  /* 12px, the floor for words (QA drew 9.5px). */
+  font-size: var(--fs-2xs); font-weight: var(--fw-bold); letter-spacing: 0.04em; text-transform: uppercase;
 }
 .snav-findings { margin: 0.125rem 0 0; padding: 0; list-style: none; }
 .snav-finding {
@@ -128,10 +129,10 @@ a.snav-section-head:focus-visible::after { outline: 0.125rem solid var(--brand);
 .snav-icon:hover { background: var(--w05); color: var(--d200); }
 .snav-icon[aria-current="page"] { margin-bottom: 0.75rem; background: rgba(var(--accent-rgb), 0.14); color: var(--accent); }
 .snav-badge {
-  position: absolute; top: -0.1875rem; inset-inline-end: -0.3125rem; min-width: 1.125rem; height: 1rem; padding: 0 0.25rem;
+  position: absolute; top: -0.25rem; inset-inline-end: -0.375rem; min-width: 1.25rem; height: 1.125rem; padding: 0 0.25rem;
   border-radius: 999px; background: rgba(var(--accent-rgb), 0.18);
   color: color-mix(in srgb, var(--accent) 45%, #fff);
-  font-size: 0.59375rem; line-height: 1rem; text-align: center; font-variant-numeric: tabular-nums; pointer-events: none;
+  font-size: var(--fs-2xs); line-height: 1.125rem; text-align: center; font-variant-numeric: tabular-nums; pointer-events: none;
 }
 
 /* ── Below the breakpoint: collapsed, and the open form as a drawer ── */
@@ -171,12 +172,12 @@ a.snav-section-head:focus-visible::after { outline: 0.125rem solid var(--brand);
 }
 
 /* ── Light ── */
-[data-theme="light"] .snav-section.is-current {
+[data-theme="light"] .snav-section.is-current:not(:where([data-theme="light"] [data-theme="dark"] *)) {
   background: linear-gradient(120deg, rgba(var(--accent-rgb), 0.12), rgba(0, 102, 255, 0.05));
 }
-[data-theme="light"] .snav-here { background: rgba(var(--accent-rgb), 0.16); color: var(--d100); }
-[data-theme="light"] .snav-bar > span { background: var(--brand); }
-[data-theme="light"] .snav-badge {
+[data-theme="light"] .snav-here:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(var(--accent-rgb), 0.16); color: var(--d100); }
+[data-theme="light"] .snav-bar > span:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: var(--brand); }
+[data-theme="light"] .snav-badge:not(:where([data-theme="light"] [data-theme="dark"] *)) {
   background: rgba(var(--accent-rgb), 0.12); color: color-mix(in srgb, var(--accent) 80%, #000);
 }
 
@@ -267,7 +268,7 @@ a.snav-section-head:focus-visible::after { outline: 0.125rem solid var(--brand);
 @media (prefers-reduced-motion: reduce) {
   .snav-tab::before, .snav-tab-link, .snav-tab-read, .snav-read-act { transition: none; }
 }
-[data-theme="light"] .snav-tabs > ul { box-shadow: var(--shadow-sm); }
-[data-theme="light"] .snav-tab::before {
+[data-theme="light"] .snav-tabs > ul:not(:where([data-theme="light"] [data-theme="dark"] *)) { box-shadow: var(--shadow-sm); }
+[data-theme="light"] .snav-tab:not(:where([data-theme="light"] [data-theme="dark"] *))::before {
   background: linear-gradient(120deg, rgba(var(--accent-rgb), 0.12), rgba(0, 102, 255, 0.05));
 }

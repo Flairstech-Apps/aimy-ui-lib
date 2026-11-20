@@ -30,8 +30,9 @@ export function MenuContent({ className, align = "start", sideOffset = 8, childr
         sideOffset={sideOffset}
         collisionPadding={16}
         className={cn(
-          "t-dropdown z-(--z-menu) flex max-h-[min(20.5rem,var(--available-height))] min-w-[13.5rem] flex-col gap-0.5 overflow-y-auto",
-          "rounded-xl border border-edge-hover bg-raised p-1.5 shadow-lg outline-none",
+          "t-dropdown z-(--z-menu) flex max-h-[min(20.5rem,var(--available-height))] max-w-[min(22rem,calc(100vw-2rem))] min-w-[13.5rem] flex-col gap-0.5 overflow-y-auto",
+          // A 1px light along the top edge lifts the panel off the page, as Knowledge's panels do.
+          "rounded-xl border border-edge-hover bg-raised p-1 shadow-[var(--shadow-lg),inset_0_1px_0_var(--w06)] outline-none",
           className
         )}
         {...props}
@@ -42,20 +43,29 @@ export function MenuContent({ className, align = "start", sideOffset = 8, childr
   )
 }
 
+// A row starts at the top: the leading icon and the tick sit on the name's line (h-[1lh]), never
+// centred on a name and its description together. The row under the pointer or the keys takes a
+// neutral wash; the chosen one keeps a light accent wash and a bolder name.
 const itemStyles = [
-  "relative flex cursor-pointer items-center gap-2.5 rounded-md px-2.5 py-2 text-xs text-ink outline-none select-none",
-  "data-highlighted:bg-[color-mix(in_srgb,var(--accent)_14%,transparent)]",
+  "relative flex cursor-pointer items-start gap-2.5 rounded-lg px-2.5 py-2 text-xs text-ink outline-none select-none",
+  "transition-[background-color] duration-(--t-fast) ease-out data-highlighted:bg-w06",
   "data-disabled:cursor-not-allowed data-disabled:opacity-[0.38]",
   "[&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:text-ink-secondary",
 ]
+
+/** A box one line tall, so an icon or a tick sits on the name's line. */
+function OnFirstLine({ children }: { children: React.ReactNode }) {
+  return <span className="flex h-[1lh] shrink-0 items-center">{children}</span>
+}
 
 type ItemText = { children: React.ReactNode; description?: React.ReactNode; leading?: React.ReactNode }
 
 function Lines({ children, description }: ItemText) {
   return (
-    <span className="flex min-w-0 flex-1 flex-col">
-      <span className="truncate font-medium">{children}</span>
-      {description ? <span className="truncate text-ink-secondary">{description}</span> : null}
+    <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+      <span className="flex min-w-0 items-center gap-2 font-medium in-data-[state=checked]:font-semibold [&>:first-child]:truncate">{children}</span>
+      {/* A description wraps to two lines rather than being cut mid-word. */}
+      {description ? <span className="line-clamp-2 text-2xs leading-snug text-ink-secondary">{description}</span> : null}
     </span>
   )
 }
@@ -69,7 +79,7 @@ type MenuItemProps = Omit<React.ComponentProps<typeof Primitive.Item>, "children
 export function MenuItem({ children, description, leading, danger, className, ...props }: MenuItemProps) {
   return (
     <Primitive.Item className={cn(itemStyles, danger && "text-err-text [&_svg]:text-err-text", className)} {...props}>
-      {leading}
+      {leading ? <OnFirstLine>{leading}</OnFirstLine> : null}
       <Lines description={description}>{children}</Lines>
     </Primitive.Item>
   )
@@ -79,16 +89,18 @@ export function MenuItem({ children, description, leading, danger, className, ..
 const tick =
   "flex transition-[opacity,scale] duration-(--t-base) ease-(--ease-spring) data-[state=unchecked]:scale-50 data-[state=unchecked]:opacity-0 data-[state=unchecked]:duration-(--t-fast) data-[state=unchecked]:ease-out motion-reduce:transition-none"
 
-const chosen = "transition-[background-color,color] duration-(--t-fast) ease-out data-[state=checked]:bg-[color-mix(in_srgb,var(--accent)_16%,transparent)] data-[state=checked]:data-highlighted:bg-[color-mix(in_srgb,var(--accent)_22%,transparent)]"
+const chosen = "data-[state=checked]:bg-[color-mix(in_srgb,var(--accent)_9%,transparent)] data-[state=checked]:data-highlighted:bg-[color-mix(in_srgb,var(--accent)_14%,transparent)]"
 
 export function MenuRadioItem({ children, description, leading, className, ...props }: Omit<React.ComponentProps<typeof Primitive.RadioItem>, "children"> & ItemText) {
   return (
     <Primitive.RadioItem className={cn(itemStyles, chosen, className)} {...props}>
-      {leading}
+      {leading ? <OnFirstLine>{leading}</OnFirstLine> : null}
       <Lines description={description}>{children}</Lines>
-      <Primitive.ItemIndicator forceMount className={tick}>
-        <Check aria-hidden="true" strokeWidth={2} className="text-accent-text!" />
-      </Primitive.ItemIndicator>
+      <OnFirstLine>
+        <Primitive.ItemIndicator forceMount className={tick}>
+          <Check aria-hidden="true" strokeWidth={2.25} className="text-accent-text!" />
+        </Primitive.ItemIndicator>
+      </OnFirstLine>
     </Primitive.RadioItem>
   )
 }
@@ -110,11 +122,13 @@ export function MenuCheckboxItem({
       }}
       {...props}
     >
-      {leading}
+      {leading ? <OnFirstLine>{leading}</OnFirstLine> : null}
       <Lines description={description}>{children}</Lines>
-      <Primitive.ItemIndicator forceMount className={tick}>
-        <Check aria-hidden="true" strokeWidth={2} className="text-accent-text!" />
-      </Primitive.ItemIndicator>
+      <OnFirstLine>
+        <Primitive.ItemIndicator forceMount className={tick}>
+          <Check aria-hidden="true" strokeWidth={2.25} className="text-accent-text!" />
+        </Primitive.ItemIndicator>
+      </OnFirstLine>
     </Primitive.CheckboxItem>
   )
 }
@@ -123,7 +137,7 @@ export function MenuCheckboxItem({
 export function MenuLabel({ className, ...props }: React.ComponentProps<typeof Primitive.Label>) {
   return (
     <Primitive.Label
-      className={cn("sticky top-0 z-[1] bg-raised px-2.5 pt-1 pb-1.5 text-2xs font-semibold tracking-wider text-ink-quiet uppercase", className)}
+      className={cn("sticky top-0 z-[1] bg-raised px-2.5 pt-2 pb-1.5 text-2xs font-semibold tracking-[0.06em] text-ink-secondary uppercase", className)}
       {...props}
     />
   )

@@ -29,7 +29,8 @@ export function Chip({ className, selected = false, onRemove, removeLabel, child
           ? "border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-accent-dim text-accent-text"
           : "border-w08 bg-w04 text-ink-secondary hover:bg-w07 hover:text-ink",
         // Beside its remove control it may shrink, so the × always stays on screen.
-        onRemove && "min-w-0 shrink pe-1.5",
+        // Room at the end for the remove control, which sits inside the pill.
+        onRemove && "min-w-0 shrink pe-8",
         className
       )}
       title={typeof children === "string" ? children : undefined}
@@ -40,14 +41,19 @@ export function Chip({ className, selected = false, onRemove, removeLabel, child
   )
   if (!onRemove) return chip
   return (
-    <span data-slot="chip-group" className="inline-flex max-w-full min-w-0 items-center gap-0.5">
+    // The × sits inside the pill's end: its own button (no button inside a button), placed over the
+    // room the chip leaves for it, in the chip's ink.
+    <span data-slot="chip-group" className="relative inline-flex max-w-full min-w-0 items-center">
       {chip}
       <button
         type="button"
         data-slot="chip-remove"
         onClick={onRemove}
         aria-label={`Remove ${removeLabel ?? (typeof children === "string" ? children : "filter")}`}
-        className="grid size-6 place-items-center rounded-pill text-ink-secondary transition-[background-color,color] duration-(--t-fast) ease-out hover:bg-w07 hover:text-ink"
+        className={cn(
+          "absolute end-1 top-1/2 grid size-6 -translate-y-1/2 place-items-center rounded-pill transition-[background-color,color] duration-(--t-fast) ease-out hover:bg-w07",
+          selected ? "text-accent-text" : "text-ink-secondary hover:text-ink"
+        )}
       >
         <X aria-hidden="true" strokeWidth={2} className="size-3" />
       </button>

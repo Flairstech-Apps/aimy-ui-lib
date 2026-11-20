@@ -36,7 +36,7 @@ export function Progress({ value, max = 100, size = "thin", limit = false, label
       )}
     >
       <div
-        className={cn("h-full origin-left rounded-pill transition-[scale] duration-(--t-slow) ease-out motion-reduce:transition-none", tone)}
+        className={cn("h-full origin-left rtl:origin-right rounded-pill transition-[scale] duration-(--t-slow) ease-out motion-reduce:transition-none", tone)}
         style={{ scale: `${ratio} 1` }}
       />
     </div>

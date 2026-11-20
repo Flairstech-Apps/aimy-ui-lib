@@ -119,7 +119,7 @@
   background: var(--surface-sunken); box-shadow: inset 0 0 0 0.0625rem var(--card-border-hover); }
 .nt-yn > .nt-ic { color: var(--nt-brand-ink); margin-top: 0.125rem; }
 .nt-yn-h { display: flex; gap: 0.5rem; align-items: center; font-size: var(--ty-micro); color: var(--ink-secondary); }
-.nt-only { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.6875rem; font-weight: var(--fw-semibold); color: var(--ink-secondary); }
+.nt-only { display: inline-flex; align-items: center; gap: 0.25rem; font-size: var(--fs-2xs); font-weight: var(--fw-semibold); color: var(--ink-secondary); }
 .nt-q { align-self: flex-end; max-width: 85%; display: grid; gap: 0.125rem; padding: 0.4375rem 0.6875rem; border-radius: 0.875rem 0.875rem 0.25rem 0.875rem;
   background: var(--brand-dim); box-shadow: inset 0 0 0 0.0625rem rgba(var(--brand-rgb), 0.45); font-size: var(--ty-meta); color: var(--ink-primary); }
 .nt-q .nt-only { justify-self: end; }
@@ -191,7 +191,7 @@
    lives on the Console's own bars, and this composer is only the meeting's. */
 .nt-ask-mark { width: 2.25rem; height: 2.25rem; border-radius: 50%; display: grid; place-items: center; flex: none;
   background: linear-gradient(135deg, #3d1f6b 0%, #1a3a6e 50%, #163b5e 100%); border: 0.0625rem solid rgba(139,79,244,0.3); box-shadow: 0 0 0.75rem rgba(100,60,200,0.25); }
-[data-theme="light"] .nt-ask-mark { background: linear-gradient(135deg, #f2ecff, #e6efff); border-color: rgba(110,70,220,0.28); box-shadow: 0 0 0.75rem rgba(110,70,220,0.15); }
+[data-theme="light"] .nt-ask-mark:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: linear-gradient(135deg, #f2ecff, #e6efff); border-color: rgba(110,70,220,0.28); box-shadow: 0 0 0.75rem rgba(110,70,220,0.15); }
 .nt-ask-mark .nt-mk { width: 1.125rem; height: 1.25rem; }
 .nt-ask-bar .nt-mk { color: var(--brand); }
 .nt-in { flex: 1; min-width: 0; height: 2rem; padding: 0 0.125rem; border: 0; background: transparent; font: inherit; font-size: var(--ty-meta); color: var(--ink-primary); }

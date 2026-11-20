@@ -67,7 +67,7 @@ export function TagInput({ value, defaultValue = [], onValueChange, placeholder 
         data-slot="tag-input"
         aria-disabled={disabled || undefined}
         className={cn(
-          "flex max-w-full flex-wrap items-center gap-1.5 rounded-md border border-edge bg-raised px-2.25 py-1.75",
+          "flex max-w-full flex-wrap items-center gap-1.5 rounded-md border border-edge bg-raised px-2 py-1.5",
           "transition-[border-color,box-shadow] duration-(--t-fast) ease-out focus-within:border-edge-focus focus-within:shadow-[0_0_0_3px_var(--brand-glow)]",
           (error || field?.invalid) && "border-err",
           disabled && "opacity-[0.38]"
@@ -76,7 +76,7 @@ export function TagInput({ value, defaultValue = [], onValueChange, placeholder 
         {tags.map((t) => (
           <span
             key={t}
-            className="inline-flex max-w-full items-center gap-1.25 rounded-sm border border-[color-mix(in_srgb,var(--accent)_25%,transparent)] bg-accent-dim py-0.75 ps-2.25 pe-1.5 text-xs font-semibold text-accent-text"
+            className="inline-flex max-w-full items-center gap-1 rounded-sm border border-[color-mix(in_srgb,var(--accent)_25%,transparent)] bg-accent-dim py-0.5 ps-2 pe-1 text-xs font-semibold text-[color-mix(in_oklab,var(--accent-text)_70%,var(--ink-primary))]"
           >
             <span className="min-w-0 [overflow-wrap:anywhere]">{t}</span>
             <button
@@ -120,7 +120,7 @@ export function TagInput({ value, defaultValue = [], onValueChange, placeholder 
             }
           }}
           onBlur={() => draft.trim() && add(draft)}
-          className="min-w-20 flex-1 bg-transparent p-0.75 text-xs text-ink outline-none placeholder:text-ink-placeholder"
+          className="min-w-20 flex-1 bg-transparent p-1 text-xs text-ink outline-none placeholder:text-ink-placeholder"
         />
       </div>
       {error ? (

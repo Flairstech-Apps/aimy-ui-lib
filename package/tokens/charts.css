@@ -477,3 +477,6 @@ button.bl-irow:hover .bl-ilabel { color: var(--ink-primary); }
 .bl-ival { min-width: 3.625rem; flex-shrink: 0; font-size: var(--ty-body, var(--fs-xs)); font-weight: var(--fw-bold); color: var(--ink-primary); text-align: end; font-variant-numeric: tabular-nums; }
 .bl-ipct { min-width: 2.375rem; flex-shrink: 0; font-size: var(--fs-2xs); font-weight: var(--fw-semibold); color: var(--ink-secondary); text-align: end; font-variant-numeric: tabular-nums; }
 @media (prefers-reduced-motion: reduce) { .bl-fill { transition: none; } }
+
+/* Right to left: bars grow from the right, where the row starts. */
+.s-att-booked:dir(rtl), .s-att-fcast:dir(rtl), .b-fn-fill:dir(rtl) { transform-origin: right; }

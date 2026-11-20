@@ -65,7 +65,7 @@
   color: var(--ink-secondary); white-space: nowrap;
   transition: background-color var(--t-fast) var(--ease-out), border-color var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out);
 }
-[data-theme="light"] .cite-action { background: rgba(16,24,40,0.04); }
+[data-theme="light"] .cite-action:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16,24,40,0.04); }
 .cite-action svg { width: 0.625rem; height: 0.625rem; flex-shrink: 0; }
 .cite-action:hover { background: rgba(255,255,255,0.09); color: var(--d50); }
 .cite-action:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
@@ -117,7 +117,7 @@
 .ts-due         { background: var(--warn-bg); color: var(--ink-warn); border-color: color-mix(in srgb, var(--warn) 24%, transparent); }
 .ts-expired     { background: var(--err-bg);  color: var(--ink-err);  border-color: color-mix(in srgb, var(--err) 32%, transparent); }
 .ts-unverified  { background: rgba(255,255,255,0.05); color: var(--ink-secondary); border-color: var(--card-border); }
-[data-theme="light"] .ts-unverified { background: rgba(16,24,40,0.05); }
+[data-theme="light"] .ts-unverified:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16,24,40,0.05); }
 .ts-superseded  { background: var(--info-bg); color: var(--ink-info); border-color: color-mix(in srgb, var(--info) 24%, transparent); }
 /* Excluded from answers: the consequence is on the badge, not only in a title. */
 .trust-state.is-excluded { padding-inline-end: 0.4375rem; }
@@ -137,7 +137,7 @@
   background: rgba(255,255,255,0.03); border: 1px solid var(--card-border);
   font-size: 0.875rem; line-height: 1.55; color: var(--ink-secondary);
 }
-[data-theme="light"] .trust-disclosure { background: rgba(16,24,40,0.03); }
+[data-theme="light"] .trust-disclosure:not(:where([data-theme="light"] [data-theme="dark"] *)) { background: rgba(16,24,40,0.03); }
 .trust-disclosure.has-exclusion { background: var(--warn-bg); border-color: color-mix(in srgb, var(--warn) 28%, transparent); }
 .td-row { display: flex; align-items: flex-start; gap: 0.5rem; }
 .td-row svg { width: 0.75rem; height: 0.75rem; flex-shrink: 0; margin-top: 0.3125rem; }

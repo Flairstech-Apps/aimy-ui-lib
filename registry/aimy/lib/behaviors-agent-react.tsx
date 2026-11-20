@@ -134,11 +134,12 @@ export function setFieldValue(el: HTMLInputElement | HTMLTextAreaElement, value:
 
 /** Shows a text field to AiMY: it reads the value and types a new one (undoable). Never a password. */
 export function useAgentTextField(id: string | undefined, el: HTMLInputElement | HTMLTextAreaElement | null) {
-  const secret = el instanceof HTMLInputElement && (el.type === "password" || el.autocomplete?.includes("password"))
+  // Read off the element only (never a DOM class), so this runs when a page renders on a server too.
+  const secret = !!el && el.tagName === "INPUT" && ((el as HTMLInputElement).type === "password" || (el as HTMLInputElement).autocomplete?.includes("password"))
   useAgentSurface(
     secret ? undefined : id,
     {
-      kind: el instanceof HTMLTextAreaElement ? "text area" : "text field",
+      kind: el?.tagName === "TEXTAREA" ? "text area" : "text field",
       label: "",
       state: () => ({ value: el?.value ?? "", ...(el?.disabled ? { disabled: true } : {}) }),
       actions: {

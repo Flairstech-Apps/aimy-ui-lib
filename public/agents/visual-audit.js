@@ -83,9 +83,20 @@ function drawn(svg) {
         const vb = svg.viewBox.baseVal;
         if (!vb || !vb.width || !vb.height || !bb.height)
             return box;
-        const sx = box.width / vb.width;
-        const sy = box.height / vb.height;
-        return new DOMRect(box.left + (bb.x - vb.x) * sx, box.top + (bb.y - vb.y) * sy, bb.width * sx, bb.height * sy);
+        // The default preserveAspectRatio (xMidYMid meet): one scale for both axes, the content centred in
+        // the box, so a mark whose viewBox isn't the box's shape is letterboxed.
+        const par = svg.getAttribute("preserveAspectRatio") ?? "";
+        let sx = box.width / vb.width;
+        let sy = box.height / vb.height;
+        let ox = 0;
+        let oy = 0;
+        if (!par.startsWith("none")) {
+            const k = par.includes("slice") ? Math.max(sx, sy) : Math.min(sx, sy);
+            ox = (box.width - vb.width * k) / 2;
+            oy = (box.height - vb.height * k) / 2;
+            sx = sy = k;
+        }
+        return new DOMRect(box.left + ox + (bb.x - vb.x) * sx, box.top + oy + (bb.y - vb.y) * sy, bb.width * sx, bb.height * sy);
     }
     catch {
         return null;
@@ -175,14 +186,19 @@ function visualProblems(root = document.body, options = {}) {
             const row = svg.closest("button, a, label, li, p, span, div");
             if (!row)
                 continue;
-            const textEl = Array.from(row.querySelectorAll("*")).concat(row).find((e) => e !== svg && !svg.contains(e) && !e.contains(svg) && firstLine(e)) ?? (row.textContent?.trim() ? row : null);
+            // The words the icon names: not a count badge, a status or anything placed on top on purpose.
+            const isLabel = (e) => e !== svg && !svg.contains(e) && !e.contains(svg) && !e.closest("[data-slot=count-badge], [role=status], .sr-only") && !/absolute|fixed/.test(getComputedStyle(e).position) && !!firstLine(e);
+            const textEl = Array.from(row.querySelectorAll("*")).find(isLabel) ?? (row.textContent?.trim() && isLabel(row) ? row : null);
             const line = textEl ? firstLine(textEl) : null;
             const d = drawn(svg);
             if (!line || !d)
                 continue;
-            // Only when the icon sits beside the text, on its first line.
+            // Only when the icon sits beside the text, on its first line: it overlaps the line's height and
+            // is to one side of the words. An icon stacked above or below its words is a different layout.
             const rect = textEl.getBoundingClientRect();
-            if (d.bottom < line.capTop - line.size || d.top > line.baseline + line.size * 0.4 || rect.left > box.right + 48 || box.left > rect.right + 48)
+            const overlaps = d.bottom > line.capTop - 2 && d.top < line.baseline + 2;
+            const beside = box.right <= rect.left + 2 || box.left >= rect.right - 2;
+            if (!overlaps || !beside || rect.left > box.right + 48 || box.left > rect.right + 48)
                 continue;
             // Centre to centre on the capitals: for a mark as tall as them that is top to top, and a chevron
             // or a larger icon reads as centred.
@@ -205,7 +221,8 @@ function visualProblems(root = document.body, options = {}) {
             const s = getComputedStyle(parent);
             if (!/flex|grid/.test(s.display) || (s.display.includes("flex") && s.flexDirection.startsWith("column")))
                 continue;
-            const kids = Array.from(parent.children).filter(visible);
+            // Placed on purpose (a badge, a control set inside another) is not part of the row.
+            const kids = Array.from(parent.children).filter((k) => visible(k) && !/absolute|fixed/.test(getComputedStyle(k).position));
             if (kids.length < 2)
                 continue;
             const pills = kids.filter((k) => k.matches(PILLISH));
