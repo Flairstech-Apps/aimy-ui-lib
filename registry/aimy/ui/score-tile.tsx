@@ -62,8 +62,12 @@ export function ScoreTile({
   let line = null
   if (series.length) {
     const g = goal ?? series[series.length - 1]!
-    const min = Math.max(0, Math.min(...series, g) - 3)
-    const max = Math.min(100, Math.max(...series, g) + 3)
+    // Scores sit in 0 to 100 and the scale stops there; a series outside it (over 100, an NPS below 0)
+    // widens the scale instead of throwing the line off the tile.
+    const lo = Math.min(...series, g)
+    const hi = Math.max(...series, g)
+    const min = lo >= 0 ? Math.max(0, lo - 3) : lo - 3
+    const max = hi <= 100 ? Math.min(100, hi + 3) : hi + 3
     const span = Math.max(1, max - min)
     const step = series.length === 1 ? 0 : (W - PX * 2) / (series.length - 1)
     const yOf = (v: number) => PY + ((max - v) / span) * (H - PY * 2)

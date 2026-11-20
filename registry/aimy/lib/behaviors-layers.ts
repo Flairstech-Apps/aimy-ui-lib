@@ -285,13 +285,15 @@ export function hideOthers(keep: Element | Element[]): Cleanup {
   if (!isBrowser) return () => {}
   const keeps = Array.isArray(keep) ? keep : [keep]
   const touched: Element[] = []
-  const skip = (el: Element) =>
-    keeps.some((k) => el.contains(k) || k.contains(el)) ||
-    el.matches("script,style,[aria-live],[data-aimy-persistent],[data-slot=announcer]") ||
-    !!el.querySelector("[aria-live],[data-aimy-persistent]")
+  // Live regions (toasts, announcers) and persistent layers stay audible. A branch that only holds
+  // one (the app's #root with its Toaster inside) is walked into, not spared whole, so the page
+  // around the live region is still hidden behind the modal.
+  const SPARE = "script,style,[aria-live],[role=alert],[role=status],[data-aimy-persistent],[data-slot=announcer]"
+  const holdsSpare = (el: Element) => !!el.querySelector("[aria-live],[role=alert],[role=status],[data-aimy-persistent]")
+  const skip = (el: Element) => keeps.some((k) => el.contains(k) || k.contains(el)) || el.matches(SPARE)
   const walk = (parent: Element) => {
     for (const child of Array.from(parent.children)) {
-      if (keeps.some((k) => child.contains(k)) && !keeps.includes(child)) walk(child)
+      if ((keeps.some((k) => child.contains(k)) && !keeps.includes(child)) || (!skip(child) && holdsSpare(child))) walk(child)
       else if (!skip(child)) {
         const n = hiddenCount.get(child) ?? 0
         if (n === 0) child.setAttribute("data-aimy-was-hidden", child.getAttribute("aria-hidden") ?? "")

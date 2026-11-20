@@ -62,8 +62,8 @@ export function Heatmap({
             </tr>
           </thead>
           <tbody>
-            {rows.map((r) => (
-              <tr key={r.name}>
+            {rows.map((r, ri) => (
+              <tr key={`${r.name}-${ri}`}>
                 <th scope="row" className="is-row-label">
                   {r.name}
                 </th>

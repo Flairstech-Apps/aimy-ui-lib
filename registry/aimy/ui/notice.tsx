@@ -33,7 +33,7 @@ export function Notice({ tone = "neutral", title, children, action, className }:
       className={cn("flex items-start gap-3 rounded-lg px-4 py-3 text-meta text-ink", t.ground, className)}
     >
       <t.Icon aria-hidden="true" strokeWidth={2} className={cn("mt-0.5 size-4 shrink-0", t.ink)} />
-      <div className="min-w-0 flex-1">
+      <div className="min-w-0 flex-1 [overflow-wrap:anywhere]">
         {title ? <p className={cn("font-semibold", t.ink)}>{title}</p> : null}
         <div className={cn(title && "mt-0.5")}>{children}</div>
       </div>

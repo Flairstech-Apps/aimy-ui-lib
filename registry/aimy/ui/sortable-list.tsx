@@ -1,7 +1,7 @@
 "use client"
 
 import { GripVertical } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import { type Rect, arrayMove, bindDrag, createAutoScroll, reducedMotion, tokenEase, tokenMs } from "@/lib/behaviors"
 import { useAgentSurface } from "@/lib/behaviors-agent-react"
 import { useFlip, useIsoLayoutEffect, useReorder } from "@/lib/behaviors-react"
@@ -56,6 +56,9 @@ function slotOffset(rects: Rect[], gap: number, from: number, to: number): numbe
 }
 
 export function SortableList<T>({ items, getKey, getLabel, onReorder, renderItem, label, className, agent }: SortableListProps<T>) {
+  // One hint per list, by an id of its own: keys made the id, so two lists with the same keys
+  // clashed, and a key with a space pointed at nothing.
+  const hintId = useId()
   const list = useRef<HTMLOListElement | null>(null)
   const reorder = useReorder({
     count: () => items.length,
@@ -230,7 +233,7 @@ export function SortableList<T>({ items, getKey, getLabel, onReorder, renderItem
               data-sortable-grip={i}
               aria-label={`Move ${name}`}
               aria-pressed={lifted}
-              aria-describedby={`${getKey(item)}-sort-hint`}
+              aria-describedby={hintId}
               onKeyDown={(e) => reorder.onKeyDown(i, e)}
               className={cn(
                 "grid size-7 shrink-0 cursor-grab touch-none place-items-center rounded-md text-ink-secondary",
@@ -240,9 +243,11 @@ export function SortableList<T>({ items, getKey, getLabel, onReorder, renderItem
             >
               <GripVertical aria-hidden="true" strokeWidth={2} className="size-4" />
             </button>
-            <span id={`${getKey(item)}-sort-hint`} hidden>
-              Space to pick up, the arrows to move, Space to drop, Escape to cancel.
-            </span>
+            {i === 0 ? (
+              <span id={hintId} hidden>
+                Space to pick up, the arrows to move, Space to drop, Escape to cancel.
+              </span>
+            ) : null}
             <div className="min-w-0 flex-1">{renderItem(item)}</div>
           </li>
         )

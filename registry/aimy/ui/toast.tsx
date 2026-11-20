@@ -108,6 +108,14 @@ export function Toaster({ offset = "1.5rem" }: ToasterProps) {
   const onClosed = () => {
     if (!open && !current) setShown(null)
   }
+  // Under reduced motion there is no transition, so no transitionend ever comes: without this the
+  // closed card stayed on the page, invisible but still taking clicks and Tab.
+  const cardRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (open || !shown || current) return
+    const running = cardRef.current?.getAnimations?.().length ?? 0
+    if (!running) setShown(null)
+  }, [open, shown])
 
   const err = shown?.tone === "err"
   const press = shown?.action ?? (shown?.onUndo ? { label: shown.undoLabel ?? "Undo", onClick: shown.onUndo } : undefined)
@@ -115,6 +123,7 @@ export function Toaster({ offset = "1.5rem" }: ToasterProps) {
   const card = shown ? (
         <div
           key={shown.id}
+          ref={cardRef}
           onTransitionEnd={(e) => e.target === e.currentTarget && onClosed()}
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
@@ -136,7 +145,7 @@ export function Toaster({ offset = "1.5rem" }: ToasterProps) {
               <AimyMark title="" className="size-3.5" />
             </span>
           )}
-          <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+          <span className="flex min-w-0 flex-1 flex-col gap-0.5 [overflow-wrap:anywhere]">
             <span className="text-xs leading-snug font-bold text-ink">{shown.title}</span>
             {shown.sub ? <span className="text-xs leading-snug text-ink-secondary">{shown.sub}</span> : null}
           </span>
@@ -175,10 +184,11 @@ export function Toaster({ offset = "1.5rem" }: ToasterProps) {
   const bottom = `calc(${offset} + var(--safe-bottom, 0px))`
   return (
     <>
-      <div data-slot="toaster" role="status" aria-live="polite" className={region} style={{ bottom }}>
+      {/* Persistent: usable over a dialog (Undo doesn't dismiss it, Tab can reach it) and never hidden behind one. */}
+      <div data-slot="toaster" role="status" aria-live="polite" data-aimy-persistent="" className={region} style={{ bottom }}>
         {err ? null : card}
       </div>
-      <div data-slot="toaster-alert" role="alert" className={region} style={{ bottom }}>
+      <div data-slot="toaster-alert" role="alert" aria-live="assertive" data-aimy-persistent="" className={region} style={{ bottom }}>
         {err ? card : null}
       </div>
     </>

@@ -74,13 +74,29 @@ export function NotificationCenter({
           onInteractOutside={(e) => {
             if (anchor.current?.contains(e.target as Node)) e.preventDefault()
           }}
+          // With no trigger, focus would drop to the page on Escape or a row's action: back to the bell.
+          onCloseAutoFocus={(e) => {
+            const a = document.activeElement
+            if (a && a !== document.body && !a.closest("[data-slot=notification-center]")) return
+            e.preventDefault()
+            requestAnimationFrame(() => anchor.current?.querySelector<HTMLElement>("button")?.focus())
+          }}
           data-slot="notification-center"
         >
           <div className="ntf-head">
             <b>Needs you</b>
             {unread ? <span className="ntf-count">{unread}</span> : null}
             {onMarkAllRead && unread ? (
-              <button type="button" className="ntf-clear" onClick={onMarkAllRead}>
+              <button
+                type="button"
+                className="ntf-clear"
+                onClick={(e) => {
+                  // The button goes once nothing is unread; focus stays in the panel, on its first row.
+                  const panel = e.currentTarget.closest<HTMLElement>("[data-slot=notification-center]")
+                  onMarkAllRead()
+                  requestAnimationFrame(() => (panel?.querySelector<HTMLElement>(".ntf-list button, .ntf-list a") ?? panel)?.focus())
+                }}
+              >
                 Mark all read
               </button>
             ) : null}

@@ -167,7 +167,8 @@ export function CallRecording({ id, seconds, src, kind = "call", className }: Ca
         </span>
       </span>
       <span className="min-w-8 flex-none text-right text-2xs font-semibold text-ink-secondary tabular-nums">
-        {clock(left)}
+        {/* Idle, the clock is the length as given now, even if it arrived after the first render. */}
+        {clock(playing ? left : seconds)}
       </span>
     </button>
   )

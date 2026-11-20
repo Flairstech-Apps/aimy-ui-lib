@@ -531,16 +531,17 @@
     opacity var(--reveal-dur) var(--reveal-ease),
     filter  var(--reveal-dur) var(--reveal-ease);
 }
-.t-skel.is-revealed .t-skel-skeleton {
+.t-skel.is-revealed > .t-skel-skeleton {
   opacity: 0;
   filter: blur(var(--reveal-blur));
 }
-.t-skel.is-revealed .t-skel-content {
+.t-skel.is-revealed > .t-skel-content {
   opacity: 1;
   filter: blur(0);
 }
-.t-skel.is-resetting .t-skel-skeleton,
-.t-skel.is-resetting .t-skel-content {
+/* Child steps only, so a Reveal inside a revealed one keeps its own skeleton. */
+.t-skel.is-resetting > .t-skel-skeleton,
+.t-skel.is-resetting > .t-skel-content {
   transition: none !important;
 }
 

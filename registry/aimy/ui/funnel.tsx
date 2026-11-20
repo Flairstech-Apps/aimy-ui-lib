@@ -50,12 +50,12 @@ export function Funnel({ rows, total, head, form = "funnel", label, arriving, cl
           <span className="b-fn-n">{head.n}</span>
         </div>
       ) : null}
-      {rows.map((r) => {
+      {rows.map((r, ri) => {
         const of = r.of ?? whole
         const pc = of ? (r.n / of) * 100 : 0
         return (
           <div
-            key={r.name}
+            key={`${r.name}-${ri}`}
             className="b-fn-row"
             role="listitem"
             aria-label={`${r.name}: ${r.n.toLocaleString("en-GB")} of ${of.toLocaleString("en-GB")}`}

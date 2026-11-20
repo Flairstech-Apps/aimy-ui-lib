@@ -177,8 +177,9 @@ export function createSwipeActions(
 ) {
   const store = createStore<{ offset: number; open: SwipeSide | null; swiping: boolean }>({ offset: 0, open: null, swiping: false })
   let start = 0
-  const lead = options.leading ?? 0
-  const trail = options.trailing ?? 0
+  // Read each time, so actions that arrive or change after the row binds still open.
+  const lead = () => options.leading ?? 0
+  const trail = () => options.trailing ?? 0
   const width = () => row.getBoundingClientRect().width || 1
 
   const off = bindDrag(row, {
@@ -190,15 +191,15 @@ export function createSwipeActions(
     onMove: (i) => {
       if (Math.abs(i.delta.y) > Math.abs(i.delta.x) && !store.get().offset) return
       const raw = start + i.delta.x
-      const limit = raw > 0 ? (options.fullSwipe ? width() : lead) : options.fullSwipe ? width() : trail
+      const limit = raw > 0 ? (options.fullSwipe ? width() : lead()) : options.fullSwipe ? width() : trail()
       const over = Math.abs(raw) - limit
       const offset = over > 0 ? Math.sign(raw) * (limit + rubberBand(over, width())) : raw
-      store.set({ offset: raw > 0 && !lead ? 0 : raw < 0 && !trail ? 0 : offset })
+      store.set({ offset: raw > 0 && !lead() ? 0 : raw < 0 && !trail() ? 0 : offset })
     },
     onEnd: (i) => {
       const o = store.get().offset
       const side: SwipeSide = o > 0 ? "leading" : "trailing"
-      const size = side === "leading" ? lead : trail
+      const size = side === "leading" ? lead() : trail()
       const flick = Math.abs(i.velocity.x) > 0.5 && Math.sign(i.velocity.x) === Math.sign(o)
       if (options.fullSwipe && Math.abs(o) > width() * 0.6) {
         store.set({ offset: 0, open: null, swiping: false })
@@ -214,7 +215,7 @@ export function createSwipeActions(
     ...store,
     /** Opens to one side (keyboard focus reaching an action does this). */
     open: (side: SwipeSide) => {
-      const size = side === "leading" ? lead : trail
+      const size = side === "leading" ? lead() : trail()
       if (size) store.set({ offset: side === "leading" ? size : -size, open: side })
     },
     close: () => store.set({ offset: 0, open: null }),

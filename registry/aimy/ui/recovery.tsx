@@ -240,11 +240,14 @@ export function RecoveryState({
   // once when a wait ends. The ticking countdown itself is never announced.
   const [firstWait] = useState(retryAfter)
   const plain = (n: React.ReactNode) => (typeof n === "string" ? n : "")
+  // "1 second", "45 seconds", "2 minutes": a Retry-After of 3600 never reads as 3600s.
+  const spoken = (s: number) => (s < 90 ? `${s} second${s === 1 ? "" : "s"}` : `${Math.round(s / 60)} minutes`)
+  const short = (s: number) => (s < 90 ? `${s}s` : `${Math.ceil(s / 60)} min`)
   let live = ""
   if (retrying) live = `${plain(heading)}. Attempt ${attempt} of ${maxAttempts}.`
   else if (left === 0 && firstWait) live = "You can try again now."
   else if (!page)
-    live = `${plain(heading)}. ${kind === "rate-limit" && firstWait && !message ? `Wait ${firstWait} seconds before trying again.` : plain(body)}`
+    live = `${plain(heading)}. ${kind === "rate-limit" && firstWait && !message ? `Wait ${spoken(firstWait)} before trying again.` : plain(body)}`
 
   const Icon = retrying ? LoaderCircle : ICONS[kind]
   const iconClass = cn(retrying && "animate-spin motion-reduce:animate-none")
@@ -271,7 +274,7 @@ export function RecoveryState({
             // The words say it is waiting ("in 12s"), so they stay at full strength.
             className={cn(waiting && "disabled:opacity-100", screen && "w-full")}
           >
-            {waiting ? `${label} in ${left}s` : label}
+            {waiting ? `${label} in ${short(left)}` : label}
           </Button>
         ) : null}
       </>

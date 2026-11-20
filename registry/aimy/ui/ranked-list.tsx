@@ -41,7 +41,7 @@ export function RankedList({ items, label, onOpen, className }: RankedListProps)
         const inner = (
           <>
             <span className="min-w-0 flex-1">
-              <span className="block text-xs font-semibold text-ink">{item.title}</span>
+              <span className="block text-xs font-semibold text-ink [overflow-wrap:anywhere]">{item.title}</span>
               {item.details ? <span className="mt-0.5 block text-2xs text-ink-secondary">{item.details}</span> : null}
               {item.reason ? <span className="mt-1.5 line-clamp-2 block text-2xs text-ink">{item.reason}</span> : null}
             </span>

@@ -22,12 +22,15 @@ describe("NotificationBell", () => {
     act(() => vi.advanceTimersByTime(40))
     const bell = screen.getByRole("button")
     expect(bell).toHaveClass("is-ringing")
+    // Read out by a region that is always on the page; the tip under the bell is for the eye.
     expect(screen.getByRole("status")).toHaveTextContent("Recording processed")
-    expect(screen.getByRole("status")).toHaveClass("is-on")
+    const tip = () => document.querySelector(".aimy-tip")
+    expect(tip()).toHaveClass("is-on")
+    expect(tip()).toHaveAttribute("aria-hidden", "true")
     act(() => vi.advanceTimersByTime(600))
     expect(bell).not.toHaveClass("is-ringing")
     act(() => vi.advanceTimersByTime(800))
-    expect(screen.getByRole("status")).not.toHaveClass("is-on")
+    expect(tip()).not.toHaveClass("is-on")
   })
 
   it("stays still while its panel is open", () => {
@@ -35,14 +38,15 @@ describe("NotificationBell", () => {
     render(<NotificationBell count={1} open ping={{ id: 1, text: "Analysis done" }} />)
     act(() => vi.advanceTimersByTime(100))
     expect(screen.getByRole("button")).not.toHaveClass("is-ringing")
-    expect(screen.queryByRole("status")).not.toBeInTheDocument()
+    expect(document.querySelector(".aimy-tip")).not.toBeInTheDocument()
+    expect(screen.getByRole("status")).toBeEmptyDOMElement()
   })
 
   it("marks a failure", () => {
     vi.useFakeTimers()
     render(<NotificationBell count={0} ping={{ id: 2, text: "Notes not written", fail: true }} />)
     act(() => vi.advanceTimersByTime(40))
-    expect(screen.getByRole("status")).toHaveClass("is-fail")
+    expect(document.querySelector(".aimy-tip")).toHaveClass("is-fail")
   })
 })
 

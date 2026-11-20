@@ -39,7 +39,7 @@ export function DatePicker({ value, onValueChange, placeholder = "Any date", lab
       <PopoverTrigger
         aria-label={`${label}: ${shown ?? placeholder}`}
         className={cn(
-          "group inline-flex min-h-8 items-center gap-1.5 rounded-pill py-1 pr-2 pl-3 text-xs font-semibold text-ink-secondary",
+          "group/date inline-flex min-h-8 items-center gap-1.5 rounded-pill py-1 pr-2 pl-3 text-xs font-semibold text-ink-secondary",
           "shadow-[inset_0_0_0_1px_var(--card-border-hover)] transition-[background-color,box-shadow,color] duration-(--t-fast) ease-out",
           "hover:bg-raised hover:text-ink data-[state=open]:text-ink data-[state=open]:shadow-[inset_0_0_0_1px_var(--brand)]",
           className
@@ -47,7 +47,7 @@ export function DatePicker({ value, onValueChange, placeholder = "Any date", lab
       >
         <CalendarDays aria-hidden="true" strokeWidth={2} className="size-3.5" />
         <span className={cn(!shown && "text-ink-placeholder")}>{shown ?? placeholder}</span>
-        <ChevronDown aria-hidden="true" strokeWidth={2} className="size-3.5 transition-transform duration-(--t-fast) ease-out group-data-[state=open]:rotate-180" />
+        <ChevronDown aria-hidden="true" strokeWidth={2} className="size-3.5 transition-transform duration-(--t-fast) ease-out group-data-[state=open]/date:rotate-180" />
       </PopoverTrigger>
       <PopoverContent label={label} className="flex w-auto gap-3">
         {presets?.length ? (

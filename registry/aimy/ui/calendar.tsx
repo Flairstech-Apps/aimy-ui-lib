@@ -11,9 +11,15 @@ import { cn } from "@/lib/utils"
 // month, Enter to choose). Weeks start on Monday.
 export type DateRange = { from: Date; to?: Date }
 
+type CalendarBase = {
+  disableFuture?: boolean
+  /** Today, for a server-rendered page: pass the person's day so the server and the browser agree on it (as Diary takes it). The browser's clock by default. */
+  today?: Date
+  className?: string
+}
 type CalendarProps =
-  | { mode?: "single"; value?: Date; onValueChange?: (d: Date) => void; disableFuture?: boolean; className?: string }
-  | { mode: "range"; value?: DateRange; onValueChange?: (r: DateRange) => void; disableFuture?: boolean; className?: string }
+  | ({ mode?: "single"; value?: Date; onValueChange?: (d: Date) => void } & CalendarBase)
+  | ({ mode: "range"; value?: DateRange; onValueChange?: (r: DateRange) => void } & CalendarBase)
 
 const day0 = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate())
 const addDays = (d: Date, n: number) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n)
@@ -26,7 +32,7 @@ const dayLabel = new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numer
 const DOW = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
 
 export function Calendar(props: CalendarProps) {
-  const today = day0(new Date())
+  const today = day0(props.today ?? new Date())
   const selected = props.mode === "range" ? props.value?.from : props.value
   const [month, setMonth] = useState(() => new Date((selected ?? today).getFullYear(), (selected ?? today).getMonth(), 1))
   const [focus, setFocus] = useState<Date>(() => day0(selected ?? today))

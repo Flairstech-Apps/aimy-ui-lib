@@ -41,10 +41,18 @@ function firstLetter(word: string) {
   return Array.from(word)[0] ?? ""
 }
 
-/** The first and last word's first letters ("Jo" keeps one), with suffixes such as III or Jr. dropped. */
+/** The first and last word's first letters ("Jo" keeps one), with suffixes such as III or Jr. and asides in brackets dropped. */
 export function initials(name: string) {
-  const parts = name.trim().split(/\s+/).filter(Boolean)
+  // Asides in brackets ("(Contractor)", "(she/her)") and words that don't start with a letter
+  // (an emoji, a dash) are not part of the name.
+  const parts = name
+    .replace(/\([^)]*\)|\[[^\]]*\]/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter((w) => /^\p{L}/u.test(w))
   while (parts.length > 1 && SUFFIX.test(parts.at(-1)!)) parts.pop()
+  // A name with no letters at all (only an emoji) still shows what it has.
+  if (!parts.length) return firstLetter(name.trim())
   const first = firstLetter(parts[0] ?? "")
   const last = parts.length > 1 ? firstLetter(parts.at(-1)!) : ""
   // Not toLocaleUpperCase: the server and the browser may differ in locale, and hydration must match.
@@ -128,8 +136,8 @@ export function AvatarGroup({ people, max = 4, size = "md", className }: AvatarG
             SIZES[size]
           )}
         >
-          +{rest}
-          <span className="sr-only"> more</span>
+          <span aria-hidden={rest > 99 || undefined}>{rest > 99 ? "99+" : `+${rest}`}</span>
+          <span className="sr-only">{rest > 99 ? ` ${rest} more` : " more"}</span>
         </span>
       ) : null}
     </span>

@@ -45,7 +45,8 @@ export function AppShell({ topnav, nav, rail, railWidth, ambient = true, classNa
   useEffect(() => {
     if (!railOpen) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setRailOpen(false)
+      // A menu, select or dialog open above the drawer takes the Escape; one press closes one layer.
+      if (e.key === "Escape" && !e.defaultPrevented && !document.querySelector("[data-aimy-layer]")) setRailOpen(false)
     }
     document.addEventListener("keydown", onKey)
     return () => document.removeEventListener("keydown", onKey)

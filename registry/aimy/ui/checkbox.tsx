@@ -19,7 +19,7 @@ export function Checkbox({ label, className, id, ...props }: CheckboxProps) {
       id={id ?? auto}
       data-slot="checkbox"
       className={cn(
-        "t-check group relative grid size-[1.0625rem] shrink-0 place-items-center rounded-xs border border-ink-rule bg-card text-on-brand",
+        "t-check group/check relative grid size-[1.0625rem] shrink-0 place-items-center rounded-xs border border-ink-rule bg-card text-on-brand",
         "after:absolute after:-inset-1.5 hover:not-disabled:border-brand",
         "data-[state=checked]:border-brand data-[state=checked]:bg-brand",
         "data-[state=indeterminate]:border-brand data-[state=indeterminate]:bg-brand-dim data-[state=indeterminate]:text-brand",
@@ -29,7 +29,7 @@ export function Checkbox({ label, className, id, ...props }: CheckboxProps) {
       {...props}
     >
       {/* The tick is always in the DOM so it can draw in and out; the dash only shows for "some". */}
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="size-3 group-data-[state=indeterminate]:hidden" style={{ "--check-len": 24 } as React.CSSProperties}>
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="size-3 group-data-[state=indeterminate]/check:hidden" style={{ "--check-len": 24 } as React.CSSProperties}>
         <path d="M20 6 9 17l-5-5" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
       </svg>
       <Primitive.Indicator forceMount className="absolute hidden data-[state=indeterminate]:block">

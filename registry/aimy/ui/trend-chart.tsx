@@ -80,7 +80,16 @@ export function TrendChart({
   const dMin = seen.length ? Math.min(...seen) : 0
   const dMax = seen.length ? Math.max(...seen) : 100
   const span = dMax - dMin
-  const tick = tickProp ?? (span <= 20 ? 5 : span <= 50 ? 10 : 20)
+  // Up to a span of 100, the products' 5/10/20. Beyond it (money, counts), about five round steps
+  // of 1, 2 or 5 times a power of ten, so 120K to 480K reads in 100K steps, not 18,000 ticks.
+  const niceStep = (s: number) => {
+    const raw = s / 5
+    const p = 10 ** Math.floor(Math.log10(raw))
+    const m = raw / p
+    return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p
+  }
+  const auto = span <= 20 ? 5 : span <= 50 ? 10 : span <= 100 ? 20 : niceStep(span)
+  const tick = tickProp && tickProp > 0 ? tickProp : auto
   const [lo, hi] = domain ?? [Math.floor((dMin - 1) / tick) * tick, Math.ceil((dMax + 1) / tick) * tick]
   const y = (v: number) => (1 - (v - lo) / (hi - lo)) * 100
 

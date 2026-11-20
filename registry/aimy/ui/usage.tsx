@@ -47,7 +47,7 @@ export function UsageSummary({ groups, link }: UsageSummaryProps) {
                 aria-valuemax={r.of}
                 aria-valuenow={r.used}
               >
-                <i style={{ "--p": Math.min(1, r.used / r.of) } as React.CSSProperties} />
+                <i style={{ "--p": r.of > 0 && Number.isFinite(r.used / r.of) ? Math.min(1, Math.max(0, r.used / r.of)) : 0 } as React.CSSProperties} />
               </div>
               {r.note ? <p className={cn("use-pop-s", r.tone === "warn" && "is-warn")}>{r.note}</p> : null}
             </div>

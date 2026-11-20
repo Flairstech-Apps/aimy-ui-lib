@@ -73,8 +73,9 @@ export function FaceStack({ people, max = 4, menu, className }: FaceStackProps) 
             menu ? "-ml-2" : "-ml-1.5"
           )}
         >
-          +{more}
-          {menu ? null : <span className="sr-only"> more</span>}
+          {/* Three digits don't fit the 24px circle: past 99 it says 99+, and a screen reader hears the count. */}
+          <span aria-hidden={more > 99 || undefined}>{more > 99 ? "99+" : `+${more}`}</span>
+          {menu ? null : <span className="sr-only">{more > 99 ? ` ${more} more` : " more"}</span>}
         </span>
       ) : null}
     </span>

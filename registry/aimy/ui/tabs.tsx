@@ -57,9 +57,22 @@ export function TabsList({ className, children, ...props }: React.ComponentProps
       place()
     }
     window.addEventListener("resize", onResize)
+    // Also follows each tab's own size (a count that gains a digit, a label that changes, the font
+    // arriving). It glides there, so the active tab turning bold mid-slide doesn't cut the slide short.
+    let primed = false // the first report is the sizes as they are, not a change
+    const ro =
+      typeof ResizeObserver === "undefined"
+        ? null
+        : new ResizeObserver(() => {
+            if (primed) place()
+            primed = true
+          })
+    ro?.observe(el)
+    for (const child of el.children) ro?.observe(child)
     return () => {
       observer.disconnect()
       window.removeEventListener("resize", onResize)
+      ro?.disconnect()
     }
   }, [place])
 

@@ -22,8 +22,9 @@ type SegmentedProps = {
 }
 
 export function Segmented({ options, value, defaultValue, onValueChange, label, className }: SegmentedProps) {
-  const [inner, setInner] = useState(defaultValue ?? options[0]?.value)
-  const current = value ?? inner
+  const [inner, setInner] = useState(defaultValue)
+  // Options that arrive after the first render still start on the first one.
+  const current = value ?? inner ?? options[0]?.value
   const bar = useRef<HTMLDivElement>(null)
   const pill = useRef<HTMLSpanElement>(null)
 
@@ -53,6 +54,21 @@ export function Segmented({ options, value, defaultValue, onValueChange, label, 
     window.addEventListener("resize", onResize)
     return () => window.removeEventListener("resize", onResize)
   }, [place])
+
+  // Also follows the segments' own size (a count that gains a digit, a label that changes, the font
+  // arriving). It glides there, so a segment that changes weight mid-slide doesn't cut the slide short.
+  useLayoutEffect(() => {
+    const el = bar.current
+    if (!el || typeof ResizeObserver === "undefined") return
+    let primed = false // the first report is the sizes as they are, not a change
+    const ro = new ResizeObserver(() => {
+      if (primed) place(true)
+      primed = true
+    })
+    ro.observe(el)
+    for (const child of el.children) ro.observe(child)
+    return () => ro.disconnect()
+  }, [place, options.length])
 
   return (
     <RadioGroup.Root

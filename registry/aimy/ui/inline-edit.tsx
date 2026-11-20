@@ -89,7 +89,7 @@ export function InlineEdit({ value, onSave, label, validate, size = "text", plac
         aria-busy={edit.saving || undefined}
         onClick={edit.start}
         className={cn(
-          "group -mx-2 inline-flex max-w-full items-start gap-2 rounded-md px-2 py-1 text-left text-ink starting:opacity-0",
+          "group/edit -mx-2 inline-flex max-w-full items-start gap-2 rounded-md px-2 py-1 text-left text-ink starting:opacity-0",
           "transition-[background-color,opacity] duration-(--t-fast) ease-out hover:not-disabled:bg-w05 disabled:cursor-not-allowed",
           sizes[size],
           className
@@ -101,7 +101,7 @@ export function InlineEdit({ value, onSave, label, validate, size = "text", plac
             // Saving behind: the new value is already shown.
             <LoaderCircle strokeWidth={2} className="size-3.5 animate-spin text-ink-secondary motion-reduce:animate-none" />
           ) : (
-            <Pencil strokeWidth={2} className="size-3.5 text-ink-secondary opacity-0 transition-opacity duration-(--t-fast) group-hover:opacity-100 group-focus-visible:opacity-100" />
+            <Pencil strokeWidth={2} className="size-3.5 text-ink-secondary opacity-0 transition-opacity duration-(--t-fast) group-hover/edit:opacity-100 group-focus-visible/edit:opacity-100" />
           )}
         </span>
       </button>

@@ -248,6 +248,8 @@
 .set2-run:not(.set2-run-hd) { min-height: 4.25rem; }
 .set2-run-hd { background: none; padding: 0 1rem 0.625rem; min-height: 0; }
 .set2-run[data-selected] { background: var(--accent-dim); }
+/* A cell never draws over the next column: long words (an address, a link) break inside it. */
+.set2-run > [role="cell"] { min-width: 0; overflow-wrap: anywhere; }
 .set2-run > .is-end { justify-self: end; text-align: right; }
 @container (max-width: 735.98px) {
   .set2-runs { grid-template-columns: minmax(0, 1fr); }

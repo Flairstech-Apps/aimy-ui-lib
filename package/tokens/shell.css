@@ -134,9 +134,11 @@
 [data-theme="light"] .topnav-user:hover { background: rgba(16, 24, 40, 0.07); }
 .topnav-user:active { transform: scale(0.97); }
 .topnav-user:focus-visible { outline: 0.125rem solid var(--brand); outline-offset: 0.125rem; }
-.topnav-user-info { display: flex; flex-direction: column; gap: 0.125rem; }
+.topnav-user-info { display: flex; flex-direction: column; gap: 0.125rem; min-width: 0; max-width: 12rem; }
 .topnav-user-name { font-size: var(--fs-2xs); font-weight: var(--fw-bold); color: var(--d50); line-height: 1; }
 .topnav-user-role { font-size: var(--fs-2xs); color: var(--d200); line-height: 1; }
+/* A long name or an email as the name ends in an ellipsis; the menu and its label carry it whole. */
+.topnav-user-name, .topnav-user-role { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding-block: 0.0625rem; margin-block: -0.0625rem; }
 .topnav-user > svg { width: 0.75rem; height: 0.75rem; color: var(--d200); transition: transform var(--t-fast) var(--ease-out); }
 .topnav-user[data-state="open"] > svg { transform: rotate(180deg); }
 

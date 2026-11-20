@@ -57,7 +57,7 @@ export function CardTitle({ asChild = false, level = 3, className, ...props }: C
         data-slot="card-title"
         type={asChild ? undefined : "button"}
         className={cn(
-          "text-left text-lg leading-tight font-bold text-ink transition-[color] duration-(--t-fast) ease-out hover:text-accent-text",
+          "text-left text-lg leading-tight font-bold text-ink [overflow-wrap:anywhere] transition-[color] duration-(--t-fast) ease-out hover:text-accent-text",
           "after:absolute after:inset-0 after:rounded-xl after:content-['']",
           className
         )}

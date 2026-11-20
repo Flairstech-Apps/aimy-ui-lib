@@ -109,7 +109,7 @@ export function CommandBar({ onAsk, open: openProp, onOpenChange, shortcut = tru
     // The ask row matches whatever was typed.
     filter: (r, q) => r.kind === "ask" || q.toLowerCase().split(/\s+/).every((w) => `${r.label} ${r.group} ${r.kind === "command" ? r.command.keywords : ""}`.toLowerCase().includes(w)),
     onSelect: (r) => void run(r),
-    onHighlight: (k) => k && document.getElementById(`${id}-${CSS.escape(k)}`)?.scrollIntoView?.({ block: "nearest" }),
+    onHighlight: (k) => k && document.getElementById(optId(k))?.scrollIntoView?.({ block: "nearest" }),
   })
 
   // However it opened (Ctrl+K, a button, the open prop): start clean on the first row.
@@ -127,7 +127,8 @@ export function CommandBar({ onAsk, open: openProp, onOpenChange, shortcut = tru
     const g = groups.find((x) => x.name === r.group) ?? groups[groups.push({ name: r.group, rows: [] }) - 1]!
     g.rows.push(r)
   }
-  const optId = (k: string) => `${id}-${k}`
+  // Command ids hold colons, spaces and JSON; encoded, each is one valid id that getElementById finds.
+  const optId = (k: string) => `${id}-${encodeURIComponent(k)}`
 
   return (
     <Dialog.Root

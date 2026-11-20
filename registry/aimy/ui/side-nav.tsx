@@ -290,7 +290,8 @@ function QaSideNav({
   useEffect(() => {
     if (!drawer) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeDrawer()
+      // A menu, select or dialog open above the drawer takes the Escape; one press closes one layer.
+      if (e.key === "Escape" && !e.defaultPrevented && !document.querySelector("[data-aimy-layer]")) closeDrawer()
     }
     document.addEventListener("keydown", onKey)
     return () => document.removeEventListener("keydown", onKey)

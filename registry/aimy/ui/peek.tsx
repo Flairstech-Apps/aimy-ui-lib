@@ -128,6 +128,8 @@ export function Peek({
       onKeyDown={(e) => {
         if (e.key === "Escape" && !shut) {
           e.stopPropagation()
+          // Focus moves to the grip first: the answer goes inert, and focus inside it would drop to the page.
+          card.current?.querySelector<HTMLElement>(".aimy-peek-grip")?.focus()
           setShut(true)
         }
       }}

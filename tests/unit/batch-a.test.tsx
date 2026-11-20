@@ -35,7 +35,9 @@ describe("Button", () => {
       </Button>
     )
     const b = screen.getByRole("button", { name: "Saving" })
-    expect(b).toBeDisabled()
+    // Still focusable, so a keyboard user's focus stays on it while it works.
+    expect(b).not.toBeDisabled()
+    expect(b).toHaveAttribute("aria-disabled", "true")
     expect(b).toHaveAttribute("aria-busy", "true")
     fireEvent.click(b)
     expect(onClick).not.toHaveBeenCalled()
@@ -96,7 +98,8 @@ describe("Link", () => {
 describe("Tag", () => {
   it("has a fill and no visible edge", () => {
     render(<Tag tone="ok">Meeting Set</Tag>)
-    const t = screen.getByText("Meeting Set")
+    const t = screen.getByText("Meeting Set").closest("[data-slot=tag]")
+    expect(t).toHaveAttribute("title", "Meeting Set")
     expect(t).toHaveClass("bg-ok-bg", "text-ok-text", "border-transparent")
   })
 })
@@ -166,6 +169,10 @@ describe("Avatar", () => {
     expect(initials("Ömer Çelik")).toBe("ÖÇ")
     expect(initials("Henry IV")).toBe("H")
     expect(initials("")).toBe("")
+    expect(initials("Jane Smith (Contractor)")).toBe("JS")
+    expect(initials("Nour Ali (she/her)")).toBe("NA")
+    expect(initials("Jane Smith 🌴")).toBe("JS")
+    expect(initials("🌴")).toBe("🌴")
   })
 
   it("shows initials and is named for the person", () => {

@@ -584,7 +584,18 @@ export function useSwipeActions(options: Parameters<typeof createSwipeActions>[1
   const [state, setState] = useState({ offset: 0, open: null as "leading" | "trailing" | null, swiping: false })
   const [api, setApi] = useState<{ close(): void; open(side: "leading" | "trailing"): void } | null>(null)
   useBind(el, (row) => {
-    const s = createSwipeActions(row, { ...latest.current, onAction: (side) => latest.current.onAction?.(side) })
+    const s = createSwipeActions(row, {
+      get leading() {
+        return latest.current.leading
+      },
+      get trailing() {
+        return latest.current.trailing
+      },
+      get fullSwipe() {
+        return latest.current.fullSwipe
+      },
+      onAction: (side) => latest.current.onAction?.(side),
+    })
     const off = s.subscribe(setState)
     setApi({ close: s.close, open: s.open })
     return () => {
@@ -743,8 +754,10 @@ export function useTreeView<T>(options: {
   onSelect?: (id: string) => void
 }) {
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set(options.defaultExpanded ?? []))
-  const [focused, setFocused] = useState<string | null>(options.tree.roots[0] ?? null)
+  const [focusedOwn, setFocused] = useState<string | null>(options.tree.roots[0] ?? null)
   const rows = visibleTreeRows(options.tree, expanded)
+  // Items that arrive late, or a focused row that goes away, never leave the tree without its Tab stop.
+  const focused = focusedOwn !== null && rows.some((r) => r.id === focusedOwn) ? focusedOwn : (rows[0]?.id ?? null)
   const latest = useLatest({ ...options, rows, focused })
   const nav = useOnce(() =>
     createTreeNavigation<T>({

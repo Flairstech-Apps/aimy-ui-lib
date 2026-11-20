@@ -46,7 +46,7 @@ export function Leaderboard({ rows, label, className }: LeaderboardProps) {
           </>
         )
         return (
-          <li key={r.name}>
+          <li key={`${r.name}-${i}`}>
             {r.onOpen ? (
               <button type="button" className="qa-lead-row" onClick={r.onOpen}>
                 {inner}

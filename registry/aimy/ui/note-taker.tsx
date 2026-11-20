@@ -16,7 +16,7 @@ import {
   TriangleAlert,
   X,
 } from "lucide-react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useId, useRef, useState } from "react"
 import { AimyMark } from "@/components/aimy-mark"
 import { Button } from "@/components/button"
 import { Orb } from "@/components/orb"
@@ -738,12 +738,13 @@ export function NoteTakerConsent({
   onNotNow: () => void
 }) {
   const start = useRef<HTMLButtonElement>(null)
+  const headId = useId()
   useEffect(() => start.current?.focus(), [])
   return (
     <div
       className="nt-cons"
       role="group"
-      aria-labelledby="nt-cons-h"
+      aria-labelledby={headId}
       onKeyDown={(e) => {
         if (e.key !== "Escape") return
         e.stopPropagation()
@@ -755,7 +756,7 @@ export function NoteTakerConsent({
         {meeting}
         <span>{when}</span>
       </span>
-      <p className="nt-cons-h" id="nt-cons-h">
+      <p className="nt-cons-h" id={headId}>
         Take notes in this meeting?
       </p>
       <p className="nt-cons-p">

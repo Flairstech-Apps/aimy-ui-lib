@@ -67,7 +67,11 @@ export function Combobox({
   const field = useField()
   const shake = useShake<HTMLDivElement>(field?.error)
   const [value, setValue] = useControllable<string | null>({ value: valueProp, defaultValue, onChange: (v) => onValueChange?.(v) })
-  const chosen = options.find((o) => o.value === value) ?? null
+  // The chosen option's name survives a later search that no longer returns it.
+  const [lastChosen, setLastChosen] = useState<ComboboxOption | null>(null)
+  const found = options.find((o) => o.value === value) ?? null
+  if (found && found !== lastChosen) setLastChosen(found)
+  const chosen = found ?? (lastChosen && lastChosen.value === value ? lastChosen : null)
   const [open, setOpen] = useState(false)
   const [typing, setTyping] = useState(false)
   const [anchor, anchorRef] = useElement<HTMLDivElement>()
@@ -75,7 +79,8 @@ export function Combobox({
   const { present, ref: presenceRef } = usePresence(open)
   const id = useId()
   const listId = `${id}-list`
-  const optId = (v: string) => `${id}-opt-${v.replace(/\W/g, "_")}`
+  // Encoded, not stripped: "Zoë" and "Zoé" stay two ids.
+  const optId = (v: string) => `${id}-opt-${encodeURIComponent(v)}`
 
   const lb = useListbox({
     items: () => options,

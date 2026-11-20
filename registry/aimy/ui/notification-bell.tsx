@@ -78,6 +78,9 @@ export function NotificationBell({ count, onClick, open, ping, className }: Noti
           {shown}
         </span>
       </span>
+      <span className="sr-only" role="status" aria-live="polite">
+        {tip?.ping.text ?? ""}
+      </span>
       {tip && typeof document !== "undefined"
         ? createPortal(
             <div
@@ -91,8 +94,9 @@ export function NotificationBell({ count, onClick, open, ping, className }: Noti
                 node.style.left = `${Math.round(left)}px`
                 node.style.setProperty("--tip-x", `${Math.round(tip.cx - left)}px`)
               }}
-              role="status"
-              aria-live="polite"
+              // Read out by the region that is always on the page (below); a region created with its
+              // text already in it is often not announced.
+              aria-hidden="true"
             >
               {tip.ping.fail ? <TriangleAlert aria-hidden="true" /> : <AimyMark title="" className="h-[13px] w-3" />}
               <span>{tip.ping.text}</span>

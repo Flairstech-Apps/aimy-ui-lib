@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 // theme clears 4.5:1. A tag is the NAME of a state, in sentence case; two
 // words both get capitals ("Meeting Set"). 12px, 600, 22px tall.
 const tagVariants = cva(
-  "inline-flex items-center gap-1 rounded-pill border border-transparent px-2 py-0.5 align-middle text-2xs leading-4 font-bold whitespace-nowrap [&_svg]:size-3 [&_svg]:shrink-0",
+  "inline-flex items-center gap-1 rounded-pill border border-transparent px-2 py-0.5 max-w-full align-middle text-2xs leading-4 font-bold whitespace-nowrap [&_svg]:size-3 [&_svg]:shrink-0",
   {
     variants: {
       tone: {
@@ -25,8 +25,14 @@ const tagVariants = cva(
 
 type TagProps = React.ComponentProps<"span"> & VariantProps<typeof tagVariants>
 
-export function Tag({ className, tone, ...props }: TagProps) {
-  return <span data-slot="tag" data-tone={tone ?? "neutral"} className={cn(tagVariants({ tone }), className)} {...props} />
+export function Tag({ className, tone, children, ...props }: TagProps) {
+  // Words that don't fit the room end in an ellipsis inside the pill, with the whole label on hover.
+  const text = typeof children === "string" ? children : undefined
+  return (
+    <span data-slot="tag" data-tone={tone ?? "neutral"} title={text} className={cn(tagVariants({ tone }), className)} {...props}>
+      {text !== undefined ? <span className="min-w-0 truncate">{text}</span> : children}
+    </span>
+  )
 }
 
 export { tagVariants }

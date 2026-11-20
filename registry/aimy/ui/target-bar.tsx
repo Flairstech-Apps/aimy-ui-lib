@@ -30,15 +30,17 @@ type TargetBarProps = {
 const OVERSHOOT = 1.2
 
 export function TargetBar({ value, target, forecast, elapsed, format, labels, arriving, className }: TargetBarProps) {
-  const scale = Math.max(target * OVERSHOOT, forecast ?? 0, value) || 1
+  // No target yet (0 or missing): the bar shows what was gained, with no percentage and no marker.
+  const hasTarget = Number.isFinite(target) && target > 0
+  const scale = Math.max(hasTarget ? target * OVERSHOOT : 0, forecast ?? 0, value) || 1
   const pc = (v: number) => Math.max(0, Math.min(100, (v / scale) * 100))
   const valuePc = pc(value)
   const fcastPc = forecast == null ? 0 : Math.max(0, pc(forecast) - valuePc)
-  const pacePc = elapsed == null ? null : pc(target * elapsed)
-  const share = target ? value / target : 0
+  const pacePc = elapsed == null || !hasTarget ? null : pc(target * elapsed)
+  const share = hasTarget ? value / target : 0
   const more = forecast == null ? 0 : Math.max(0, forecast - value)
   const said =
-    `${format(value)} of a ${format(target)} target.` +
+    (hasTarget ? `${format(value)} of a ${format(target)} target.` : `${format(value)} so far. No target is set.`) +
     (forecast != null ? ` AiMY expects another ${format(more)} by the end, reaching ${format(forecast)}.` : "")
   const L = {
     value: "Gained",
@@ -51,16 +53,16 @@ export function TargetBar({ value, target, forecast, elapsed, format, labels, ar
     <div className={cn("s-att", arriving && "is-arriving", className)} data-slot="target-bar">
       <div className="s-att-head">
         <span className="s-att-lead">
-          {format(value)} <span className="s-att-of">of {format(target)}</span>
+          {format(value)} {hasTarget ? <span className="s-att-of">of {format(target)}</span> : null}
         </span>
-        <span className={cn("s-att-pc", share >= 1 && "tone-ok")}>{Math.round(share * 100)}% of target</span>
+        {hasTarget ? <span className={cn("s-att-pc", share >= 1 && "tone-ok")}>{Math.round(share * 100)}% of target</span> : <span className="s-att-pc">No target set</span>}
       </div>
       <div className="s-att-bar" role="img" aria-label={said}>
         <div className="s-att-track">
           <span className="s-att-booked" style={{ width: `${valuePc.toFixed(1)}%` }} />
           {fcastPc ? <span className="s-att-fcast" style={{ width: `${fcastPc.toFixed(1)}%` }} /> : null}
         </div>
-        <span className="s-att-target" style={{ left: `${pc(target).toFixed(1)}%` }} />
+        {hasTarget ? <span className="s-att-target" style={{ left: `${pc(target).toFixed(1)}%` }} /> : null}
         {pacePc != null ? <span className="s-att-pace" style={{ left: `${pacePc.toFixed(1)}%` }} /> : null}
       </div>
       <div className="s-att-keys" aria-hidden="true">
@@ -71,7 +73,7 @@ export function TargetBar({ value, target, forecast, elapsed, format, labels, ar
             {L.forecast} · {format(more)}
           </span>
         ) : null}
-        <span className="s-att-key is-target">{L.target}</span>
+        {hasTarget ? <span className="s-att-key is-target">{L.target}</span> : null}
         {pacePc != null ? <span className="s-att-key is-pace">{L.pace}</span> : null}
       </div>
     </div>

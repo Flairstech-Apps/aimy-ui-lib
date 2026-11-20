@@ -17,7 +17,9 @@ type ProgressProps = {
 }
 
 export function Progress({ value, max = 100, size = "thin", limit = false, label, className }: ProgressProps) {
-  const ratio = Math.min(1, Math.max(0, max > 0 ? value / max : 0))
+  // A missing value (NaN) or a max of 0 reads as empty, never as a full bar.
+  const raw = max > 0 ? value / max : 0
+  const ratio = Number.isFinite(raw) ? Math.min(1, Math.max(0, raw)) : 0
   const tone = !limit ? "bg-brand" : ratio >= 0.95 ? "bg-err" : ratio >= 0.8 ? "bg-warn" : "bg-brand"
   return (
     <div

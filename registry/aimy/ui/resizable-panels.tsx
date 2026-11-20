@@ -28,11 +28,14 @@ type ResizablePanelsProps = {
 export function ResizablePanels({ children, direction = "horizontal", defaultSizes, sizes: sizesProp, onSizesChange, min = 10, labels, className }: ResizablePanelsProps) {
   const panels = Children.toArray(children)
   const n = panels.length
-  const [sizes, setSizes] = useControllable<number[]>({
+  const [held, setSizes] = useControllable<number[]>({
     value: sizesProp,
     defaultValue: defaultSizes ?? panels.map(() => 100 / n),
     onChange: onSizesChange,
   })
+  // A panel that comes or goes re-splits the room (defaultSizes when they fit the new count), so
+  // the sizes always cover 100% and no panel opens at 0.
+  const sizes = held.length === n ? held : defaultSizes?.length === n ? defaultSizes : panels.map(() => 100 / n)
   const minOf = (i: number) => (Array.isArray(min) ? (min[i] ?? 10) : min)
   const root = useRef<HTMLDivElement>(null)
   const horizontal = direction === "horizontal"
@@ -147,7 +150,7 @@ function PanelAndHandle({
           aria-valuemax={Math.round(max)}
           onKeyDown={onKey}
           className={cn(
-            "group relative shrink-0 touch-none outline-none",
+            "group/handle relative shrink-0 touch-none outline-none",
             horizontal ? "w-px cursor-col-resize" : "h-px cursor-row-resize",
             // A wider hit area than the line it draws.
             horizontal ? "before:absolute before:inset-y-0 before:-inset-x-1.5" : "before:absolute before:inset-x-0 before:-inset-y-1.5"
@@ -157,8 +160,8 @@ function PanelAndHandle({
             aria-hidden="true"
             className={cn(
               "absolute bg-hairline transition-[background-color,transform] duration-(--t-fast) ease-out",
-              "group-hover:bg-brand group-focus-visible:bg-brand group-active:bg-brand",
-              horizontal ? "inset-y-0 left-0 w-px group-hover:scale-x-[3] group-focus-visible:scale-x-[3]" : "inset-x-0 top-0 h-px group-hover:scale-y-[3] group-focus-visible:scale-y-[3]"
+              "group-hover/handle:bg-brand group-focus-visible/handle:bg-brand group-active/handle:bg-brand",
+              horizontal ? "inset-y-0 left-0 w-px group-hover/handle:scale-x-[3] group-focus-visible/handle:scale-x-[3]" : "inset-x-0 top-0 h-px group-hover/handle:scale-y-[3] group-focus-visible/handle:scale-y-[3]"
             )}
           />
         </div>

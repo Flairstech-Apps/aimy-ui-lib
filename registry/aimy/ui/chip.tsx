@@ -21,24 +21,26 @@ export function Chip({ className, selected = false, onRemove, removeLabel, child
       type={type ?? "button"}
       aria-pressed={selected}
       className={cn(
-        "inline-flex min-h-7 shrink-0 items-center gap-1.5 rounded-pill border px-3.5 text-2xs leading-4 font-semibold whitespace-nowrap",
+        "inline-flex min-h-7 max-w-full shrink-0 items-center gap-1.5 rounded-pill border px-3.5 text-2xs leading-4 font-semibold whitespace-nowrap",
         "transition-[background-color,border-color,color,scale] duration-(--t-fast) ease-out",
         "active:scale-(--press-scale) active:duration-(--t-press) motion-reduce:transition-none motion-reduce:active:scale-100",
         "[&_svg]:size-3 [&_svg]:shrink-0",
         selected
           ? "border-[color-mix(in_srgb,var(--accent)_30%,transparent)] bg-accent-dim text-accent-text"
           : "border-w08 bg-w04 text-ink-secondary hover:bg-w07 hover:text-ink",
-        onRemove && "pr-1.5",
+        // Beside its remove control it may shrink, so the × always stays on screen.
+        onRemove && "min-w-0 shrink pr-1.5",
         className
       )}
+      title={typeof children === "string" ? children : undefined}
       {...props}
     >
-      {children}
+      {typeof children === "string" ? <span className="min-w-0 truncate">{children}</span> : children}
     </button>
   )
   if (!onRemove) return chip
   return (
-    <span data-slot="chip-group" className="inline-flex items-center gap-0.5">
+    <span data-slot="chip-group" className="inline-flex max-w-full min-w-0 items-center gap-0.5">
       {chip}
       <button
         type="button"

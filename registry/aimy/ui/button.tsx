@@ -21,7 +21,7 @@ const buttonVariants = cva(
     "font-sans font-semibold whitespace-nowrap select-none",
     "transition-[background-color,border-color,color,scale] duration-(--t-fast) ease-out",
     "active:not-disabled:scale-(--press-scale) active:not-disabled:duration-(--t-press)",
-    "disabled:cursor-not-allowed disabled:opacity-[0.38] aria-busy:cursor-progress aria-busy:opacity-100",
+    "disabled:cursor-not-allowed disabled:opacity-[0.38] aria-disabled:not-aria-busy:cursor-not-allowed aria-disabled:not-aria-busy:opacity-[0.38] aria-busy:cursor-progress aria-busy:opacity-100 aria-disabled:pointer-events-none",
     "[&_svg]:size-3.5 [&_svg]:shrink-0",
     "motion-reduce:transition-none motion-reduce:active:scale-100",
   ],
@@ -69,15 +69,25 @@ export function Button({
   disabled,
   children,
   type,
+  onClick,
   ...props
 }: ButtonProps) {
   const Comp = asChild ? Slot.Root : "button"
+  // Loading keeps the button focusable (disabling it would drop a keyboard user's focus to the top of
+  // the page) and refuses the press instead. A link (asChild) can't be disabled, so it is taken out of
+  // the Tab order and refuses the press too.
+  const refuse = loading || (asChild && disabled)
   return (
     <Comp
       data-slot="button"
       data-variant={variant ?? "ghost"}
       type={asChild ? undefined : (type ?? "button")}
-      disabled={asChild ? undefined : disabled || loading}
+      disabled={asChild ? undefined : disabled}
+      aria-disabled={refuse || undefined}
+      tabIndex={asChild && disabled ? -1 : undefined}
+      // A handler only when one is needed, so a Button still renders in a server component. A press it
+      // refuses is cancelled, which also stops a form's Enter-to-submit while it works.
+      onClick={refuse && (onClick || type === "submit") ? (e: React.MouseEvent<HTMLButtonElement>) => e.preventDefault() : onClick}
       aria-busy={loading || undefined}
       className={cn(buttonVariants({ variant, size }), className)}
       {...props}

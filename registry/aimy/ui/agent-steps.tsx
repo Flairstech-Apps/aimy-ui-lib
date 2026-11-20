@@ -69,8 +69,8 @@ export function AgentSteps({
         <p>{note}</p>
       </div>
       <ol className="b-cur-steps" aria-live="polite">
-        {steps.map((s) => (
-          <li key={s.label} className={cn("b-cur-step", `is-${s.state}`)} aria-hidden={s.state === "wait" || undefined}>
+        {steps.map((s, si) => (
+          <li key={`${s.label}-${si}`} className={cn("b-cur-step", `is-${s.state}`)} aria-hidden={s.state === "wait" || undefined}>
             <div className="b-cur-in">
               <div className="b-cur-row">
                 <span className="b-cur-pin" aria-hidden="true">

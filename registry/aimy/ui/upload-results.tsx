@@ -49,7 +49,9 @@ export function UploadResults({ items, label, onAction, className }: UploadResul
   const count = (s: UploadStatus) => items.filter((i) => i.status === s).length
   // Open on what needs a person: failures, then warnings, then the rest.
   const first: UploadStatus = count("failed") ? "failed" : count("warnings") ? "warnings" : "added"
-  const [shown, setShown] = useState<UploadStatus>(first)
+  // Follows what needs a person as results stream in, until the person picks a tab.
+  const [picked, setShown] = useState<UploadStatus | null>(null)
+  const shown = picked ?? first
 
   return (
     <div data-slot="upload-results" className={className}>
