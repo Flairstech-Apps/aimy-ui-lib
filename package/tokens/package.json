@@ -1,6 +1,6 @@
 {
   "name": "@flairstech-aimy/tokens",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "AiMY design tokens, motion, fonts and the Tailwind v4 mapping. Works anywhere HTML renders. Internal to FlairsTech; served from the AiMY UI registry.",
   "style": "./index.css",
   "exports": {
@@ -30,10 +30,12 @@
     "./scroll-dot.css": "./scroll-dot.css",
     "./diary.css": "./diary.css",
     "./document.css": "./document.css",
-    "./deck.css": "./deck.css"
+    "./deck.css": "./deck.css",
+    "./settings.css": "./settings.css"
   },
   "files": [
-    "*.css"
+    "*.css",
+    "fonts/*.woff2"
   ],
   "repository": {
     "type": "git",
