@@ -28,9 +28,27 @@ type AvatarProps = {
   className?: string
 }
 
-function initials(name: string) {
-  const parts = name.trim().split(/\s+/)
-  return ((parts[0]?.[0] ?? "") + (parts.length > 1 ? (parts.at(-1)?.[0] ?? "") : "")).toUpperCase()
+// A generation or honour after the name is not a surname: "Bartholomew
+// Fitzgerald-Montgomery III" is BF, not BI.
+const SUFFIX = /^(?:i{2,3}|iv|jr|sr)\.?,?$/i
+
+/** The first letter as a person reads it: a whole grapheme, so É or a combined letter never splits. */
+function firstLetter(word: string) {
+  if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
+    for (const { segment } of new Intl.Segmenter(undefined, { granularity: "grapheme" }).segment(word)) return segment
+    return ""
+  }
+  return Array.from(word)[0] ?? ""
+}
+
+/** The first and last word's first letters ("Jo" keeps one), with suffixes such as III or Jr. dropped. */
+export function initials(name: string) {
+  const parts = name.trim().split(/\s+/).filter(Boolean)
+  while (parts.length > 1 && SUFFIX.test(parts.at(-1)!)) parts.pop()
+  const first = firstLetter(parts[0] ?? "")
+  const last = parts.length > 1 ? firstLetter(parts.at(-1)!) : ""
+  // Not toLocaleUpperCase: the server and the browser may differ in locale, and hydration must match.
+  return (first + last).toUpperCase()
 }
 
 export function Avatar({ name, src, size = "md", className }: AvatarProps) {

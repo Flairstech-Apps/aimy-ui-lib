@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react"
 import { Phone } from "lucide-react"
 import { describe, expect, it, vi } from "vitest"
-import { Avatar, AimyAvatar, AvatarGroup } from "@/registry/aimy/ui/avatar"
+import { Avatar, AimyAvatar, AvatarGroup, initials } from "@/registry/aimy/ui/avatar"
 import { Button } from "@/registry/aimy/ui/button"
 import { Chip } from "@/registry/aimy/ui/chip"
 import { CountBadge } from "@/registry/aimy/ui/count-badge"
@@ -156,6 +156,18 @@ describe("Kbd and Divider", () => {
 })
 
 describe("Avatar", () => {
+  it("takes the first and last word, drops a suffix, and never splits a letter", () => {
+    expect(initials("Bartholomew Fitzgerald-Montgomery III")).toBe("BF")
+    expect(initials("Martin Luther King Jr.")).toBe("MK")
+    expect(initials("Sam Smith, Sr.")).toBe("SS")
+    expect(initials("Jo")).toBe("J")
+    expect(initials("  Engy   Hassan  ")).toBe("EH")
+    expect(initials("élodie Roux")).toBe("ÉR")
+    expect(initials("Ömer Çelik")).toBe("ÖÇ")
+    expect(initials("Henry IV")).toBe("H")
+    expect(initials("")).toBe("")
+  })
+
   it("shows initials and is named for the person", () => {
     render(<Avatar name="Engy Hassan" />)
     expect(screen.getByRole("img", { name: "Engy Hassan" })).toHaveTextContent("EH")

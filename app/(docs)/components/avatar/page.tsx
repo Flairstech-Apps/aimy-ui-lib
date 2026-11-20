@@ -50,7 +50,10 @@ export default function AvatarPage() {
         <p>
           Initials on <code>--grad-avatar</code> from <code>.avatar</code>; the photo ring from Sales&apos; <code>.b-face</code>;
           AiMY&apos;s tile from Knowledge&apos;s <code>.aimy-av-tile</code>, now the <code>--aimy-tile</code> tokens. Initials use
-          12px at 24 and 28 (the products set 10px in the topnav, below the 12px floor).
+          12px at 24 and 28 (the products set 10px in the topnav, below the 12px floor). The initials are the first
+          and last word&apos;s first letters, with a suffix such as III or Jr. left out (Bartholomew Fitzgerald-Montgomery
+          III is BF), each a whole letter as people read it, so an accented or combined one never splits; one word
+          gives one letter.
         </p>
       </Source>
       <A11y items={["A person's avatar is an image named for them.", "If the photo fails to load, the initials show instead of a broken image."]} />
