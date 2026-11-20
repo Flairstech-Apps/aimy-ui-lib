@@ -126,6 +126,7 @@ const LIBRARY: NavGroup[] = [
       { href: "/components/stat-tile/", label: "Stat tiles" },
       { href: "/components/description-list/", label: "Description list" },
       { href: "/components/timeline/", label: "Timeline" },
+      { href: "/components/journey/", label: "Journey" },
       { href: "/components/data-table/", label: "Data table" },
       { href: "/components/virtual-list/", label: "Windowed list" },
       { href: "/components/tree/", label: "Tree" },

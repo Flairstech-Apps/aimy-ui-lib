@@ -346,3 +346,46 @@
   .s-call::details-content, .s-call-chev, .b-af-door, .set2-th { transition: none; }
   .b-af-door:active { transform: none; }
 }
+
+/* ── Journey: Sales' story of a contact (.b-story-line, bdr.css 2174-2238) ──
+   Steps left to right; each that has happened is a filled dot in its tone, joined to the next by a
+   2px line; the last is an open ring with a halo, where they stand now. A hidden stretch is dashed
+   on both sides. The chain wraps, never scrolls. Changed: the dates are secondary ink (Sales' were
+   muted), the dots take the status fills, sides are logical, and the ground the dots cut out of is
+   a variable, so the strip sits on a card or the page. */
+.jr {
+  --jr-ground: var(--card-bg);
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px 0;
+}
+.jr-step {
+  position: relative; display: flex; flex-direction: column; gap: 2px;
+  padding-inline-end: 22px; margin-inline-end: 14px;
+}
+.jr-step::after {
+  content: ""; position: absolute; inset-inline-start: 14px; inset-inline-end: 4px; top: 5px; height: 2px;
+  border-radius: 2px; background: var(--d400);
+}
+.jr-step.is-gap::after,
+.jr-step:has(+ .jr-step.is-gap)::after {
+  background: repeating-linear-gradient(90deg, var(--d400) 0 3px, transparent 3px 7px);
+}
+.jr-step:last-child { padding-inline-end: 0; margin-inline-end: 0; }
+.jr-step:last-child::after { display: none; }
+.jr-dot {
+  width: 12px; height: 12px; border-radius: 50%; background: var(--d200);
+  border: 2px solid var(--jr-ground); box-shadow: 0 0 0 1px var(--card-border);
+}
+.jr-dot.tone-ok { background: var(--ok); box-shadow: 0 0 0 1px color-mix(in srgb, var(--ok) 40%, transparent); }
+.jr-dot.tone-warn { background: var(--warn); box-shadow: 0 0 0 1px color-mix(in srgb, var(--warn) 40%, transparent); }
+.jr-dot.tone-err { background: var(--err); box-shadow: 0 0 0 1px color-mix(in srgb, var(--err) 40%, transparent); }
+.jr-label { margin-top: 6px; font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--d100); white-space: nowrap; }
+.jr-detail { font-size: var(--fs-xs); color: var(--ink-secondary); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.jr-step.is-now .jr-label { color: var(--ink-primary); }
+/* Where they stand: the tone becomes the ring and the ground shows through it. */
+.jr-step.is-now .jr-dot { background: var(--jr-ground); box-shadow: 0 0 0 2px var(--d200), 0 0 0 6px rgba(var(--accent-rgb), 0.14); }
+.jr-step.is-now .jr-dot.tone-ok { box-shadow: 0 0 0 2px var(--ok), 0 0 0 6px color-mix(in srgb, var(--ok) 18%, transparent); }
+.jr-step.is-now .jr-dot.tone-warn { box-shadow: 0 0 0 2px var(--warn), 0 0 0 6px color-mix(in srgb, var(--warn) 18%, transparent); }
+.jr-step.is-now .jr-dot.tone-err { box-shadow: 0 0 0 2px var(--err), 0 0 0 6px color-mix(in srgb, var(--err) 18%, transparent); }
+.jr-step.is-gap .jr-dot { background: transparent; box-shadow: none; border-color: transparent; }
+.jr-step.is-gap .jr-label { color: var(--ink-secondary); letter-spacing: 0.08em; }

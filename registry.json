@@ -2222,6 +2222,23 @@
       ]
     },
     {
+      "name": "journey",
+      "type": "registry:component",
+      "title": "Journey",
+      "description": "Sales' story of a contact, left to right: a filled dot in the tone of how each step went, joined by a line, and the last step an open ring with a halo, where they stand now. A long story keeps its first step and its last ones, with the stretch between said in words on a dashed line. Wraps, never scrolls. Use Timeline for one record's full history.",
+      "dependencies": [],
+      "registryDependencies": [
+        "@aimy/theme",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/journey.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "timeline",
       "type": "registry:component",
       "title": "Timeline",
@@ -2523,7 +2540,7 @@
       "name": "bar-list",
       "type": "registry:component",
       "title": "BarList",
-      "description": "A bar per category, as QA's audit panel and the operations hub draw them. stacked: the name and its figures over a 4px bar, toned ok, warn or err, with an optional goal mark and a narrowed scale explained in a note. inline: name, short bar, value and share on one line. Rows with onClick open what they count.",
+      "description": "A bar per category, as QA's audit panel and the operations hub draw them. stacked: the name and its figures over a 6px bar, toned ok, warn or err, with an optional goal mark and a narrowed scale explained in a note. inline: name, short bar, value and share on one line. Rows with onClick open what they count.",
       "dependencies": [],
       "registryDependencies": [
         "@aimy/theme",
