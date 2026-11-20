@@ -400,54 +400,62 @@
    same bands the cells use (QA's hand-drawn key did not match its cells). */
 .qa-hm-body { overflow-x: auto; }
 .qa-hm { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 32.5rem; }
-.qa-hm th { font-size: var(--fs-2xs); font-weight: var(--fw-bold); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-secondary); padding: 0 0 8px; text-align: center; }
-.qa-hm th.is-row { text-align: left; padding-right: 12px; }
-.qa-hm td { padding: 3px; }
-.qa-hm th.is-row-label { font-size: var(--fs-2xs); font-weight: var(--fw-semibold); letter-spacing: 0; text-transform: none; color: var(--d200); padding: 3px 12px 3px 0; white-space: nowrap; text-align: left; }
+.qa-hm th { font-size: var(--fs-2xs); font-weight: var(--fw-medium); color: var(--ink-secondary); padding: 0 0 8px; text-align: center; }
+.qa-hm th.is-row { text-align: start; padding-inline-end: 16px; }
+.qa-hm td { padding: 2px; }
+.qa-hm th.is-row-label { font-size: var(--fs-xs); font-weight: var(--fw-medium); color: var(--ink-primary); padding: 2px 16px 2px 0; white-space: nowrap; text-align: start; }
 .qa-hm-cell {
   position: relative; display: flex; align-items: center; justify-content: center;
-  min-width: 2rem; height: 1.5rem; border-radius: 4px;
-  font-size: var(--fs-2xs); font-weight: var(--fw-bold); font-variant-numeric: tabular-nums;
-  transition: transform var(--t-fast) var(--ease-out);
+  min-width: 2.25rem; height: 1.75rem; border-radius: var(--r-sm);
+  font-size: var(--fs-2xs); font-weight: var(--fw-semibold); font-variant-numeric: tabular-nums;
+  transition: box-shadow var(--t-fast) var(--ease-out);
 }
+/* Pointing at a cell rings it; it never grows, so its figure never blurs. */
 @media (hover: hover) and (pointer: fine) {
-  .qa-hm-cell:hover { transform: scale(1.15); z-index: 2; outline: 1px solid var(--card-border-hover); }
+  .qa-hm-cell:hover { z-index: 2; box-shadow: 0 0 0 2px var(--card-bg), 0 0 0 3px var(--card-border-hover); }
 }
-.qa-hm-cell.tone-ok { background: color-mix(in srgb, var(--ok) 40%, transparent); color: var(--ok-text); }
-.qa-hm-cell.tone-warn { background: color-mix(in srgb, var(--warn) 25%, transparent); color: var(--warn-text); }
-.qa-hm-cell.tone-err { background: color-mix(in srgb, var(--err) 25%, transparent); color: var(--err-text); }
-.qa-hm-cell.is-na { background: var(--w04); color: var(--ink-secondary); }
-.qa-hm-cell.is-coached::after { content: ""; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 3px; height: 3px; border-radius: 50%; background: var(--ai-text); }
-.qa-hm-keys { display: flex; align-items: center; gap: 6px 14px; flex-wrap: wrap; margin-top: 12px; font-size: var(--fs-2xs); color: var(--ink-secondary); }
+/* Every band at the same strength, so no band looks louder than its meaning. */
+.qa-hm-cell.tone-ok { background: color-mix(in srgb, var(--ok) 22%, transparent); color: var(--ok-text); }
+.qa-hm-cell.tone-warn { background: color-mix(in srgb, var(--warn) 22%, transparent); color: var(--warn-text); }
+.qa-hm-cell.tone-err { background: color-mix(in srgb, var(--err) 22%, transparent); color: var(--err-text); }
+.qa-hm-cell.is-na { background: none; box-shadow: inset 0 0 0 1px var(--card-border); color: var(--ink-secondary); font-weight: var(--fw-medium); }
+.qa-hm-cell.is-coached::after { content: ""; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); width: 3px; height: 3px; border-radius: 50%; background: var(--ai-text); }
+.qa-hm-keys { display: flex; align-items: center; gap: 6px 16px; flex-wrap: wrap; margin-top: 14px; font-size: var(--fs-2xs); color: var(--ink-secondary); }
 .qa-hm-key { display: inline-flex; align-items: center; gap: 6px; }
-.qa-hm-key .qa-hm-cell { min-width: 12px; width: 12px; height: 12px; border-radius: 2px; }
+.qa-hm-key .qa-hm-cell { min-width: 12px; width: 12px; height: 12px; border-radius: var(--r-xs); }
 .qa-hm-key.is-coached::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ai-text); flex-shrink: 0; }
 
 /* ── Leaderboard: QA's achievers (.lead-*, index.html 6540-6553) ───────────
    Ranked, no bars: a rank badge (medal inks for the first three), the name,
    and each measure with its label above it. A row opens that person. */
-.qa-lead { display: flex; flex-direction: column; padding: 6px 4px 4px; }
+/* One grid for the whole list, each row a subgrid of it, so every figure shares its column's edge. */
+.qa-lead { display: grid; grid-template-columns: 1.75rem minmax(0, 1fr) repeat(var(--metrics, 1), minmax(4.125rem, auto)); column-gap: 16px; margin: 0; padding: 0; }
+.qa-lead > li { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; }
 .qa-lead-row {
-  display: grid; grid-template-columns: 30px minmax(0, 1fr) repeat(var(--metrics, 1), auto); align-items: center; gap: 16px;
-  padding: 11px 8px; border-radius: 8px; border: 0; background: none; text-align: left; font: inherit; color: inherit; width: 100%;
+  grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center;
+  padding: 10px 8px; border-radius: var(--r-md); border: 0; background: none; text-align: start; font: inherit; color: inherit; width: 100%;
   transition: background-color var(--t-fast) var(--ease-out);
 }
+/* The measures are named once, over their column. */
+.qa-lead-head { padding: 0 8px 6px; }
+.qa-lead-head > span { font-size: var(--fs-2xs); font-weight: var(--fw-medium); color: var(--ink-secondary); text-align: end; }
+.qa-lead-head > span:nth-child(2) { text-align: start; }
 button.qa-lead-row { cursor: pointer; }
 button.qa-lead-row:hover { background: var(--w04); }
 .qa-lead-row:focus-visible { outline: 2px solid var(--brand); outline-offset: 1px; }
-.qa-lead > li + li { border-top: 1px solid var(--card-border); }
+.qa-lead > li + li:not(.qa-lead-head + li) { border-top: 1px solid var(--w06); }
 .qa-lead > li { list-style: none; }
 .qa-lead-rank {
-  width: 26px; height: 26px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
-  font-size: var(--fs-2xs); font-weight: var(--fw-extrabold, 800); background: var(--w04); color: var(--d200);
+  width: 1.75rem; height: 1.75rem; border-radius: var(--r-pill); display: flex; align-items: center; justify-content: center;
+  font-size: var(--fs-2xs); font-weight: var(--fw-bold); font-variant-numeric: tabular-nums; background: var(--w04); color: var(--d200);
 }
 .qa-lead-rank.r1 { background: color-mix(in srgb, var(--medal-gold) 16%, transparent); color: var(--medal-gold); }
 .qa-lead-rank.r2 { background: color-mix(in srgb, var(--medal-silver) 14%, transparent); color: var(--medal-silver); }
 .qa-lead-rank.r3 { background: color-mix(in srgb, var(--medal-bronze) 16%, transparent); color: var(--medal-bronze); }
 .qa-lead-name { font-size: var(--fs-xs); font-weight: var(--fw-bold); color: var(--d50); min-width: 0; overflow-wrap: anywhere; }
-.qa-lead-metric { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; min-width: 4.125rem; }
+.qa-lead-metric { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
 .qa-lead-metric-l { font-size: var(--fs-2xs); font-weight: var(--fw-bold); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-secondary); }
-.qa-lead-metric-v { font-size: var(--fs-xs); font-weight: var(--fw-extrabold, 800); color: var(--d100); font-variant-numeric: tabular-nums; }
+.qa-lead-metric-v { font-size: var(--fs-sm); font-weight: var(--fw-bold); color: var(--d100); font-variant-numeric: tabular-nums; }
 .qa-lead-metric-v.tone-ok { color: var(--ok-text); }
 .qa-lead-metric-v.tone-warn { color: var(--warn-text); }
 .qa-lead-metric-v.tone-err { color: var(--err-text); }

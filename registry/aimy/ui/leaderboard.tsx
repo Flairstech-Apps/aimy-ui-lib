@@ -1,8 +1,9 @@
 import { cn } from "@/lib/utils"
 
 // QA's achievers list (.lead-*): ranked, no bars. A rank badge, in medal
-// inks for the first three, the name, and each measure with its label over
-// its value, right-aligned so the figures compare down the column. A row
+// inks for the first three, the name, and each measure right-aligned in a
+// column shared by every row, so the figures compare down it. When every row
+// names the same measures they are named once, over their columns. A row
 // with `onOpen` is a button that opens that person (in QA, the AiMY canvas
 // asked about them). QA took its leaderboard off the home page on purpose;
 // this keeps the pattern for where a ranking is the point.
@@ -23,6 +24,10 @@ type LeaderboardProps = {
 
 export function Leaderboard({ rows, label, className }: LeaderboardProps) {
   const metrics = Math.max(1, ...rows.map((r) => r.metrics.length))
+  // When every row names the same measures, they are named once over their columns; each row keeps
+  // its labels for screen readers. Rows that differ keep their own labels in view.
+  const widest = rows.find((r) => r.metrics.length === metrics)?.metrics ?? []
+  const shared = rows.length > 0 && rows.every((r) => r.metrics.every((m, i) => m.label === widest[i]?.label))
   return (
     <ol
       className={cn("qa-lead", className)}
@@ -30,6 +35,15 @@ export function Leaderboard({ rows, label, className }: LeaderboardProps) {
       style={{ "--metrics": metrics } as React.CSSProperties}
       data-slot="leaderboard"
     >
+      {shared ? (
+        <li className="qa-lead-head" aria-hidden="true">
+          <span />
+          <span>Name</span>
+          {widest.map((m) => (
+            <span key={m.label}>{m.label}</span>
+          ))}
+        </li>
+      ) : null}
       {rows.map((r, i) => {
         const inner = (
           <>
@@ -39,7 +53,7 @@ export function Leaderboard({ rows, label, className }: LeaderboardProps) {
             <span className="qa-lead-name">{r.name}</span>
             {r.metrics.map((m) => (
               <span key={m.label} className="qa-lead-metric">
-                <span className="qa-lead-metric-l">{m.label}</span>{" "}
+                <span className={shared ? "sr-only" : "qa-lead-metric-l"}>{m.label}</span>{" "}
                 <span className={cn("qa-lead-metric-v", m.tone && `tone-${m.tone}`)}>{m.value}</span>
               </span>
             ))}
