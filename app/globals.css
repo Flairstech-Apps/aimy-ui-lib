@@ -64,13 +64,15 @@
     radial-gradient(28% 36% at calc(54% - var(--haze-x)) 92%, var(--haze-violet), transparent 74%);
   animation: haze-drift 22s ease-in-out infinite alternate;
 }
+/* On a light ground a deep hue at low strength turns grey-lilac and a grey shade dirties it:
+   light takes lighter, saturated hues and shades each rib with the violet itself. */
 [data-theme="light"] .haze {
-  --haze-violet: color-mix(in oklab, var(--accent) 38%, transparent);
-  --haze-blue: color-mix(in oklab, var(--brand) 34%, transparent);
-  --haze-light: color-mix(in oklab, #ffffff 70%, transparent);
-  --haze-edge: rgb(255 255 255 / 0.55);
-  --haze-shade: rgb(16 24 40 / 0.07);
-  --haze-grain: 0.12;
+  --haze-violet: color-mix(in oklab, #9d6bff 34%, transparent);
+  --haze-blue: color-mix(in oklab, #3d7bff 30%, transparent);
+  --haze-light: color-mix(in oklab, #ffffff 55%, transparent);
+  --haze-edge: rgb(255 255 255 / 0.7);
+  --haze-shade: rgb(92 62 214 / 0.06);
+  --haze-grain: 0.08;
 }
 @keyframes haze-drift {
   to { --haze-x: 7%; }
@@ -174,10 +176,10 @@
 [data-theme="light"] .backdrop[data-kind="split"] {
   background: linear-gradient(
     90deg,
-    color-mix(in oklab, #0f1215 7%, transparent) 0%,
-    color-mix(in oklab, #0f1215 4%, transparent) 44%,
-    color-mix(in oklab, #fff 30%, transparent) 56%,
-    color-mix(in oklab, #fff 50%, transparent) 100%
+    color-mix(in oklab, #1e2a52 4%, transparent) 0%,
+    color-mix(in oklab, #1e2a52 2%, transparent) 44%,
+    color-mix(in oklab, #fff 40%, transparent) 56%,
+    color-mix(in oklab, #fff 70%, transparent) 100%
   );
 }
 /* The agents: rings spreading from the MCP command. */
@@ -219,6 +221,16 @@
   box-shadow:
     inset 0 1px 0 color-mix(in oklab, var(--ink-primary) 10%, transparent),
     0 12px 40px -12px rgb(0 0 0 / 0.45);
+}
+/* Light: the glass catches light on its top edge (white, not an ink line) and casts a soft
+   cool shadow, not a black one. */
+[data-theme="light"] .nav-glass {
+  background: color-mix(in oklab, #ffffff 62%, transparent);
+  border-color: color-mix(in oklab, var(--ink-primary) 9%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 1px 2px rgb(15 23 42 / 0.05),
+    0 12px 32px -14px rgb(30 41 82 / 0.22);
 }
 /* The phone menu hangs inside the glass pill, and a blur inside a blur only sees the pill,
    so the page's words showed through it. The menu is near solid instead. */

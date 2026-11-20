@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Table variants</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../package/tokens/aimy.css" />
+<style>
+  /* ═════════════════ PAGE ═════════════════ */
+  html, body { margin: 0; }
+  body { font-family: var(--font-sans); color: var(--ink-primary); background: var(--body-bg); -webkit-font-smoothing: antialiased; }
+  .pv-page { max-width: 1148px; margin: 0 auto; padding: 40px 16px 120px; }
+  .pv-h1 { margin: 0 0 10px; font-size: 28px; font-weight: 600; letter-spacing: -0.01em; }
+  .pv-lead, .pv-say { margin: 0; max-width: 72ch; font-size: 15px; line-height: 1.6; color: var(--ink-secondary); text-wrap: pretty; }
+  .pv-say { margin: 0 0 20px; }
+  .pv-lead b, .pv-say b { color: var(--ink-primary); font-weight: 600; }
+  .pv-var { margin: 40px 0 0; }
+  .pv-var-head { display: flex; align-items: baseline; gap: 12px; margin: 0 0 6px; }
+  .pv-var-key { font-size: 14px; font-weight: 600; color: var(--accent-text); }
+  .pv-var-name { margin: 0; font-size: 18px; font-weight: 600; }
+  /* Dark above light: each table gets the full width, so no column is cut. */
+  .pair { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  .frame { border-radius: 12px; border: 1px solid var(--card-border); background: var(--body-bg); padding: 20px; color: var(--ink-primary); min-width: 0; }
+  .frame-name { margin: 0 0 12px; font-size: 12px; font-weight: 600; color: var(--ink-secondary); }
+  .scroll { overflow-x: auto; }
+
+  /* Shared cell content */
+  .t { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; font-variant-numeric: tabular-nums; }
+  .t th { text-align: start; white-space: nowrap; font-weight: 600; }
+  .t td { white-space: nowrap; }
+  .t .end { text-align: end; }
+  .t .who { color: var(--ink-primary); font-weight: 500; }
+  .t td { color: var(--ink-secondary); }
+  .t .sub { display: block; font-weight: 500; font-size: 12px; color: var(--ink-secondary); margin-top: 2px; }
+  .box { display: inline-block; width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--ink-rule); vertical-align: middle; box-sizing: border-box; }
+  .box.on { background: var(--brand); border-color: var(--brand); position: relative; }
+  .box.on::after { content: ""; position: absolute; left: 4px; top: 1px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  .pill { display: inline-flex; padding: 2px 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; }
+  .pill.ok { background: var(--ok-bg); color: var(--ok-text); }
+  .pill.warn { background: var(--warn-bg); color: var(--warn-text); }
+  .pill.err { background: var(--err-bg); color: var(--err-text); }
+  .arrow { display: inline-block; margin-inline-start: 4px; color: var(--ink-rule); }
+  .arrow.on { color: var(--ink-action); }
+
+  /* ═════ A · Ruled: one card, a sunken head, a hairline between rows ═════ */
+  .a { border: 1px solid var(--card-border); border-radius: 12px; background: var(--card-bg); overflow: hidden; box-shadow: var(--shadow-sm); }
+  .a th { padding: 10px 14px; font-size: 12px; color: var(--ink-secondary); background: var(--w03); border-bottom: 1px solid var(--card-border); }
+  .a td { padding: 0 14px; height: 44px; border-bottom: 1px solid var(--w06); }
+  .a tr:last-child td { border-bottom: 0; }
+  .a tbody tr:hover td { background: var(--w03); }
+  .a tbody tr.sel td { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+  [data-theme="light"] .a th { background: var(--surface-sunken); }
+  [data-theme="light"] .a tbody tr.sel td { background: color-mix(in srgb, var(--accent) 6%, #fff); }
+
+  /* ═════ B · Banded: no rules, a soft band every other row, the head on the page ═════ */
+  .b th { padding: 0 14px 10px; font-size: 12px; color: var(--ink-secondary); }
+  .b td { padding: 0 14px; height: 42px; }
+  .b tbody tr:nth-child(odd) td { background: var(--w03); }
+  .b tbody td:first-child { border-radius: 8px 0 0 8px; }
+  .b tbody td:last-child { border-radius: 0 8px 8px 0; }
+  .b tbody tr:hover td { background: var(--w06); }
+  .b tbody tr.sel td { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  [data-theme="light"] .b tbody tr:nth-child(odd) td { background: #fff; }
+  [data-theme="light"] .b tbody tr.sel td { background: color-mix(in srgb, var(--accent) 7%, #fff); }
+
+  /* ═════ C · Rows: every row its own card (today's rows form), with an edge and a lift ═════ */
+  .c { border-spacing: 0 6px; }
+  .c th { padding: 0 16px 4px; font-size: 12px; color: var(--ink-secondary); }
+  .c td { padding: 0 16px; height: 52px; background: var(--card-bg); border-block: 1px solid var(--card-border); transition: background-color 120ms; }
+  .c td:first-child { border-inline-start: 1px solid var(--card-border); border-radius: 10px 0 0 10px; }
+  .c td:last-child { border-inline-end: 1px solid var(--card-border); border-radius: 0 10px 10px 0; }
+  .c tbody tr:hover td { background: var(--card-bg-raised); border-color: var(--card-border-hover); }
+  .c tbody tr.sel td { background: color-mix(in srgb, var(--accent) 9%, var(--card-bg)); border-color: color-mix(in srgb, var(--accent) 30%, transparent); }
+  [data-theme="light"] .c tbody tr:hover td { background: #fff; box-shadow: 0 1px 0 var(--w04); }
+</style>
+</head>
+<body>
+<main class="pv-page">
+  <h1 class="pv-h1">Table variants</h1>
+  <p class="pv-lead">The DataTable's table form today: in dark a zebra of the card and raised grounds; in light <b>no zebra at all</b> (both grounds are white), no rule under the head, no row hover, and every cell in secondary ink. Three directions, each in both themes. Hover a row; the third row is selected.</p>
+
+  <section class="pv-var" data-v="A">
+    <div class="pv-var-head"><span class="pv-var-key">A</span><h2 class="pv-var-name">Ruled</h2></div>
+    <p class="pv-say">One card with its edge. A sunken head band with a rule under it, a hairline between rows, a wash on hover. The first column in primary ink names the row. <b>Reads as a record table</b>: dense, scannable, the same in both themes.</p>
+    <div class="pair" data-tpl="a"></div>
+  </section>
+
+  <section class="pv-var" data-v="B">
+    <div class="pv-var-head"><span class="pv-var-key">B</span><h2 class="pv-var-name">Banded</h2></div>
+    <p class="pv-say">No card and no rules: the head sits on the page and every other row is a soft rounded band (a white band in light). <b>Lightest</b>: suits a table inside a card or a chat reply, where a second card edge would double up.</p>
+    <div class="pair" data-tpl="b"></div>
+  </section>
+
+  <section class="pv-var" data-v="C">
+    <div class="pv-var-head"><span class="pv-var-key">C</span><h2 class="pv-var-name">Rows as cards</h2></div>
+    <p class="pv-say">Today's rows form taken to the table: every row its own card with an edge, a gap between. <b>Roomiest</b>: suits a short list of things you act on one at a time (runs, contacts to call), less so a 50-row record.</p>
+    <div class="pair" data-tpl="c"></div>
+  </section>
+</main>
+<script>
+  const rows = [
+    ["Amelia Taylor", "Kestrel Logistics", "Leeds", ["ok", "Meeting set"], 0],
+    ["Youssef Foster", "Harbour Foods", "Manchester", ["warn", "Needs reply"], 2],
+    ["Dana Haddad", "Northgate Health", "Cardiff", ["ok", "Meeting set"], 4],
+    ["Peter Moss", "Brightline Retail", "Bristol", ["err", "Missed call"], 1],
+    ["Lina Whitfield", "Ashby Freight", "Glasgow", ["warn", "Needs reply"], 3],
+  ]
+  // Lucide arrow-up and chevrons-up-down, verbatim.
+  const svg = (d) => `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px">${d}</svg>`
+  const up = svg('<path d="m5 12 7-7 7 7"/><path d="M12 19V5"/>')
+  const both = svg('<path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/>')
+  const table = (cls) => `<div class="scroll"><table class="t ${cls}"><thead><tr>
+    <th style="width:1px"><span class="box"></span></th>
+    <th>Name<span class="arrow on">${up}</span><span class="sub">from LinkedIn</span></th>
+    <th>Company<span class="sub">from the register</span></th><th>City</th><th>Status</th><th class="end">Calls<span class="arrow">${both}</span></th>
+  </tr></thead><tbody>${rows.map((r, i) => `<tr class="${i === 2 ? "sel" : ""}">
+    <td><span class="box ${i === 2 ? "on" : ""}"></span></td><td class="who">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td>
+    <td><span class="pill ${r[3][0]}">${r[3][1]}</span></td><td class="end">${r[4]}</td></tr>`).join("")}</tbody></table></div>`
+  for (const el of document.querySelectorAll("[data-tpl]")) {
+    el.innerHTML = ["dark", "light"].map((t) => `<div class="frame" data-theme="${t}"><p class="frame-name">${t === "dark" ? "Dark" : "Light"}</p>${table(el.dataset.tpl)}</div>`).join("")
+  }
+</script>
+</body>
+</html>

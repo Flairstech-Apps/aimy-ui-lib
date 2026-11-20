@@ -140,4 +140,47 @@ export const PATCHES = [
       light.set("--ambient-body", light.get("--body-bg"))
     },
   },
+  {
+    id: "light-elevated",
+    why: "light read flat next to dark (Nour, 20 Nov): the slate ground #eef1f6 greyed every white surface, the brand blue sat a step duller than dark's, the status inks had browned (warn #6b4500), the 14% status grounds read as candy, and the light and glow that make dark feel premium were near zero. Every ink here stays AA on the new ground, on white and on its own 10% ground",
+    apply({ light }) {
+      // A cleaner ground with half the blue cast: slate under violet and blue light turned it
+      // lilac-grey. White cards still lift off it with their edge and shadow. The grey steps
+      // move with it, keeping their order and their distance from white.
+      light.set("--body-bg", "#f4f5f8")
+      light.set("--ambient-body", "#f4f5f8")
+      light.set("--d950", "#e7eaef")
+      light.set("--d900", "#eff1f5")
+      light.set("--d800", "#f4f6f9")
+      light.set("--d750", "#e9ecf1")
+      light.set("--d700", "#d3d9e1")
+      light.set("--surface-sunken", "#f4f6f9")
+      // Brand: the same hue as dark's #3369ff, as vivid as white text on it allows (5.9:1).
+      light.set("--brand", "#1f55ea")
+      light.set("--brand-rgb", "31,85,234")
+      light.set("--brand-hover", "#1a49cf")
+      light.set("--brand-dim", "rgba(31,85,234,0.10)")
+      light.set("--brand-glow", "rgba(31,85,234,0.18)")
+      light.set("--text-link", "#1f55ea")
+      // AI: brand blue into a clear sky blue (dark's ends at cyan); the old teal end went murky.
+      light.set("--ai", "linear-gradient(104deg, #1f55ea 0%, #2563eb 47%, #0a78b0 100%)")
+      // Status inks with their colour back: green, amber and red, not forest, brown and wine.
+      light.set("--ok-text", "#05764a")
+      light.set("--warn-text", "#985600")
+      light.set("--err-text", "#bb1a30")
+      // Status grounds: a tint, not a fill, and solid: a see-through amber or red over the cool
+      // grey ground turned beige and dusty pink, so each is its 10% tint already laid on white
+      // and looks the same on the page, a card or a row.
+      light.set("--ok-bg", "#e8f7f0")
+      light.set("--warn-bg", "#fef4e6")
+      light.set("--err-bg", "#feeceb")
+      light.set("--info-bg", "#e7f6fd")
+      light.set("--cyan-bg", "#e7f4f4")
+      // The light behind the app, strong enough to be seen on a light ground.
+      light.set("--ambient-1", "radial-gradient(ellipse at center, rgba(0,102,255,0.11) 0%, rgba(97,173,241,0.065) 28%, transparent 60%)")
+      light.set("--ambient-2", "radial-gradient(ellipse at center, rgba(111,223,226,0.09) 0%, rgba(139,79,244,0.06) 38%, transparent 60%)")
+      light.set("--grad-ellipse-1", "radial-gradient(ellipse at 30% 50%, rgba(0,82,212,0.11) 0%, rgba(97,173,241,0.07) 28%, transparent 60%)")
+      light.set("--grad-ellipse-2", "radial-gradient(ellipse at 75% 70%, rgba(10,115,130,0.08) 0%, rgba(115,49,224,0.06) 38%, transparent 60%)")
+    },
+  },
 ]

@@ -17,6 +17,7 @@
  *   - rem: sizes in rem so apps can scale them (decision 9); same values at a 16px root
  *   - safe-areas: the phone's own bars never cover the app (Nour, 11 Nov; Sales ead3a9e, Knowledge d3e44a2): --safe-* name the status bar, home indicator and landscape notch (0 on a laptop), and the top bar grows by the status bar so everything hung off it follows
  *   - ambient: the wash Sales and Knowledge draw behind the app (QA my-profile.html, Sales sales.css 1056-1090, Knowledge knowledge.css 2064-2105): --grad-ellipse-* re-centred at center with the products' own stops, and the dark ground they are calibrated on (#171a1c, QA's); --grad-ellipse-* stay as the design system tunes them for its docs column
+ *   - light-elevated: light read flat next to dark (Nour, 20 Nov): the slate ground #eef1f6 greyed every white surface, the brand blue sat a step duller than dark's, the status inks had browned (warn #6b4500), the 14% status grounds read as candy, and the light and glow that make dark feel premium were near zero. Every ink here stays AA on the new ground, on white and on its own 10% ground
  */
 
 :root,
@@ -233,13 +234,13 @@
 
 [data-theme="light"] {
   color-scheme: light;
-  --ai: linear-gradient(104deg, #0047c7 0%, #1f6fc4 47%, #0a7a8c 100%);
-  --d950: #e4e9f0;
-  --d900: #edf1f6;
+  --ai: linear-gradient(104deg, #1f55ea 0%, #2563eb 47%, #0a78b0 100%);
+  --d950: #e7eaef;
+  --d900: #eff1f5;
   --d850: #ffffff;
-  --d800: #f2f5fa;
-  --d750: #e6ebf3;
-  --d700: #cfd8e3;
+  --d800: #f4f6f9;
+  --d750: #e9ecf1;
+  --d700: #d3d9e1;
   --d600: #5f6b7d;
   --d500: #515e72;
   --d400: #45505f;
@@ -247,46 +248,46 @@
   --d200: #2e3747;
   --d100: #1e293b;
   --d50: #0f172a;
-  --brand: #1d4ed8;
-  --brand-rgb: 29,78,216;
-  --brand-hover: #1a44bd;
-  --brand-dim: rgba(29,78,216,0.10);
-  --brand-glow: rgba(29,78,216,0.18);
+  --brand: #1f55ea;
+  --brand-rgb: 31,85,234;
+  --brand-hover: #1a49cf;
+  --brand-dim: rgba(31,85,234,0.10);
+  --brand-glow: rgba(31,85,234,0.18);
   --accent: #6725cc;
   --accent-rgb: 103,37,204;
   --accent-dim: rgba(103,37,204,0.10);
   --accent-glow: rgba(103,37,204,0.18);
   --cyan: #0d8f95;
   --cyan-rgb: 13,143,149;
-  --cyan-bg: rgba(13,143,149,0.14);
+  --cyan-bg: #e7f4f4;
   --cyan-border: rgba(13,143,149,0.32);
   --purple: #6725cc;
   --ok: #0e9257;
   --ok-rgb: 14,146,87;
-  --ok-bg: rgba(23,178,106,0.14);
+  --ok-bg: #e8f7f0;
   --ok-border: rgba(14,146,87,0.30);
   --ok-glow: rgba(14,146,87,0.18);
   --warn: #b26205;
   --warn-rgb: 178,98,5;
-  --warn-bg: rgba(247,144,9,0.14);
+  --warn-bg: #fef4e6;
   --warn-border: rgba(178,98,5,0.30);
   --err: #d92d20;
   --err-rgb: 217,45,32;
-  --err-bg: rgba(240,68,56,0.14);
+  --err-bg: #feeceb;
   --err-border: rgba(217,45,32,0.30);
   --err-glow: rgba(217,45,32,0.18);
   --err-strong: #b42318;
   --info: #067dc2;
   --info-rgb: 6,125,194;
-  --info-bg: rgba(14,165,233,0.14);
+  --info-bg: #e7f6fd;
   --info-border: rgba(6,125,194,0.30);
   --text-on-status: #ffffff;
-  --ok-text: #066640;
-  --warn-text: #6b4500;
-  --err-text: #a81029;
+  --ok-text: #05764a;
+  --warn-text: #985600;
+  --err-text: #bb1a30;
   --info-text: #1a54bd;
   --cyan-text: #096673;
-  --body-bg: #eef1f6;
+  --body-bg: #f4f5f8;
   --card-bg: #ffffff;
   --card-bg-raised: #ffffff;
   --card-border: rgba(15,23,42,0.10);
@@ -296,8 +297,8 @@
   --glass-bg: rgba(255,255,255,0.80);
   --glass-border: rgba(15,23,42,0.10);
   --grad-avatar: linear-gradient(135deg,#6d28d9,#1d4ed8);
-  --grad-ellipse-1: radial-gradient(ellipse at 30% 50%, rgba(0,82,212,0.07) 0%, rgba(97,173,241,0.05) 28%, transparent 60%);
-  --grad-ellipse-2: radial-gradient(ellipse at 75% 70%, rgba(10,115,130,0.05) 0%, rgba(115,49,224,0.04) 38%, transparent 60%);
+  --grad-ellipse-1: radial-gradient(ellipse at 30% 50%, rgba(0,82,212,0.11) 0%, rgba(97,173,241,0.07) 28%, transparent 60%);
+  --grad-ellipse-2: radial-gradient(ellipse at 75% 70%, rgba(10,115,130,0.08) 0%, rgba(115,49,224,0.06) 38%, transparent 60%);
   --w015: rgba(15,23,42,0.012);
   --w02: rgba(15,23,42,0.016);
   --w025: rgba(15,23,42,0.020);
@@ -340,7 +341,7 @@
   --ai-ink-soft: #37618f;
   --surface-deep: #ffffff;
   --surface-float: #ffffff;
-  --surface-sunken: #f2f5fa;
+  --surface-sunken: #f4f6f9;
   --topbar-bg: rgba(255,255,255,0.85);
   --panel-veil: rgba(255,255,255,0.92);
   --glass-strong: rgba(255,255,255,0.94);
@@ -358,7 +359,7 @@
   --text-muted: #45505f;
   --text-caption: #515e72;
   --text-placeholder: #5f6b7d;
-  --text-link: #1d4ed8;
+  --text-link: #1f55ea;
   --ink-primary: var(--text-strong);
   --ink-secondary: var(--d200);
   --ink-muted: var(--text-subtext);
@@ -369,9 +370,9 @@
   --badge-ground: #d92d20;
   --aimy-tile: linear-gradient(135deg, #f2ecff, #e6efff);
   --aimy-tile-edge: rgba(110,70,220,0.28);
-  --ambient-1: radial-gradient(ellipse at center, rgba(0,102,255,0.07) 0%, rgba(97,173,241,0.04) 28%, transparent 60%);
-  --ambient-2: radial-gradient(ellipse at center, rgba(111,223,226,0.05) 0%, rgba(139,79,244,0.035) 38%, transparent 60%);
-  --ambient-body: #eef1f6;
+  --ambient-1: radial-gradient(ellipse at center, rgba(0,102,255,0.11) 0%, rgba(97,173,241,0.065) 28%, transparent 60%);
+  --ambient-2: radial-gradient(ellipse at center, rgba(111,223,226,0.09) 0%, rgba(139,79,244,0.06) 38%, transparent 60%);
+  --ambient-body: #f4f5f8;
   --teal: var(--cyan);
   --teal-dim: var(--cyan-bg);
   --topbar-height: calc(3.75rem + var(--safe-top));
