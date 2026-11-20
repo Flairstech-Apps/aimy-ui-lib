@@ -113,7 +113,8 @@ export function CallRecording({ id, seconds, src, kind = "call", className }: Ca
   }
 
   // Stops when it leaves the page, or when its length changes under it.
-  useEffect(() => stop, [stop])
+  // A different recording (src or id) also stops this one, or the clock ticked on over the new one.
+  useEffect(() => stop, [stop, src, id])
 
   const bars = wave(id)
   const drawBars = (played: boolean) =>

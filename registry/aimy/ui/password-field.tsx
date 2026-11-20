@@ -33,7 +33,7 @@ export function PasswordField({ variant = "box", secretName = "the password", cl
       />
       <button
         type="button"
-        aria-pressed={shown}
+        // The label says what pressing does; aria-pressed as well read "Hide the password, pressed".
         aria-label={shown ? `Hide ${secretName}` : `Show ${secretName}`}
         title={shown ? `Hide ${secretName}` : `Show ${secretName}`}
         onClick={() => setShown((v) => !v)}

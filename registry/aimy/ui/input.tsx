@@ -17,8 +17,10 @@ export function Input({ variant = "box", className, id, ...props }: InputProps) 
     <input
       ref={ref}
       data-slot="input"
-      id={id ?? field?.id}
+      // Inside a Field the Field's id wins, so its label always reaches the control (give the Field the id).
+      id={field?.id ?? id}
       aria-invalid={field?.invalid || undefined}
+      aria-required={field?.required || undefined}
       aria-describedby={field?.describedBy}
       className={cn(controlStyles.base, controlStyles[variant], variant === "box" && "min-h-9", className)}
       {...props}

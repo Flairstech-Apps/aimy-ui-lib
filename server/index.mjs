@@ -195,7 +195,10 @@ function loginPage(res, error, next) {
   send(res, error ? 401 : 200, html, { "Content-Type": "text/html; charset=utf-8" })
 }
 
-const safe = (next) => (next && next.startsWith("/") && !next.startsWith("//") ? next : "/")
+// A path on this site only. "/\evil.com" reads as "//evil.com" in a browser, so backslashes and
+// control characters are refused too.
+// eslint-disable-next-line no-control-regex -- refusing control characters is the point
+const safe = (next) => (next && next.startsWith("/") && !next.startsWith("//") && !/[\x00-\x1f\\]/.test(next) ? next : "/")
 
 function setCookie(req, name, value, maxAge, path = "/") {
   const secure = origin(req).startsWith("https:") ? "; Secure" : ""
@@ -319,6 +322,10 @@ async function callback(req, res, url) {
     return notice(res, 401, "Sign-in didn't finish", "The sign-in answer didn't match this site.", again)
   }
   const email = String(claims.email ?? "").toLowerCase()
+  // An identity provider that allows self sign-up would otherwise let anyone claim a company address.
+  if (DOMAINS.length && claims.email_verified !== true && claims.email_verified !== "true") {
+    return notice(res, 403, "Not for this account", "Your email address isn't verified yet. Verify it with your sign-in provider, then try again.")
+  }
   if (DOMAINS.length && !DOMAINS.includes(email.split("@")[1] ?? "")) {
     return notice(res, 403, "Not for this account", `AiMY UI is for FlairsTech accounts. You signed in as ${email}.`)
   }
@@ -526,6 +533,12 @@ async function serveStatic(req, res, pathname, url) {
 createServer((req, res) => {
   // Open or locked, the library stays out of search engines.
   res.setHeader("X-Robots-Tag", "noindex, nofollow")
+  // No sniffing, no framing by other sites (the sign-in page can't be clickjacked), referrers kept to
+  // the origin, and https remembered once seen over https.
+  res.setHeader("X-Content-Type-Options", "nosniff")
+  res.setHeader("X-Frame-Options", "SAMEORIGIN")
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin")
+  if (origin(req).startsWith("https:")) res.setHeader("Strict-Transport-Security", "max-age=31536000")
   handle(req, res).catch((error) => {
     console.error(error)
     if (!res.headersSent) send(res, 500, "Server error")

@@ -238,6 +238,10 @@ export function bindHold(el: HTMLElement, options: { onHold: () => void; delay?:
   }
   const start = (e: PointerEvent | KeyboardEvent) => {
     if (e instanceof KeyboardEvent && (e.repeat || (e.key !== " " && e.key !== "Enter"))) return
+    // A second press (two fingers, or Space held then a click) replaces the first, never orphans it.
+    clearTimeout(timer)
+    clearInterval(tick)
+    cancelAnimationFrame(frame)
     const delay = options.delay ?? tokenMs("--duration-very-slow", 600)
     const t0 = performance.now()
     const loop = () => {
@@ -269,6 +273,7 @@ export function bindRepeat(el: HTMLElement, options: { onStep: () => void; delay
   }
   const start = (e: PointerEvent) => {
     if (e.button !== 0) return
+    stop() // a second press replaces the first, so no timer runs on after release
     options.onStep()
     timer = setTimeout(() => (tick = setInterval(options.onStep, options.interval ?? 60)), options.delay ?? tokenMs("--duration-slow", 400))
   }

@@ -54,9 +54,39 @@ export function useCallbackRef<A extends unknown[], R>(fn: ((...args: A) => R) |
 /** Runs after the current commit (and React's own focus restore). */
 export const afterCommit = (fn: () => void) => void setTimeout(fn, 0)
 
-/** Re-renders on a behaviour's state. */
-export function useStore<T>(store: Pick<Store<T>, "get" | "subscribe">): T {
-  return useSyncExternalStore(store.subscribe, store.get, store.get)
+/**
+ * Re-renders on a behaviour's state. server is what the server rendered, for stores that read the
+ * browser (localStorage, media queries) when they are made: hydration starts from it, so the first
+ * client render matches the server's markup, then moves to the real value.
+ */
+export function useStore<T>(store: Pick<Store<T>, "get" | "subscribe">, server?: T): T {
+  const [serverSnapshot] = useState(() => server)
+  return useSyncExternalStore(store.subscribe, store.get, serverSnapshot === undefined ? store.get : () => serverSnapshot)
+}
+
+const destroyed = new WeakSet<object>()
+/**
+ * A behaviour that holds listeners, made again if it was destroyed and the component lives on:
+ * StrictMode unmounts and remounts once, and a store destroyed then went dead (the theme toggle
+ * saved but stopped changing the page).
+ */
+function useLive<T extends { destroy(): void }>(make: () => T): T {
+  const [live, setLive] = useState(make)
+  const latestMake = useLatest(make)
+  useEffect(() => {
+    if (destroyed.has(live)) {
+      // A new store replaces the dead one, once, after StrictMode's remount. No cleanup from this
+      // run: the next run (for the new store) owns it, or it would be destroyed in turn, for ever.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setLive(latestMake.current())
+      return
+    }
+    return () => {
+      live.destroy()
+      destroyed.add(live)
+    }
+  }, [live, latestMake])
+  return live
 }
 
 /** Creates a value once for the life of the component. */
@@ -860,22 +890,20 @@ export function useConnect(options: { ports: () => (Port & { el: HTMLElement })[
 // ── Preferences ─────────────────────────────────────────────
 
 export function usePreference<T extends string>(options: PreferenceOptions<T>) {
-  const p = useOnce(() => createPreference(options))
-  useDestroy(p.destroy)
-  const { value } = useStore(p)
+  const p = useLive(() => createPreference(options))
+  const { value } = useStore(p, { value: options.default })
   return [value, p.set] as const
 }
 
 export function useColorScheme(options: { key?: string; default?: ColorSchemeChoice } = {}) {
-  const c = useOnce(() => createColorScheme(options))
-  useDestroy(c.destroy)
-  const state = useStore(c)
+  const c = useLive(() => createColorScheme(options))
+  const fallback = options.default ?? "dark"
+  const state = useStore(c, { choice: fallback, scheme: fallback === "light" ? "light" : "dark" })
   return { ...state, set: c.set, toggle: c.toggle }
 }
 
 export function usePointerKind() {
-  const p = useOnce(() => createPointerKind())
-  useDestroy(p.destroy)
-  return useStore(p)
+  const p = useLive(() => createPointerKind())
+  return useStore(p, { coarse: false, hover: true })
 }
 

@@ -109,7 +109,8 @@ export default {
         const form = await request.formData()
         const given = String(form.get("token") ?? "")
         const next = String(form.get("next") ?? "/")
-        const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/"
+        // eslint-disable-next-line no-control-regex -- refusing control characters is the point
+        const safeNext =next.startsWith("/") && !next.startsWith("//") && !/[\x00-\x1f\\]/.test(next) ? next : "/"
         if (!token || !same(given, token)) return loginPage(true, safeNext)
         return new Response(null, {
           status: 303,

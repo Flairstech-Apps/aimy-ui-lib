@@ -68,6 +68,14 @@ export function Calendar(props: CalendarProps) {
     if (d.getMonth() !== month.getMonth() || d.getFullYear() !== month.getFullYear()) setMonth(new Date(d.getFullYear(), d.getMonth(), 1))
   }
 
+  // The month buttons carry the focused day with them, so the new month still has a day to Tab to.
+  const shiftMonth = (n: number) => {
+    const m = addMonths(month, n)
+    const f = addMonths(focus, n)
+    setMonth(m)
+    setFocus(f.getMonth() === m.getMonth() && f.getFullYear() === m.getFullYear() ? f : m)
+  }
+
   const onKey = (e: React.KeyboardEvent) => {
     const map: Record<string, Date> = {
       ArrowLeft: addDays(focus, -1),
@@ -95,7 +103,7 @@ export function Calendar(props: CalendarProps) {
         <button
           type="button"
           aria-label="Previous month"
-          onClick={() => setMonth(addMonths(month, -1))}
+          onClick={() => shiftMonth(-1)}
           className="grid size-7 place-items-center rounded-md text-ink-secondary transition-[background-color,color] duration-(--t-fast) ease-out hover:bg-w07 hover:text-ink"
         >
           <ChevronLeft aria-hidden="true" strokeWidth={2} className="size-4" />
@@ -106,7 +114,7 @@ export function Calendar(props: CalendarProps) {
         <button
           type="button"
           aria-label="Next month"
-          onClick={() => setMonth(addMonths(month, 1))}
+          onClick={() => shiftMonth(1)}
           className="grid size-7 place-items-center rounded-md text-ink-secondary transition-[background-color,color] duration-(--t-fast) ease-out hover:bg-w07 hover:text-ink"
         >
           <ChevronRight aria-hidden="true" strokeWidth={2} className="size-4" />

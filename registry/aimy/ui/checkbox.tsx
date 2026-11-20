@@ -3,6 +3,7 @@
 import { Checkbox as Primitive } from "radix-ui"
 import { useId } from "react"
 import { cn } from "@/lib/utils"
+import { useField } from "@/components/field"
 
 // Knowledge's settings checkbox (.set2-ck2): a 17px box with a 1px edge, the
 // brand fill and a white tick when on, a dash for "some". The tick draws
@@ -14,9 +15,13 @@ type CheckboxProps = Omit<React.ComponentProps<typeof Primitive.Root>, "children
 
 export function Checkbox({ label, className, id, ...props }: CheckboxProps) {
   const auto = useId()
+  const field = useField()
   const box = (
     <Primitive.Root
+      // Inside a Field, its hint and error reach it (a Field can hold several, so each keeps its own id).
       id={id ?? auto}
+      aria-invalid={field?.invalid || undefined}
+      aria-describedby={field?.describedBy}
       data-slot="checkbox"
       className={cn(
         "t-check group/check relative grid size-[1.0625rem] shrink-0 place-items-center rounded-xs border border-ink-rule bg-card text-on-brand",

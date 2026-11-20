@@ -30,6 +30,38 @@ import { cn } from "@/lib/utils"
 //     onSelectionAction={(label, text) => propose(label, text)}
 //     docActions={["Rewrite for support agents", "Shorten", "Fill the gaps"]} onDocAction={propose} />
 
+// The blocks and marks the editor makes, and plain links. Anything else is unwrapped to its text;
+// scripts, styles, frames and embeds are dropped with their contents; attributes are dropped except
+// a link's http(s), mailto or relative href.
+const KEEP = new Set(["P", "H1", "H2", "H3", "H4", "UL", "OL", "LI", "BLOCKQUOTE", "PRE", "CODE", "B", "STRONG", "I", "EM", "U", "S", "BR", "HR", "A", "SPAN", "DIV", "MARK", "SUB", "SUP"])
+const DROP = new Set(["SCRIPT", "STYLE", "IFRAME", "OBJECT", "EMBED", "TEMPLATE", "LINK", "META", "BASE", "FORM", "INPUT", "BUTTON", "TEXTAREA", "SELECT", "SVG", "MATH", "IMG", "VIDEO", "AUDIO", "SOURCE", "NOSCRIPT"])
+const SAFE_HREF = /^(https?:|mailto:|#|\/(?!\/))/i
+
+/** Parses html inertly (nothing runs or loads) and keeps only the editor's own tags. */
+export function cleanHtml(html: string): Node[] {
+  const doc = new DOMParser().parseFromString(html, "text/html")
+  const walk = (parent: Element) => {
+    for (const el of Array.from(parent.children)) {
+      if (DROP.has(el.tagName.toUpperCase())) {
+        el.remove()
+        continue
+      }
+      walk(el)
+      if (!KEEP.has(el.tagName.toUpperCase())) {
+        el.replaceWith(...Array.from(el.childNodes))
+        continue
+      }
+      for (const attr of Array.from(el.attributes)) {
+        const keep = el.tagName === "A" && attr.name === "href" && SAFE_HREF.test(attr.value.trim())
+        if (!keep) el.removeAttribute(attr.name)
+      }
+      if (el.tagName === "A") el.setAttribute("rel", "noopener noreferrer")
+    }
+  }
+  walk(doc.body)
+  return Array.from(doc.body.childNodes)
+}
+
 export type Format = "bold" | "italic" | "underline" | "h3" | "h4" | "ul" | "ol" | "quote" | "code" | "p"
 type Active = Partial<Record<Format, boolean>>
 
@@ -394,9 +426,10 @@ export function DocEditor({
   const [active, setActive] = useState<Active>({})
   const [blank, setBlank] = useState(!html.trim())
 
-  // The body is the browser's to edit; React sets it once.
+  // The body is the browser's to edit; React sets it once, cleaned first: the html can come from
+  // another person, an import or an AI draft, so nothing in it may run.
   useEffect(() => {
-    if (body.current) body.current.innerHTML = html
+    if (body.current) body.current.replaceChildren(...cleanHtml(html))
     // Only the first html counts; later edits live in the DOM.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])

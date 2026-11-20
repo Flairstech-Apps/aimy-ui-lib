@@ -178,6 +178,8 @@ export function CommandBar({ onAsk, open: openProp, onOpenChange, shortcut = tru
                 }
               }}
               onKeyDown={(e) => {
+                // While an input method composes, its Enter, arrows and Escape belong to it.
+                if (e.nativeEvent.isComposing || e.keyCode === 229) return
                 if (asking) {
                   if (e.key === "Enter") {
                     e.preventDefault()

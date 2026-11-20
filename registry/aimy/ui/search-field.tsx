@@ -52,7 +52,8 @@ export function SearchField({
         value={current}
         onChange={(e) => set(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Escape" && current) {
+          // An input method's Escape cancels its characters, not the search.
+          if (e.key === "Escape" && current && !e.nativeEvent.isComposing && e.keyCode !== 229) {
             e.preventDefault()
             set("")
           }

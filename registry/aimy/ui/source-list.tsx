@@ -26,7 +26,7 @@ export function SourceList({ sources, onOpen, variant = "inline", className }: S
     <ol className="source-list" aria-label={variant === "inline" ? "Sources" : undefined}>
       {sources.map((s, i) => (
         <li key={s.id} className="contents">
-          <button type="button" className="source-item" onClick={() => onOpen?.(s)}>
+          <button type="button" className="source-item" onClick={onOpen ? () => onOpen(s) : undefined /* none without onOpen, so it renders in a server component */}>
             <span className="cite" aria-hidden="true">
               {i + 1}
             </span>

@@ -170,8 +170,12 @@ export function ScrollDot({ label, track, latest, className, innerClassName, chi
     const ro = new ResizeObserver(layout)
     ro.observe(el)
     for (const child of Array.from(el.children)) ro.observe(child)
-    const mo = new MutationObserver(() => {
-      for (const child of Array.from(el.children)) ro.observe(child)
+    // New children are watched, removed ones let go, so a long stream doesn't hold old nodes.
+    const mo = new MutationObserver((records) => {
+      for (const r of records) {
+        for (const n of Array.from(r.addedNodes)) if (n instanceof Element) ro.observe(n)
+        for (const n of Array.from(r.removedNodes)) if (n instanceof Element) ro.unobserve(n)
+      }
       layout()
     })
     mo.observe(el, { childList: true })

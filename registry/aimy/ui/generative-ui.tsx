@@ -163,7 +163,12 @@ const fmt = (unit: unknown) => (n: number) =>
 /** How each catalogue part is drawn. */
 export const AIMY_UI_RENDER: Record<string, Renderer> = {
   Stack: (p, c) => <div className={cn("flex flex-col", p.gap === "tight" ? "gap-2" : "gap-4")}>{c}</div>,
-  Columns: (p, c) => <div className={cn("grid gap-3", p.count === 3 ? "column:grid-cols-3" : "column:grid-cols-2")}>{c}</div>,
+  // On the room the answer has (a chat drawer is narrow on a wide screen), not the window's.
+  Columns: (p, c) => (
+    <div className="@container">
+      <div className={cn("grid gap-3", p.count === 3 ? "@min-[44rem]:grid-cols-3 @min-[30rem]:grid-cols-2" : "@min-[30rem]:grid-cols-2")}>{c}</div>
+    </div>
+  ),
   Widget: (p, c) => {
     const Icon = ICONS[String(p.icon ?? "grid")] ?? LayoutGrid
     return (
@@ -275,7 +280,7 @@ export function GenerativeUI({ spec, stream, catalog = AIMY_UI, render = AIMY_UI
   }, [streaming, problemsKey, onProblems])
 
   const draw = (n: UiNode, key: string): ReactNode => {
-    const r = render[n.type]
+    const r = Object.hasOwn(render, n.type) ? render[n.type] : undefined
     if (!r) return null
     const kids = n.children?.map((c, i) => draw(c, `${key}.${i}`))
     return (

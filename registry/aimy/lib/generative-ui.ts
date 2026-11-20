@@ -90,7 +90,7 @@ function checkProps(spec: Record<string, UiField>, given: Record<string, unknown
     if (r.ok) out[k] = r.value
     else if (!f.optional) ok = false
   }
-  if (!partial) for (const k of Object.keys(given)) if (!(k in spec)) problems.push(`${path}.${k}: not a prop of this part, left out`)
+  if (!partial) for (const k of Object.keys(given)) if (!Object.hasOwn(spec, k)) problems.push(`${path}.${k}: not a prop of this part, left out`)
   return { ok, value: out }
 }
 
@@ -110,7 +110,9 @@ export function checkUi(spec: unknown, catalog: UiCatalog, options: { partial?: 
       if (!partial) problems.push(`${path}: each part needs a type`)
       return null
     }
-    const part = catalog[raw.type]
+    // Own keys only: a model that names "constructor" or "__proto__" gets "no such part", not the
+    // object's prototype (which crashed the whole answer).
+    const part = Object.hasOwn(catalog, raw.type) ? catalog[raw.type] : undefined
     if (!part) {
       if (!partial) problems.push(`${path}: there is no part called ${raw.type}; use one of ${Object.keys(catalog).join(", ")}`)
       return null

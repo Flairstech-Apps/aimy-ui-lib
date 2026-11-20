@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 // label, ever). Knowledge's settings form: .set2-field > .set2-lbl, the
 // control, .set2-hint / .set2-hint.is-err. The products never set
 // aria-invalid or tie the message to the control; this does both.
-type FieldContextValue = { id: string; describedBy: string | undefined; invalid: boolean; error: string | undefined }
+type FieldContextValue = { id: string; describedBy: string | undefined; invalid: boolean; error: string | undefined; required: boolean }
 
 const FieldContext = createContext<FieldContextValue | null>(null)
 
@@ -56,7 +56,7 @@ export function Field({ label, help, error, optional, id: given, className, chil
   const errorId = `${id}-error`
   const describedBy = error ? errorId : help ? helpId : undefined
   return (
-    <FieldContext.Provider value={{ id, describedBy, invalid: Boolean(error), error }}>
+    <FieldContext.Provider value={{ id, describedBy, invalid: Boolean(error), error, required: !optional }}>
       <div data-slot="field" className={cn("flex flex-col gap-1.5", className)}>
         <label htmlFor={id} className="text-xs font-semibold text-ink-secondary">
           {label}
@@ -64,7 +64,8 @@ export function Field({ label, help, error, optional, id: given, className, chil
         </label>
         {children}
         {error ? (
-          <p id={errorId} className="text-xs text-err-text">
+          // Read out as it appears, not only when the person comes back to the control.
+          <p id={errorId} role="alert" className="text-xs text-err-text">
             {error}
           </p>
         ) : help ? (

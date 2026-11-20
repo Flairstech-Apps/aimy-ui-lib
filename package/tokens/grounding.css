@@ -195,7 +195,7 @@
 .b-conf.is-busy { padding: 0; color: var(--ink-secondary); }
 .b-wait-pop {
   position: absolute; z-index: 60; top: calc(100% + 8px); right: 0;
-  width: max-content; max-width: 20rem; padding: 12px 14px;
+  width: max-content; max-width: min(20rem, calc(100vw - 2rem)); padding: 12px 14px; /* never wider than a phone */
   border-radius: var(--r-lg); border: 1px solid var(--card-border-hover);
   background: var(--panel-bg); box-shadow: var(--shadow-lg);
   -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);

@@ -3,6 +3,7 @@
 import { Switch as Primitive } from "radix-ui"
 import { useId, useState } from "react"
 import { cn } from "@/lib/utils"
+import { useField } from "@/components/field"
 
 // Knowledge's settings switch (.toggle and .set2-us-sw): a 36 x 20 track, the
 // brand when on, a 14px white thumb. The thumb travels with transitions.dev's
@@ -18,12 +19,16 @@ type SwitchProps = Omit<React.ComponentProps<typeof Primitive.Root>, "children">
 
 export function Switch({ label, lockedReason, className, id, checked, defaultChecked, onCheckedChange, disabled, ...props }: SwitchProps) {
   const auto = useId()
+  const field = useField()
   const [inner, setInner] = useState(defaultChecked ?? false)
   const [moved, setMoved] = useState(false)
   const on = checked ?? inner
   const track = (
     <Primitive.Root
+      // Inside a Field, its hint and error reach it (a Field can hold several, so each keeps its own id).
       id={id ?? auto}
+      aria-invalid={field?.invalid || undefined}
+      aria-describedby={field?.describedBy}
       data-slot="switch"
       data-on={on}
       checked={on}

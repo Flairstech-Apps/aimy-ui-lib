@@ -68,9 +68,11 @@ export function InlineEdit({ value, onSave, label, validate, size = "text", plac
   const errorId = useId()
   const button = useRef<HTMLButtonElement>(null)
   const was = useRef(false)
-  // Back on the text after saving or putting it back, so focus isn't lost.
+  // Back on the text after saving or putting it back with Enter or Escape, so focus isn't lost. When
+  // the person tabbed or clicked away, focus is already where they went, and stays there.
   useEffect(() => {
-    if (was.current && !edit.editing) button.current?.focus()
+    const a = document.activeElement
+    if (was.current && !edit.editing && (!a || a === document.body)) button.current?.focus()
     was.current = edit.editing
   }, [edit.editing])
 

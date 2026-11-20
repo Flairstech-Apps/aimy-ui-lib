@@ -6,7 +6,24 @@
 import { type Cleanup, cleanups, clamp, createStore, on } from "./behaviors-core"
 import { createTypeahead } from "./behaviors-focus"
 
-type Key = { key: string; preventDefault(): void; ctrlKey?: boolean; metaKey?: boolean; altKey?: boolean; shiftKey?: boolean }
+type Key = {
+  key: string
+  preventDefault(): void
+  ctrlKey?: boolean
+  metaKey?: boolean
+  altKey?: boolean
+  shiftKey?: boolean
+  isComposing?: boolean
+  keyCode?: number
+  nativeEvent?: { isComposing?: boolean }
+}
+
+/**
+ * True while an input method is composing (Japanese, Chinese, Korean, some Arabic keyboards): its
+ * Enter confirms the characters and its arrows choose them, so they mustn't save, pick or move.
+ * Safari sends the confirming keydown with isComposing false, so keyCode 229 counts too.
+ */
+export const isComposing = (e: Key) => !!(e.isComposing || e.nativeEvent?.isComposing || e.keyCode === 229)
 
 // ── Listbox ─────────────────────────────────────────────────
 
@@ -102,6 +119,7 @@ export function createListbox<T>(options: ListboxOptions<T>) {
     /** @param hasInput true when focus is in a text field (letters filter instead of typing ahead). */
     onKeyDown(e: Key, hasInput = false): boolean {
       const page = options.pageSize ?? 10
+      if (isComposing(e)) return false
       const map: Record<string, () => void> = {
         ArrowDown: () => step(1),
         ArrowUp: () => step(-1),
@@ -415,6 +433,7 @@ export function createInlineEdit(options: InlineEditOptions) {
       o.onCancel?.()
     },
     onKeyDown(e: Key, multiline = false) {
+      if (isComposing(e)) return false
       if (e.key === "Escape") {
         e.preventDefault()
         api.cancel()

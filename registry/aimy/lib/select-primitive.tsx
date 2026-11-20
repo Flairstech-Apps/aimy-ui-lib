@@ -99,7 +99,23 @@ export function Root({
       }}
     >
       {children}
-      {name ? <input type="hidden" name={name} value={value ?? ""} required={required} /> : null}
+      {name ? (
+        <input
+          type="hidden"
+          name={name}
+          value={value ?? ""}
+          required={required}
+          // A disabled select sends nothing, as a native one; the form's reset puts the default back.
+          disabled={disabled}
+          ref={(node) => {
+            const form = node?.form
+            if (!form) return
+            const reset = () => setValue(defaultValue)
+            form.addEventListener("reset", reset)
+            return () => form.removeEventListener("reset", reset)
+          }}
+        />
+      ) : null}
     </SelectContext>
   )
 }

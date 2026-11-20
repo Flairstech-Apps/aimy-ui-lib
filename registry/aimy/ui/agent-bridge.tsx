@@ -30,7 +30,7 @@ type AgentProviderProps = {
   undoShortcut?: boolean
 }
 
-type Pending = AgentRequest & { id: number; resolve: (ok: boolean) => void }
+type Pending = AgentRequest & { id: number; resolve: (ok: boolean) => void; owner: object }
 let pendingId = 0
 const listeners = new Set<(p: Pending[]) => void>()
 let pending: Pending[] = []
@@ -41,18 +41,30 @@ const setPending = (next: Pending[]) => {
 
 export function AgentProvider({ children, levelFor, webmcp, bridge: given, undoShortcut = true }: AgentProviderProps) {
   const latest = useLatest({ levelFor })
+  const [owner] = useState(() => ({}))
   const [bridge] = useState(
     () =>
       given ??
       createAgentBridge({
         levelFor: (s, a) => latest.current.levelFor?.(s.id, a),
-        approve: (req) => new Promise<boolean>((resolve) => setPending([...pending, { ...req, id: ++pendingId, resolve }])),
+        approve: (req) => new Promise<boolean>((resolve) => setPending([...pending, { ...req, id: ++pendingId, resolve, owner }])),
         onActivity: (e: AgentActivity) => {
           if (e.status === "done" && e.level === "tell") toast(e.sentence, e.undo ? { onUndo: () => void e.undo?.() } : {})
         },
       })
   )
   useEffect(() => (webmcp ? bridge.registerWebMCP() : undefined), [bridge, webmcp])
+  // Leaving the page answers its open asks with no, so they don't show up on the next page and the
+  // model's call doesn't wait for ever.
+  useEffect(
+    () => () => {
+      const mine = pending.filter((p) => p.owner === owner)
+      if (!mine.length) return
+      setPending(pending.filter((p) => p.owner !== owner))
+      for (const p of mine) p.resolve(false)
+    },
+    [owner]
+  )
   // One undo for the whole page: what AiMY did and what you ran, newest first.
   useEffect(() => {
     if (!undoShortcut) return

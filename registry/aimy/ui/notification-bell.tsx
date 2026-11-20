@@ -56,7 +56,12 @@ export function NotificationBell({ count, onClick, open, ping, className }: Noti
       window.setTimeout(() => setRinging(false), RING_MS),
       window.setTimeout(() => setTip((t) => (t ? { ...t, on: false } : t)), TIP_MS),
     ]
-    return () => timers.forEach(window.clearTimeout)
+    return () => {
+      timers.forEach(window.clearTimeout)
+      // Opening the panel mid-ring stops the ring and the tip, rather than leaving them on over it.
+      setRinging(false)
+      setTip(null)
+    }
     // A new ping id is the signal; its other fields come with it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ping?.id, open])

@@ -5,7 +5,7 @@
 // adds toasts and the approval card is AgentProvider in agent-bridge.tsx.
 
 import { createContext, use, useEffect, useRef } from "react"
-import { type AgentAction, type AgentActivity, type AgentBridge, type AgentSurface } from "./behaviors-agent"
+import { type AgentAction, type AgentActivity, type AgentBridge, type AgentSurface, type AutonomyLevel } from "./behaviors-agent"
 import { useIsoLayoutEffect, useStore } from "./behaviors-react"
 
 export const AgentContext = createContext<AgentBridge | null>(null)
@@ -71,10 +71,23 @@ function nameOf(el: Element | null): string {
  * Adds a command for the command bar (and for AiMY, as a tool): "Go to
  * Contacts", "New deal". said is what happened, in the past tense, for the
  * log: "opened Contacts". Return a function to make it undoable.
+ *
+ * AiMY asks before running a command unless it says it is safe to act on:
+ * undoable: true (it returns its undo) or a level. undoable: false asks
+ * everyone first, the person included.
  */
 export function useCommand(
   id: string,
-  command: { group: string; label: string; said?: string; run: () => void | (() => void) | Promise<void | (() => void)> },
+  command: {
+    group: string
+    label: string
+    said?: string
+    run: () => void | (() => void) | Promise<void | (() => void)>
+    /** true when run returns its undo; false when it can't be taken back (always asks). */
+    undoable?: boolean
+    /** How freely AiMY may run it, when undoable isn't false. Default: ask, unless undoable is true. */
+    level?: AutonomyLevel
+  },
   enabled = true
 ) {
   useAgentSurface(
@@ -83,7 +96,16 @@ export function useCommand(
       kind: "command",
       label: command.group,
       state: () => null,
-      actions: { run: { description: command.label, say: () => command.said ?? `ran “${command.label}”`, run: () => command.run() } },
+      actions: {
+        run: {
+          description: command.label,
+          say: () => command.said ?? `ran “${command.label}”`,
+          run: () => command.run(),
+          undoable: command.undoable,
+          // An app command can do anything, so AiMY asks unless the app said it is safe.
+          level: command.level ?? (command.undoable === true ? undefined : "ask"),
+        },
+      },
     },
     null
   )

@@ -153,7 +153,7 @@ async function getComponent(ctx, { name } = {}) {
 }
 
 async function getSkill(ctx, name) {
-  if (!SKILLS[name]) return null
+  if (!Object.hasOwn(SKILLS, name)) return null
   return load(ctx, `skills/${name}/SKILL.md`)
 }
 
@@ -225,7 +225,11 @@ async function one(ctx, msg) {
   try {
     return { jsonrpc: "2.0", id: msg.id, result: await call(ctx, msg.method, msg.params) }
   } catch (error) {
-    return { jsonrpc: "2.0", id: msg.id, error: { code: error.code ?? -32603, message: error.message } }
+    // Our own errors carry a code and a sentence for the caller; anything else (a file read failing)
+    // is logged here and answered generically, so no server path leaks.
+    if (typeof error.code === "number") return { jsonrpc: "2.0", id: msg.id, error: { code: error.code, message: error.message } }
+    console.error(error)
+    return { jsonrpc: "2.0", id: msg.id, error: { code: -32603, message: "Something went wrong on the server. Try again." } }
   }
 }
 
@@ -252,6 +256,11 @@ export async function handleMcp(req, res, ctx) {
   } catch {
     res.writeHead(400, { ...CORS, "Content-Type": "application/json" })
     return res.end(JSON.stringify({ jsonrpc: "2.0", id: null, error: { code: -32700, message: "Parse error" } }))
+  }
+  // A batch is capped, so one request can't make the server read and send thousands of files.
+  if (Array.isArray(msg) && msg.length > 20) {
+    res.writeHead(400, { ...CORS, "Content-Type": "application/json" })
+    return res.end(JSON.stringify({ jsonrpc: "2.0", id: null, error: { code: -32600, message: "Send at most 20 calls in one batch." } }))
   }
   const answers = Array.isArray(msg)
     ? (await Promise.all(msg.map((m) => one(ctx, m)))).filter(Boolean)

@@ -78,6 +78,9 @@ export function Toaster({ offset = "1.5rem" }: ToasterProps) {
   // A new toast replaces the shown one in place; null closes it.
   if (item !== prevItem) {
     setPrevItem(item)
+    // The card under the pointer (Undo just pressed) is gone without a leave or blur event: a new
+    // toast, or none, starts unpaused, or it would never close by itself.
+    setPaused(false)
     if (item) {
       setShown(item)
       setOpen(true) // rises in through @starting-style; no frame waiting

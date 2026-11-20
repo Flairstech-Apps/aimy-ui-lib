@@ -186,6 +186,8 @@ export function Combobox({
         }}
         onClick={openList}
         onKeyDown={(e) => {
+          // While an input method composes, its Enter, arrows and Escape belong to it.
+          if (e.nativeEvent.isComposing || e.keyCode === 229) return
           if (e.key === "Escape") {
             if (open) {
               e.preventDefault()
@@ -199,10 +201,20 @@ export function Combobox({
             openList()
             return
           }
+          // Text cleared and Enter: the choice is cleared, not swapped for the first option.
+          if (e.key === "Enter" && typing && !lb.query.trim()) {
+            e.preventDefault()
+            setValue(null)
+            close()
+            return
+          }
           if (open) lb.onKeyDown(e, true)
         }}
         onBlur={(e) => {
-          if (!panel?.contains(e.relatedTarget as Node)) close()
+          if (panel?.contains(e.relatedTarget as Node)) return
+          // Leaving with the text cleared clears the choice; it doesn't bring the old name back.
+          if (typing && !lb.query.trim()) setValue(null)
+          close()
         }}
         className={cn(controlStyles.base, controlStyles.box, "min-h-9 pr-8")}
       />
@@ -223,7 +235,25 @@ export function Combobox({
       >
         <ChevronDown strokeWidth={2} className={cn("size-3.5 transition-transform duration-(--t-fast) ease-out", open && "rotate-180")} />
       </button>
-      {name ? <input type="hidden" name={name} value={value ?? ""} /> : null}
+      {name ? (
+        <input
+          type="hidden"
+          name={name}
+          value={value ?? ""}
+          // A disabled combobox sends nothing, as a native field; the form's reset puts the default back.
+          disabled={disabled}
+          ref={(node) => {
+            const form = node?.form
+            if (!form) return
+            const reset = () => {
+              setValue(defaultValue)
+              setTyping(false)
+            }
+            form.addEventListener("reset", reset)
+            return () => form.removeEventListener("reset", reset)
+          }}
+        />
+      ) : null}
       {present ? (
         <Portal>
           <PopperContent

@@ -161,7 +161,8 @@ describe("PasswordField", () => {
     expect(input).toHaveAttribute("type", "password")
     fireEvent.click(screen.getByRole("button", { name: "Show the token" }))
     expect(input).toHaveAttribute("type", "text")
-    expect(screen.getByRole("button", { name: "Hide the token" })).toHaveAttribute("aria-pressed", "true")
+    // The label says what pressing does; no aria-pressed as well ("Hide the token, pressed" read twice over).
+    expect(screen.getByRole("button", { name: "Hide the token" })).not.toHaveAttribute("aria-pressed")
   })
 })
 

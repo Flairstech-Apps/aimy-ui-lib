@@ -31,8 +31,26 @@ export function formatRange(r?: DateRange) {
   return `${fmt.format(r.from)} to ${fmt.format(r.to)}`
 }
 
-export function DatePicker({ value, onValueChange, placeholder = "Any date", label, presets, disableFuture = true, className }: DatePickerProps) {
-  const [open, setOpen] = useState(false)
+export function DatePicker(props: DatePickerProps) {
+  const { onValueChange, placeholder = "Any date", label, presets, disableFuture = true, className } = props
+  const [open, setOpenState] = useState(false)
+  // Without a value prop it holds the range itself; with one (even undefined, which means cleared)
+  // the parent does.
+  const controlled = "value" in props
+  const [own, setOwn] = useState<DateRange | undefined>(undefined)
+  const value = controlled ? props.value : own
+  // A range in the making: the parent hears about it only once both ends are chosen, so a list never
+  // filters on half a range; closing the panel drops it.
+  const [draft, setDraft] = useState<DateRange | undefined>(undefined)
+  const commit = (r: DateRange | undefined) => {
+    if (!controlled) setOwn(r)
+    setDraft(undefined)
+    onValueChange?.(r)
+  }
+  const setOpen = (o: boolean) => {
+    setOpenState(o)
+    if (!o) setDraft(undefined)
+  }
   const shown = formatRange(value)
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -49,15 +67,16 @@ export function DatePicker({ value, onValueChange, placeholder = "Any date", lab
         <span className={cn(!shown && "text-ink-placeholder")}>{shown ?? placeholder}</span>
         <ChevronDown aria-hidden="true" strokeWidth={2} className="size-3.5 transition-transform duration-(--t-fast) ease-out group-data-[state=open]/date:rotate-180" />
       </PopoverTrigger>
-      <PopoverContent label={label} className="flex w-auto gap-3">
+      <PopoverContent label={label} className="flex w-auto gap-3 max-phone:flex-col">
         {presets?.length ? (
-          <ul className="flex min-w-[8rem] flex-col gap-0.5 border-r border-hairline pr-3">
+          // On a phone the presets are a row above the calendar, so the calendar keeps its width.
+          <ul className="flex min-w-[8rem] flex-col gap-0.5 border-r border-hairline pr-3 max-phone:min-w-0 max-phone:flex-row max-phone:flex-wrap max-phone:border-r-0 max-phone:border-b max-phone:pr-0 max-phone:pb-2">
             {presets.map((p) => (
               <li key={p.label}>
                 <button
                   type="button"
                   onClick={() => {
-                    onValueChange?.(p.range)
+                    commit(p.range)
                     setOpen(false)
                   }}
                   className="w-full rounded-md px-2 py-1.5 text-left text-xs text-ink-secondary transition-[background-color,color] duration-(--t-fast) ease-out hover:bg-w07 hover:text-ink"
@@ -67,11 +86,11 @@ export function DatePicker({ value, onValueChange, placeholder = "Any date", lab
               </li>
             ))}
             {value ? (
-              <li className="mt-auto pt-2">
+              <li className="mt-auto pt-2 max-phone:mt-0 max-phone:pt-0">
                 <button
                   type="button"
                   onClick={() => {
-                    onValueChange?.(undefined)
+                    commit(undefined)
                     setOpen(false)
                   }}
                   className="px-2 text-xs font-semibold text-accent-text hover:underline"
@@ -84,11 +103,12 @@ export function DatePicker({ value, onValueChange, placeholder = "Any date", lab
         ) : null}
         <Calendar
           mode="range"
-          value={value}
+          value={draft ?? value}
           disableFuture={disableFuture}
           onValueChange={(r) => {
-            onValueChange?.(r)
-            if (r.to) setOpen(false)
+            if (!r.to) return setDraft(r)
+            commit(r)
+            setOpen(false)
           }}
         />
       </PopoverContent>

@@ -123,6 +123,7 @@ export function createOptimistic<T>(options: OptimisticOptions<T>) {
     error: null,
   })
   let token = 0
+  let settled = 0 // the newest save the server has confirmed
   let quiet: ReturnType<typeof setTimeout> | undefined
 
   const api = {
@@ -142,6 +143,12 @@ export function createOptimistic<T>(options: OptimisticOptions<T>) {
       store.set({ shown: next, status: "saving", error: null })
       o.save(next).then(
         () => {
+          // An older save that lands is still what the server holds now: remember it as confirmed, so
+          // a newer save that fails goes back to it, not to the value before both.
+          if (mine > settled) {
+            settled = mine
+            store.set({ confirmed: next })
+          }
           if (mine !== token) return
           store.set({ confirmed: next, status: "saved" })
           o.onSaved?.(next)

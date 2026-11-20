@@ -22,7 +22,7 @@ export type AgentParam = {
   optional?: boolean
 }
 
-/** What an action returns: how to take it back. Returning nothing means it can't be undone, so it always asks. */
+/** What an action returns: how to take it back. An action that can't be taken back says undoable: false, and then always asks first. */
 export type AgentUndo = () => void | Promise<void>
 
 export type AgentAction = {
@@ -199,29 +199,37 @@ export function createAgentBridge(options: AgentBridgeOptions = {}) {
       let surface: AgentSurface | undefined
       let actionName = ""
       if (typeof name === "string") {
+        let matches = 0
         for (const s of surfaces.values())
           for (const a of Object.keys(s.actions))
             if (toolName(s.id, a) === name) {
               surface = s
               actionName = a
+              matches++
             }
+        // Ids that read the same once cleaned ("deal.title", "deal_title") must not run the wrong one.
+        if (matches > 1) return { ok: false, message: `Two parts on the screen answer to ${name}, so it wasn't run. Give the parts ids that differ by more than punctuation.` }
       } else {
         surface = surfaces.get(name.surface)
         actionName = name.action
       }
-      const action = surface?.actions[actionName]
+      const action = surface && Object.hasOwn(surface.actions, actionName) ? surface.actions[actionName] : undefined
       if (!surface || !action) return { ok: false, message: `There is no ${typeof name === "string" ? name : `${name.surface}.${name.action}`} on the screen now. Read the screen again.` }
 
       const problem = checkParams(action.params, input)
       if (problem) return { ok: false, message: problem }
+      // Only the declared params reach the action: anything else the model sent is dropped.
+      input = Object.fromEntries(Object.entries(input).filter(([k]) => Object.hasOwn(action.params ?? {}, k)))
 
       const said = action.say?.(input) ?? `${action.description.charAt(0).toLowerCase()}${action.description.slice(1)}`
       // "AiMY chose Atlas Energy in Company." — unless the words already name the part.
       const actor = person ? "You" : who
       const sentence = said.toLowerCase().includes(surface.label.toLowerCase()) ? `${actor} ${said}.` : `${actor} ${said} in ${surface.label}.`
-      // What can't be undone always asks, whatever the setting. A person
-      // running a command has already chosen: it acts, then tells with Undo.
-      const level: AutonomyLevel = person ? "tell" : action.undoable === false ? "ask" : (options.levelFor?.(surface, actionName) ?? action.level ?? "tell")
+      // What can't be undone always asks, whatever the setting, and for a person too: one Enter in a
+      // fuzzy-matched command bar must not send or delete with nothing to take it back. Otherwise a
+      // person running a command has already chosen: it acts, then tells with Undo.
+      const level: AutonomyLevel =
+        action.undoable === false ? "ask" : person ? "tell" : (options.levelFor?.(surface, actionName) ?? action.level ?? "tell")
       const entry: AgentActivity = { id: nextId("agent"), surface: surface.id, label: surface.label, sentence, by: person ? "person" : "aimy", level, status: "asked", at: Date.now() }
 
       if (level === "ask") {
@@ -230,6 +238,11 @@ export function createAgentBridge(options: AgentBridgeOptions = {}) {
         if (!ok) {
           log({ ...entry, status: "refused" })
           return { ok: false, message: options.approve ? "The person said no. Don't try again unless they ask." : "This needs the person's approval, and there is no way to ask here." }
+        }
+        // The part may have left the screen while the person decided.
+        if (!surfaces.has(surface.id)) {
+          log({ ...entry, status: "refused" })
+          return { ok: false, message: `${surface.label} is no longer on the screen, so nothing was done. Read the screen again.` }
         }
       }
 
@@ -318,21 +331,39 @@ export function createAgentBridge(options: AgentBridgeOptions = {}) {
     registerWebMCP(): Cleanup {
       const mc = isBrowser ? (navigator as Navigator & { modelContext?: WebModelContext }).modelContext : undefined
       if (!mc) return () => {}
-      const tools = bridge.tools().map((t) => ({
-        name: t.name,
-        description: t.description,
-        inputSchema: t.input_schema,
-        execute: async (input: Record<string, unknown>) => {
-          const r = await bridge.act(t.name, input ?? {})
-          return { content: [{ type: "text", text: JSON.stringify(r) }] }
-        },
-      }))
-      if (typeof mc.provideContext === "function") {
-        mc.provideContext({ tools })
-        return () => mc.provideContext?.({ tools: [] })
+      const make = () =>
+        bridge.tools().map((t) => ({
+          name: t.name,
+          description: t.description,
+          inputSchema: t.input_schema,
+          execute: async (input: Record<string, unknown>) => {
+            const r = await bridge.act(t.name, input ?? {})
+            return { content: [{ type: "text", text: JSON.stringify(r) }] }
+          },
+        }))
+      let offs: ReturnType<NonNullable<WebModelContext["registerTool"]>>[] = []
+      const withdraw = () => offs.forEach((o) => (typeof o === "function" ? o() : o?.unregister?.()))
+      const offer = () => {
+        const tools = make()
+        if (typeof mc.provideContext === "function") return mc.provideContext({ tools })
+        withdraw()
+        offs = tools.map((t) => mc.registerTool?.(t))
       }
-      const offs = tools.map((t) => mc.registerTool?.(t))
-      return () => offs.forEach((o) => (typeof o === "function" ? o() : o?.unregister?.()))
+      // The tools follow the screen: parts that mount later are offered, parts that leave are withdrawn.
+      let names = ""
+      const sync = () => {
+        const now = bridge.tools().map((t) => t.name).join(" ")
+        if (now === names) return
+        names = now
+        offer()
+      }
+      sync()
+      const off = store.subscribe(sync)
+      return () => {
+        off()
+        if (typeof mc.provideContext === "function") mc.provideContext({ tools: [] })
+        else withdraw()
+      }
     },
   }
   return bridge

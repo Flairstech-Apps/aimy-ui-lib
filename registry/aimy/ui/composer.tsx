@@ -170,7 +170,8 @@ export function Composer({
     if (!unavailable && queued) {
       setQueued(null)
       setFlush({ text: queued })
-      if (value === undefined) setInner("")
+      // Clear the field only if it still holds the queued question, not something typed since.
+      if (value === undefined && inner.trim() === queued.trim()) setInner("")
     }
   }
   const submit = useRef(onSubmit)
@@ -239,7 +240,8 @@ export function Composer({
   }
 
   const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+    // Safari confirms an input method's characters with an Enter whose isComposing is false: keyCode 229.
+    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing && e.keyCode !== 229) {
       e.preventDefault()
       if (!generating && !empty) send()
     }

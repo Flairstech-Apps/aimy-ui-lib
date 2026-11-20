@@ -18,10 +18,14 @@ type SegmentedProps = {
   onValueChange?: (value: string) => void
   /** Accessible name for the group, e.g. "Show". */
   label: string
+  /** Sends the choice with a form under this name. */
+  name?: string
+  disabled?: boolean
+  required?: boolean
   className?: string
 }
 
-export function Segmented({ options, value, defaultValue, onValueChange, label, className }: SegmentedProps) {
+export function Segmented({ options, value, defaultValue, onValueChange, label, name, disabled, required, className }: SegmentedProps) {
   const [inner, setInner] = useState(defaultValue)
   // Options that arrive after the first render still start on the first one.
   const current = value ?? inner ?? options[0]?.value
@@ -76,6 +80,9 @@ export function Segmented({ options, value, defaultValue, onValueChange, label, 
       data-slot="segmented"
       aria-label={label}
       value={current}
+      name={name}
+      disabled={disabled}
+      required={required}
       loop
       orientation="horizontal"
       onValueChange={(next) => {

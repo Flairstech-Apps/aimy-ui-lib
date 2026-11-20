@@ -15,9 +15,11 @@ export function Textarea({ variant = "box", className, id, rows = 3, ...props }:
     <textarea
       ref={ref}
       data-slot="textarea"
-      id={id ?? field?.id}
+      // Inside a Field the Field's id wins, so its label always reaches the control (give the Field the id).
+      id={field?.id ?? id}
       rows={rows}
       aria-invalid={field?.invalid || undefined}
+      aria-required={field?.required || undefined}
       aria-describedby={field?.describedBy}
       className={cn(
         controlStyles.base,

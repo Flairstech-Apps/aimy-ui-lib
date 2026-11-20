@@ -35,7 +35,7 @@ export function Activity({ items, onOpen, className }: ActivityProps) {
       {items.map((t) => (
         <li key={t.id} className="s-qrow">
           <div className="s-qrow-id">
-            <button type="button" className="s-qrow-name" onClick={() => onOpen?.(t)}>
+            <button type="button" className="s-qrow-name" onClick={onOpen ? () => onOpen(t) : undefined /* none without onOpen, so it renders in a server component */}>
               {t.subject}
             </button>
             <span className="s-qrow-sub">

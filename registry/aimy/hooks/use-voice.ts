@@ -300,6 +300,8 @@ export function useDictation({ onText, bars = 48 }: { onText: (said: string) => 
 
   useEffect(
     () => () => {
+      // First: a permission prompt answered after unmount must not start the mic and leave it on.
+      live.current = false
       rec.deafen()
       mic.close()
     },
