@@ -10,6 +10,12 @@ import { Toaster } from "@/registry/aimy/ui/toast"
 import { a11yViolations } from "../a11y"
 
 const later = <T,>(ms: number, v?: T, fail?: Error) => new Promise<T>((ok, no) => setTimeout(() => (fail ? no(fail) : ok(v as T)), ms))
+/** A save the test settles itself, so a slow click can't let it fail before the optimistic state is checked. */
+function held() {
+  let fail: (e: Error) => void = () => {}
+  const promise = new Promise<never>((_, no) => (fail = no))
+  return { promise, fail }
+}
 
 afterEach(() => vi.useRealTimers())
 
@@ -138,17 +144,20 @@ describe("feedback parts", () => {
     expect(screen.getByText("Archived")).toBeInTheDocument()
     await userEvent.click(await screen.findByRole("button", { name: "Undo" }))
     expect(screen.getByText("In the list")).toBeInTheDocument()
-    rerender(<Demo save={() => later(30, undefined, new UserFacingError("Kestrel is locked."))} />)
+    const locked = held()
+    rerender(<Demo save={() => locked.promise} />)
     await userEvent.click(screen.getByRole("button", { name: "Archive" }))
     expect(screen.getByText("Archived")).toBeInTheDocument()
+    await act(async () => locked.fail(new UserFacingError("Kestrel is locked.")))
     await waitFor(() => expect(screen.getByText("In the list")).toBeInTheDocument())
     expect(await screen.findByRole("button", { name: "Try again" })).toBeInTheDocument()
   })
 
   it("useOptimisticValue drives a part and reports failures", async () => {
     const onError = vi.fn()
+    const refused = held()
     function Demo() {
-      const v = useOptimisticValue<string>("New", () => later(30, undefined, new UserFacingError("No.")), { onError })
+      const v = useOptimisticValue<string>("New", () => refused.promise, { onError })
       return (
         <button type="button" onClick={() => v.set("Won")}>
           {v.shown} {v.status}
@@ -158,6 +167,7 @@ describe("feedback parts", () => {
     render(<Demo />)
     await userEvent.click(screen.getByRole("button"))
     expect(screen.getByRole("button")).toHaveTextContent("Won saving")
+    await act(async () => refused.fail(new UserFacingError("No.")))
     await waitFor(() => expect(screen.getByRole("button")).toHaveTextContent("New failed"))
     await act(async () => {})
     expect(onError).toHaveBeenCalledWith("No.", expect.any(Function), "Won")
