@@ -33,8 +33,8 @@ const c = (name: string) => `/components/${name}/`
 
 const ENTRIES: Entry[] = [
   {
-    label: "2.2.0",
-    type: "Release",
+    label: "2.1.3",
+    type: "Patch",
     date: "24 Nov 2026",
     title: "Decks ready to present",
     items: [

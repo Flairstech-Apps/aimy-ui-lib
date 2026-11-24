@@ -13,7 +13,7 @@ The library has two templates. Both take a story (a cover, the moments in order,
 
 ## 1. Take the latest AiMY UI
 
-Once per session: compare the project's `@flairstech-aimy/ui` with `npm view @flairstech-aimy/ui version`. If it is behind, read https://aimy-ui-lib.aimy.flairstech.com/whats-new/ and update ui and tokens together (`pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest`). Speaker notes, figure units and the deck checks need 2.2.0 or later.
+Once per session: compare the project's `@flairstech-aimy/ui` with `npm view @flairstech-aimy/ui version`. If it is behind, read https://aimy-ui-lib.aimy.flairstech.com/whats-new/ and update ui and tokens together (`pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest`). Speaker notes, figure units and the deck checks need 2.1.3 or later.
 
 ## 2. Pick the template
 
