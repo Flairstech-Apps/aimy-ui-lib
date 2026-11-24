@@ -1,6 +1,7 @@
 "use client"
 
 import { ArrowRight, Check, Quote, type LucideIcon } from "lucide-react"
+import { useEffect, useRef } from "react"
 import {
   CloseAction,
   CloseTitle,
@@ -184,8 +185,6 @@ export function chaptersProblems(story: ChaptersStory): string[] {
 
 /* ═════════════════ SLIDES ═════════════════ */
 
-/* Each part's row in the rail: 132px, closer together when there are more of them. */
-const partHeight = (n: number) => Math.min(132, Math.floor(600 / Math.max(n, 1)))
 
 function Kicker({ p, parts }: { p: number; parts: ChaptersPart[] }) {
   return (
@@ -336,15 +335,38 @@ function ChaptersSlides({ story, flat }: { story: ChaptersStory; flat: Flat[] })
   const edge = !now || now.type === "cover" || now.type === "agenda" || now.type === "close"
   const p = now && "p" in now ? now.p : -1
   const last = flat.length - 1
-  const partH = partHeight(parts.length)
+  const list = useRef<HTMLOListElement>(null)
   const fit = (n: number, hint: string) => ({ "data-fit": "150,960", "data-fit-slide": n + 1, "data-fit-hint": hint })
+
+  // The light sits on the current part, measured, so it fits a name on one line or two and
+  // follows the rail when its words are set smaller to fit.
+  useEffect(() => {
+    const ol = list.current
+    if (!ol) return
+    const place = () => {
+      const li = ol.querySelectorAll<HTMLElement>(".dk-chp-part")[Math.max(p, 0)]
+      const light = ol.querySelector<HTMLElement>(".dk-chp-light")
+      if (!li || !light) return
+      light.style.transform = `translateY(${li.offsetTop}px)`
+      light.style.height = `${li.offsetHeight}px`
+    }
+    place()
+    const ro = typeof ResizeObserver === "function" ? new ResizeObserver(place) : null
+    ro?.observe(ol)
+    return () => ro?.disconnect()
+  }, [p])
 
   return (
     <div className="dk-slide dk-chp" data-edge={edge ? "" : undefined}>
       <DeckField />
-      <aside className="dk-chp-rail" aria-hidden="true">
-        <ol className="dk-chp-parts" style={{ "--part-h": `${partH}px` } as React.CSSProperties}>
-          <li className="dk-chp-light" style={{ transform: `translateY(${Math.max(p, 0) * partH}px)` }} />
+      <aside
+        className="dk-chp-rail"
+        aria-hidden="true"
+        data-fit="0,1008"
+        data-fit-hint="The rail's parts don't fit. Shorten the part titles to one to three words, or use fewer parts"
+      >
+        <ol ref={list} className="dk-chp-parts">
+          <li className="dk-chp-light" />
           {parts.map((part, j) => (
             <li
               key={j}

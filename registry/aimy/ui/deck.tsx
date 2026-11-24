@@ -200,7 +200,7 @@ export function fitDeck(stage: HTMLElement): string[] {
     }
     for (const el of long) {
       const over = overOf(el)
-      const at = `Slide ${el.dataset.fitSlide}: ${el.dataset.fitHint}`
+      const at = el.dataset.fitSlide ? `Slide ${el.dataset.fitSlide}: ${el.dataset.fitHint}` : `${el.dataset.fitHint}`
       out.push(
         over > 2
           ? `${at} (${Math.round(over)}px over even at ${FIT_FLOOR * 100}% size).`

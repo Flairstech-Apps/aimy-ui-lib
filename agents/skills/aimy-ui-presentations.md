@@ -194,7 +194,7 @@ test("the proposal deck has no problems", () => expect(chaptersProblems(story)).
 ## 9. Check it
 
 - **The story:** `deckProblems(story, "horizon")` (or `"lanes"`, from `@/components/deck`) or `chaptersProblems(story)` (from `@/components/chapters-deck`) returns every problem as a sentence. It must return `[]`; put it in a unit test, as above.
-- **The drawn slides:** in development the deck measures every slide once its fonts load. Words that run into the horizon, the orb, the header, the rail or off the slide (down or sideways) are set smaller until they fit (to 70% at most), and it warns in the console (`AiMY deck "…"`) for each one. Pass `onProblems` to collect them yourself. A warning means the slide is smaller than it should be: fix every one by cutting words, never with CSS.
+- **The drawn slides:** in development the deck measures every slide once its fonts load. Words that run into the horizon, the orb, the header, the rail or off the slide (down or sideways) are set smaller until they fit (to 70% at most), and it warns in the console (`AiMY deck "…"`) for each one. Pass `onProblems` to collect them yourself. A warning means the slide is smaller than it should be: fix every one by cutting words, never with CSS. Never cut text short to make it fit either: no ellipsis, no line clamp, no `overflow: hidden` on words. A presentation shows every word it has, or loses the word.
 - **Look at it:** open the page, click the deck, and step through every slide with the arrow keys, waiting for each to settle. Check both themes and Present. If the `aimy-ui-visual-review` skill is present, run it on the cover, a figure slide and the close.
 - **Read it aloud:** if a slide needs its notes to make sense, its title is wrong.
 

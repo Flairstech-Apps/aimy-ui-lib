@@ -98,6 +98,7 @@ Presentations:
 - No lists on slides: three things that each matter are three moments; the rest is one sentence or the notes. The close has one action; a second ask goes in its sub.
 - Give every slide `notes`: what the presenter says and the detail you cut. They show only in the speaker view.
 - In Chapters, slide titles are their point ("Agents spend a third of every call looking for the answer"), parts are short topic names (the agenda), points are two or three never four, and a choice is two options with one recommended.
+- Nothing in a deck is ever truncated: no ellipsis, no line clamp, no hidden overflow. Words wrap, and what is too long is set smaller to fit and reported, so you cut it.
 - `deckProblems(story, kind)` (or `chaptersProblems(story)`) must return nothing, and the deck must log no `AiMY deck` warnings. Fix them by cutting words, never by CSS.
 
 Behaviours (building a part the library doesn't have):
