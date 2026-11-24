@@ -40,7 +40,7 @@ const ENTRIES: Entry[] = [
     items: [
       { kind: "new", name: "ChaptersDeck", href: c("chapters-deck"), text: "For proposals, plans, pitches and trainings: parts with dividers, the agenda kept in a rail, and statement, points, figures, before and after, quote and choice slides." },
       { kind: "new", name: "aimy-ui-presentations", href: "/skills/aimy-ui-presentations/SKILL.md", text: "Says which deck to use (by time or by topic), and tells timeline decks as events, plainly." },
-      { kind: "changed", name: "Decks", href: c("horizon-deck"), text: "Words that run off a slide sideways are now set smaller to fit too, not only those that run down." },
+      { kind: "changed", name: "Decks", href: c("horizon-deck"), text: "Nothing is ever cut short: words wrap, and what runs off a slide down or sideways is set smaller to fit, with the deck saying what to cut." },
     ],
     run: BOTH,
   },
