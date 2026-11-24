@@ -13,6 +13,7 @@ const cover = {
   kicker: "AiMY UI · the story so far",
   title: "From two products to one system.",
   when: "November 2026",
+  notes: "Open with the problem: two products drawing the same things two ways. This is how they became one system.",
 }
 
 const close = {
@@ -21,6 +22,7 @@ const close = {
   sub: "Every insight AiMY surfaces comes with a next step.",
   action: { label: "Browse the parts", href: "/start/" },
   where: "aimy-ui-lib.aimy.flairstech.com",
+  notes: "Ask everyone to take their next screen from the library, and to tell us when a part is missing.",
 }
 
 const HORIZON: HorizonStory = {
@@ -31,6 +33,7 @@ const HORIZON: HorizonStory = {
       chapter: "The plan",
       title: "We started with a plan, not code.",
       body: "We read Sales, Knowledge and the design system, then wrote every decision down before building anything.",
+      notes: "Nine disagreements between the products were settled on paper before any code.",
     },
     {
       when: "27 Oct",
@@ -48,6 +51,7 @@ const HORIZON: HorizonStory = {
       when: "29 Oct",
       chapter: "1.0.0",
       figure: { value: PARTS, means: "parts today, each page naming the product it came from" },
+      notes: "Every part was built because a product draws it; nothing speculative.",
     },
     {
       when: "11 Nov",

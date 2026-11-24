@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, it } from "vitest"
+import { deckProblems, formatFigure } from "@/registry/aimy/ui/deck"
 import { HorizonDeck, type HorizonStory } from "@/registry/aimy/ui/horizon-deck"
 import { LanesDeck, type LanesStory } from "@/registry/aimy/ui/lanes-deck"
 import { a11yViolations } from "../a11y"
@@ -104,5 +105,66 @@ describe("LanesDeck", () => {
       />
     )
     expect(container.querySelector(".dk-lns-rail")).toHaveTextContent("SignalWhat we saw")
+  })
+})
+
+describe("Deck stories", () => {
+  it("draws a figure in its own decimals and grouping, with its unit", () => {
+    expect(formatFigure(92.5)).toBe("92.5")
+    expect(formatFigure(1240)).toBe("1,240")
+    expect(formatFigure(1.4)).toBe("1.4")
+    expect(formatFigure(3)).toBe("3")
+    const story: HorizonStory = {
+      ...horizon,
+      moments: [horizon.moments[0]!, { chapter: "Pilot", figure: { value: 1.4, prefix: "$", suffix: "M", means: "pipeline added" } }],
+    }
+    render(<HorizonDeck story={story} />)
+    expect(within(deck()).getByText("1.4").parentElement).toHaveTextContent("$1.4M")
+  })
+
+  it("leaves a moment's date out rather than needing one", () => {
+    const story: HorizonStory = { ...horizon, moments: [{ chapter: "Why", title: "Reps lose their day." }, ...horizon.moments] }
+    const { container } = render(<HorizonDeck story={story} />)
+    expect(container.querySelectorAll(".dk-hzn-chip")[0]).toHaveTextContent(/^Why$/)
+    expect(container.querySelectorAll(".dk-hzn-panel .dk-kicker")[1]).toHaveTextContent(/^Why$/)
+  })
+
+  it("offers the speaker view only when there are notes", () => {
+    const { unmount } = render(<HorizonDeck story={horizon} />)
+    expect(screen.queryByRole("button", { name: "Speaker view" })).toBeNull()
+    unmount()
+    render(<LanesDeck story={{ ...lanes, close: { ...close, notes: "Ask for one thing." } }} />)
+    expect(screen.getByRole("button", { name: "Speaker view" })).toBeInTheDocument()
+  })
+
+  it("names what is wrong with a story before it is drawn", () => {
+    expect(deckProblems(horizon, "horizon")).toEqual([])
+    expect(deckProblems(lanes, "lanes")).toEqual([])
+    const bad = deckProblems(
+      {
+        cover: { kicker: "All-hands", title: "AiMY Sales v3: rebuilt from the ground up to give every rep their time back" },
+        moments: [
+          { chapter: "Why", title: "Data entry", figure: { value: 40, means: "% of the day" } },
+          { chapter: "", title: "Ok" },
+        ],
+        close,
+      },
+      "horizon"
+    ).join("\n")
+    expect(bad).toMatch(/The cover: the title is \d+ characters/)
+    expect(bad).toMatch(/a figure takes the title's place/)
+    expect(bad).toMatch(/put the unit in the figure's suffix/)
+    expect(bad).toMatch(/Moment 2 .*needs a chapter/)
+    const lane = deckProblems({ ...lanes, moments: [{ chapter: "Trust", learned: "People trust sources.", figure: { value: 4.2, suffix: "/5", means: "trust" }, did: "" }, lanes.moments[0]!] }, "lanes").join("\n")
+    expect(lane).toMatch(/learned isn't shown/)
+    expect(lane).toMatch(/needs did/)
+    expect(deckProblems({ ...horizon, moments: Array.from({ length: 8 }, (_, k) => ({ chapter: `M${k}`, title: "A line." })) }, "horizon")[0]).toMatch(/^8 moments is too many/)
+  })
+
+  it("reports the story's problems to onProblems", async () => {
+    const seen: string[][] = []
+    render(<HorizonDeck story={{ ...horizon, moments: horizon.moments.slice(0, 1) }} onProblems={(p) => seen.push(p)} />)
+    await new Promise((r) => setTimeout(r, 0))
+    expect(seen.at(-1)?.[0]).toMatch(/at least two moments/)
   })
 })

@@ -4,6 +4,8 @@ import { Lightbulb, Zap } from "lucide-react"
 import { useEffect, useRef } from "react"
 import {
   CloseAction,
+  deckProblems,
+  figureText,
   CloseTitle,
   Deck,
   DeckCount,
@@ -31,15 +33,17 @@ import { cssDuration } from "@/lib/utils"
 // Explored in docs/deck-variants.html (D).
 
 export type LanesMoment = {
-  /** When it happened: "27 Oct". */
-  when: string
-  /** Its name, on the learned card and in the rail: "The plan". */
+  /** When it happened: "27 Oct", "July", "Q3". Leave it out rather than invent one. */
+  when?: string
+  /** Its name, on the learned card and in the rail, one to three words: "The plan". */
   chapter: string
   /** What we learned. A figure replaces it with a number and what it means. */
   learned?: string
   figure?: DeckFigure
-  /** What we did about it. */
+  /** What we did about it; "Next: …" when nothing was done yet. Never invent it. */
   did: string
+  /** What the presenter says here, in the speaker view. Never on the slide. */
+  notes?: string
 }
 
 export type LanesStory = {
@@ -102,12 +106,24 @@ function LanesSlides({ story }: { story: LanesStory }) {
               style={{ left: n * COL }}
               aria-hidden={i !== n + 1}
             >
-              <div className="dk-lns-up">
+              <div
+                className="dk-lns-up"
+                data-fit-group={`col${n}`}
+                data-fit="100,1080"
+                data-fit-slide={n + 2}
+                data-fit-hint="the learned card runs up into the header. Keep it to three lines; say the rest in the notes"
+              >
                 <DeckLine className="dk-card is-learned">
                   <span className="dk-card-label">{m.chapter}</span>
                   {m.figure ? (
                     <>
-                      <DeckCount value={m.figure.value} n={n + 1} className="dk-lns-figure" />
+                      <DeckCount
+                        value={m.figure.value}
+                        prefix={m.figure.prefix}
+                        suffix={m.figure.suffix}
+                        n={n + 1}
+                        className="dk-lns-figure"
+                      />
                       {m.figure.means}
                     </>
                   ) : (
@@ -116,11 +132,17 @@ function LanesSlides({ story }: { story: LanesStory }) {
                 </DeckLine>
               </div>
               <span className="dk-lns-dot" />
-              <span className="dk-lns-when">{m.when}</span>
+              {m.when ? <span className="dk-lns-when">{m.when}</span> : null}
               <svg className="dk-lns-link" viewBox="0 0 40 108" aria-hidden="true">
                 <path pathLength={1} d="M20 4 V98 M10 88 L20 100 L30 88" />
               </svg>
-              <div className="dk-lns-down">
+              <div
+                className="dk-lns-down"
+                data-fit-group={`col${n}`}
+                data-fit="0,1010"
+                data-fit-slide={n + 2}
+                data-fit-hint="the did card runs off the bottom. Keep it to three lines; say the rest in the notes"
+              >
                 <DeckLine i={5} pop className="dk-card is-did">
                   {m.did}
                 </DeckLine>
@@ -165,8 +187,15 @@ function LanesSlides({ story }: { story: LanesStory }) {
           </span>
         </div>
       </aside>
-      <DeckHead />
-      <section className="dk-lns-panel" data-state={stateOf(0, i)} aria-hidden={i !== 0}>
+      <DeckHead meta={cover.when} />
+      <section
+        className="dk-lns-panel"
+        data-state={stateOf(0, i)}
+        aria-hidden={i !== 0}
+        data-fit="150,1000"
+        data-fit-slide={1}
+        data-fit-hint="the cover is too tall. Keep the title to three lines and the line under it to two"
+      >
         <DeckSpot name="cover" />
         <DeckLine i={1} className="dk-kicker">
           {cover.kicker}
@@ -180,7 +209,14 @@ function LanesSlides({ story }: { story: LanesStory }) {
           </DeckLine>
         ) : null}
       </section>
-      <section className="dk-lns-panel" data-state={stateOf(last, i)} aria-hidden={i !== last}>
+      <section
+        className="dk-lns-panel"
+        data-state={stateOf(last, i)}
+        aria-hidden={i !== last}
+        data-fit="150,1000"
+        data-fit-slide={last + 1}
+        data-fit-hint="the close is too tall. Keep the title to two lines and the line under it to two"
+      >
         <DeckSpot name="close" />
         <CloseTitle close={close} />
         {close.sub ? (
@@ -197,9 +233,34 @@ function LanesSlides({ story }: { story: LanesStory }) {
 }
 
 /** A deck told in two lanes on one time axis: what we learned above, what we did below. */
-export function LanesDeck({ story, label, className }: { story: LanesStory; label?: string; className?: string }) {
+export function LanesDeck({
+  story,
+  label,
+  onProblems,
+  className,
+}: {
+  story: LanesStory
+  label?: string
+  /** Gets what deckProblems finds and what runs over on the drawn slides. Without it they go to the console in development. */
+  onProblems?: (problems: string[]) => void
+  className?: string
+}) {
+  const { cover, moments, close } = story
   return (
-    <Deck label={label ?? story.cover.title} count={story.moments.length + 2} className={className}>
+    <Deck
+      label={label ?? cover.title}
+      count={moments.length + 2}
+      titles={[
+        cover.title,
+        ...moments.map((m) => `${m.chapter}: ${m.figure ? `${figureText(m.figure)} ${m.figure.means}` : m.learned}`),
+        [close.title, close.turn].filter(Boolean).join(" "),
+      ]}
+      notes={[cover.notes, ...moments.map((m) => m.notes), close.notes]}
+      problems={deckProblems(story, "lanes")}
+      checkKey={JSON.stringify(story)}
+      onProblems={onProblems}
+      className={className}
+    >
       <LanesSlides story={story} />
     </Deck>
   )

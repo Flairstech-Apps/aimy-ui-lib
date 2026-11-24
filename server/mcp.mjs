@@ -15,6 +15,7 @@ const VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"]
 const SKILLS = {
   "aimy-ui-build": "Build a screen, panel or flow from a screenshot, a mock-up or a description, using only AiMY UI.",
   "aimy-ui-review": "Review a screen, component or diff against AiMY UI's rules and report each break with its fix.",
+  "aimy-ui-presentations": "Make a presentation from a brief with HorizonDeck or LanesDeck: the story, the words, figures with units, speaker notes and the checks.",
   "aimy-ui-upgrade": "Bring an app up to the latest AiMY UI release without losing its own edits.",
   "aimy-ui-visual-review": "Check how a screen looks, rendered: alignment, spacing, overflow, contrast, both themes, desk and phone widths, measured in pixels.",
 }
@@ -26,6 +27,10 @@ const SKILL_ARG = {
   "aimy-ui-review": {
     name: "target",
     description: "What to review: files, a diff, or a screen. Leave empty for the current diff.",
+  },
+  "aimy-ui-presentations": {
+    name: "brief",
+    description: "What the presentation is for, who it is for, and the content or where to find it.",
   },
   "aimy-ui-upgrade": null,
   "aimy-ui-visual-review": {
@@ -68,7 +73,7 @@ const TOOLS = [
   {
     name: "get_skill",
     description:
-      "Get one of the AiMY UI task skills as instructions: aimy-ui-build (build a screen from a brief), aimy-ui-review (check a screen's code against the rules), aimy-ui-visual-review (check how a screen looks, rendered) or aimy-ui-upgrade (take a new release).",
+      "Get one of the AiMY UI task skills as instructions: aimy-ui-build (build a screen from a brief), aimy-ui-review (check a screen's code against the rules), aimy-ui-visual-review (check how a screen looks, rendered), aimy-ui-presentations (make a deck from a brief) or aimy-ui-upgrade (take a new release).",
     inputSchema: {
       type: "object",
       properties: { name: { type: "string", enum: Object.keys(SKILLS), description: "Which skill." } },

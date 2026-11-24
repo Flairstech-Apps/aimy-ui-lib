@@ -1,0 +1,306 @@
+---
+name: aimy-ui-presentations
+description: Make a presentation (a deck) for an AiMY team from a brief, notes, a document or data, with AiMY UI's HorizonDeck or LanesDeck, ready to present with speaker notes. Use when asked for a presentation, deck, slides, a keynote, an all-hands, a launch, a review, a retrospective or an update.
+---
+
+<!-- Written by scripts/agent-files.mjs from agents/skills/aimy-ui-presentations.md. Edit that, not this. -->
+
+# Make a presentation with AiMY UI
+
+A deck is a story told aloud, one moment at a time. It is not a document on a screen. Each slide holds one idea in a few large words; the presenter says everything else, and everything else goes in the notes. Most of the work is deciding what the room should remember and cutting the rest.
+
+The library has two templates. Both take a story (a cover, the moments in order, a close) and draw every slide, the timeline and the motion themselves. Never lay slides out by hand, never add your own slide markup around them, and never put a list on a slide.
+
+## 1. Take the latest AiMY UI
+
+Once per session: compare the project's `@flairstech-aimy/ui` with `npm view @flairstech-aimy/ui version`. If it is behind, read https://aimy-ui-lib.aimy.flairstech.com/whats-new/ and update ui and tokens together (`pnpm up @flairstech-aimy/ui@latest @flairstech-aimy/tokens@latest`). Speaker notes, figure units and the deck checks need 2.2.0 or later.
+
+## 2. Pick the template
+
+- **`HorizonDeck`** for a room listening to one person: keynotes, launches, all-hands, kick-offs. One headline per slide, a line or two under it at most. The orb travels a horizon of moments.
+- **`LanesDeck`** for what we learned and what we did: reviews, retrospectives, monthly and quarterly updates, post-mortems. Each moment is a column, learned above and did below, and past columns stay on screen so the room can read back.
+- **Neither** when the thing is meant to be read alone, is mostly a table, or is a long list (a report, a manual, a backlog). Say so and stop: that is a page (`DocPage`, `DataTable`), not a deck.
+
+## 3. Write the story before any code
+
+1. Write the one sentence the room should leave with. It becomes the close.
+2. Choose two to seven moments; five reads best. The horizon holds seven at most; the lanes hold twelve, but every extra moment is another minute of talking.
+3. Order them in time. Common shapes:
+   - **Launch:** why we built it, then one moment for each thing that matters most (three at most), then the proof as figures, then when it arrives, then the close with the ask.
+   - **Review:** one moment per period (July, August, September) or per finding, each with what we learned and what we did.
+   - **Plan:** where we are today, then each step with its date, then the close with what we need.
+4. Cut. Whatever doesn't earn a moment goes in a nearby moment's notes, not on a slide. When the brief has more than seven points for the horizon, merge the closest ones (two features in one moment, the dates of a rollout in one) and keep the rest for the notes.
+
+## 4. Write each part
+
+Short is the rule; the deck checks the numbers below for you (step 7).
+
+- **Cover:** `kicker` names the occasion in a few words ("All-hands · Sales v3", under 48 characters). `title` is the deck's claim in two lines at most (under 60). `sub` is one line (under 110). `when` shows top right: the day it is presented when the brief gives it, or for a review the period it covers ("Q3 2026"). Leave it out rather than work it out.
+- **`chapter`:** the moment's name on the timeline, one to three words, under 22 characters: "Why", "Call summaries", "Pilot", "EMEA".
+- **`when`:** a real date or period from the brief, in one format across the deck ("1 Dec", "July", "Q3", "Today", "Next"). Leave it out when there isn't one. Never invent a date to fill the field; moments without one still sit in order on the timeline.
+- **Horizon `title`:** one claim in plain words, two lines at most (under 64 characters). **`body`:** at most two lines (under 130), or nothing.
+- **Lanes `learned` and `did`:** one or two sentences each, three lines at most (under 150 characters). `did` is what was actually done. When nothing was done yet, write "Next: …"; when nothing changed that period, say so and why ("Nothing new: the lift came from July's citations."). Never invent an action.
+- **Figures:** a number that earns its place (`figure: { value, prefix, suffix, means }`).
+  - `value` is the number as it is: `92.5`, `1240`, `1.4`. It keeps its decimals and groups thousands when drawn.
+  - The unit goes in `prefix` ("$", "£") or `suffix` ("%", "M", "K", "h", "x", "/5"), never in the words.
+  - `means` says what it counts and what it is against: "win rate in the pilot teams, up from 18%". Compare it with before, a usual day or a target someone actually set, using only numbers from the brief.
+  - When the brief gives nothing to compare with, say what the number means for us instead: the rest of the whole ("of questions search answered; the other 39% got none"), or what it changes ("hours a week back for each rep"). Never invent a baseline or a target. If nothing honest can be said beside it, it is not a figure: put it in a title's words or the notes.
+  - On the horizon a figure replaces the title and body; in the lanes it replaces `learned`. Don't pass both: the other is dropped.
+- **Close:** `title` plus `turn` fit on one line (under 34 characters together); `turn` is the last word or two, set in AiMY blue ("Knowledge to" + "Action."). `sub` is one line (under 60 on the horizon; two lines, under 110, in the lanes). `action` is the one thing to do next, with a real `href` (ask for it, or leave the href out; never invent a link), and `where` says where to find it when the brief does. When the room is asked for nothing (a review), leave the action out.
+
+## 5. Lists, asks and everything else
+
+- **Several things that each matter** (three features, three regions): a moment each when the count allows; they can share a `when`. When it doesn't, one moment names them all, the first in the title and the rest in the body, as the example below does with the rollout.
+- **Several things to mention:** one sentence in a body, or the notes.
+- **Several asks:** the most important is the close's `action`; the next goes in the close's `sub` ("Book a training session, and tell us what breaks in #sales-v3.").
+- **Priorities ahead:** in a review, one sentence in the close's `sub` ("Next quarter: offline mode, admin analytics and Arabic."), or their own moments with `when: "Next"`.
+- **Detail, sources, caveats, the long version of a number:** the notes.
+
+## 6. Write the notes
+
+Give every slide `notes`: what to say, in full sentences, as the presenter would say it. Put there the detail you cut, where each number comes from, and the line that leads to the next slide. Notes never appear on the slides. Any notes add a **Speaker view** button beside Present: it opens the presenter's own window with this slide's notes, what comes next and a clock, and its arrow keys move the deck.
+
+## 7. Put it on a page
+
+The deck is the page's content. It fills the width of whatever holds it and keeps 16:9, so put it straight into the app's content column (the shell sets the width; about 1200px reads best) with nothing between its slides and its controls. Don't put it in a card, beside other content, or in a dialog, and add no CSS of your own.
+
+Keep the story in its own module (`story.ts`, exporting it) and import it into the page, so a test can check it.
+
+```tsx
+// story.ts
+import type { HorizonStory } from "@/components/horizon-deck"
+
+
+// The brief: "Launch Sales v3 at the all-hands. Reps spent 40% of their day on data entry. New: AI call
+// summaries. Pilot: win rate up from 18% to 23%, $1.4M pipeline added in six weeks by three teams.
+// Rollout: EMEA 1 Dec, US 12 Jan, APAC 2 Feb. Ask: book training; feedback in #sales-v3."
+// Every word below comes from it; nothing is invented.
+const story: HorizonStory = {
+  cover: { kicker: "All-hands · Sales v3", title: "Sales v3 gives reps their day back.", notes: "Open with where reps' time goes today." },
+  moments: [
+    { chapter: "Why", figure: { value: 40, suffix: "%", means: "of a rep's day goes on data entry instead of selling" }, notes: "…" },
+    { chapter: "Call summaries", title: "Every call is summarised before you hang up.", notes: "…" },
+    { chapter: "Pilot", figure: { value: 23, suffix: "%", means: "win rate in the pilot teams, up from 18%" }, notes: "…" },
+    { chapter: "Pilot", figure: { value: 1.4, prefix: "$", suffix: "M", means: "pipeline added in six weeks by three teams" }, notes: "…" },
+    { when: "1 Dec", chapter: "EMEA", title: "EMEA moves first, on 1 December.", body: "The US follows on 12 January and APAC on 2 February.", notes: "…" },
+  ],
+  close: { title: "Your day,", turn: "back.", sub: "Book a training session, and tell us what breaks in #sales-v3.", action: { label: "Book training" }, notes: "…" },
+}
+
+export default story
+
+// page.tsx
+import { HorizonDeck } from "@/components/horizon-deck"
+import story from "./story"
+
+export default function SalesV3AllHands() {
+  return <HorizonDeck story={story} />
+}
+
+// story.test.ts
+import { deckProblems } from "@/components/deck"
+import story from "./story"
+
+test("the all-hands deck has no problems", () => expect(deckProblems(story, "horizon")).toEqual([]))
+```
+
+## 8. Check it
+
+- **The story:** `deckProblems(story, "horizon")` (or `"lanes"`, from `@/components/deck`) returns every problem as a sentence. It must return `[]`; put it in a unit test, as above.
+- **The drawn slides:** in development the deck measures every slide once its fonts load. Words that run into the horizon, the orb, the header or off the slide are set smaller until they fit (to 70% at most), and it warns in the console (`AiMY deck "…"`) for each one. Pass `onProblems` to collect them yourself. A warning means the slide is smaller than it should be: fix every one by cutting words, never with CSS.
+- **Look at it:** open the page, click the deck, and step through every slide with the arrow keys, waiting for each to settle. Check both themes and Present. If the `aimy-ui-visual-review` skill is present, run it on the cover, a figure slide and the close.
+- **Read it aloud:** if a slide needs its notes to make sense, its title is wrong.
+
+## 9. Presenting
+
+- **Present** takes the deck full screen. Arrows, Space, Page Up and Down, Home and End move it; clicking the left third goes back.
+- **Speaker view** opens on the presenter's screen. In a Teams meeting, share the window or screen with the deck, not the speaker view.
+- Allow pop-ups for the site if the browser blocks the speaker view; the deck says so when it happens.
+
+## Which component
+
+### Components
+
+- **Button** (`@aimy/button`): The AiMY button, a pill as both products draw it. https://aimy-ui-lib.aimy.flairstech.com/components/button/
+- **Icon button** (`@aimy/icon-button`): A square control for an icon alone, with a required label that becomes its accessible name and tooltip. https://aimy-ui-lib.aimy.flairstech.com/components/icon-button/
+- **Link** (`@aimy/link`): Coloured words for going somewhere: brand ink, underline on hover, or always underlined inside a sentence (variant inline). https://aimy-ui-lib.aimy.flairstech.com/components/link/
+- **Tag** (`@aimy/tag`): A label for a state: a soft ground of the hue and the word in the readable ink, no edge (a label has a fill, a control has an edge). https://aimy-ui-lib.aimy.flairstech.com/components/tag/
+- **Chip** (`@aimy/chip`): A toggle for filtering, with an edge because you can press it. https://aimy-ui-lib.aimy.flairstech.com/components/chip/
+- **Count badge** (`@aimy/count-badge`): An unread count pinned to the top right of a control (put it in a relative parent). https://aimy-ui-lib.aimy.flairstech.com/components/count-badge/
+- **Status** (`@aimy/status`): Presence in words with a coloured dot: online, busy, away, offline. https://aimy-ui-lib.aimy.flairstech.com/components/status/
+- **Kbd** (`@aimy/kbd`): Key caps for a keyboard shortcut: <Kbd keys={["Ctrl", "K"]} />. https://aimy-ui-lib.aimy.flairstech.com/components/kbd/
+- **Divider** (`@aimy/divider`): A 1px rule in the edge colour, horizontal or vertical. https://aimy-ui-lib.aimy.flairstech.com/components/divider/
+- **Avatar** (`@aimy/avatar`): A person as their photo (with the face ring) or initials on the avatar gradient; AiMY as its mark on the AiMY tile, so AiMY is never shown with a person's face. https://aimy-ui-lib.aimy.flairstech.com/components/avatar/
+- **Face stack** (`@aimy/face-stack`): Sales' face stack: faces over each other as one group, the first on top, each ringed in the ground colour, the rest past four as one more circle with the count. https://aimy-ui-lib.aimy.flairstech.com/components/face-stack/
+- **Call recording** (`@aimy/call-recording`): Sales' recording strip from the call log: the recording of a call, or the message left on a missed one, as a voice note. https://aimy-ui-lib.aimy.flairstech.com/components/call-recording/
+
+### Forms
+
+- **Inputs** (`@aimy/field`): Wraps a form control with its label above and help or an error below, and wires them up: the control gets the id, aria-describedby and aria-invalid. https://aimy-ui-lib.aimy.flairstech.com/components/field/
+- **Search field** (`@aimy/search-field`): Find-as-you-type with a search icon, a clear button that appears only when there is text, and Escape to clear. https://aimy-ui-lib.aimy.flairstech.com/components/search-field/
+- **Select** (`@aimy/select`): The only select control; never a native <select>. https://aimy-ui-lib.aimy.flairstech.com/components/select/
+- **Combobox** (`@aimy/combobox`): Choose one option by typing to narrow a long list (an owner, a company, a product). https://aimy-ui-lib.aimy.flairstech.com/components/combobox/
+- **Multi-select** (`@aimy/multi-select`): Several choices behind one trigger: Knowledge's .k-multi. https://aimy-ui-lib.aimy.flairstech.com/components/multi-select/
+- **Tag input** (`@aimy/tag-input`): Values typed in as tags: Knowledge's .tag-input. https://aimy-ui-lib.aimy.flairstech.com/components/tag-input/
+- **Inline edit** (`@aimy/inline-edit`): Rename or change one value where it sits: at rest it reads as its text with a pencil on hover and focus; pressed, it becomes the box field in the same size. https://aimy-ui-lib.aimy.flairstech.com/components/inline-edit/
+- **Checkbox** (`@aimy/checkbox`): A 17px box: brand fill and a white tick when on, a dash for some (checked="indeterminate"). https://aimy-ui-lib.aimy.flairstech.com/components/checkbox/
+- **Switch** (`@aimy/switch`): An on/off switch, 36 by 20: the brand when on. https://aimy-ui-lib.aimy.flairstech.com/components/switch/
+- **Segmented** (`@aimy/segmented`): Two to five mutually exclusive options in a pill, as a radiogroup: arrow keys move and choose. https://aimy-ui-lib.aimy.flairstech.com/components/segmented/
+- **Copy button** (`@aimy/copy-button`): Copies a value and says so in words: Copy, then Copied for 1.4s (or Press Ctrl+C if the browser refuses), announced to screen readers. https://aimy-ui-lib.aimy.flairstech.com/components/copy-button/
+- **Date picker** (`@aimy/date-picker`): A date or range filter: a pill like Select that opens quick choices and the Calendar. https://aimy-ui-lib.aimy.flairstech.com/components/date-picker/
+
+### Containers & navigation
+
+- **Card** (`@aimy/card`): The record card both products draw: an article with CardHead (a state Tag and CardType), CardTitle (a real button or link whose hit area covers the card), CardSummary, CardFacts, CardBody and CardFoot (stay clickable on their own). https://aimy-ui-lib.aimy.flairstech.com/components/card/
+- **Tabs** (`@aimy/tabs`): A real tablist with arrow keys. https://aimy-ui-lib.aimy.flairstech.com/components/tabs/
+- **Menu** (`@aimy/menu`): A menu of actions or choices from a control: MenuItem (acts and closes; danger for destructive), MenuRadioGroup and MenuRadioItem (one answer), MenuCheckboxItem (several answers; stays open), MenuLabel, MenuSeparator, MenuSearch (filters long lists). https://aimy-ui-lib.aimy.flairstech.com/components/menu/
+- **Command bar** (`@aimy/command-bar`): Ctrl+K opens one bar for every action the page's parts offer (through the agent bridge) and every command the app adds with useCommand; the same set AiMY uses as tools. https://aimy-ui-lib.aimy.flairstech.com/components/command-bar/
+- **Tooltip & popover** (`@aimy/tooltip`): A short hint on hover or keyboard focus, after 80ms (transitions.dev tooltip, 17). https://aimy-ui-lib.aimy.flairstech.com/components/tooltip/
+- **Hover card** (`@aimy/hover-card`): A card on a chart mark that you can reach: it opens beside the mark after a short rest, stays open while the pointer travels into it, and closes a moment after it leaves, so an action inside can be pressed. https://aimy-ui-lib.aimy.flairstech.com/components/hover-card/
+- **Disclosure** (`@aimy/disclosure`): Show or hide one section in place: a header with an optional count and a chevron, the body sliding open with transitions.dev accordion (21). https://aimy-ui-lib.aimy.flairstech.com/components/disclosure/
+- **Pager** (`@aimy/pager`): Paging in words: 1–15 of 134 contacts, page 1 of 9, with Back and Next text actions that say how many. https://aimy-ui-lib.aimy.flairstech.com/components/pager/
+- **Resizable panels** (`@aimy/resizable-panels`): Side-by-side or stacked panels with a handle between each pair: a hairline that turns brand on hover, drag and focus. https://aimy-ui-lib.aimy.flairstech.com/components/resizable-panels/
+
+### Feedback & overlays
+
+- **Toast** (`@aimy/toast`): The confirmation every action ends with: act at once, then toast what happened with Undo. https://aimy-ui-lib.aimy.flairstech.com/components/toast/
+- **Confirmation & feedback** (`@aimy/feedback`): The first rung of AiMY's confirmation ladder made easy. https://aimy-ui-lib.aimy.flairstech.com/components/feedback/
+- **Dialog** (`@aimy/dialog`): Dialog: for ordered forms and changes with consequences, never to confirm what Undo can take back. https://aimy-ui-lib.aimy.flairstech.com/components/dialog/
+- **Sheet** (`@aimy/sheet`): A panel that slides in from the side over the page, with a scrim: the rail as a drawer below the rail rung, settings and connection sheets. https://aimy-ui-lib.aimy.flairstech.com/components/sheet/
+- **Notice** (`@aimy/notice`): A notice in the page: neutral, info, ok, warn or err. https://aimy-ui-lib.aimy.flairstech.com/components/notice/
+- **Empty & error states** (`@aimy/empty-state`): EmptyState: why there is nothing here and the way forward (Clear filters, New document), with an icon tile and an optional fine line; dashed or plain. https://aimy-ui-lib.aimy.flairstech.com/components/empty-state/
+- **Recovery** (`@aimy/recovery`): AIMY-2979's error and recovery patterns. https://aimy-ui-lib.aimy.flairstech.com/components/recovery/
+- **Skeleton** (`@aimy/skeleton`): Placeholders shaped like what is coming, pulsing while loading; Reveal cross-fades from the skeleton to the content when loading ends (transitions.dev skeleton reveal, 14). https://aimy-ui-lib.aimy.flairstech.com/components/skeleton/
+- **Progress** (`@aimy/progress`): How much is done or used: thin (3px) for work in progress, meter (6px) or large (8px) for usage. https://aimy-ui-lib.aimy.flairstech.com/components/progress/
+- **Notification bell** (`@aimy/notification-bell`): The topbar bell with its micro-interactions: the count slides on and pops (transitions.dev 03); a new ping rocks the bell from its top, three swings in 600ms, and drops one line under it saying what finished, gone after 1.4s (Knowledge's ring and tip). https://aimy-ui-lib.aimy.flairstech.com/components/notification-bell/
+
+### Shell
+
+- **App shell** (`@aimy/app-shell`): The frame every AiMY product sits in: topnav, rail, page. https://aimy-ui-lib.aimy.flairstech.com/components/app-shell/
+- **Background** (`@aimy/ambient-background`): The wash Sales and Knowledge draw behind the whole app: two ellipse glows on the ground, below every surface (fixed, z-index 0, no pointer), with each theme's own alphas, and the dark ground they are calibrated on (#171a1c). https://aimy-ui-lib.aimy.flairstech.com/components/ambient-background/
+- **Top navigation** (`@aimy/topnav`): The bar: Knowledge's markup with Sales' values. https://aimy-ui-lib.aimy.flairstech.com/components/topnav/
+- **Side navigation** (`@aimy/side-nav`): The pages of a product down the left, in two forms. https://aimy-ui-lib.aimy.flairstech.com/components/side-nav/
+- **Scroll dot** (`@aimy/scroll-dot`): QA's scroll indicator, opt-in per scrolling area: a translucent accent dot in place of the native bar that trails a flame sized by scroll speed and lands with a squash when the scroll stops. https://aimy-ui-lib.aimy.flairstech.com/components/scroll-dot/
+- **Rail doors**: https://aimy-ui-lib.aimy.flairstech.com/components/rail-door/
+- **Notification center** (`@aimy/notification-center`): The bell and Sales' panel: Needs you with the unread count and Mark all read; a row per thing with a severity dot beside its type in words, when, one sentence and one action; a question for AiMY at the foot. https://aimy-ui-lib.aimy.flairstech.com/components/notification-center/
+- **Diary** (`@aimy/diary`): Sales' diary: the month (count, Today, the months either side; a Monday-first grid with up to three dots a day by kind, today marked) and the chosen day beside it (hour or all day, kind in words, who, what, who set the time), add one, and the next three. https://aimy-ui-lib.aimy.flairstech.com/components/diary/
+
+### Documents
+
+- **Document page** (`@aimy/document`): Knowledge's document page: the paper and the details beside it (one column below 1100px of its own width). https://aimy-ui-lib.aimy.flairstech.com/components/document/
+- **Writing tools** (`@aimy/doc-editor`): Knowledge's writing tools: SelectionMenu (Bold, Italic, Underline, then what AiMY can do with the selected words), WritingToolbar (add a block, formats, headings, lists, quote, undo, redo, AiMY), BlockMenu ('+' or '/' on an empty line) and AiMenu (AiMY for the whole document), wired together in DocEditor over a contenteditable body. https://aimy-ui-lib.aimy.flairstech.com/components/doc-editor/
+
+### Presentations
+
+- **Horizon deck** (`@aimy/horizon-deck`): A presentation told on the orb's horizon: the orb rises on the cover, then hops along the horizon from moment to moment, drawing its path in the sky, rippling the ground where it lands and raising that date onto a glass chip. https://aimy-ui-lib.aimy.flairstech.com/components/horizon-deck/
+- **Two lanes deck** (`@aimy/lanes-deck`): A presentation told in two lanes on one time axis: what we learned above, what we did below, an arrow drawn between, past columns kept at full strength, and a glass rail with the legend (Knowledge to Action) and the chapter. https://aimy-ui-lib.aimy.flairstech.com/components/lanes-deck/
+
+### Data display
+
+- **Stat tiles** (`@aimy/stat-tile`): Sales' figure strip: a caption, one figure, and a sub-line that says what it means, divided by a hairline above, never boxed. https://aimy-ui-lib.aimy.flairstech.com/components/stat-tile/
+- **Description list** (`@aimy/description-list`): Label and value pairs in the products' two shapes: beside (Sales' record facts, the label in an 8rem column; stacks when narrow) and stacked (Knowledge's facts, a small upper-case label over the value, a note, a hairline between rows, one control on the right). https://aimy-ui-lib.aimy.flairstech.com/components/description-list/
+- **Timeline** (`@aimy/timeline`): Sales' history of one record on a rail: a dot per touchpoint in the tone of how it went, a larger accent node where a step was climbed, month headings, an end cap saying where it began. https://aimy-ui-lib.aimy.flairstech.com/components/timeline/
+- **Journey** (`@aimy/journey`): Sales' story of a contact, left to right: a filled dot in the tone of how each step went, joined by a line, and the last step an open ring with a halo, where they stand now. https://aimy-ui-lib.aimy.flairstech.com/components/journey/
+- **Data table** (`@aimy/data-table`): Records in columns, in Knowledge's two forms: rows (each row a card, one height, the first column takes its own line below 46rem) and table (a real table in one card: a head band, a hairline between rows, a wash on hover, sub-labels, scrolls sideways). https://aimy-ui-lib.aimy.flairstech.com/components/data-table/
+- **Windowed list** (`@aimy/virtual-list`): Sales' windowed list for long lists: only the rows near the view exist, about thirty at a time. https://aimy-ui-lib.aimy.flairstech.com/components/virtual-list/
+- **Tree** (`@aimy/tree`): Nested items you open and close (folders, teams, collections). https://aimy-ui-lib.aimy.flairstech.com/components/tree/
+- **Sortable list** (`@aimy/sortable-list`): A list people put in their own order. https://aimy-ui-lib.aimy.flairstech.com/components/sortable-list/
+- **Swipe row** (`@aimy/swipe-row`): A row on a phone that slides to show an action behind it (archive, snooze), with fullSwipe to run it in one move. https://aimy-ui-lib.aimy.flairstech.com/components/swipe-row/
+
+### Charts
+
+- **KPI widget** (`@aimy/kpi-widget`): Sales' floor widget: one measure over time against what was promised. https://aimy-ui-lib.aimy.flairstech.com/components/kpi-widget/
+- **Progress to target** (`@aimy/target-bar`): Sales' attainment bar: the figure of its target and the share in words, then one bar with what is in (solid accent), what AiMY expects could still come (hatched), the target crossing the bar and today's pace as a tick inside it. https://aimy-ui-lib.aimy.flairstech.com/components/target-bar/
+- **Bar list** (`@aimy/bar-list`): A bar per category, as QA's audit panel and the operations hub draw them. https://aimy-ui-lib.aimy.flairstech.com/components/bar-list/
+- **Funnel** (`@aimy/funnel`): Sales' funnel: a name, a pill bar and a right-aligned count a row. https://aimy-ui-lib.aimy.flairstech.com/components/funnel/
+- **Sparkline** (`@aimy/sparkline`): Knowledge's before-and-after line: the line before a change in the reading ink, after it in the brand, the change a dashed line in the action ink, named underneath. https://aimy-ui-lib.aimy.flairstech.com/components/sparkline/
+- **Score tile** (`@aimy/score-tile`): QA's quality-score summary: the score in its tone, how far from the goal, how it moved with a Lucide arrow, and a small curve of the period that is also the button opening the full trend (aria-expanded, aria-controls), with the data's source under it. https://aimy-ui-lib.aimy.flairstech.com/components/score-tile/
+- **Trend chart** (`@aimy/trend-chart`): QA's quality-score trend: ranges (Segmented), Compare (Chip), average/peak/low figures, a smooth accent curve over a fading area, the previous period dashed, a dashed goal with its pill, peak/low/latest written at their points, flagged dips banded in red, and a pointer or arrow-key readout. https://aimy-ui-lib.aimy.flairstech.com/components/trend-chart/
+- **Donut** (`@aimy/donut`): QA's pass/borderline/fail ring: contiguous arcs from twelve o'clock; pointing at a part or its key row (or focusing the row) thickens it with a glow, dims the rest and says it in the centre in its ink. https://aimy-ui-lib.aimy.flairstech.com/components/donut/
+- **Heatmap** (`@aimy/heatmap`): QA's goal-by-week grid: a row per goal, a column per period, each cell its score tinted by band, a coaching dot with its note, 'none' where there is no score. https://aimy-ui-lib.aimy.flairstech.com/components/heatmap/
+- **Leaderboard** (`@aimy/leaderboard`): QA's achievers list: ranked, no bars; a rank badge in medal inks for the first three, the name, and each measure labelled and right-aligned. https://aimy-ui-lib.aimy.flairstech.com/components/leaderboard/
+
+### Chat widgets
+
+- **Widget frame** (`@aimy/widget-frame`): What every widget in a chat reply sits in: a head that names the result and counts or orders it, with Open in the canvas and Download; the result; and a foot that opens the rest in the canvas instead of a paginator. https://aimy-ui-lib.aimy.flairstech.com/components/widget-frame/
+- **Candidate card** (`@aimy/candidate-card`): One candidate in a grid of cards: name, role, the Fit badge, company and location, two skills and how many more, then View profile, Email and Start outreach. https://aimy-ui-lib.aimy.flairstech.com/components/candidate-card/
+- **Candidate profile** (`@aimy/candidate-profile`): One candidate in full inside a reply: header with the Fit badge, contact facts, About in three lines with Read all, work experience two jobs deep with Show all, skills, and Start outreach, Download CV, Add note. https://aimy-ui-lib.aimy.flairstech.com/components/candidate-profile/
+- **Chat table** (`@aimy/chat-table`): A tool's table in a chat reply: the DataTable with sentence-case headers and three-state sorting, placeholder rows while the tool runs, and the rows form instead of sideways scrolling when the widget is narrow. https://aimy-ui-lib.aimy.flairstech.com/components/chat-table/
+- **Ranked list** (`@aimy/ranked-list`): Results best first, one per row, each with its reason in two lines and the Fit badge; the row opens the result. https://aimy-ui-lib.aimy.flairstech.com/components/ranked-list/
+- **File drop** (`@aimy/file-drop`): Where files come in: drop them or press to choose. https://aimy-ui-lib.aimy.flairstech.com/components/file-drop/
+- **Upload results** (`@aimy/upload-results`): A batch counted by status (Added, Added with warnings, Not added), each a number, an icon and a word, filtering the rows below; it opens on what needs a person, and each row has its fix: Open, See warnings, Upload again. https://aimy-ui-lib.aimy.flairstech.com/components/upload-results/
+
+### AI: conversation
+
+- **Composer** (`@aimy/composer`): Where a person asks AiMY, as the products' voice.js arranges it. https://aimy-ui-lib.aimy.flairstech.com/components/composer/
+- **Message** (`@aimy/message`): One conversation turn in Sales' shape: 16px text, 12px corners with the square one on the speaker's side. https://aimy-ui-lib.aimy.flairstech.com/components/message/
+- **Streaming text** (`@aimy/streaming-text`): Text that arrives over time: pass the text so far and streaming. https://aimy-ui-lib.aimy.flairstech.com/components/streaming-text/
+- **Generative UI** (`@aimy/generative-ui`): AiMY answers with interface drawn only from library parts: GenerativeUI renders a model's show_ui spec (finished or streaming, each part as soon as it is whole) with WidgetFrame, StatTiles, TrendChart, KpiWidget, RankedList, DataTable, Donut, TargetBar, DescriptionList, Notice, Tag and Button. https://aimy-ui-lib.aimy.flairstech.com/components/generative-ui/
+- **Thinking** (`@aimy/thinking`): AiMY at work before any words: the particle think-mark (the AiMY mark scattering and gathering, ported from the products) and a line saying what it does. https://aimy-ui-lib.aimy.flairstech.com/components/thinking/
+- **Response actions** (`@aimy/response-actions`): What a person can do with one answer (Knowledge's .msg-acts): Copy, Retry, the N sources it stands on, and Useful / Not useful (mutually exclusive, toggles). https://aimy-ui-lib.aimy.flairstech.com/components/response-actions/
+- **Suggestions** (`@aimy/suggestions`): One-click questions: openers centred in an empty conversation, follow-ups under an answer. https://aimy-ui-lib.aimy.flairstech.com/components/suggestions/
+- **Reasoning** (`@aimy/reasoning`): How AiMY got to an answer, folded under it: 'How this was answered' with steps that say what AiMY did and why (Knowledge's act-log; Sales' 'Why AiMY wrote it this way'). https://aimy-ui-lib.aimy.flairstech.com/components/reasoning/
+- **Canvas** (`@aimy/canvas`): The AiMY canvas: glass over the page from under the topbar, with 'Based on' (what the conversation is about), a chats column that becomes a drawer below 900px, the thread (a polite live log, 53rem wide) and the canvas Composer on the same edges. https://aimy-ui-lib.aimy.flairstech.com/components/canvas/
+- **Peek** (`@aimy/peek`): AiMY's answer in a card that rises out of the float bar (Sales' .b-peek, Knowledge's .aimy-peek): thinks, then answers; three lines then a fade; press to open the canvas; one-click questions under it. https://aimy-ui-lib.aimy.flairstech.com/components/peek/
+
+### AI: trust
+
+- **Citations & sources** (`@aimy/citation`): A numbered marker in an answer that points at its source (Knowledge's .cite). https://aimy-ui-lib.aimy.flairstech.com/components/citation/
+- **Trust state** (`@aimy/trust-state`): The trust condition of a source, on the source (Knowledge's statusBadge): current (No issues), outdated (Out of date), conflicting, draft, unowned, unused, superseded (also says Not in answers). https://aimy-ui-lib.aimy.flairstech.com/components/trust-state/
+- **Trust disclosure** (`@aimy/trust-disclosure`): What an answer is grounded on, said under it (Knowledge's .trust-disclosure): rows in ok, warn, err or none tone, and the warm exclusion ground when nothing could answer, with DisclosureAction for the way forward. https://aimy-ui-lib.aimy.flairstech.com/components/trust-disclosure/
+- **Confidence & score** (`@aimy/confidence`): How sure AiMY is about a group of facts, in words, with why (Sales' .b-conf): ok (a check), old (May be out of date, Check again), gap (Partly known), none (Not known yet, Find out more), busy (Checking again). https://aimy-ui-lib.aimy.flairstech.com/components/confidence/
+- **When AiMY is unavailable**: https://aimy-ui-lib.aimy.flairstech.com/components/unavailable/
+
+### AI: actions
+
+- **Work state** (`@aimy/work-state`): Where a surfaced item stands, required on every item (doctrine §2.3): detected (Found), recommended (Suggested), drafted (Drafted), staged (Awaiting you), completed (Done), failed (Stopped). https://aimy-ui-lib.aimy.flairstech.com/components/work-state/
+- **Entry action** (`@aimy/entry-action`): An action that declares how it behaves (doctrine §3); mode is required so an unclassified action does not compile. https://aimy-ui-lib.aimy.flairstech.com/components/entry-action/
+- **Suggestion** (`@aimy/suggestion`): A change AiMY proposes, shown as a change (Knowledge's editor suggestion): old wording struck through, new wording after, Accept, Edit, Reject. https://aimy-ui-lib.aimy.flairstech.com/components/suggestion/
+- **Agent steps** (`@aimy/agent-steps`): AiMY's work step by step while it runs (Sales' curation trace): what it is doing with a running clock, a line saying the person can leave, steps that appear as they start, beat while live and tick with what they found. https://aimy-ui-lib.aimy.flairstech.com/components/agent-steps/
+- **Change review** (`@aimy/change-review`): A governed or irreversible change, reviewed before it runs (Knowledge's commit surface): Now → After, why, 'What this will do' (changes, cautions, what is skipped), Reversible for 24h, and a typed word for destructive changes. https://aimy-ui-lib.aimy.flairstech.com/components/change-review/
+- **Version list** (`@aimy/version-list`): A document's versions (Knowledge's versionList). https://aimy-ui-lib.aimy.flairstech.com/components/version-list/
+- **Activity** (`@aimy/activity`): What happened, who did it and when (Sales' activity rows): the subject, the outcome in its tone, then who and when, with the note under it. https://aimy-ui-lib.aimy.flairstech.com/components/activity/
+- **Set-scope bar** (`@aimy/set-scope-bar`): Bulk work states its scope: N selected, of what, filtered how, the actions that apply, and Clear (the design system's set-scope bar; neither product draws one). https://aimy-ui-lib.aimy.flairstech.com/components/set-scope-bar/
+- **Audit trail** (`@aimy/audit-trail`): A governed record of changes (design system spec): what changed, who and how, when, and Revert or Irreversible on every entry. https://aimy-ui-lib.aimy.flairstech.com/components/audit-trail/
+- **Decision zone** (`@aimy/decision-zone`): A proposal with operational consequences decided in place (design system spec): the question, its consequence and how long it stays reversible, Accept / Edit / Reject (edit required), Awaiting you, then what was decided and Undo. https://aimy-ui-lib.aimy.flairstech.com/components/decision-zone/
+- **Step list** (`@aimy/step-list`): The compact step list (design system spec): done with what it found ('3 matches · 1.2s'), running, pending with its number, failed. https://aimy-ui-lib.aimy.flairstech.com/components/step-list/
+
+### AI: memory
+
+- **Brief** (`@aimy/brief`): What AiMY has to say at the top of a page, from parts: Brief (wash, accent or plain ground), BriefHead (Sales' large Today title, or the small AiMY label with a work state), BriefLines with BriefLink numbers, BriefFigure (one large figure and its sentence), BriefDeck, BriefActions, BriefStarts (ways to start with counts and reasons), BriefNext (Knowledge's 'Worth asking'). https://aimy-ui-lib.aimy.flairstech.com/components/brief/
+- **Memory**: https://aimy-ui-lib.aimy.flairstech.com/components/memory/
+- **AiMY note** (`@aimy/aimy-note`): A sentence from AiMY on a record or card with where it came from (Sales' .b-aimy): the mark, one useful sentence, the source line, one optional control. https://aimy-ui-lib.aimy.flairstech.com/components/aimy-note/
+- **Briefing** (`@aimy/briefing`): A briefing item's Acknowledge, and Dismiss with one-click reasons in place, each with Undo (doctrine §5.9; design system spec). https://aimy-ui-lib.aimy.flairstech.com/components/briefing/
+- **Autonomy** (`@aimy/autonomy`): How much AiMY may do without asking, per kind of work, with the evidence it has earned it: Ask me first / Do it, then tell me / Do it, keep a log. https://aimy-ui-lib.aimy.flairstech.com/components/autonomy/
+- **Agent bridge** (`@aimy/agent-bridge`): AgentProvider lets AiMY see and work the parts on a page that have an agent id (Combobox, Select, InlineEdit, Tree, SortableList): bridge.tools() hands their actions to a model as tools, bridge.act runs the calls. https://aimy-ui-lib.aimy.flairstech.com/components/agent-bridge/
+- **Usage** (`@aimy/usage`): How much of AiMY a person has used (Knowledge's usage popover): groups by period, rows 'N of M' with a meter and what it means. https://aimy-ui-lib.aimy.flairstech.com/components/usage/
+- **Usage limits** (`@aimy/usage-limit`): What a person is told at a usage limit, in the products' words: past your share (You can keep going), limit reached (when it starts again), stopped by an admin (who can turn it back on); always what still works. https://aimy-ui-lib.aimy.flairstech.com/components/usage-limit/
+- **Model picker** (`@aimy/model-picker`): Which AiMY model answers (design system spec): the AI dot, the name and tag, and a menu where each model says what it is for. https://aimy-ui-lib.aimy.flairstech.com/components/model-picker/
+
+### AI: voice
+
+- **Orb** (`@aimy/orb`): The Silk orb: hair-fine strands of light on a turning drum (ported from the products' voice.js). https://aimy-ui-lib.aimy.flairstech.com/components/orb/
+- **Voice mode**: https://aimy-ui-lib.aimy.flairstech.com/components/voice-mode/
+- **Note taker** (`@aimy/note-taker`): AiMY takes notes in a meeting, hearing only you. https://aimy-ui-lib.aimy.flairstech.com/components/note-taker/
+- **Meeting in the canvas**: https://aimy-ui-lib.aimy.flairstech.com/components/note-canvas/
+
+### Also in the registry
+
+- **ThemeScript** (`@aimy/theme-script`): Put inside <head>.
+- **ThemeToggle** (`@aimy/theme-toggle`): The one-click light/dark switch from the AiMY topnav.
+- **Icon** (`@aimy/icon`): Renders a lucide-react glyph at an AiMY size (xs 12, sm 14, md 16, lg 20, xl 24), stroke 2, hidden from screen readers unless given a label.
+- **AimyMark** (`@aimy/aimy-mark`): The AiMY logo: the mark alone (variant icon) or with the wordmark (variant lockup), path data verbatim from the canonical logo.
+- **Input** (`@aimy/input`): A one-line text field.
+- **Textarea** (`@aimy/textarea`): Several lines that grow with the text up to 12 lines, then scroll.
+- **PasswordField** (`@aimy/password-field`): A secret (API key, token, password), masked, in the mono face, with a show/hide control inside the field that names what it will do.
+- **Popover** (`@aimy/popover`): A small panel tied to a control, for a few fields or an explanation with a button.
+- **Calendar** (`@aimy/calendar`): A month grid, single day or range, weeks from Monday: today outlined, the choice in the accent, a range on an accent wash.
+- **VoiceStage** (`@aimy/voice-stage`): A voice conversation as a place: the page goes away, one orb stays with a line saying what it does (Listening, Thinking, Answering, You're muted, or the error in words), the session clock, and mute and end.
+- **SourceList** (`@aimy/source-list`): The sources an answer stands on (Knowledge's sourceRow): number, kind, title, where it came from, trust state; a row opens the document.
+- **Score** (`@aimy/score`): A rating out of 100 with a three-bar meter (Knowledge's ICP Fit badge): high from 75, medium from 50, low below.
+- **SourceLine** (`@aimy/source-line`): Where an answer's facts came from, in one plain line under it (Sales' .s-ans-cite): 'From your last 3 calls'.
+- **ConflictPair** (`@aimy/conflict-pair`): Two sources that disagree, side by side, each with trust state, what it says, how it is used and 'Make this the one' (a review action into ChangeReview).
+- **MemoryPanel** (`@aimy/memory-panel`): What AiMY carries into this conversation from an earlier thread (Knowledge's memory panel), with Answer without it always present, and each line forgettable with Undo.
+- **MemoryList** (`@aimy/memory-list`): Everything AiMY remembers about a person or account, with where each came from; forget one in a click with Undo, or all of it after one inline confirm.
+- **Rail** (`@aimy/rail`): Sales' left column of standing facts, Knowledge's drawer below 1040 (scrim, Escape, focus in and back).
+- **Deck** (`@aimy/deck`): The engine both presentation templates share: a fixed 1920x1080 stage scaled whole to its frame (letterboxed when presenting), keys (arrows, Space, Page Up and Down, Home, End), click to go on or back, Present full screen, a speaker view in its own window (each slide's notes, what comes next, a clock), words set smaller until they fit their room with deckProblems and onProblems saying what to cut, and the motion borrowed from the Chrome extension: the logo flying between the cover, the header and the close, the header mark's dots thinking between moments, drifting blooms and rising dust, figures counting up, titles word by word.

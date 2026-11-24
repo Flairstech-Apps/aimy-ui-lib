@@ -26,13 +26,25 @@ export default function LanesDeckPage() {
     moments: [
       { when: "27 Oct", chapter: "The plan", learned: "Two products solve the same problems.", did: "One plan, nine disagreements settled." },
       { when: "29 Oct", chapter: "1.0.0", figure: { value: 113, means: "parts" }, did: "Built what the products draw." },
+      { when: "Nov", chapter: "Trust", figure: { value: 4.2, suffix: "/5", means: "trust score, up from 3.1" }, did: "Next: citations everywhere.", notes: "Say where the score comes from." },
     ],
     close: { title: "Knowledge to", turn: "Action.", action: { label: "Browse the parts", href: "/start/" } },
   }}
 />`}</CodeBlock>
         <ul data-ai="ul" className="mt-3 flex max-w-[46rem] list-disc flex-col gap-1.5 pl-5 text-meta text-ink-secondary">
           <li data-ai="li">
-            Every moment needs both halves: what was learned (or a figure) and what was done about it.
+            Every moment needs both halves: what was learned (or a figure) and what was done about it. When nothing
+            was done yet, say &quot;Next: …&quot;; never invent it. A figure takes the learned card&apos;s words, with
+            its unit in <code className="font-mono text-ink">prefix</code> or{" "}
+            <code className="font-mono text-ink">suffix</code>.
+          </li>
+          <li data-ai="li">
+            <code className="font-mono text-ink">notes</code> on any slide add Speaker view beside Present, and{" "}
+            <code className="font-mono text-ink">cover.when</code> shows top right.
+          </li>
+          <li data-ai="li">
+            A column&apos;s cards are set smaller together until both fit, and the deck says what to cut (console in
+            development, or <code className="font-mono text-ink">onProblems</code>).
           </li>
           <li data-ai="li">
             The rail names the lanes Knowledge and Action. Pass <code className="font-mono text-ink">lanes</code> to

@@ -3,6 +3,8 @@
 import { useEffect, useId, useRef } from "react"
 import {
   CloseAction,
+  deckProblems,
+  figureText,
   CloseTitle,
   Deck,
   DeckCount,
@@ -33,20 +35,23 @@ import { cssDuration } from "@/lib/utils"
 // docs/deck-variants.html (C).
 
 export type HorizonMoment = {
-  /** When it happened: "27 Oct". */
-  when: string
-  /** Its name on the timeline: "The plan". */
+  /** When it happened: "27 Oct", "Q3", "Today". Leave it out rather than invent one. */
+  when?: string
+  /** Its name on the timeline, one to three words: "The plan". */
   chapter: string
   /** The headline. Leave it out on a figure slide. */
   title?: string
+  /** At most two lines under the headline. */
   body?: string
   /** A number instead of a headline: the value and what it means. */
   figure?: DeckFigure
+  /** What the presenter says here, in the speaker view. Never on the slide. */
+  notes?: string
 }
 
 export type HorizonStory = {
   cover: DeckCover
-  /** Two to seven moments fit the horizon; five reads best. */
+  /** Two to seven moments fit the horizon; five reads best. Merge the closest when there are more. */
   moments: HorizonMoment[]
   close: DeckClose
 }
@@ -205,7 +210,11 @@ function HorizonSlides({ story }: { story: HorizonStory }) {
         <div className="dk-hzn-ripple" />
       </div>
       <DeckHead meta={cover.when} />
-      <ol className="dk-hzn-ticks" aria-hidden="true">
+      <ol
+        className="dk-hzn-ticks"
+        style={{ "--room": `${moments.length > 1 ? Math.min(280, 1200 / (moments.length - 1) - 16) : 280}px` } as React.CSSProperties}
+        aria-hidden="true"
+      >
         {moments.map((m, k) => {
           const x = g.tickX(k)
           return (
@@ -217,14 +226,21 @@ function HorizonSlides({ story }: { story: HorizonStory }) {
             >
               <span className="dk-hzn-mark" />
               <span className="dk-hzn-chip">
-                <b>{m.when}</b>
+                {m.when ? <b>{m.when}</b> : null}
                 <span>{m.chapter}</span>
               </span>
             </li>
           )
         })}
       </ol>
-      <section className="dk-hzn-panel" data-state={stateOf(0, i)} aria-hidden={i !== 0}>
+      <section
+        className="dk-hzn-panel"
+        data-state={stateOf(0, i)}
+        aria-hidden={i !== 0}
+        data-fit="0,770"
+        data-fit-slide={1}
+        data-fit-hint="the cover's words run into the horizon. Keep the title to two lines and the line under it to one"
+      >
         <DeckSpot name="cover" />
         <DeckLine i={1} className="dk-kicker">
           {cover.kicker}
@@ -239,14 +255,20 @@ function HorizonSlides({ story }: { story: HorizonStory }) {
         ) : null}
       </section>
       {moments.map((m, k) => (
-        <section key={k} className="dk-hzn-panel" data-state={stateOf(k + 1, i)} aria-hidden={i !== k + 1}>
-          <DeckLine className="dk-kicker">
-            {m.when} · {m.chapter}
-          </DeckLine>
+        <section
+          key={k}
+          className="dk-hzn-panel"
+          data-state={stateOf(k + 1, i)}
+          aria-hidden={i !== k + 1}
+          data-fit="0,690"
+          data-fit-slide={k + 2}
+          data-fit-hint="the words run down into the orb. Keep the title to two lines and the body to two; say the rest in the notes"
+        >
+          <DeckLine className="dk-kicker">{m.when ? `${m.when} · ${m.chapter}` : m.chapter}</DeckLine>
           {m.figure ? (
             <>
               <DeckLine i={1} className="dk-figure">
-                <DeckCount value={m.figure.value} n={k + 1} />
+                <DeckCount value={m.figure.value} prefix={m.figure.prefix} suffix={m.figure.suffix} n={k + 1} />
               </DeckLine>
               <DeckLine i={2} as="p" className="dk-lede">
                 {m.figure.means}
@@ -268,7 +290,14 @@ function HorizonSlides({ story }: { story: HorizonStory }) {
           )}
         </section>
       ))}
-      <section className="dk-hzn-panel" data-state={stateOf(last, i)} aria-hidden={i !== last}>
+      <section
+        className="dk-hzn-panel"
+        data-state={stateOf(last, i)}
+        aria-hidden={i !== last}
+        data-fit="0,700"
+        data-fit-slide={last + 1}
+        data-fit-hint="the close runs into the horizon. Keep the title to one line and the line under it to one"
+      >
         <DeckSpot name="close" />
         <CloseTitle close={close} />
         {close.sub ? (
@@ -285,9 +314,34 @@ function HorizonSlides({ story }: { story: HorizonStory }) {
 }
 
 /** A deck told on the orb's horizon: cover, moments along the timeline, close. */
-export function HorizonDeck({ story, label, className }: { story: HorizonStory; label?: string; className?: string }) {
+export function HorizonDeck({
+  story,
+  label,
+  onProblems,
+  className,
+}: {
+  story: HorizonStory
+  label?: string
+  /** Gets what deckProblems finds and what runs over on the drawn slides. Without it they go to the console in development. */
+  onProblems?: (problems: string[]) => void
+  className?: string
+}) {
+  const { cover, moments, close } = story
   return (
-    <Deck label={label ?? story.cover.title} count={story.moments.length + 2} className={className}>
+    <Deck
+      label={label ?? cover.title}
+      count={moments.length + 2}
+      titles={[
+        cover.title,
+        ...moments.map((m) => (m.figure ? `${figureText(m.figure)} ${m.figure.means}` : (m.title ?? m.chapter))),
+        [close.title, close.turn].filter(Boolean).join(" "),
+      ]}
+      notes={[cover.notes, ...moments.map((m) => m.notes), close.notes]}
+      problems={deckProblems(story, "horizon")}
+      checkKey={JSON.stringify(story)}
+      onProblems={onProblems}
+      className={className}
+    >
       <HorizonSlides story={story} />
     </Deck>
   )

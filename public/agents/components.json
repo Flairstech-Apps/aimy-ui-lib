@@ -367,14 +367,14 @@
     "name": "horizon-deck",
     "title": "Horizon deck",
     "group": "Presentations",
-    "description": "A presentation told on the orb's horizon: the orb rises on the cover, then hops along the horizon from moment to moment, drawing its path in the sky, rippling the ground where it lands and raising that date onto a glass chip. A headline and a line or two per slide, for keynotes, launches and all-hands. Pass a story: cover, two to seven moments (when, chapter, title, body or a figure), close.",
+    "description": "A presentation told on the orb's horizon: the orb rises on the cover, then hops along the horizon from moment to moment, drawing its path in the sky, rippling the ground where it lands and raising that date onto a glass chip. A headline and a line or two per slide, for keynotes, launches and all-hands. Pass a story: cover, two to seven moments (chapter, an optional when, title and body or a figure with its unit, notes), close.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/horizon-deck/"
   },
   {
     "name": "lanes-deck",
     "title": "Two lanes deck",
     "group": "Presentations",
-    "description": "A presentation told in two lanes on one time axis: what we learned above, what we did below, an arrow drawn between, past columns kept at full strength, and a glass rail with the legend (Knowledge to Action) and the chapter. For reviews, retrospectives and updates, where every insight needs its next step. Pass a story: cover, moments (when, chapter, learned or a figure, did), close.",
+    "description": "A presentation told in two lanes on one time axis: what we learned above, what we did below, an arrow drawn between, past columns kept at full strength, and a glass rail with the legend (Knowledge to Action) and the chapter. For reviews, retrospectives and updates, where every insight needs its next step. Pass a story: cover, moments (chapter, an optional when, learned or a figure with its unit, did, notes), close.",
     "docs": "https://aimy-ui-lib.aimy.flairstech.com/components/lanes-deck/"
   },
   {
@@ -910,6 +910,6 @@
     "name": "deck",
     "title": "Deck",
     "group": "Also in the registry",
-    "description": "The engine both presentation templates share: a fixed 1920x1080 stage scaled whole to its frame (letterboxed when presenting), keys (arrows, Space, Page Up and Down, Home, End), click to go on or back, Present full screen, and the motion borrowed from the Chrome extension: the logo flying between the cover, the header and the close, the header mark's dots thinking between moments, drifting blooms and rising dust, figures counting up, titles word by word. Use HorizonDeck or LanesDeck; build on Deck, useDeck and its parts only for a new template."
+    "description": "The engine both presentation templates share: a fixed 1920x1080 stage scaled whole to its frame (letterboxed when presenting), keys (arrows, Space, Page Up and Down, Home, End), click to go on or back, Present full screen, a speaker view in its own window (each slide's notes, what comes next, a clock), words set smaller until they fit their room with deckProblems and onProblems saying what to cut, and the motion borrowed from the Chrome extension: the logo flying between the cover, the header and the close, the header mark's dots thinking between moments, drifting blooms and rising dust, figures counting up, titles word by word. Use HorizonDeck or LanesDeck; build on Deck, useDeck and its parts only for a new template."
   }
 ]

@@ -23,6 +23,10 @@ const SKILLS: [string, string][] = [
     "Looks at the screen rendered, not its code: measures icons against the capitals, pill heights, shared edges and baselines, overflow, contrast and small text, in both themes at desk and phone widths, and reports each problem in pixels with a zoomed screenshot.",
   ],
   [
+    "aimy-ui-presentations",
+    "Turns a brief, notes or data into a deck: picks Horizon or Two lanes, writes the story in moments, puts units on figures and detail in speaker notes, and checks every slide fits.",
+  ],
+  [
     "aimy-ui-upgrade",
     "Takes a new release: updates the packages and the copied components, then puts back the app's own edits that still apply.",
   ],

@@ -22,11 +22,12 @@ export default function HorizonDeckPage() {
       <Section title="Use it">
         <CodeBlock>{`<HorizonDeck
   story={{
-    cover: { kicker: "Q4 review", title: "From two products to one system.", when: "November 2026" },
+    cover: { kicker: "Q4 review", title: "From two products to one system.", when: "November 2026", notes: "Open with the problem." },
     moments: [
       { when: "27 Oct", chapter: "The plan", title: "We started with a plan, not code.", body: "Every decision written down first." },
       { when: "29 Oct", chapter: "1.0.0", figure: { value: 113, means: "parts, each naming the product it came from" } },
-      { when: "11 Nov", chapter: "Patches", title: "Production found what the docs missed." },
+      { chapter: "Pilot", figure: { value: 1.4, prefix: "$", suffix: "M", means: "pipeline added in six weeks, against none before" } },
+      { when: "11 Nov", chapter: "Patches", title: "Production found what the docs missed.", notes: "Name the three fixes." },
     ],
     close: { title: "Knowledge to", turn: "Action.", sub: "Every insight comes with a next step.", action: { label: "Browse the parts", href: "/start/" } },
   }}
@@ -38,7 +39,24 @@ export default function HorizonDeckPage() {
           </li>
           <li data-ai="li">
             A figure takes the headline&apos;s place: the number counts up when its slide arrives, with what it means
-            under it.
+            under it. It keeps its decimals (92.5) and groups thousands (1,240); the unit goes in{" "}
+            <code className="font-mono text-ink">prefix</code> or <code className="font-mono text-ink">suffix</code>{" "}
+            (&quot;$&quot;, &quot;%&quot;, &quot;M&quot;, &quot;/5&quot;).
+          </li>
+          <li data-ai="li">
+            <code className="font-mono text-ink">when</code> is a real date or period. Leave it out when there isn&apos;t
+            one; never invent one.
+          </li>
+          <li data-ai="li">
+            <code className="font-mono text-ink">notes</code> on the cover, any moment or the close add Speaker view
+            beside Present: the presenter&apos;s own window with the notes, what comes next and a clock. Its arrow
+            keys move the deck.
+          </li>
+          <li data-ai="li">
+            Words that run long are set smaller until they fit, never over the horizon, and the deck says what to cut:
+            in the console in development, or to <code className="font-mono text-ink">onProblems</code>.{" "}
+            <code className="font-mono text-ink">deckProblems(story, &quot;horizon&quot;)</code> checks a story before
+            it is drawn.
           </li>
           <li data-ai="li">
             The close&apos;s <code className="font-mono text-ink">turn</code> is set in AiMY blue after its title, as
@@ -91,6 +109,7 @@ export default function HorizonDeckPage() {
       <A11y
         items={[
           "A region named by the deck, announced as a slide deck. Arrows, Space, Page Up and Down, Home and End move through it; the slide count is a live region.",
+          "The speaker view is its own window with the same keys, and its slide count is a live region too.",
           "Only the current slide is read; the others are hidden from screen readers while they are off the screen. The timeline on the ground is drawing, not content: the slide says its date.",
           "Under reduced motion nothing travels: each slide appears in place, the orb is still and figures show their value.",
         ]}

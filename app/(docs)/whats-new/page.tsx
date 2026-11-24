@@ -33,6 +33,20 @@ const c = (name: string) => `/components/${name}/`
 
 const ENTRIES: Entry[] = [
   {
+    label: "2.2.0",
+    type: "Release",
+    date: "24 Nov 2026",
+    title: "Decks ready to present",
+    items: [
+      { kind: "new", name: "HorizonDeck, LanesDeck", href: c("horizon-deck"), text: "Notes on any slide open a speaker view in its own window: the notes, what comes next, a clock and the keys." },
+      { kind: "new", name: "Figures", href: c("horizon-deck"), text: "Keep their decimals and group thousands, with the unit in prefix or suffix ($1.4M, 92.5%, 4.2/5)." },
+      { kind: "changed", name: "HorizonDeck, LanesDeck", href: c("lanes-deck"), text: "Long words are set smaller until they fit, never over the horizon or off the slide, and the deck says what to cut." },
+      { kind: "changed", name: "Moments", href: c("horizon-deck"), text: "A date is optional: leave it out rather than invent one." },
+      { kind: "new", name: "aimy-ui-presentations", href: "/skills/aimy-ui-presentations/SKILL.md", text: "A skill that teaches agents to turn a brief into a deck: the story, the words, the notes and the checks." },
+    ],
+    run: BOTH,
+  },
+  {
     label: "2.1.2",
     type: "Patch",
     date: "20 Nov 2026",

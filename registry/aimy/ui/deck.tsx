@@ -1,11 +1,13 @@
 "use client"
 
-import { ChevronLeft, ChevronRight, Maximize2 } from "lucide-react"
+import { ChevronLeft, ChevronRight, Maximize2, NotebookText } from "lucide-react"
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react"
+import { createPortal } from "react-dom"
 import { AimyMark } from "@/components/aimy-mark"
 import { Button } from "@/components/button"
 import { IconButton } from "@/components/icon-button"
 import { sampleMark } from "@/components/thinking"
+import { toast } from "@/components/toast"
 import { cn, cssDuration } from "@/lib/utils"
 
 // Decks: presentations told on a timeline. This is the engine both templates
@@ -26,8 +28,10 @@ export type DeckCover = {
   kicker: string
   title: string
   sub?: string
-  /** When, on the header's right (Horizon). */
+  /** When, on the header's right. */
   when?: string
+  /** What the presenter says here, in the speaker view. Never on the slide. */
+  notes?: string
 }
 
 export type DeckClose = {
@@ -38,10 +42,172 @@ export type DeckClose = {
   action?: { label: string; href?: string }
   /** Where to find it, beside the action. */
   where?: string
+  /** What the presenter says here, in the speaker view. Never on the slide. */
+  notes?: string
 }
 
-/** A number that earns its place: the value, and what it means. It counts up when its slide arrives. */
-export type DeckFigure = { value: number; means: string }
+/**
+ * A number that earns its place: the value, and what it means. It counts up
+ * when its slide arrives, keeping the value's decimals (92.5 stays 92.5) and
+ * grouping thousands (1,240).
+ */
+export type DeckFigure = {
+  value: number
+  /** What it counts and what it is against, from the brief only: "win rate in the pilot teams, up from 18%". */
+  means: string
+  /** Before the number: "$", "£". */
+  prefix?: string
+  /** After it, a symbol or short unit: "%", "M", "K", "h", "x", "/5". */
+  suffix?: string
+}
+
+const decimalsOf = (v: number) => Math.min(2, (String(v).split(".")[1] ?? "").length)
+
+/** The figure's number as it is shown: its own decimals, thousands grouped. */
+export function formatFigure(value: number, decimals = decimalsOf(value)) {
+  return new Intl.NumberFormat("en-GB", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(value)
+}
+
+/** The whole figure in words, for the speaker view and screen readers: "$1.4M". */
+export const figureText = (f: DeckFigure) => `${f.prefix ?? ""}${formatFigure(f.value)}${f.suffix ?? ""}`
+
+/* ═════════════════ CHECKS ═════════════════ */
+
+type AnyMoment = {
+  when?: string
+  chapter: string
+  title?: string
+  body?: string
+  learned?: string
+  did?: string
+  figure?: DeckFigure
+}
+
+/**
+ * What is wrong with a story before it is drawn, in sentences an agent can
+ * act on: too many moments, a figure with a bare unit in its words, text a
+ * template drops, lines long enough to run over. The deck also measures
+ * every slide once it is drawn and reports what really runs over.
+ */
+export function deckProblems(
+  story: { cover: DeckCover; moments: AnyMoment[]; close: DeckClose },
+  kind: "horizon" | "lanes"
+): string[] {
+  const out: string[] = []
+  const { cover, moments, close } = story
+  const most = kind === "horizon" ? 7 : 12
+  if (moments.length < 2) out.push(`A deck needs at least two moments; this one has ${moments.length}.`)
+  if (moments.length > most)
+    out.push(
+      `${moments.length} moments is too many for the ${kind === "horizon" ? "horizon" : "lanes"}: ${most} at most, five reads best. Merge moments, or say the rest in the notes.`
+    )
+  const long = (where: string, text: string | undefined, max: number, what: string) => {
+    if (text && text.length > max) out.push(`${where}: ${what} is ${text.length} characters; keep it under ${max}.`)
+  }
+  long("The cover", cover.title, 60, "the title")
+  long("The cover", cover.kicker, 48, "the kicker")
+  long("The cover", cover.sub, 110, "the line under the title")
+  const fig = (where: string, f: DeckFigure) => {
+    if (!Number.isFinite(f.value)) out.push(`${where}: the figure's value isn't a number.`)
+    if (!f.means?.trim()) out.push(`${where}: the figure needs means, what the number counts and what it is against.`)
+    if (/^\s*(%|percent|per cent|\$|£|€)/i.test(f.means ?? ""))
+      out.push(`${where}: put the unit in the figure's suffix or prefix ("%", "$"), not at the start of means.`)
+    if ((f.suffix ?? "").length > 3) out.push(`${where}: the suffix "${f.suffix}" is long; use a symbol or short unit and say the rest in means.`)
+    if ((f.prefix ?? "").length > 2) out.push(`${where}: the prefix "${f.prefix}" is long; use a symbol.`)
+    long(where, f.means, 80, "the figure's means")
+  }
+  moments.forEach((m, k) => {
+    const where = `Moment ${k + 1} (${m.chapter || "no chapter"})`
+    if (!m.chapter?.trim()) out.push(`${where}: needs a chapter, its name on the timeline.`)
+    long(where, m.chapter, 22, "the chapter")
+    long(where, m.when, 12, "when")
+    if (kind === "horizon") {
+      if (m.figure && (m.title || m.body)) out.push(`${where}: a figure takes the title's place; the title and body aren't shown. Put them in the notes or another moment.`)
+      if (!m.figure && !m.title) out.push(`${where}: needs a title or a figure.`)
+      long(where, m.title, 64, "the title")
+      long(where, m.body, 130, "the body")
+    } else {
+      if (m.figure && m.learned) out.push(`${where}: a figure takes the learned card's words; learned isn't shown. Say it in the figure's means.`)
+      if (!m.figure && !m.learned) out.push(`${where}: needs learned or a figure.`)
+      if (!m.did?.trim()) out.push(`${where}: needs did, what was done about it (or "Next: …" when nothing was done yet).`)
+      long(where, m.learned, 150, "learned")
+      long(where, m.did, 150, "did")
+    }
+    if (m.figure) fig(where, m.figure)
+  })
+  long("The close", `${close.title} ${close.turn ?? ""}`.trim(), 34, "the title with its turn")
+  long("The close", close.sub, kind === "horizon" ? 60 : 110, "the line under the title")
+  return out
+}
+
+const dev = (() => {
+  try {
+    return process.env.NODE_ENV !== "production"
+  } catch {
+    return false
+  }
+})()
+
+/** The smallest a slide's words are set to make them fit: 70% of their size. */
+const FIT_FLOOR = 0.7
+
+/**
+ * Makes every slide's words fit their room, and says what it had to do.
+ * Each [data-fit="top,bottom"] holds its children between those stage lines;
+ * when they run over, the words step down in size (--fit, to 70% at most)
+ * until they fit, so a long title never runs into the horizon or off the
+ * slide. Measured by offsets, not boxes, so a line still rising measures
+ * where it will land. Anything set smaller, or still over at the smallest,
+ * comes back as a problem: cut words to bring it back to full size.
+ */
+export function fitDeck(stage: HTMLElement): string[] {
+  const out: string[] = []
+  const yIn = (el: HTMLElement) => {
+    let y = 0
+    let n: HTMLElement | null = el
+    while (n && n !== stage) {
+      y += n.offsetTop
+      n = n.offsetParent as HTMLElement | null
+    }
+    return y
+  }
+  const overOf = (el: HTMLElement) => {
+    const [top = 0, bottom = 1080] = (el.dataset.fit ?? "").split(",").map(Number)
+    const kids = [...el.children].filter((c): c is HTMLElement => c instanceof HTMLElement && c.offsetHeight > 0)
+    if (!kids.length) return 0
+    const y0 = Math.min(...kids.map(yIn))
+    const y1 = Math.max(...kids.map((c) => yIn(c) + c.offsetHeight))
+    return Math.max(top - y0, y1 - bottom)
+  }
+  // Rooms in one data-fit-group (a column's two cards) share one size, so
+  // words side by side never differ.
+  const groups = new Map<string, HTMLElement[]>()
+  stage.querySelectorAll<HTMLElement>("[data-fit]").forEach((el, n) => {
+    const key = el.dataset.fitGroup ?? `#${n}`
+    groups.set(key, [...(groups.get(key) ?? []), el])
+  })
+  for (const els of groups.values()) {
+    const set = (k: number) => els.forEach((el) => (k < 1 ? el.style.setProperty("--fit", String(k)) : el.style.removeProperty("--fit")))
+    const worst = () => Math.max(...els.map(overOf))
+    let k = 1
+    set(k)
+    const long = els.filter((el) => overOf(el) > 2)
+    while (worst() > 2 && k > FIT_FLOOR) {
+      k = Math.max(FIT_FLOOR, Math.round((k - 0.05) * 100) / 100)
+      set(k)
+    }
+    for (const el of long) {
+      const over = overOf(el)
+      const at = `Slide ${el.dataset.fitSlide}: ${el.dataset.fitHint}`
+      out.push(
+        over > 2
+          ? `${at} (${Math.round(over)}px over even at ${FIT_FLOOR * 100}% size).`
+          : `${at} (set at ${Math.round(k * 100)}% size to fit).`
+      )
+    }
+  }
+  return out
+}
 
 /* ═════════════════ STATE ═════════════════ */
 
@@ -85,16 +251,82 @@ type DeckProps = {
   label: string
   /** Every slide: the cover, each moment, the close. */
   count: number
+  /** Each slide's name, for the speaker view. */
+  titles?: string[]
+  /** What the presenter says on each slide. Any notes add Speaker view to the bar. */
+  notes?: (string | undefined)[]
+  /** What deckProblems found in the story, reported with what the slides measure. */
+  problems?: string[]
+  /** Changes whenever the story does, so the slides are measured again. */
+  checkKey?: string
+  /** Gets every problem (the story's and what runs over). Without it they go to the console in development. */
+  onProblems?: (problems: string[]) => void
   children: React.ReactNode
   className?: string
 }
 
-/** The engine: the 16:9 stage, the keys, the controls and Present. Its slides read where they are with useDeck(). */
-export function Deck({ label, count, children, className }: DeckProps) {
+/** The engine: the 16:9 stage, the keys, the controls, Present and the speaker view. Its slides read where they are with useDeck(). */
+export function Deck({ label, count, titles, notes, problems, checkKey, onProblems, children, className }: DeckProps) {
   const frame = useRef<HTMLDivElement>(null)
   const stage = useRef<HTMLDivElement>(null)
   const [nav, setNav] = useState({ i: 0, prev: -1 })
+  const [speaker, setSpeaker] = useState<Window | null>(null)
   const last = count - 1
+  const report = useRef(onProblems)
+  useEffect(() => {
+    report.current = onProblems
+  })
+
+  // Once the words are in their fonts, measure every slide and say what runs over.
+  const storyProblems = (problems ?? []).join("\n")
+  useEffect(() => {
+    const st = stage.current
+    if (!st) return
+    let live = true
+    void (document.fonts?.ready ?? Promise.resolve()).then(() => {
+      if (!live) return
+      const all = [...(storyProblems ? storyProblems.split("\n") : []), ...fitDeck(st)]
+      // Shown only once its words fit, so a long title never flashes over the horizon.
+      st.dataset.words = ""
+      if (report.current) report.current(all)
+      else if (dev && all.length) console.warn(`AiMY deck "${label}":\n- ${all.join("\n- ")}`)
+    })
+    return () => {
+      live = false
+    }
+  }, [checkKey, storyProblems, label, count])
+
+  // The speaker view is its own window, so the audience never sees it.
+  useEffect(() => {
+    if (!speaker) return
+    const shut = () => speaker.close()
+    window.addEventListener("pagehide", shut)
+    return () => {
+      window.removeEventListener("pagehide", shut)
+      speaker.close()
+    }
+  }, [speaker])
+
+  const openSpeaker = () => {
+    if (speaker && !speaker.closed) {
+      speaker.focus()
+      return
+    }
+    const w = window.open("", "aimy-speaker-view", "popup,width=880,height=620")
+    if (!w) {
+      toast("Your browser blocked the speaker view", { tone: "err", sub: "Allow pop-ups for this site, then open it again." })
+      return
+    }
+    const d = w.document
+    d.title = `Speaker view · ${label}`
+    d.head.replaceChildren(...[...document.querySelectorAll('link[rel="stylesheet"], style')].map((n) => n.cloneNode(true)))
+    d.documentElement.dataset.theme = document.documentElement.dataset.theme ?? "dark"
+    d.documentElement.lang = document.documentElement.lang || "en"
+    d.body.replaceChildren()
+    d.body.className = "dk-speaker-body"
+    w.addEventListener("pagehide", () => setSpeaker(null))
+    setSpeaker(w)
+  }
 
   const go = useCallback(
     (n: number) =>
@@ -182,12 +414,102 @@ export function Deck({ label, count, children, className }: DeckProps) {
           <ChevronRight />
         </IconButton>
         <span className="dk-keys">Arrows or Space when the deck is selected</span>
+        {notes?.some(Boolean) ? (
+          <Button size="sm" variant="ghost" onClick={openSpeaker}>
+            <NotebookText />
+            Speaker view
+          </Button>
+        ) : null}
         <Button size="sm" variant="brand" onClick={present}>
           <Maximize2 />
           Present
         </Button>
       </div>
+      {speaker
+        ? createPortal(
+            <SpeakerView win={speaker} label={label} i={i} count={count} titles={titles} notes={notes} go={go} />,
+            speaker.document.body
+          )
+        : null}
     </div>
+  )
+}
+
+/* ═════════════════ THE SPEAKER VIEW ═════════════════ */
+
+const clock = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`
+
+/**
+ * The presenter's own window: this slide's notes large enough to read at a
+ * glance, what comes next, and the time since it opened. Its keys and
+ * buttons move the deck, so it can drive a deck shared on another screen.
+ */
+function SpeakerView({
+  win,
+  label,
+  i,
+  count,
+  titles,
+  notes,
+  go,
+}: {
+  win: Window
+  label: string
+  i: number
+  count: number
+  titles?: string[]
+  notes?: (string | undefined)[]
+  go: (n: number) => void
+}) {
+  const [secs, setSecs] = useState(0)
+  useEffect(() => {
+    const t = win.setInterval(() => setSecs((s) => s + 1), 1000)
+    return () => win.clearInterval(t)
+  }, [win])
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement).closest?.("button")) return
+      if (["ArrowRight", "ArrowDown", "PageDown", " ", "Enter"].includes(e.key)) go(i + 1)
+      else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(e.key)) go(i - 1)
+      else if (e.key === "Home") go(0)
+      else if (e.key === "End") go(count - 1)
+      else return
+      e.preventDefault()
+    }
+    win.addEventListener("keydown", onKey)
+    return () => win.removeEventListener("keydown", onKey)
+  }, [win, go, i, count])
+  const note = notes?.[i]
+  return (
+    <main className="dk-speaker" aria-label={`Speaker view: ${label}`}>
+      <header className="dk-speaker-head">
+        <span className="dk-speaker-count" aria-live="polite">
+          Slide {i + 1} of {count}
+        </span>
+        <span className="dk-speaker-time" aria-label={`${clock(secs)} since the speaker view opened`}>
+          {clock(secs)}
+        </span>
+        <span className="dk-speaker-nav">
+          <IconButton label="Previous slide" onClick={() => go(i - 1)} disabled={i === 0}>
+            <ChevronLeft />
+          </IconButton>
+          <IconButton label="Next slide" onClick={() => go(i + 1)} disabled={i === count - 1}>
+            <ChevronRight />
+          </IconButton>
+        </span>
+      </header>
+      <h1 className="dk-speaker-title">{titles?.[i] ?? `Slide ${i + 1}`}</h1>
+      <p className="dk-speaker-notes">{note ?? "No notes for this slide."}</p>
+      <p className="dk-speaker-next">
+        {i < count - 1 ? (
+          <>
+            <b>Next</b> {titles?.[i + 1] ?? `Slide ${i + 2}`}
+          </>
+        ) : (
+          <b>This is the last slide.</b>
+        )}
+      </p>
+    </main>
   )
 }
 
@@ -268,8 +590,23 @@ export function CloseAction({ close, center }: { close: DeckClose; center?: bool
   )
 }
 
-/** A figure that counts up to itself when slide n arrives, then holds. */
-export function DeckCount({ value, n, className }: { value: number; n: number; className?: string }) {
+/**
+ * A figure that counts up to itself when slide n arrives, then holds: in its
+ * own decimals with thousands grouped, the prefix and suffix standing still.
+ */
+export function DeckCount({
+  value,
+  n,
+  prefix,
+  suffix,
+  className,
+}: {
+  value: number
+  n: number
+  prefix?: string
+  suffix?: string
+  className?: string
+}) {
   const { i, lead } = useDeck()
   const ref = useRef<HTMLSpanElement>(null)
   useEffect(() => {
@@ -277,22 +614,25 @@ export function DeckCount({ value, n, className }: { value: number; n: number; c
     if (!el || i !== n || reducedMotion()) return
     const t0 = performance.now() + lead
     const dur = cssDuration("--deck-count", 1100)
+    const places = decimalsOf(value)
     let raf = 0
-    el.textContent = "0"
+    el.textContent = formatFigure(0, places)
     const step = (now: number) => {
       const t = Math.max(0, Math.min(1, (now - t0) / dur))
-      el.textContent = String(Math.round(value * easeOutCubic(t)))
+      el.textContent = formatFigure(value * easeOutCubic(t), places)
       if (t < 1) raf = requestAnimationFrame(step)
     }
     raf = requestAnimationFrame(step)
     return () => {
       cancelAnimationFrame(raf)
-      el.textContent = String(value)
+      el.textContent = formatFigure(value)
     }
   }, [i, n, value, lead])
   return (
-    <span ref={ref} className={className}>
-      {value}
+    <span className={className}>
+      {prefix}
+      <span ref={ref}>{formatFigure(value)}</span>
+      {suffix}
     </span>
   )
 }

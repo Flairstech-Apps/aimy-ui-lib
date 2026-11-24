@@ -86,9 +86,13 @@ Errors and recovery (AIMY-2979):
 
 Presentations:
 
-- A deck is `HorizonDeck` (keynotes, launches, all-hands: a headline and a line or two per slide, the orb travelling the horizon) or `LanesDeck` (reviews, retrospectives, updates: what we learned above, what we did below). Pass a story: a cover, the moments in order, a close. Never lay slides out by hand.
-- Every moment has a date and a short chapter name; the timeline is drawn from them. A figure is a number with what it means, never a bare number.
-- Write slides in plain words, a headline and at most two lines under it. When there is more to say, add a moment.
+- For a whole presentation, follow the `aimy-ui-presentations` skill (https://aimy-ui-lib.aimy.flairstech.com/skills/aimy-ui-presentations/SKILL.md).
+- A deck is a story told aloud: `HorizonDeck` (keynotes, launches, all-hands: a headline and a line or two per slide) or `LanesDeck` (reviews, retrospectives, updates: what we learned above, what we did below). Pass a story: a cover, three to seven moments in time order (five reads best), a close. Never lay slides out by hand, and never make a deck of something meant to be read alone.
+- Each moment has a chapter of one to three words. `when` is a real date or period; leave it out rather than invent one. In the lanes, `did` is what was actually done, or "Next: …".
+- A figure is the number as it is (`92.5`, `1240`), its unit in `prefix` or `suffix` ("$", "%", "M", "/5"), and `means`: what it counts and what it is against. A figure replaces the title (horizon) or learned (lanes); don't pass both.
+- No lists on slides: three things that each matter are three moments; the rest is one sentence or the notes. The close has one action; a second ask goes in its sub.
+- Give every slide `notes`: what the presenter says and the detail you cut. They show only in the speaker view.
+- `deckProblems(story, kind)` must return nothing, and the deck must log no `AiMY deck` warnings. Fix them by cutting words, never by CSS.
 
 Behaviours (building a part the library doesn't have):
 
