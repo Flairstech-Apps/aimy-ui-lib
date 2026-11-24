@@ -119,6 +119,7 @@ const LIBRARY: NavGroup[] = [
     items: [
       { href: "/components/horizon-deck/", label: "Horizon deck" },
       { href: "/components/lanes-deck/", label: "Two lanes deck" },
+      { href: "/components/chapters-deck/", label: "Chapters deck" },
     ],
   },
   {

@@ -91,13 +91,14 @@ Errors and recovery (AIMY-2979):
 Presentations:
 
 - For a whole presentation, follow the `aimy-ui-presentations` skill (https://aimy-ui-lib.aimy.flairstech.com/skills/aimy-ui-presentations/SKILL.md).
-- A deck is a story told aloud: `HorizonDeck` (keynotes, launches, all-hands: a headline and a line or two per slide) or `LanesDeck` (reviews, retrospectives, updates: what we learned above, what we did below). Pass a story: a cover, three to seven moments in time order (five reads best), a close. Never lay slides out by hand, and never make a deck of something meant to be read alone.
+- Pick the deck by how the content is organised. By time: `HorizonDeck` (a story told to a room: launches, all-hands) or `LanesDeck` (what we learned and did, period by period: reviews, retrospectives, updates); pass a cover, two to seven moments in time order (five reads best), a close. By topic: `ChaptersDeck` (proposals, plans, pitches, trainings, a review of one subject, anything ending in a decision); pass a cover, two to five parts each with one to five slides (statement, points, figures, compare, quote, choice), a close. Never lay slides out by hand, and never make a deck of something meant to be read alone.
 - Tell it as a sequence of events: each moment is something that happened to someone, leading to the next (the problem, what we did, what changed, what comes next), past tense for what happened and future for what's next. Titles are events ("Reps lost 40% of their day to data entry"), not topics ("Data entry overhead"). Keep it plain: no "once upon a time", "journey", hype or invented drama.
 - Each moment has a chapter of one to three words. `when` is a real date or period; leave it out rather than invent one. In the lanes, `did` is what was actually done, or "Next: …".
 - A figure is the number as it is (`92.5`, `1240`), its unit in `prefix` or `suffix` ("$", "%", "M", "/5"), and `means`: what it counts and what it is against. A figure replaces the title (horizon) or learned (lanes); don't pass both.
 - No lists on slides: three things that each matter are three moments; the rest is one sentence or the notes. The close has one action; a second ask goes in its sub.
 - Give every slide `notes`: what the presenter says and the detail you cut. They show only in the speaker view.
-- `deckProblems(story, kind)` must return nothing, and the deck must log no `AiMY deck` warnings. Fix them by cutting words, never by CSS.
+- In Chapters, slide titles are their point ("Agents spend a third of every call looking for the answer"), parts are short topic names (the agenda), points are two or three never four, and a choice is two options with one recommended.
+- `deckProblems(story, kind)` (or `chaptersProblems(story)`) must return nothing, and the deck must log no `AiMY deck` warnings. Fix them by cutting words, never by CSS.
 
 Behaviours (building a part the library doesn't have):
 
@@ -199,6 +200,7 @@ Icons are Lucide only, on the 24 grid at stroke 2.
 
 - **Horizon deck** (`@aimy/horizon-deck`): A presentation told on the orb's horizon: the orb rises on the cover, then hops along the horizon from moment to moment, drawing its path in the sky, rippling the ground where it lands and raising that date onto a glass chip. https://aimy-ui-lib.aimy.flairstech.com/components/horizon-deck/
 - **Two lanes deck** (`@aimy/lanes-deck`): A presentation told in two lanes on one time axis: what we learned above, what we did below, an arrow drawn between, past columns kept at full strength, and a glass rail with the legend (Knowledge to Action) and the chapter. https://aimy-ui-lib.aimy.flairstech.com/components/lanes-deck/
+- **Chapters deck** (`@aimy/chapters-deck`): A presentation organised by topic, not by date: a proposal, a plan, a pitch, a training. https://aimy-ui-lib.aimy.flairstech.com/components/chapters-deck/
 
 ### Data display
 

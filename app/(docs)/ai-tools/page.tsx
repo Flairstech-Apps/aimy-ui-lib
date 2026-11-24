@@ -24,7 +24,7 @@ const SKILLS: [string, string][] = [
   ],
   [
     "aimy-ui-presentations",
-    "Turns a brief, notes or data into a deck: picks Horizon or Two lanes, writes the story in moments, puts units on figures and detail in speaker notes, and checks every slide fits.",
+    "Turns a brief, notes or data into a deck: picks Horizon, Two lanes or Chapters by whether the talk runs on dates or topics, writes it plainly, puts units on figures and detail in speaker notes, and checks every slide fits.",
   ],
   [
     "aimy-ui-upgrade",

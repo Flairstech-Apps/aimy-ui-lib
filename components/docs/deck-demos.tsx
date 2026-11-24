@@ -1,6 +1,8 @@
 "use client"
 
+import { FileCheck, Phone, Search } from "lucide-react"
 import registry from "@/registry.json"
+import { ChaptersDeck, type ChaptersStory } from "@/registry/aimy/ui/chapters-deck"
 import { HorizonDeck, type HorizonStory } from "@/registry/aimy/ui/horizon-deck"
 import { LanesDeck, type LanesStory } from "@/registry/aimy/ui/lanes-deck"
 
@@ -106,4 +108,105 @@ export function HorizonDemo() {
 
 export function LanesDemo() {
   return <LanesDeck story={LANES} />
+}
+
+// A talk by topic: a proposal to roll AiMY Knowledge out to Customer Support (mock content).
+const CHAPTERS: ChaptersStory = {
+  cover: {
+    kicker: "Proposal · Customer Support",
+    title: "Give Support answers in seconds, not minutes.",
+    sub: "Rolling AiMY Knowledge out to the Support team in January.",
+    when: "Support leads · 3 December 2026",
+    notes: "Open with the cost of searching, then the pilot, then the one decision we need today.",
+  },
+  parts: [
+    {
+      title: "Why now",
+      holds: "What searching costs us today",
+      slides: [
+        {
+          kind: "statement",
+          title: "Agents spend a third of every call looking for the answer.",
+          sub: "Four tools, two wikis and a shared drive, for every question.",
+          notes: "From 120 recorded calls in October.",
+        },
+        {
+          kind: "figures",
+          title: "What searching costs today",
+          figures: [
+            { value: 11, suffix: "min", means: "to answer a question, against the 7-minute target Support set" },
+            { value: 34, suffix: "%", means: "of call time goes on searching, not talking" },
+            { value: 4, means: "tools checked for a typical question" },
+          ],
+        },
+      ],
+    },
+    {
+      title: "What changes",
+      holds: "What agents get, and how their day changes",
+      slides: [
+        {
+          kind: "points",
+          title: "What AiMY Knowledge gives every agent",
+          points: [
+            { icon: Search, head: "One search", line: "Every wiki, drive and past ticket, asked once." },
+            { icon: FileCheck, head: "Answers with sources", line: "Each answer cites the policy it came from." },
+            { icon: Phone, head: "Inside the call", line: "It sits in the call screen, not another tab." },
+          ],
+        },
+        {
+          kind: "compare",
+          title: "An everyday question, before and after",
+          before: "Today",
+          after: "With Knowledge",
+          rows: [
+            ["Check four tools", "Ask once"],
+            ["Copy from an old ticket", "Read the cited policy"],
+            ["Escalate when unsure", "See the source and decide"],
+          ],
+        },
+      ],
+    },
+    {
+      title: "The proof",
+      holds: "Six weeks with the Sales team",
+      slides: [
+        {
+          kind: "figures",
+          title: "Six weeks with the Sales team",
+          figures: [
+            { value: 41, suffix: "%", means: "faster answers than before the pilot" },
+            { value: 4.2, suffix: "/5", means: "trust in the answers, up from 3.1" },
+          ],
+        },
+        { kind: "quote", quote: "I stopped keeping my own notes file. Everything I need is in the answer.", who: "An account manager in the pilot" },
+      ],
+    },
+    {
+      title: "The decision",
+      holds: "Two ways to roll it out",
+      slides: [
+        {
+          kind: "choice",
+          title: "Two ways to roll it out",
+          options: [
+            { name: "Everyone in January", lines: ["All 60 agents start on 12 January", "One week of training for all", "Fastest, most risk on day one"] },
+            { name: "Tier 1 first", recommended: true, lines: ["Tier 1 on 12 January, tier 2 in February", "Tier 1 agents help train tier 2", "Four weeks longer, far less risk"] },
+          ],
+          notes: "Recommend tier 1 first: the pilot's lesson was that people learn fastest from colleagues.",
+        },
+      ],
+    },
+  ],
+  close: {
+    title: "Answers in",
+    turn: "seconds.",
+    sub: "Approve tier 1 first, and we start on 12 January.",
+    action: { label: "Approve the rollout" },
+    where: "Decision by 10 December",
+  },
+}
+
+export function ChaptersDemo() {
+  return <ChaptersDeck story={CHAPTERS} />
 }

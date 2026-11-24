@@ -2987,6 +2987,25 @@
           "type": "registry:component"
         }
       ]
+    },
+    {
+      "name": "chapters-deck",
+      "type": "registry:component",
+      "title": "ChaptersDeck",
+      "description": "A presentation organised by topic, not by date: a proposal, a plan, a pitch, a training. The talk is split into parts, each opening with a divider; the agenda is built from them and kept on screen in a glass rail whose light glides to each new part. Ten kinds of slide: cover, agenda, part, statement, points, figures, before and after, quote, choice, close. Pass a story: cover, two to five parts (title, holds, slides), close; check it with chaptersProblems.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "@aimy/deck",
+        "@aimy/utils"
+      ],
+      "files": [
+        {
+          "path": "registry/aimy/ui/chapters-deck.tsx",
+          "type": "registry:component"
+        }
+      ]
     }
   ]
 }

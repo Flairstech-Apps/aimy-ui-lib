@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { describe, expect, it } from "vitest"
+import { ChaptersDeck, chaptersProblems, chaptersSlides, type ChaptersStory } from "@/registry/aimy/ui/chapters-deck"
 import { deckProblems, formatFigure } from "@/registry/aimy/ui/deck"
 import { HorizonDeck, type HorizonStory } from "@/registry/aimy/ui/horizon-deck"
 import { LanesDeck, type LanesStory } from "@/registry/aimy/ui/lanes-deck"
@@ -166,5 +167,91 @@ describe("Deck stories", () => {
     render(<HorizonDeck story={{ ...horizon, moments: horizon.moments.slice(0, 1) }} onProblems={(p) => seen.push(p)} />)
     await new Promise((r) => setTimeout(r, 0))
     expect(seen.at(-1)?.[0]).toMatch(/at least two moments/)
+  })
+})
+
+const talk: ChaptersStory = {
+  cover: { kicker: "Proposal · Support", title: "Answers in seconds, not minutes.", when: "3 December 2026", notes: "Open with the cost." },
+  parts: [
+    { title: "Why now", holds: "What searching costs", slides: [{ kind: "statement", title: "Agents spend a third of every call searching." }] },
+    {
+      title: "The proof",
+      slides: [{ kind: "figures", title: "Six weeks with Sales", figures: [{ value: 41, suffix: "%", means: "faster answers than before" }] }],
+    },
+    {
+      title: "The decision",
+      slides: [
+        {
+          kind: "choice",
+          title: "Two ways to roll it out",
+          options: [
+            { name: "Everyone in January", lines: ["All agents on 12 January"] },
+            { name: "Tier 1 first", recommended: true, lines: ["Tier 1 in January"] },
+          ],
+        },
+      ],
+    },
+  ],
+  close: { title: "Answers in", turn: "seconds.", action: { label: "Approve the rollout" } },
+}
+
+const talkDeck = () => screen.getByRole("region", { name: talk.cover.title })
+
+describe("ChaptersDeck", () => {
+  it("flattens a talk into cover, agenda, a divider and slides per part, and the close", () => {
+    expect(chaptersSlides(talk).map((f) => f.type)).toEqual(["cover", "agenda", "part", "slide", "part", "slide", "part", "slide", "close"])
+    expect(chaptersSlides({ ...talk, agenda: false })[1]?.type).toBe("part")
+  })
+
+  it("is a named slide deck whose agenda lists the parts", async () => {
+    const { container } = render(<ChaptersDeck story={talk} />)
+    expect(talkDeck()).toHaveAttribute("aria-roledescription", "slide deck")
+    expect(count()).toHaveTextContent("1 of 9")
+    fireEvent.keyDown(talkDeck(), { key: "ArrowRight" })
+    const agenda = container.querySelector(".dk-k-agenda")!
+    expect(agenda.closest("section")).toHaveAttribute("data-state", "now")
+    expect(within(agenda as HTMLElement).getAllByRole("listitem").map((li) => li.textContent)).toEqual(["01Why now", "02The proof", "03The decision"])
+    expect(await a11yViolations(container)).toEqual([])
+  })
+
+  it("lights the current part in the rail and steps the rail aside on the cover", () => {
+    const { container } = render(<ChaptersDeck story={talk} />)
+    expect(container.querySelector(".dk-chp")).toHaveAttribute("data-edge")
+    for (let k = 0; k < 4; k++) fireEvent.keyDown(talkDeck(), { key: "ArrowRight" })
+    expect(container.querySelector(".dk-chp")).not.toHaveAttribute("data-edge")
+    const parts = container.querySelectorAll(".dk-chp-part")
+    expect(parts[0]).toHaveAttribute("data-state", "done")
+    expect(parts[1]).toHaveAttribute("data-state", "now")
+    expect(parts[2]).toHaveAttribute("data-state", "ahead")
+  })
+
+  it("marks the recommended option and offers the speaker view for notes", () => {
+    render(<ChaptersDeck story={talk} />)
+    expect(screen.getByRole("button", { name: "Speaker view" })).toBeInTheDocument()
+    const rec = screen.getAllByText("Recommended", { selector: ".dk-k-opt-tag" })
+    expect(rec).toHaveLength(1)
+    expect(rec[0]!.closest(".dk-k-opt")).toHaveTextContent("Tier 1 first")
+  })
+
+  it("names what is wrong with a talk before it is drawn", () => {
+    expect(chaptersProblems(talk)).toEqual([])
+    const bad = chaptersProblems({
+      ...talk,
+      parts: [
+        { title: "One", slides: [] },
+        {
+          title: "Two",
+          slides: [
+            { kind: "points", title: "Too many", points: [{ head: "a" }, { head: "b" }, { head: "c" }, { head: "d" }] },
+            { kind: "choice", title: "Three", options: [{ name: "A", lines: [] }, { name: "B", lines: [] }, { name: "C", lines: [] }] },
+            { kind: "figures", title: "Bare", figures: [{ value: 40, means: "% of the day" }] },
+          ],
+        },
+      ],
+    }).join("\n")
+    expect(bad).toMatch(/Part 1 \(One\): has no slides/)
+    expect(bad).toMatch(/two or three points; this has 4/)
+    expect(bad).toMatch(/a choice is two options; this has 3/)
+    expect(bad).toMatch(/put the unit in suffix or prefix/)
   })
 })

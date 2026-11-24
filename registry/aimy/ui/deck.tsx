@@ -177,7 +177,9 @@ export function fitDeck(stage: HTMLElement): string[] {
     if (!kids.length) return 0
     const y0 = Math.min(...kids.map(yIn))
     const y1 = Math.max(...kids.map((c) => yIn(c) + c.offsetHeight))
-    return Math.max(top - y0, y1 - bottom)
+    // Words that won't wrap (a long figure, four side by side) run off sideways.
+    const wide = el.scrollWidth - el.clientWidth
+    return Math.max(top - y0, y1 - bottom, wide)
   }
   // Rooms in one data-fit-group (a column's two cards) share one size, so
   // words side by side never differ.
@@ -515,7 +517,7 @@ function SpeakerView({
 
 /* ═════════════════ WORDS ═════════════════ */
 
-type Tag = "div" | "p" | "span" | "h2"
+type Tag = "div" | "p" | "span" | "h2" | "li"
 
 /** A line that rises into place when its slide arrives; i orders it. pop lands it with a spring. */
 export function DeckLine({
@@ -599,12 +601,15 @@ export function DeckCount({
   n,
   prefix,
   suffix,
+  unitClassName,
   className,
 }: {
   value: number
   n: number
   prefix?: string
   suffix?: string
+  /** Sets the prefix and suffix apart (a template may draw units smaller). */
+  unitClassName?: string
   className?: string
 }) {
   const { i, lead } = useDeck()
@@ -630,9 +635,9 @@ export function DeckCount({
   }, [i, n, value, lead])
   return (
     <span className={className}>
-      {prefix}
+      {prefix ? unitClassName ? <span className={cn(unitClassName, "is-pre")}>{prefix}</span> : prefix : null}
       <span ref={ref}>{formatFigure(value)}</span>
-      {suffix}
+      {suffix ? unitClassName ? <span className={unitClassName}>{suffix.trim()}</span> : suffix : null}
     </span>
   )
 }

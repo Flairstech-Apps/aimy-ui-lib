@@ -243,6 +243,20 @@ export {
 } from "../../../registry/aimy/ui/deck"
 export { HorizonDeck, type HorizonMoment, type HorizonStory } from "../../../registry/aimy/ui/horizon-deck"
 export { LanesDeck, type LanesMoment, type LanesStory } from "../../../registry/aimy/ui/lanes-deck"
+export {
+  ChaptersDeck,
+  chaptersProblems,
+  chaptersSlides,
+  type ChaptersStory,
+  type ChaptersPart,
+  type ChapterSlide,
+  type ChapterStatement,
+  type ChapterPoints,
+  type ChapterFigures,
+  type ChapterCompare,
+  type ChapterQuote,
+  type ChapterChoice,
+} from "../../../registry/aimy/ui/chapters-deck"
 export { Combobox, type ComboboxOption } from "../../../registry/aimy/ui/combobox"
 export { MultiSelect, type MultiOption } from "../../../registry/aimy/ui/multi-select"
 export { TagInput } from "../../../registry/aimy/ui/tag-input"

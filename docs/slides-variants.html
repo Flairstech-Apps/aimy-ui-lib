@@ -179,7 +179,7 @@
   .ps-tile { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 20px; background: var(--brand-dim); color: var(--ai-ink); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), 0.3); }
   .ps-tile svg, .ps-qmark svg, .ps-cmp-arrow svg, .ps-opt-line svg { width: 36px; height: 36px; }
   .ps-point b { display: block; margin-top: 36px; font-size: 42px; line-height: 1.15; font-weight: 600; letter-spacing: -0.02em; }
-  .ps-point span { display: block; margin-top: 14px; font-size: 30px; line-height: 1.45; color: var(--ink-secondary); }
+  .ps-point-line { display: block; margin-top: 14px; font-size: 30px; line-height: 1.45; color: var(--ink-secondary); }
 
   .ps-figs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; margin-top: 80px; }
   .ps-fig { padding: 0 48px; border-left: 2px solid var(--w12); }
@@ -613,7 +613,7 @@ function slideHtml(s, { spot = false } = {}) {
     case 'figures':
       return `${kicker}<h2 class="ps-title">${words(s.title)}</h2><div class="ps-figs">${s.figures.map((f, j) => `<div class="ps-fig rv" style="--i:${j + 3}"><div class="ps-fig-n">${figureHtml(f)}</div><p class="ps-fig-m">${esc(f.means)}</p></div>`).join('')}</div>`;
     case 'points':
-      return `${kicker}<h2 class="ps-title">${words(s.title)}</h2><div class="ps-points">${s.points.map((p, j) => `<div class="ps-point rv is-pop" style="--i:${j + 3}"><span class="ps-tile">${icon(p.icon)}</span><b>${esc(p.head)}</b><span>${esc(p.line)}</span></div>`).join('')}</div>`;
+      return `${kicker}<h2 class="ps-title">${words(s.title)}</h2><div class="ps-points">${s.points.map((p, j) => `<div class="ps-point rv is-pop" style="--i:${j + 3}"><span class="ps-tile">${icon(p.icon)}</span><b>${esc(p.head)}</b><span class="ps-point-line">${esc(p.line)}</span></div>`).join('')}</div>`;
     case 'compare':
       return `${kicker}<h2 class="ps-title">${words(s.title)}</h2><div class="ps-cmp">
         <div class="ps-cmp-h rv" style="--i:2">${esc(s.left)}</div><div class="rv" style="--i:2"></div><div class="ps-cmp-h is-new rv" style="--i:2">${esc(s.right)}</div>

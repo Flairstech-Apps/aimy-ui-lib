@@ -100,6 +100,7 @@ Build from the library's parts. Nothing on the screen is a new design: when a pa
 
 - **Horizon deck** (`@aimy/horizon-deck`): A presentation told on the orb's horizon: the orb rises on the cover, then hops along the horizon from moment to moment, drawing its path in the sky, rippling the ground where it lands and raising that date onto a glass chip. https://aimy-ui-lib.aimy.flairstech.com/components/horizon-deck/
 - **Two lanes deck** (`@aimy/lanes-deck`): A presentation told in two lanes on one time axis: what we learned above, what we did below, an arrow drawn between, past columns kept at full strength, and a glass rail with the legend (Knowledge to Action) and the chapter. https://aimy-ui-lib.aimy.flairstech.com/components/lanes-deck/
+- **Chapters deck** (`@aimy/chapters-deck`): A presentation organised by topic, not by date: a proposal, a plan, a pitch, a training. https://aimy-ui-lib.aimy.flairstech.com/components/chapters-deck/
 
 ### Data display
 

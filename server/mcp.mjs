@@ -15,7 +15,7 @@ const VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"]
 const SKILLS = {
   "aimy-ui-build": "Build a screen, panel or flow from a screenshot, a mock-up or a description, using only AiMY UI.",
   "aimy-ui-review": "Review a screen, component or diff against AiMY UI's rules and report each break with its fix.",
-  "aimy-ui-presentations": "Make a presentation from a brief with HorizonDeck or LanesDeck: the story, the words, figures with units, speaker notes and the checks.",
+  "aimy-ui-presentations": "Make a presentation from a brief: which deck (HorizonDeck, LanesDeck or ChaptersDeck), the story, the words, figures with units, speaker notes and the checks.",
   "aimy-ui-upgrade": "Bring an app up to the latest AiMY UI release without losing its own edits.",
   "aimy-ui-visual-review": "Check how a screen looks, rendered: alignment, spacing, overflow, contrast, both themes, desk and phone widths, measured in pixels.",
 }
