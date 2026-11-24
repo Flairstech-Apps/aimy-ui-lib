@@ -1,0 +1,1066 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Slides variants</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../package/tokens/aimy.css" />
+<link rel="stylesheet" href="../package/tokens/motion.css" />
+<style>
+  /* ═════════════════ PAGE ═════════════════
+     The exploration page around the decks, in the apps' variants-page form. */
+  html, body { margin: 0; }
+  body { font-family: var(--font-sans); color: var(--d100); background: var(--body-bg); -webkit-font-smoothing: antialiased; }
+  .pv-page { max-width: 1148px; margin: 0 auto; padding: 40px 16px 120px; }
+  .pv-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .pv-h1 { margin: 0 0 10px; font-size: 28px; font-weight: 600; color: var(--ink-primary); letter-spacing: -0.01em; }
+  .pv-lead { margin: 0; max-width: 68ch; font-size: 16px; line-height: 1.6; color: var(--ink-secondary); text-wrap: pretty; }
+  .pv-lead b, .pv-view b, .pv-var-say b { color: var(--ink-primary); font-weight: 600; }
+  .pv-view { margin: 24px 0 0; padding: 0 0 0 20px; max-width: 72ch; font-size: 16px; line-height: 1.6; color: var(--ink-secondary); }
+  .pv-view li { margin: 0 0 8px; }
+  .pv-var { margin: 40px 0 0; padding: 28px 28px 24px; border: 1px solid var(--card-border); border-radius: 12px; background: var(--card-bg); }
+  .pv-var-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 0 0 6px; }
+  .pv-var-key { font-size: 14px; font-weight: 600; color: var(--accent-text); }
+  .pv-var-name { margin: 0; font-size: 18px; font-weight: 600; color: var(--ink-primary); }
+  .pv-var-say { margin: 0 0 20px; max-width: 72ch; font-size: 15px; line-height: 1.6; color: var(--ink-secondary); }
+  .pv-btn {
+    display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 14px; border-radius: 9999px;
+    font: 500 14px/1 var(--font-sans); color: var(--ink-primary); background: none; border: 1px solid var(--card-border); cursor: pointer;
+    transition: transform 90ms var(--ease-smooth-out);
+  }
+  .pv-btn:hover { background: var(--w05); }
+  .pv-btn:active { transform: scale(var(--press-scale)); }
+  .pv-btn.is-brand { background: var(--brand); border-color: var(--brand); color: var(--on-brand); }
+  .pv-btn.is-brand:hover { background: var(--brand-hover); }
+  .pv-btn:focus-visible, .pv-icobtn:focus-visible, .dk-frame:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  .pv-btn svg, .pv-icobtn svg { width: 16px; height: 16px; flex: none; }
+  .pv-icobtn {
+    display: inline-grid; place-items: center; width: 32px; height: 32px; padding: 0; border-radius: 9999px;
+    color: var(--ink-primary); background: none; border: 1px solid var(--card-border); cursor: pointer;
+    transition: transform 90ms var(--ease-smooth-out);
+  }
+  .pv-icobtn:hover { background: var(--w05); }
+  .pv-icobtn:active { transform: scale(var(--press-scale)); }
+  .pv-icobtn:disabled { cursor: default; color: var(--ink-secondary); background: none; transform: none; }
+  .pv-count { min-width: 64px; text-align: center; font-size: 14px; font-weight: 500; color: var(--ink-primary); font-variant-numeric: tabular-nums; }
+
+  /* ═════════════════ DECK ENGINE ═════════════════
+     A fixed 1920x1080 stage, scaled as a whole to its frame and letterboxed when
+     presenting, so a slide never re-lays out. Slide switching is by data-state
+     (now, done, ahead) on any element carrying data-n, never display:none. */
+  .dk { display: flex; flex-direction: column; gap: 12px; }
+  .dk-frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 10px; background: var(--body-bg); border: 1px solid var(--card-border); cursor: pointer; user-select: none; }
+  .dk-frame:fullscreen { aspect-ratio: auto; border: 0; border-radius: 0; background: var(--body-bg); }
+  .dk-stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+  .dk-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .dk-bar .pv-push { margin-left: auto; }
+  .dk-keys { font-size: 14px; color: var(--ink-secondary); }
+
+  /* ═════════════════ SLIDE TYPE ═════════════════
+     Authored at 1920x1080. The brand guide's line slide sets the voice:
+     Poppins 600 to 700, tight tracking on display sizes, AiMY blue for the turn. */
+  .sl { position: absolute; inset: 0; overflow: hidden; font-family: var(--font-sans); color: var(--ink-primary); background: var(--body-bg); }
+  .sl-head { position: absolute; z-index: 5; left: 120px; right: 120px; top: 72px; display: flex; align-items: center; justify-content: space-between; }
+  .sl-lockup { height: 44px; width: auto; display: block; }
+  .sl-head-meta { font-size: 24px; font-weight: 500; color: var(--ink-secondary); }
+  .sl-kicker { font-size: 28px; line-height: 1.3; font-weight: 600; color: var(--accent-text); }
+  .sl-display { margin: 24px 0 0; font-size: 120px; line-height: 1.02; font-weight: 600; letter-spacing: -0.035em; text-wrap: balance; }
+  .sl-title { margin: 24px 0 0; font-size: 88px; line-height: 1.05; font-weight: 600; letter-spacing: -0.03em; text-wrap: balance; }
+  .sl-lede { margin: 32px 0 0; font-size: 40px; line-height: 1.4; color: var(--ink-secondary); text-wrap: pretty; }
+  .sl-body { margin: 28px 0 0; font-size: 34px; line-height: 1.5; color: var(--ink-secondary); text-wrap: pretty; }
+  .sl-figure { margin: 8px 0 0; font-size: 280px; line-height: 0.95; font-weight: 600; letter-spacing: -0.05em; font-variant-numeric: tabular-nums; }
+  .sl-ai { color: var(--ai-ink); }
+  .sl-meta { margin-top: 40px; font-size: 26px; font-weight: 500; color: var(--ink-secondary); }
+  .sl-cta { display: flex; align-items: center; gap: 28px; margin-top: 56px; }
+  .sl-cta.is-center { justify-content: center; }
+  .sl-cta-btn { display: inline-flex; align-items: center; height: 76px; padding: 0 40px; border-radius: 9999px; background: var(--brand); color: var(--on-brand); font-size: 28px; font-weight: 500; }
+  .sl-cta-where { font-family: var(--font-mono); font-size: 24px; color: var(--ink-secondary); }
+  .sl-card { padding: 32px 36px; border-radius: 20px; font-size: 30px; line-height: 1.45; color: var(--ink-primary); border: 1px solid transparent; }
+  .sl-card-label { display: block; margin-bottom: 12px; font-size: 20px; line-height: 1.3; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  .sl-card.is-learned { background: var(--brand-dim); border-color: rgba(var(--brand-rgb), 0.3); }
+  .sl-card.is-learned .sl-card-label { color: var(--ai-ink); }
+  .sl-card.is-did { background: var(--accent-dim); border-color: rgba(var(--accent-rgb), 0.3); }
+  .sl-card.is-did .sl-card-label { color: var(--accent-text); }
+
+  /* ═════════════════ REVEAL ═════════════════
+     transitions.dev 18 (text reveal), lines ordered by --i on the large stagger;
+     titles arrive word by word (30). --lead is how long a line waits: the
+     camera's move, or the logo's whole flight when the logo is travelling. */
+  .rv, .rv-w {
+    opacity: 0; transform: translateY(var(--distance-medium)); filter: blur(var(--blur-medium));
+    transition: opacity var(--duration-quick) var(--ease-smooth-out), transform var(--duration-quick) var(--ease-smooth-out), filter var(--duration-quick) var(--ease-smooth-out);
+  }
+  [data-state="now"] .rv, [data-state="now"] .rv-w {
+    opacity: 1; transform: none; filter: none;
+    transition-duration: var(--duration-very-slow);
+    transition-delay: calc(var(--lead, var(--duration-fast)) + var(--i, 0) * var(--duration-micro));
+  }
+  .rv-w { display: inline-block; }
+  [data-state="now"] .rv-w { transition-delay: calc(var(--lead, var(--duration-fast)) + var(--w) * var(--duration-stagger) * 2); }
+  /* A card that lands rather than rises: the spring of a press that settles. */
+  .rv.is-pop { transform: translateY(var(--distance-medium)) scale(var(--scale-large)); }
+  [data-state="now"] .rv.is-pop { transform: none; transition-timing-function: var(--ease-spring); }
+
+  /* ═════════════════ MOTION KIT ═════════════════
+     Borrowed from the Chrome extension (Knowledge/extension): the logo flight,
+     the thinking mark and the ambient field. */
+
+  /* The header lockup, split so the mark can land and the word can follow.
+     Sizes are the lockup's own geometry at 44px: the word is 68.54/147.66 of
+     the mark's height, 14.1 units after it, its top 39.6 units down. */
+  .brand { display: flex; align-items: flex-start; }
+  .brand-anchor { position: relative; width: 45.1px; height: 44px; flex: none; }
+  .brand-icon { display: block; width: 100%; height: 100%; opacity: 0; }
+  .brand-anchor.is-on .brand-icon { opacity: 1; }
+  .brand-anchor.is-landing .brand-icon { animation: mk-land 260ms var(--ease-spring); }
+  @keyframes mk-land { from { transform: scale(1.14); } to { transform: scale(1); } }
+  .brand-think { position: absolute; left: -12px; top: -12px; width: 69px; height: 68px; opacity: 0; pointer-events: none; }
+  .brand-anchor.is-thinking .brand-icon { opacity: 0; }
+  .brand-anchor.is-thinking .brand-think { opacity: 1; }
+  .brand-word { display: block; width: 75.6px; height: 20.4px; margin: 11.8px 0 0 4.2px; clip-path: inset(0 100% 0 0); }
+  /* Wipes out from behind the mark rather than fading in place (the extension's word-reveal). */
+  .brand-word.is-on { animation: mk-word 380ms ease-out 60ms forwards; }
+  @keyframes mk-word { from { clip-path: inset(0 100% 0 0); transform: translateX(-6px); opacity: 0.35; } to { clip-path: inset(0 -2px 0 0); transform: none; opacity: 1; } }
+
+  /* The mark in flight, moved by the Web Animations API, and the places it rests. */
+  .mk-fly { position: absolute; z-index: 8; left: 0; top: 0; visibility: hidden; transform-origin: center; will-change: transform; pointer-events: none; }
+  .mk-fly svg { display: block; width: 100%; height: 100%; }
+  .mk-spot { position: relative; display: block; flex: none; width: 150px; height: 146.3px; margin-bottom: 36px; }
+  .mk-halo { position: absolute; inset: -80px; border-radius: 50%; background: radial-gradient(closest-side, rgba(76, 90, 249, 0.34), transparent); }
+
+  /* The ambient field: two blooms on 29s and 37s (coprime, so they never fall
+     into a beat) and dust rising on its own cycles. */
+  .sl { --mote: rgba(226, 238, 255, 0.85); }
+  [data-theme="light"] .sl { --mote: rgba(29, 78, 216, 0.55); --o-mul: 0.8; }
+  .mk-field { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+  [data-theme="light"] .mk-field { opacity: 0.6; }
+  .mk-bloom { position: absolute; inset: -20%; will-change: transform, opacity; }
+  .mk-bloom.is-a { background: radial-gradient(ellipse at 30% 50%, rgba(0, 102, 255, 0.36) 0%, rgba(97, 173, 241, 0.2) 28%, transparent 60%); animation: mk-drift-a 29s var(--ease-smooth-out) infinite alternate; }
+  .mk-bloom.is-b { background: radial-gradient(ellipse at 75% 70%, rgba(111, 223, 226, 0.2) 0%, rgba(139, 79, 244, 0.14) 38%, transparent 60%); animation: mk-drift-b 37s var(--ease-smooth-out) infinite alternate; }
+  @keyframes mk-drift-a { from { transform: translate3d(-9%, -5%, 0) scale(1); opacity: 0.72; } to { transform: translate3d(10%, 6%, 0) scale(1.32); opacity: 1; } }
+  @keyframes mk-drift-b { from { transform: translate3d(7%, 8%, 0) scale(1.26); opacity: 0.55; } to { transform: translate3d(-10%, -6%, 0) scale(1); opacity: 0.95; } }
+  .mk-mote { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); border-radius: 50%; background: var(--mote); opacity: 0; will-change: transform, opacity; animation: mk-mote var(--d) linear infinite; animation-delay: calc(var(--i) * -1.7s); }
+  @keyframes mk-mote { 0% { transform: translate3d(0, 0, 0); opacity: 0; } 18% { opacity: calc(var(--o) * var(--o-mul, 1)); } 76% { opacity: calc(var(--o) * var(--o-mul, 1)); } 100% { transform: translate3d(var(--dx), var(--t), 0); opacity: 0; } }
+
+  /* A moment arriving: its mark rings once (badge pop timing). */
+  @keyframes mk-ping { from { transform: scale(1); opacity: 0.8; } to { transform: scale(3.4); opacity: 0; } }
+
+  /* A light that runs along the timeline to the next moment, head first. */
+  .mk-comet { position: absolute; z-index: 3; left: 0; top: 0; width: 240px; height: 6px; margin: -3px 0 0 -240px; border-radius: 3px; transform-origin: 100% 50%; opacity: 0; pointer-events: none; background: linear-gradient(90deg, transparent, rgba(var(--cyan-rgb), 0.9) 70%, var(--comet-head)); box-shadow: 0 0 18px rgba(var(--cyan-rgb), 0.6); }
+  .sl { --comet-head: #fff; }
+  [data-theme="light"] .sl { --comet-head: var(--brand); }
+
+  /* ═════════════════ SLIDE KINDS ═════════════════
+     What a normal deck is made of, the same in every variant: a cover, an
+     agenda, a divider for each part, a statement, points, figures, a
+     before-and-after, a quote, a choice, a close. Authored at 1920x1080. */
+  .ps { position: absolute; display: flex; flex-direction: column; justify-content: center; pointer-events: none; }
+  .ps-display { margin: 24px 0 0; font-size: 104px; line-height: 1.02; font-weight: 600; letter-spacing: -0.035em; text-wrap: balance; }
+  .ps-title { margin: 20px 0 0; font-size: 72px; line-height: 1.08; font-weight: 600; letter-spacing: -0.03em; text-wrap: balance; }
+  .ps-statement { margin: 24px 0 0; font-size: 96px; line-height: 1.06; font-weight: 600; letter-spacing: -0.035em; text-wrap: balance; }
+  .ps-sub { margin: 36px 0 0; max-width: 1100px; font-size: 38px; line-height: 1.45; color: var(--ink-secondary); text-wrap: pretty; }
+  .ps-meta { margin-top: 48px; font-size: 26px; font-weight: 500; color: var(--ink-secondary); }
+  .ps-unit { font-size: 0.5em; letter-spacing: -0.01em; margin-left: 0.06em; }
+  .ps-unit.is-pre { margin: 0 0.04em 0 0; }
+
+  .ps-agenda { margin: 40px 0 0; padding: 0; list-style: none; max-width: 1200px; }
+  .ps-agenda li { display: grid; grid-template-columns: 120px 1fr; align-items: baseline; padding: 30px 0; border-top: 1px solid var(--w12); }
+  .ps-agenda li:last-child { border-bottom: 1px solid var(--w12); }
+  .ps-agenda span { font-size: 40px; font-weight: 600; color: var(--ai-ink); font-variant-numeric: tabular-nums; }
+  .ps-agenda b { font-size: 64px; line-height: 1.1; font-weight: 600; letter-spacing: -0.03em; }
+
+  .ps-div-n { font-size: 240px; line-height: 0.9; font-weight: 600; letter-spacing: -0.05em; color: var(--ai-ink); font-variant-numeric: tabular-nums; }
+  .ps-div-name { margin: 32px 0 0; font-size: 128px; line-height: 1; font-weight: 600; letter-spacing: -0.04em; }
+  .ps-div-holds { margin: 40px 0 0; font-size: 32px; line-height: 1.45; color: var(--ink-secondary); }
+
+  .ps-points { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 64px; }
+  .ps-point { padding: 44px 40px; border-radius: 28px; background: var(--w03); border: 1px solid var(--w07); }
+  .ps-tile { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 20px; background: var(--brand-dim); color: var(--ai-ink); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), 0.3); }
+  .ps-tile svg, .ps-qmark svg, .ps-cmp-arrow svg, .ps-opt-line svg { width: 36px; height: 36px; }
+  .ps-point b { display: block; margin-top: 36px; font-size: 42px; line-height: 1.15; font-weight: 600; letter-spacing: -0.02em; }
+  .ps-point span { display: block; margin-top: 14px; font-size: 30px; line-height: 1.45; color: var(--ink-secondary); }
+
+  .ps-figs { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; margin-top: 80px; }
+  .ps-fig { padding: 0 48px; border-left: 2px solid var(--w12); }
+  .ps-fig:first-child { padding-left: 0; border-left: 0; }
+  .ps-fig-n { font-size: 140px; line-height: 1; font-weight: 600; letter-spacing: -0.045em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .ps-fig-m { margin: 24px 0 0; font-size: 30px; line-height: 1.45; color: var(--ink-secondary); text-wrap: pretty; }
+
+  .ps-cmp { display: grid; grid-template-columns: 1fr 96px 1fr; margin-top: 64px; }
+  .ps-cmp-h { padding-bottom: 20px; font-size: 24px; line-height: 1.3; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-secondary); }
+  .ps-cmp-h.is-new { color: var(--ai-ink); }
+  .ps-cmp-row { display: contents; }
+  .ps-cmp-row > * { padding: 30px 0; border-top: 1px solid var(--w12); font-size: 40px; line-height: 1.25; }
+  .ps-cmp-row > :last-child { font-weight: 600; }
+  .ps-cmp-arrow { display: grid; place-items: center; color: var(--ai-ink); }
+
+  .ps-qmark { color: var(--ai-ink); }
+  .ps-qmark svg { width: 72px; height: 72px; }
+  .ps-quote { margin: 32px 0 0; font-size: 80px; line-height: 1.15; font-weight: 500; letter-spacing: -0.025em; text-wrap: balance; }
+  .ps-who { margin-top: 44px; font-size: 30px; color: var(--ink-secondary); }
+
+  .ps-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 64px; }
+  .ps-opt { position: relative; padding: 48px 48px 40px; border-radius: 28px; background: var(--w03); border: 1px solid var(--w12); }
+  .ps-opt.is-rec { background: var(--brand-dim); border-color: rgba(var(--brand-rgb), 0.55); box-shadow: 0 0 0 1px rgba(var(--brand-rgb), 0.55), 0 0 60px -20px var(--brand-glow); }
+  .ps-opt-tag { position: absolute; top: -22px; left: 44px; height: 44px; padding: 0 22px; display: inline-flex; align-items: center; border-radius: 9999px; background: var(--brand); color: var(--on-brand); font-size: 22px; font-weight: 600; }
+  .ps-opt b { display: block; font-size: 48px; line-height: 1.1; font-weight: 600; letter-spacing: -0.025em; }
+  .ps-opt-line { display: grid; grid-template-columns: 36px 1fr; gap: 18px; margin-top: 24px; font-size: 30px; line-height: 1.35; }
+  .ps-opt-line svg { width: 30px; height: 30px; margin-top: 4px; color: var(--ai-ink); }
+
+  /* ═════════════════ A. CHAPTERS ═════════════════
+     A glass rail holds the agenda for the whole talk: the parts in order, the
+     current one lit, a bar per slide inside it. The rail's light glides to
+     each new part. Content sits right of it, left-aligned like a document. */
+  .va-rail {
+    position: absolute; z-index: 3; left: 0; top: 0; bottom: 0; width: 480px;
+    background: linear-gradient(180deg, var(--glass-soft), color-mix(in oklab, var(--glass-soft) 55%, transparent));
+    -webkit-backdrop-filter: blur(24px) saturate(1.2); backdrop-filter: blur(24px) saturate(1.2);
+    border-right: 1px solid var(--glass-border);
+    transition: opacity var(--duration-very-slow) var(--ease-smooth-out) 200ms, transform var(--duration-very-slow) var(--ease-smooth-out) 200ms;
+  }
+  .va[data-edge] .va-rail { opacity: 0; transform: translateX(-48px); transition-delay: 0ms; transition-duration: var(--duration-medium); }
+  .va-parts { position: absolute; left: 72px; right: 48px; top: 300px; margin: 0; padding: 0; list-style: none; }
+  .va-light { position: absolute; left: -24px; right: 0; top: 0; height: 132px; border-radius: 22px; background: var(--brand-dim); box-shadow: inset 0 0 0 1px rgba(var(--brand-rgb), 0.35); transition: transform 620ms var(--ease-smooth-out); }
+  .va-part { position: relative; display: grid; grid-template-columns: 64px 1fr; align-items: baseline; height: 132px; align-content: center; }
+  .va-part-n { font-size: 26px; line-height: 44px; font-weight: 600; color: var(--ink-secondary); font-variant-numeric: tabular-nums; }
+  .va-part-name { font-size: 34px; line-height: 44px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink-secondary); transition: color var(--duration-quick) var(--ease-smooth-out); }
+  .va-part[data-state="now"] .va-part-n { color: var(--ai-ink); }
+  .va-part[data-state="now"] .va-part-name, .va-part[data-state="done"] .va-part-name { color: var(--ink-primary); }
+  .va-segs { grid-column: 2; display: flex; gap: 6px; margin-top: 14px; width: 220px; }
+  .va-seg { position: relative; flex: 1; height: 4px; border-radius: 2px; overflow: hidden; background: var(--w12); }
+  .va-seg::after { content: ""; position: absolute; inset: 0; background: var(--ai); transform: scaleX(0); transform-origin: 0 50%; transition: transform var(--duration-quick) var(--ease-smooth-out); }
+  .va-seg[data-state="done"]::after { transform: none; }
+  .va-seg[data-state="now"]::after { transform: none; transition-duration: var(--duration-very-slow); transition-delay: var(--lead, 250ms); }
+  .va-foot { position: absolute; left: 72px; right: 48px; bottom: 72px; font-size: 22px; line-height: 1.45; color: var(--ink-secondary); }
+  .va-foot b { display: block; font-size: 24px; font-weight: 600; color: var(--ink-primary); }
+  .va .ps { left: 620px; right: 150px; top: 180px; bottom: 140px; }
+  .va .ps.is-edge { left: 200px; right: 200px; }
+
+  /* ═════════════════ B. STAGE ═════════════════
+     A keynote: big centred words, the orb as the talk's presence (large on
+     the cover and the close, beside each part's title, resting in the corner
+     while you talk), and the whole talk as one bar along the foot, a segment
+     per part with its name. */
+  .vb-orb { position: absolute; z-index: 1; left: 0; top: 0; width: 600px; height: 600px; will-change: transform; transition: transform 1100ms var(--ease-deck-arc); }
+  .vb-orb canvas { display: block; width: 100%; height: 100%; }
+  .vb .ps { left: 160px; right: 160px; top: 170px; bottom: 210px; }
+  .vb .ps.is-centre { align-items: center; text-align: center; }
+  .vb .ps.is-centre .ps-sub { margin-left: auto; margin-right: auto; }
+  .vb .ps.is-part { right: 880px; }
+  .vb .ps.is-cover, .vb .ps.is-close { top: 120px; bottom: 320px; }
+  .vb-prog { position: absolute; z-index: 4; left: 160px; right: 160px; bottom: 72px; display: flex; gap: 16px; transition: opacity var(--duration-medium) var(--ease-smooth-out); }
+  .vb[data-edge] .vb-prog { opacity: 0; }
+  .vb-group { min-width: 0; }
+  .vb-group-name { display: block; margin-bottom: 14px; font-size: 22px; line-height: 1.3; font-weight: 600; color: var(--ink-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color var(--duration-quick) var(--ease-smooth-out); }
+  .vb-group[data-state="now"] .vb-group-name { color: var(--ink-primary); }
+  .vb-track { position: relative; height: 6px; border-radius: 3px; overflow: hidden; background: var(--w12); }
+  .vb-fill { position: absolute; inset: 0; background: var(--ai); transform: scaleX(0); transform-origin: 0 50%; transition: transform var(--duration-very-slow) var(--ease-smooth-out); }
+
+  /* ═════════════════ C. BOARD ═════════════════
+     The whole talk laid out on one board, a row per part. The camera glides
+     from slide to slide, pulls back to show each part as you enter it, and
+     the agenda is the board itself, seen from above. */
+  .vc-world { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
+  .vc-dots { position: absolute; background-image: radial-gradient(circle, var(--w12) 3px, transparent 3.5px); background-size: 120px 120px; }
+  .vc-card { position: absolute; width: 1920px; height: 1080px; border-radius: 56px; background: var(--card-bg); border: 2px solid var(--card-border); overflow: hidden; transition: box-shadow 600ms var(--ease-smooth-out), border-color 600ms var(--ease-smooth-out); }
+  .vc-card[data-state="now"] { border-color: rgba(var(--brand-rgb), 0.7); box-shadow: 0 0 0 6px rgba(var(--brand-rgb), 0.35), 0 40px 120px -40px var(--brand-glow); }
+  .vc-card .ps { left: 160px; right: 160px; top: 120px; bottom: 120px; }
+  .vc .rv, .vc .rv-w { opacity: 1; transform: none; filter: none; transition: none; }
+  .vc-row { position: absolute; display: flex; align-items: baseline; gap: 48px; font-size: 150px; line-height: 1; font-weight: 600; letter-spacing: -0.04em; color: var(--ink-primary); white-space: nowrap; }
+  .vc-row span { color: var(--ai-ink); font-variant-numeric: tabular-nums; }
+  .vc .sl-head { z-index: 6; }
+  .vc-veil { position: absolute; z-index: 5; left: 0; right: 0; top: 0; height: 200px; background: linear-gradient(180deg, var(--body-bg), transparent); pointer-events: none; }
+  .vc-part { transition: opacity var(--duration-quick) var(--ease-smooth-out); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dk-stage *, .dk-stage *::after { transition-duration: 0ms !important; transition-delay: 0ms !important; animation: none !important; }
+    .brand-word.is-on { clip-path: none; }
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="aimy-rg" cx="75.72" cy="73.83" fx="75.72" fy="73.83" r="70.54" gradientUnits="userSpaceOnUse"><stop offset="0.26" stop-color="#8c4ff4"/><stop offset="0.36" stop-color="#8250f4"/><stop offset="0.51" stop-color="#6954f6"/><stop offset="0.7" stop-color="#3f5bf9"/><stop offset="0.92" stop-color="#0764fe"/><stop offset="0.95" stop-color="#0066ff"/></radialGradient>
+    <symbol id="aimy-mark" viewBox="0 0 151.43 147.66"><path fill="var(--aimy-mark, url(#aimy-rg))" d="m84.2,6.76c1.09-2.9,3.26-3.67,6.2-3.46,3.04.21,6.12-.04,9.17.09,3.09.13,4.19,1.99,2.72,4.73-2.8,5.23-5.69,10.4-8.64,15.54-.91,1.59-1.31,2.9-.3,4.69,1.09,1.94,1.68,4.16,2.47,6.27.56,1.48,1.14,2.9,3.1,2.84,2.03-.06,2.38-1.54,2.71-3.11,1.1-5.1,2.22-10.19,3.39-15.28.66-2.88,1.64-3.2,3.7-1.18,3.15,3.08,6.22,6.25,9.37,9.33,1.29,1.26,1.36,2.4.1,3.7-1.25,1.29-2.47,2.62-3.66,3.97-.61.69-1.13,1.49-.46,2.42.68.94,1.55.61,2.42.27,4.51-1.8,9.04-3.53,13.53-5.39,1.83-.76,3.32-.47,4.67.87,2.49,2.47,5.04,4.9,7.42,7.47,2.54,2.73,1.91,4.74-1.77,5.82-5.69,1.67-11.39,3.26-17.1,4.85-1.37.38-2.26.89-2.75,2.47-.76,2.47-2.02,4.8-3.1,7.17-.61,1.35-.72,2.59.51,3.68,1.25,1.11,2.44.75,3.68-.05,4.53-2.92,9.07-5.83,13.64-8.69,2.5-1.57,3.33-1.08,3.36,1.91.04,4.22-.08,8.45.05,12.67.07,2.39-.98,3.24-3.21,3.2-1.53-.03-3.06.06-4.59.14-1.02.06-2.06.26-2.2,1.52-.13,1.15.81,1.46,1.65,1.82,4.29,1.85,8.54,3.8,12.88,5.53,2.16.86,3.1,2.23,3.06,4.5-.06,3.33.02,6.65-.04,9.98-.08,3.82-1.88,4.89-5.2,3.07-5.2-2.84-10.38-5.72-15.53-8.66-1.34-.76-2.38-1.03-3.92-.2-2.28,1.22-4.82,1.95-7.26,2.86-1.4.53-2.29,1.38-2.17,3,.13,1.67,1.24,2.19,2.69,2.5,5.27,1.12,10.53,2.27,15.78,3.49,2.92.67,3.16,1.56,1.07,3.69-3.09,3.14-6.26,6.21-9.33,9.38-1.27,1.3-2.36,1.38-3.66.09-1.27-1.27-2.63-2.45-3.98-3.65-.69-.62-1.48-1.14-2.42-.5-.97.66-.64,1.53-.29,2.4,1.76,4.42,3.43,8.88,5.28,13.26.95,2.24.47,3.9-1.24,5.51-2.23,2.09-4.32,4.33-6.51,6.47-3.13,3.06-5.22,2.5-6.45-1.76-1.58-5.52-3.13-11.05-4.64-16.59-.4-1.48-1.02-2.39-2.66-2.9-2.39-.74-4.62-1.97-6.92-3.01-1.43-.65-2.78-.8-3.9.57-1.05,1.29-.54,2.46.25,3.69,2.88,4.45,5.73,8.92,8.55,13.41,1.65,2.62,1.17,3.48-1.98,3.52-4.14.05-8.28-.06-12.41.06-2.47.07-3.33-1.01-3.38-3.37-.04-1.94.39-3.96-.55-5.82-1.74-2.18-2.36-.35-2.92.91-1.76,3.94-3.56,7.87-5.08,11.9-1.11,2.96-2.92,4.25-6.1,4.03-2.77-.2-5.57-.01-8.36-.06-4.27-.07-5.4-1.95-3.37-5.63,2.74-4.95,5.49-9.9,8.31-14.8.9-1.56,1.33-2.86.29-4.67-1.15-2-1.75-4.32-2.56-6.51-.53-1.44-1.25-2.6-3.04-2.53-1.83.08-2.32,1.31-2.64,2.85-1.1,5.18-2.24,10.36-3.44,15.52-.67,2.88-1.65,3.17-3.72,1.13-3.08-3.02-6.08-6.14-9.19-9.14-1.49-1.44-1.54-2.68-.06-4.1,1.1-1.06,2.11-2.22,3.13-3.36.73-.81,1.57-1.72.72-2.83-.76-1-1.8-.44-2.72-.08-4.27,1.69-8.56,3.31-12.78,5.1-2.23.95-3.93.54-5.56-1.18-2.29-2.42-4.75-4.67-7.02-7.1-2.34-2.51-1.78-4.64,1.49-5.62,5.6-1.67,11.22-3.27,16.86-4.79,1.77-.48,2.96-1.11,3.53-3.1.67-2.31,1.91-4.45,2.9-6.66.65-1.44.72-2.79-.65-3.89-1.32-1.05-2.45-.47-3.67.32-4.36,2.84-8.76,5.65-13.17,8.41-2.76,1.73-3.71,1.23-3.74-1.95-.04-4.14.09-8.28-.03-12.41-.06-2.34.89-3.26,3.18-3.21,1.7.04,3.41-.17,5.12-.3.87-.06,1.62-.4,1.76-1.36.15-1-.58-1.41-1.36-1.75-4.37-1.89-8.7-3.87-13.12-5.63-2.25-.9-3.23-2.35-3.19-4.71.06-3.33-.07-6.66.04-9.98.12-3.56,2.07-4.64,5.2-2.93,5.13,2.79,10.23,5.62,15.3,8.52,1.5.86,2.72,1.22,4.44.29,2.12-1.15,4.5-1.81,6.77-2.67,1.47-.55,2.53-1.38,2.37-3.15-.15-1.68-1.35-2.16-2.76-2.46-5.19-1.13-10.37-2.25-15.55-3.44-2.86-.66-3.17-1.67-1.16-3.73,3.02-3.09,6.14-6.07,9.13-9.19,1.44-1.51,2.67-1.53,4.1-.06,1.07,1.09,2.21,2.12,3.36,3.12.8.7,1.66,1.64,2.81.74,1-.78.45-1.8.08-2.71-1.69-4.27-3.3-8.56-5.1-12.78-.97-2.26-.48-3.92,1.19-5.56,2.24-2.2,4.29-4.6,6.51-6.82,2.52-2.52,5.28-1.85,6.29,1.53,1.68,5.69,3.31,11.4,4.86,17.13.42,1.53,1.09,2.38,2.7,2.9,2.47.8,4.79,2.05,7.17,3.11,1.38.61,2.62.55,3.64-.69.98-1.19.61-2.32-.13-3.46-2.82-4.38-5.65-8.75-8.42-13.17-.58-.93-1.69-1.87-.93-3.15.68-1.15,1.94-.76,2.97-.77,4.13-.04,8.27.06,12.4-.03,2.07-.04,2.97.78,2.95,2.84-.01,1.71.14,3.41.26,5.12.07.94.34,1.85,1.47,1.96.98.1,1.41-.63,1.73-1.42,1.76-4.23,3.52-8.46,5.28-12.68Zm-22.36,61.41c-3.34,1.86-6.31,1.33-9.12-1.21-2.13-1.92-4.4-3.7-6.68-5.44-1.37-1.05-5.46-.12-5.88,1.48-.4,1.51,1.45,1.62,2.35,2.26,2.26,1.62,2.42,2.82.44,4.99-1.2,1.31-1.86,2.77-.81,4.36,1.07,1.61,2.68,2.01,4.5,1.25,1.66-.69,3.35-1.31,4.95-2.11,3.35-1.67,6.39-1.47,9.13,1.21,2.48,5.78.4,9.43-5.84,10.19-2.94.36-5.9.59-8.84.99-1.71.24-3.72,3.37-3.04,4.99.74,1.75,2.14.27,3.18.13,2.82-.39,3.74.25,3.89,3.17.09,1.76.6,3.29,2.48,3.69,2.06.43,3.44-.64,4.21-2.52.82-1.99,1.6-4,2.44-5.99,1.06-2.53,2.86-4.12,5.72-4.2,2.6-.07,4.55,1.12,5.68,3.4,1.22,2.48.87,4.87-.94,7.03-1.56,1.86-3.06,3.77-4.61,5.63-2.97,3.57-2.9,4.91.52,8.4.47-.79.92-1.56,1.38-2.32,1.77-2.93,2.86-3.11,5.4-.87,1.35,1.19,2.84,1.7,4.39.59,1.5-1.08,1.78-2.66,1.12-4.34-.89-2.26-1.96-4.45-2.77-6.73-1.32-3.73.56-7.35,4.17-8.3,3.57-.94,7.08,1.37,7.7,5.21.4,2.48.6,5,.8,7.5.41,4.94.97,5.53,5.99,5.97.04.05.08.11.13.14.01,0,.07-.05.11-.08-.09,0-.19,0-.28,0,.48-1.21-.26-2.26-.46-3.37-.48-2.69.29-3.75,2.95-3.8,1.88-.03,3.52-.5,3.93-2.51.45-2.19-.81-3.54-2.79-4.32-2.01-.78-4.01-1.57-5.99-2.42-2.45-1.05-3.89-2.93-3.98-5.6-.08-2.55,1.12-4.54,3.41-5.68,2.38-1.18,4.72-.92,6.82.76,1.9,1.51,3.77,3.05,5.64,4.6,3.87,3.21,4.66,3.2,8.75-.27-1.04-.61-2.07-1.14-3.02-1.79-2.24-1.53-2.4-2.82-.54-4.79,1.28-1.36,2.12-2.83.94-4.56-1.2-1.75-2.96-1.85-4.82-1.09-2.08.86-4.11,1.83-6.22,2.59-3.73,1.35-7.49-.5-8.38-4.02-.96-3.81,1.3-7.23,5.33-7.83,2.48-.37,5-.59,7.51-.78,4.75-.36,5.44-1.05,5.77-6.3-1.15.29-2.24.62-3.35.82-2.62.49-3.71-.35-3.78-3.03-.05-1.89-.52-3.49-2.57-3.85-2.07-.36-3.39.78-4.14,2.67-.83,2.09-1.62,4.2-2.57,6.23-1.68,3.6-5.57,4.91-8.76,3.05-3.36-1.96-4.18-6.1-1.75-9.32,1.57-2.08,3.27-4.06,4.93-6.07,2.94-3.56,2.89-4.57-.43-8.15-.08.02-.2.01-.23.06-.3.44-.6.89-.88,1.35-2.3,3.81-2.75,3.89-6.21,1.3-1.24-.93-2.61-1.34-3.97-.31-1.33,1.02-1.89,2.42-1.26,4.06.84,2.18,1.74,4.33,2.67,6.47,1.16,2.67.88,5.12-1.13,7.24-1.79,1.89-4.12,2.26-6.47,1.44-2.61-.91-3.96-2.91-4.18-5.72-.25-3.13-.61-6.26-1.01-9.38-.24-1.92-3.07-4.03-5.03-3.37-2.01.68-.22,2.24-.11,3.34.27,2.74-.36,3.64-3.35,3.81-1.79.1-3.25.69-3.58,2.6-.31,1.81.57,3.15,2.24,3.88,1.73.76,3.5,1.42,5.24,2.15,5.82,2.41,6.87,6.44,2.99,11.41Z"/></symbol>
+    <symbol id="aimy-lockup" viewBox="0 0 418.18 147.66"><g fill="#0366ff"><path d="m209.6,97.25h-25.58l-4.1,12.11h-17.48l24.8-68.54h19.33l24.8,68.54h-17.67l-4.1-12.11Zm-4.3-12.89l-8.49-25.09-8.4,25.09h16.89Z"/><path d="m255.58,40.82v68.54h-16.7V40.82h16.7Z"/><path d="m345.31,40.82v68.54h-16.7v-41.1l-15.33,41.1h-13.47l-15.43-41.2v41.2h-16.7V40.82h19.72l19.23,47.45,19.04-47.45h19.63Z"/><path d="m416.1,40.82l-23.73,45.89v22.65h-16.7v-22.65l-23.73-45.89h18.94l13.28,28.71,13.18-28.71h18.75Z"/></g><path fill="var(--aimy-mark, url(#aimy-rg))" d="m81.08,8.02c1.09-2.9,3.26-3.67,6.2-3.46,3.04.21,6.12-.04,9.17.09,3.09.13,4.19,1.99,2.72,4.73-2.8,5.23-5.69,10.4-8.64,15.54-.91,1.59-1.31,2.9-.3,4.69,1.09,1.94,1.68,4.16,2.47,6.27.56,1.48,1.14,2.9,3.1,2.84,2.03-.06,2.38-1.54,2.71-3.11,1.1-5.1,2.22-10.19,3.39-15.28.66-2.88,1.64-3.2,3.7-1.18,3.15,3.08,6.22,6.25,9.37,9.33,1.29,1.26,1.36,2.4.1,3.7-1.25,1.29-2.47,2.62-3.66,3.97-.61.69-1.13,1.49-.46,2.42.68.94,1.55.61,2.42.27,4.51-1.8,9.04-3.53,13.53-5.39,1.83-.76,3.32-.47,4.67.87,2.49,2.47,5.04,4.9,7.42,7.47,2.54,2.73,1.91,4.74-1.77,5.82-5.69,1.67-11.39,3.26-17.1,4.85-1.37.38-2.26.89-2.75,2.47-.76,2.47-2.02,4.8-3.1,7.17-.61,1.35-.72,2.59.51,3.68,1.25,1.11,2.44.75,3.68-.05,4.53-2.92,9.07-5.83,13.64-8.69,2.5-1.57,3.33-1.08,3.36,1.91.04,4.22-.08,8.45.05,12.67.07,2.39-.98,3.24-3.21,3.2-1.53-.03-3.06.06-4.59.14-1.02.06-2.06.26-2.2,1.52-.13,1.15.81,1.46,1.65,1.82,4.29,1.85,8.54,3.8,12.88,5.53,2.16.86,3.1,2.23,3.06,4.5-.06,3.33.02,6.65-.04,9.98-.08,3.82-1.88,4.89-5.2,3.07-5.2-2.84-10.38-5.72-15.53-8.66-1.34-.76-2.38-1.03-3.92-.2-2.28,1.22-4.82,1.95-7.26,2.86-1.4.53-2.29,1.38-2.17,3,.13,1.67,1.24,2.19,2.69,2.5,5.27,1.12,10.53,2.27,15.78,3.49,2.92.67,3.16,1.56,1.07,3.69-3.09,3.14-6.26,6.21-9.33,9.38-1.27,1.3-2.36,1.38-3.66.09-1.27-1.27-2.63-2.45-3.98-3.65-.69-.62-1.48-1.14-2.42-.5-.97.66-.64,1.53-.29,2.4,1.76,4.42,3.43,8.88,5.28,13.26.95,2.24.47,3.9-1.24,5.51-2.23,2.09-4.32,4.33-6.51,6.47-3.13,3.06-5.22,2.5-6.45-1.76-1.58-5.52-3.13-11.05-4.64-16.59-.4-1.48-1.02-2.39-2.66-2.9-2.39-.74-4.62-1.97-6.92-3.01-1.43-.65-2.78-.8-3.9.57-1.05,1.29-.54,2.46.25,3.69,2.88,4.45,5.73,8.92,8.55,13.41,1.65,2.62,1.17,3.48-1.98,3.52-4.14.05-8.28-.06-12.41.06-2.47.07-3.33-1.01-3.38-3.37-.04-1.94.39-3.96-.55-5.82-1.74-2.18-2.36-.35-2.92.91-1.76,3.94-3.56,7.87-5.08,11.9-1.11,2.96-2.92,4.25-6.1,4.03-2.77-.2-5.57-.01-8.36-.06-4.27-.07-5.4-1.95-3.37-5.63,2.74-4.95,5.49-9.9,8.31-14.8.9-1.56,1.33-2.86.29-4.67-1.15-2-1.75-4.32-2.56-6.51-.53-1.44-1.25-2.6-3.04-2.53-1.83.08-2.32,1.31-2.64,2.85-1.1,5.18-2.24,10.36-3.44,15.52-.67,2.88-1.65,3.17-3.72,1.13-3.08-3.02-6.08-6.14-9.19-9.14-1.49-1.44-1.54-2.68-.06-4.1,1.1-1.06,2.11-2.22,3.13-3.36.73-.81,1.57-1.72.72-2.83-.76-1-1.8-.44-2.72-.08-4.27,1.69-8.56,3.31-12.78,5.1-2.23.95-3.93.54-5.56-1.18-2.29-2.42-4.75-4.67-7.02-7.1-2.34-2.51-1.78-4.64,1.49-5.62,5.6-1.67,11.22-3.27,16.86-4.79,1.77-.48,2.96-1.11,3.53-3.1.67-2.31,1.91-4.45,2.9-6.66.65-1.44.72-2.79-.65-3.89-1.32-1.05-2.45-.47-3.67.32-4.36,2.84-8.76,5.65-13.17,8.41-2.76,1.73-3.71,1.23-3.74-1.95-.04-4.14.09-8.28-.03-12.41-.06-2.34.89-3.26,3.18-3.21,1.7.04,3.41-.17,5.12-.3.87-.06,1.62-.4,1.76-1.36.15-1-.58-1.41-1.36-1.75-4.37-1.89-8.7-3.87-13.12-5.63-2.25-.9-3.23-2.35-3.19-4.71.06-3.33-.07-6.66.04-9.98.12-3.56,2.07-4.64,5.2-2.93,5.13,2.79,10.23,5.62,15.3,8.52,1.5.86,2.72,1.22,4.44.29,2.12-1.15,4.5-1.81,6.77-2.67,1.47-.55,2.53-1.38,2.37-3.15-.15-1.68-1.35-2.16-2.76-2.46-5.19-1.13-10.37-2.25-15.55-3.44-2.86-.66-3.17-1.67-1.16-3.73,3.02-3.09,6.14-6.07,9.13-9.19,1.44-1.51,2.67-1.53,4.1-.06,1.07,1.09,2.21,2.12,3.36,3.12.8.7,1.66,1.64,2.81.74,1-.78.45-1.8.08-2.71-1.69-4.27-3.3-8.56-5.1-12.78-.97-2.26-.48-3.92,1.19-5.56,2.24-2.2,4.29-4.6,6.51-6.82,2.52-2.52,5.28-1.85,6.29,1.53,1.68,5.69,3.31,11.4,4.86,17.13.42,1.53,1.09,2.38,2.7,2.9,2.47.8,4.79,2.05,7.17,3.11,1.38.61,2.62.55,3.64-.69.98-1.19.61-2.32-.13-3.46-2.82-4.38-5.65-8.75-8.42-13.17-.58-.93-1.69-1.87-.93-3.15.68-1.15,1.94-.76,2.97-.77,4.13-.04,8.27.06,12.4-.03,2.07-.04,2.97.78,2.95,2.84-.01,1.71.14,3.41.26,5.12.07.94.34,1.85,1.47,1.96.98.1,1.41-.63,1.73-1.42,1.76-4.23,3.52-8.46,5.28-12.68Zm-22.36,61.41c-3.34,1.86-6.31,1.33-9.12-1.21-2.13-1.92-4.4-3.7-6.68-5.44-1.37-1.05-5.46-.12-5.88,1.48-.4,1.51,1.45,1.62,2.35,2.26,2.26,1.62,2.42,2.82.44,4.99-1.2,1.31-1.86,2.77-.81,4.36,1.07,1.61,2.68,2.01,4.5,1.25,1.66-.69,3.35-1.31,4.95-2.11,3.35-1.67,6.39-1.47,9.13,1.21,2.48,5.78.4,9.43-5.84,10.19-2.94.36-5.9.59-8.84.99-1.71.24-3.72,3.37-3.04,4.99.74,1.75,2.14.27,3.18.13,2.82-.39,3.74.25,3.89,3.17.09,1.76.6,3.29,2.48,3.69,2.06.43,3.44-.64,4.21-2.52.82-1.99,1.6-4,2.44-5.99,1.06-2.53,2.86-4.12,5.72-4.2,2.6-.07,4.55,1.12,5.68,3.4,1.22,2.48.87,4.87-.94,7.03-1.56,1.86-3.06,3.77-4.61,5.63-2.97,3.57-2.9,4.91.52,8.4.47-.79.92-1.56,1.38-2.32,1.77-2.93,2.86-3.11,5.4-.87,1.35,1.19,2.84,1.7,4.39.59,1.5-1.08,1.78-2.66,1.12-4.34-.89-2.26-1.96-4.45-2.77-6.73-1.32-3.73.56-7.35,4.17-8.3,3.57-.94,7.08,1.37,7.7,5.21.4,2.48.6,5,.8,7.5.41,4.94.97,5.53,5.99,5.97.04.05.08.11.13.14.01,0,.07-.05.11-.08-.09,0-.19,0-.28,0,.48-1.21-.26-2.26-.46-3.37-.48-2.69.29-3.75,2.95-3.8,1.88-.03,3.52-.5,3.93-2.51.45-2.19-.81-3.54-2.79-4.32-2.01-.78-4.01-1.57-5.99-2.42-2.45-1.05-3.89-2.93-3.98-5.6-.08-2.55,1.12-4.54,3.41-5.68,2.38-1.18,4.72-.92,6.82.76,1.9,1.51,3.77,3.05,5.64,4.6,3.87,3.21,4.66,3.2,8.75-.27-1.04-.61-2.07-1.14-3.02-1.79-2.24-1.53-2.4-2.82-.54-4.79,1.28-1.36,2.12-2.83.94-4.56-1.2-1.75-2.96-1.85-4.82-1.09-2.08.86-4.11,1.83-6.22,2.59-3.73,1.35-7.49-.5-8.38-4.02-.96-3.81,1.3-7.23,5.33-7.83,2.48-.37,5-.59,7.51-.78,4.75-.36,5.44-1.05,5.77-6.3-1.15.29-2.24.62-3.35.82-2.62.49-3.71-.35-3.78-3.03-.05-1.89-.52-3.49-2.57-3.85-2.07-.36-3.39.78-4.14,2.67-.83,2.09-1.62,4.2-2.57,6.23-1.68,3.6-5.57,4.91-8.76,3.05-3.36-1.96-4.18-6.1-1.75-9.32,1.57-2.08,3.27-4.06,4.93-6.07,2.94-3.56,2.89-4.57-.43-8.15-.08.02-.2.01-.23.06-.3.44-.6.89-.88,1.35-2.3,3.81-2.75,3.89-6.21,1.3-1.24-.93-2.61-1.34-3.97-.31-1.33,1.02-1.89,2.42-1.26,4.06.84,2.18,1.74,4.33,2.67,6.47,1.16,2.67.88,5.12-1.13,7.24-1.79,1.89-4.12,2.26-6.47,1.44-2.61-.91-3.96-2.91-4.18-5.72-.25-3.13-.61-6.26-1.01-9.38-.24-1.92-3.07-4.03-5.03-3.37-2.01.68-.22,2.24-.11,3.34.27,2.74-.36,3.64-3.35,3.81-1.79.1-3.25.69-3.58,2.6-.31,1.81.57,3.15,2.24,3.88,1.73.76,3.5,1.42,5.24,2.15,5.82,2.41,6.87,6.44,2.99,11.41Z"/></symbol>
+    <symbol id="aimy-word" viewBox="162.44 40.82 253.66 68.54"><g fill="#0366ff"><path d="m209.6,97.25h-25.58l-4.1,12.11h-17.48l24.8-68.54h19.33l24.8,68.54h-17.67l-4.1-12.11Zm-4.3-12.89l-8.49-25.09-8.4,25.09h16.89Z"/><path d="m255.58,40.82v68.54h-16.7V40.82h16.7Z"/><path d="m345.31,40.82v68.54h-16.7v-41.1l-15.33,41.1h-13.47l-15.43-41.2v41.2h-16.7V40.82h19.72l19.23,47.45,19.04-47.45h19.63Z"/><path d="m416.1,40.82l-23.73,45.89v22.65h-16.7v-22.65l-23.73-45.89h18.94l13.28,28.71,13.18-28.71h18.75Z"/></g></symbol>
+  </defs>
+</svg>
+
+<main class="pv-page">
+  <div class="pv-top">
+    <div>
+      <h1 class="pv-h1">Presentations: a deck for everything else</h1>
+      <p class="pv-lead">Horizon and Two lanes tell a story on a timeline. Most decks aren't one: a proposal, a plan, a pitch, a training, an update on a topic. This is the third template, for those. Each variant shows <b>the same deck</b>, a proposal to roll AiMY Knowledge out to Customer Support (mock content). Click a deck, then use the arrow keys or Space, or press Present.</p>
+    </div>
+    <button class="pv-btn" type="button" id="pvTheme">Light theme</button>
+  </div>
+
+  <ul class="pv-view">
+    <li><b>Parts, not dates.</b> The talk is split into parts (Why now, What changes, The proof, The decision). Each part opens with a divider, and the agenda is built from them, so the room always knows where it is.</li>
+    <li><b>Ten kinds of slide,</b> the same in every variant: cover, agenda, part divider, statement, points (three at most, never bullets), figures (two or three, each with what it means), before and after, quote, choice (two options, one recommended), close.</li>
+    <li><b>The same motion family</b> as the other decks: the mark flies from the cover to the header and back, thinks between slides, words rise in, figures count up.</li>
+    <li><b>Where the variants differ</b> is how they show where you are: a rail with the agenda (A), a keynote stage with the orb and a bar along the foot (B), or the whole talk as a board the camera moves across (C).</li>
+    <li><b>When to use which template</b> goes into the presentations skill once you pick: a story with dates is Horizon or Two lanes; anything organised by topic is this one.</li>
+  </ul>
+
+  <article class="pv-var" id="vA">
+    <div class="pv-var-head"><span class="pv-var-key">A</span><h3 class="pv-var-name">Chapters: the agenda stays on screen</h3></div>
+    <p class="pv-var-say">A glass rail on the left holds the agenda for the whole talk, with the current part lit and a bar per slide inside it; the light glides to each new part. Content sits beside it, left-aligned like a document. <b>For:</b> proposals, plans, trainings and reviews by topic, where people need to follow the structure.</p>
+    <div class="dk" data-deck="chapters"></div>
+  </article>
+
+  <article class="pv-var" id="vB">
+    <div class="pv-var-head"><span class="pv-var-key">B</span><h3 class="pv-var-name">Stage: one idea, big, centred</h3></div>
+    <p class="pv-var-say">A keynote. Words are large and centred, the orb is the talk's presence (large on the cover and the close, beside each part's title, resting in the corner while you talk), and the whole talk runs along the foot as one bar, a segment per part with its name. <b>For:</b> pitches, kick-offs and talks to a big room.</p>
+    <div class="dk" data-deck="stage"></div>
+  </article>
+
+  <article class="pv-var" id="vC">
+    <div class="pv-var-head"><span class="pv-var-key">C</span><h3 class="pv-var-name">Board: the whole talk on one surface</h3></div>
+    <p class="pv-var-say">Every slide sits on one board, a row per part. The camera glides from slide to slide, pulls back to show each part as you enter it, and the agenda is the board seen from above. <b>For:</b> workshops and planning sessions, where seeing how the pieces relate matters as much as each slide.</p>
+    <div class="dk" data-deck="board"></div>
+  </article>
+</main>
+
+
+<script>
+/* The orb: makeSilk, transpiled from registry/aimy/ui/orb.tsx (ported from the products' voice.js). */
+(() => {
+"use strict";
+const SILK_N = 40; /* strands */
+const SILK_PTS = 64; /* points per strand */
+const SILK_BLOOM = 7; /* px (CSS): the glow under the strands */
+const TAU_PHASE = 0.6; /* s: phase blends */
+const TAU_UP = 0.2; /* s: voice rising */
+const TAU_DOWN = 0.7; /* s: voice falling */
+const BREATH_W = (Math.PI * 2) / 2.4; /* rad/s: one breath per 2.4s */
+const SILK_DARK = [
+    [69, 211, 230],
+    [64, 140, 255],
+    [140, 110, 255],
+];
+const SILK_LIGHT = [
+    [0, 120, 214],
+    [0, 86, 230],
+    [86, 58, 214],
+];
+const SILK_GREY = [
+    [150, 162, 178],
+    [126, 138, 156],
+    [150, 150, 170],
+];
+const reduced = () => window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+function makeSilk(canvas) {
+    const ctx = canvas.getContext("2d");
+    const off = document.createElement("canvas");
+    const octx = off.getContext("2d");
+    if (!ctx || !octx)
+        return null;
+    // Canvas filters arrived late in Safari; without one the bloom is skipped.
+    const canBloom = typeof ctx.filter === "string";
+    const TAU = Math.PI * 2;
+    let w = 0;
+    let h = 0;
+    let dpr = 1;
+    let raf = 0;
+    let last = 0;
+    let t = 0;
+    let rot = 0;
+    let ph = 0;
+    let phase = "connecting";
+    let want = 0;
+    let lvl = 0;
+    let light = false;
+    const E = { spin: 0.2, height: 0.78, amp: 0.045, colour: 1, alpha: 0.45, breath: 0 };
+    const goals = () => {
+        const quiet = phase === "muted" || phase === "error";
+        return {
+            spin: phase === "thinking" ? 1.15 : phase === "speaking" ? 0.42 : quiet ? 0.05 : 0.2,
+            height: phase === "thinking" ? 0.58 : 0.86,
+            amp: quiet ? 0.02 : phase === "thinking" ? 0.07 : 0.045,
+            colour: quiet ? 0 : 1,
+            alpha: phase === "error" ? 0.35 : phase === "connecting" ? 0.45 : phase === "muted" ? 0.6 : 1,
+            breath: phase === "speaking" ? 1 : 0,
+        };
+    };
+    const mix = (a, b, f) => a.map((v, i) => Math.round(v + (b[i] - v) * f));
+    const rgba = (c, a) => "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + Math.max(0, a).toFixed(3) + ")";
+    function fit() {
+        dpr = Math.min(2, window.devicePixelRatio || 1);
+        const cw = Math.round(canvas.clientWidth * dpr);
+        const ch = Math.round(canvas.clientHeight * dpr);
+        if (cw && (cw !== w || ch !== h)) {
+            w = canvas.width = off.width = cw;
+            h = canvas.height = off.height = ch;
+        }
+        // The nearest theme scope, so an orb inside a light panel draws light.
+        light = canvas.closest("[data-theme]")?.getAttribute("data-theme") === "light";
+    }
+    function draw(dt) {
+        if (!ctx || !octx)
+            return;
+        const G = goals();
+        const kp = dt ? 1 - Math.exp(-dt / TAU_PHASE) : 1;
+        for (const key of Object.keys(G))
+            E[key] += (G[key] - E[key]) * kp;
+        const target = phase === "listening" ? want : 0;
+        lvl += (target - lvl) * (dt ? 1 - Math.exp(-dt / (target > lvl ? TAU_UP : TAU_DOWN)) : 1);
+        t += dt;
+        rot += dt * E.spin;
+        ph += dt * (0.9 + E.spin * 1.4 + lvl * 0.9);
+        if (!w)
+            return;
+        const cx = w / 2;
+        const cy = h / 2;
+        const S = Math.min(w, h) * 0.44;
+        const swell = E.breath * (0.5 - 0.5 * Math.cos(t * BREATH_W));
+        const pinch = phase === "thinking" ? 1 + 0.03 * Math.sin(t * 1.6) : 1;
+        const H = S * E.height * (1 + swell * 0.04 + lvl * 0.06) * pinch;
+        const A = S * (E.amp + lvl * 0.22 + swell * 0.065);
+        const pal = (light ? SILK_LIGHT : SILK_DARK).map((c, i) => mix(SILK_GREY[i], c, E.colour));
+        octx.clearRect(0, 0, w, h);
+        octx.globalCompositeOperation = light ? "source-over" : "lighter";
+        octx.lineCap = "butt";
+        for (let k = 0; k < SILK_N; k++) {
+            const th = (k / SILK_N) * TAU + rot;
+            const depth = (Math.cos(th) + 1) / 2;
+            const base = Math.sin(th) * H;
+            // Its own latitude: half-width of the sphere at this height.
+            const L = Math.sqrt(Math.max(S * S * 0.03, S * S - base * base));
+            const a = E.alpha * (0.06 + 0.72 * depth * depth) * (light ? 1.15 : 1);
+            const grad = octx.createLinearGradient(cx - L, 0, cx + L, 0);
+            grad.addColorStop(0, rgba(pal[0], 0));
+            grad.addColorStop(0.26, rgba(pal[0], a * 0.8));
+            grad.addColorStop(0.5, rgba(pal[1], a));
+            grad.addColorStop(0.74, rgba(pal[2], a * 0.8));
+            grad.addColorStop(1, rgba(pal[2], 0));
+            octx.beginPath();
+            for (let i = 0; i <= SILK_PTS; i++) {
+                const u = (i / SILK_PTS) * 2 - 1;
+                const env = Math.pow(Math.max(0, 1 - u * u), 0.8);
+                const wave = Math.sin(u * 3.1 + ph + k * 0.43) +
+                    0.5 * Math.sin(u * 5.9 - ph * 1.27 + k * 0.91) +
+                    E.breath * 0.55 * Math.sin(Math.abs(u) * 5 - t * 2.6);
+                const x = cx + u * L;
+                const y = cy + base + env * wave * A * (0.55 + 0.45 * depth);
+                if (i)
+                    octx.lineTo(x, y);
+                else
+                    octx.moveTo(x, y);
+            }
+            octx.strokeStyle = grad;
+            octx.lineWidth = (0.4 + 1.1 * depth) * dpr;
+            octx.stroke();
+            // The sheen, on the strands that face you full-on, faded at its ends.
+            if (!light && depth > 0.88) {
+                const sa = ((0.45 * (depth - 0.88)) / 0.12) * E.colour * E.alpha;
+                const sheen = octx.createLinearGradient(cx - L, 0, cx + L, 0);
+                sheen.addColorStop(0.2, "rgba(255,255,255,0)");
+                sheen.addColorStop(0.5, "rgba(255,255,255," + sa.toFixed(3) + ")");
+                sheen.addColorStop(0.8, "rgba(255,255,255,0)");
+                octx.strokeStyle = sheen;
+                octx.lineWidth = 0.6 * dpr;
+                octx.stroke();
+            }
+        }
+        octx.globalCompositeOperation = "source-over";
+        ctx.clearRect(0, 0, w, h);
+        // The light the silk throws on the room behind it.
+        const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, S * 1.15);
+        glow.addColorStop(0, rgba(mix(SILK_GREY[1], [0, 102, 255], E.colour), (light ? 0.08 : 0.2) * E.alpha * (0.7 + lvl * 0.8 + swell * 0.4)));
+        glow.addColorStop(1, rgba([0, 102, 255], 0));
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, w, h);
+        // Bloom, then the strands sharp over their own glow.
+        if (canBloom) {
+            ctx.globalCompositeOperation = light ? "source-over" : "lighter";
+            ctx.globalAlpha = light ? 0.35 : 0.85;
+            ctx.filter = "blur(" + SILK_BLOOM * dpr + "px)";
+            ctx.drawImage(off, 0, 0);
+            ctx.filter = "none";
+            ctx.globalAlpha = 1;
+        }
+        ctx.globalCompositeOperation = light ? "source-over" : "lighter";
+        ctx.drawImage(off, 0, 0);
+        ctx.globalCompositeOperation = "source-over";
+    }
+    function loop(now) {
+        const dt = last ? Math.min(0.05, (now - last) / 1000) : 0;
+        last = now;
+        fit();
+        draw(dt);
+        raf = requestAnimationFrame(loop);
+    }
+    // One still frame, every eased value at its goal.
+    function still() {
+        fit();
+        lvl = 0;
+        draw(0);
+    }
+    return {
+        start() {
+            if (reduced()) {
+                still();
+                return;
+            }
+            if (!raf) {
+                last = 0;
+                raf = requestAnimationFrame(loop);
+            }
+        },
+        stop() {
+            cancelAnimationFrame(raf);
+            raf = 0;
+        },
+        phase(p) {
+            phase = p;
+            if (reduced())
+                still();
+        },
+        level(v) {
+            want = v;
+        },
+    };
+}
+;
+window.makeSilk = makeSilk;
+
+})();
+</script>
+<script>
+/* ═════════════════ THE TALK ═════════════════
+   Mock content: a proposal to roll AiMY Knowledge out to Customer Support. */
+const PARTS = ['Why now', 'What changes', 'The proof', 'The decision'];
+const SLIDES = [
+  { kind: 'cover', kicker: 'Proposal · Customer Support', title: 'Give Support answers in seconds, not minutes.', sub: 'Rolling AiMY Knowledge out to the Support team in January.', meta: 'Support leads meeting · 3 December 2026' },
+  { kind: 'agenda' },
+  { kind: 'part', s: 0, holds: 'What searching costs us today' },
+  { kind: 'statement', s: 0, title: 'Agents spend a third of every call looking for the answer.', sub: 'Four tools, two wikis and a shared drive, for every question.' },
+  { kind: 'figures', s: 0, title: 'What searching costs today', figures: [
+    { value: 11, suffix: ' min', means: 'to answer a question, against the 7-minute target Support set' },
+    { value: 34, suffix: '%', means: 'of call time goes on searching, not talking' },
+    { value: 4, means: 'tools checked for a typical question' },
+  ] },
+  { kind: 'part', s: 1, holds: 'What agents get, and how their day changes' },
+  { kind: 'points', s: 1, title: 'What AiMY Knowledge gives every agent', points: [
+    { icon: 'search', head: 'One search', line: 'Every wiki, drive and past ticket, asked once.' },
+    { icon: 'file', head: 'Answers with sources', line: 'Each answer cites the policy it came from.' },
+    { icon: 'phone', head: 'Inside the call', line: 'It sits in the call screen, not another tab.' },
+  ] },
+  { kind: 'compare', s: 1, title: 'An everyday question, before and after', left: 'Today', right: 'With Knowledge', rows: [
+    ['Check four tools', 'Ask once'],
+    ['Copy from an old ticket', 'Read the cited policy'],
+    ['Escalate when unsure', 'See the source and decide'],
+  ] },
+  { kind: 'part', s: 2, holds: 'Six weeks with the Sales team' },
+  { kind: 'figures', s: 2, title: 'Six weeks with the Sales team', figures: [
+    { value: 41, suffix: '%', means: 'faster answers than before the pilot' },
+    { value: 4.2, suffix: '/5', means: 'trust in the answers, up from 3.1' },
+  ] },
+  { kind: 'quote', s: 2, quote: 'I stopped keeping my own notes file. Everything I need is in the answer.', who: 'An account manager in the pilot' },
+  { kind: 'part', s: 3, holds: 'Two ways to roll it out' },
+  { kind: 'choice', s: 3, title: 'Two ways to roll it out', options: [
+    { name: 'Everyone in January', lines: ['All 60 agents start on 12 January', 'One week of training for everyone', 'Fastest, with the most risk on day one'] },
+    { name: 'Tier 1 first', tag: 'Recommended', lines: ['Tier 1 on 12 January, tier 2 on 9 February', 'Tier 1 agents help train tier 2', 'Four weeks longer, far less risk'] },
+  ] },
+  { kind: 'close', title: 'Answers in', turn: 'seconds.', sub: 'Approve tier 1 first, and we start on 12 January.', action: 'Approve the rollout', where: 'Decision by 10 December' },
+];
+const COUNT = SLIDES.length;
+const LAST = COUNT - 1;
+const EDGE = (i) => ['cover', 'agenda', 'close'].includes(SLIDES[i].kind);
+
+/* ═════════════════ HELPERS ═════════════════ */
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const rv = (i, html, cls = '', tag = 'div') => `<${tag} class="rv ${cls}" style="--i:${i}">${html}</${tag}>`;
+const words = (text, from = 0) => text.split(' ').map((w, k) => `<span class="rv-w" style="--w:${k + from}">${esc(w)}</span>`).join(' ');
+const reduced = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+const moment = (k) => k > 0 && k < LAST;
+const pad = (n) => String(n).padStart(2, '0');
+const places = (v) => Math.min(2, (String(v).split('.')[1] || '').length);
+const fmt = (v, d) => new Intl.NumberFormat('en-GB', { minimumFractionDigits: d, maximumFractionDigits: d }).format(v);
+
+/* Lucide, verbatim. */
+const ICONS = {
+  search: '<path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>',
+  file: '<path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><path d="m9 15 2 2 4-4"/>',
+  phone: '<path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/>',
+  quote: '<path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/>',
+  arrow: '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+};
+const icon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
+
+const figureHtml = (f) =>
+  `${f.prefix ? `<span class="ps-unit is-pre">${esc(f.prefix)}</span>` : ''}<span data-count="${f.value}">${fmt(f.value, places(f.value))}</span>${f.suffix ? `<span class="ps-unit">${esc(f.suffix.trim())}</span>` : ''}`;
+
+/* One slide's words, the same in every variant. spot: where the mark rests on the cover and close. */
+function slideHtml(s, { spot = false } = {}) {
+  const kicker = s.s !== undefined ? rv(0, `${pad(s.s + 1)} · ${esc(PARTS[s.s])}`, 'sl-kicker') : '';
+  switch (s.kind) {
+    case 'cover':
+      return `${spot ? spotHtml('cover') : ''}${rv(1, esc(s.kicker), 'sl-kicker')}<h2 class="ps-display">${words(s.title)}</h2>${rv(6, esc(s.sub), 'ps-sub', 'p')}${rv(7, esc(s.meta), 'ps-meta')}`;
+    case 'agenda':
+      return `${rv(0, 'Agenda', 'sl-kicker')}<ol class="ps-agenda">${PARTS.map((p, j) => `<li class="rv" style="--i:${j + 1}"><span>${pad(j + 1)}</span><b>${esc(p)}</b></li>`).join('')}</ol>`;
+    case 'part':
+      return `${rv(0, pad(s.s + 1), 'ps-div-n')}<h2 class="ps-div-name">${words(PARTS[s.s], 1)}</h2>${rv(5, esc(s.holds), 'ps-div-holds', 'p')}`;
+    case 'statement':
+      return `${kicker}<h2 class="ps-statement">${words(s.title)}</h2>${s.sub ? rv(8, esc(s.sub), 'ps-sub', 'p') : ''}`;
+    case 'figures':
+      return `${kicker}<h2 class="ps-title">${words(s.title)}</h2><div class="ps-figs">${s.figures.map((f, j) => `<div class="ps-fig rv" style="--i:${j + 3}"><div class="ps-fig-n">${figureHtml(f)}</div><p class="ps-fig-m">${esc(f.means)}</p></div>`).join('')}</div>`;
+    case 'points':
+      return `${kicker}<h2 class="ps-title">${words(s.title)}</h2><div class="ps-points">${s.points.map((p, j) => `<div class="ps-point rv is-pop" style="--i:${j + 3}"><span class="ps-tile">${icon(p.icon)}</span><b>${esc(p.head)}</b><span>${esc(p.line)}</span></div>`).join('')}</div>`;
+    case 'compare':
+      return `${kicker}<h2 class="ps-title">${words(s.title)}</h2><div class="ps-cmp">
+        <div class="ps-cmp-h rv" style="--i:2">${esc(s.left)}</div><div class="rv" style="--i:2"></div><div class="ps-cmp-h is-new rv" style="--i:2">${esc(s.right)}</div>
+        ${s.rows.map((r, j) => `<div class="ps-cmp-row"><div class="rv" style="--i:${j * 2 + 3}">${esc(r[0])}</div><div class="ps-cmp-arrow rv" style="--i:${j * 2 + 4}">${icon('arrow')}</div><div class="rv" style="--i:${j * 2 + 4}">${esc(r[1])}</div></div>`).join('')}</div>`;
+    case 'quote':
+      return `${kicker}${rv(1, icon('quote'), 'ps-qmark')}<blockquote class="ps-quote">${words(s.quote, 2)}</blockquote>${rv(9, esc(s.who), 'ps-who')}`;
+    case 'choice':
+      return `${kicker}<h2 class="ps-title">${words(s.title)}</h2><div class="ps-opts">${s.options.map((o, j) => `<div class="ps-opt rv is-pop${o.tag ? ' is-rec' : ''}" style="--i:${j * 2 + 3}">${o.tag ? `<span class="ps-opt-tag">${esc(o.tag)}</span>` : ''}<b>${esc(o.name)}</b>${o.lines.map((l) => `<div class="ps-opt-line">${icon('check')}<span>${esc(l)}</span></div>`).join('')}</div>`).join('')}</div>`;
+    case 'close': {
+      const n = s.title.split(' ').length;
+      return `${spot ? spotHtml('close') : ''}<h2 class="ps-display">${words(s.title)} <span class="rv-w sl-ai" style="--w:${n}">${esc(s.turn)}</span></h2>${rv(5, esc(s.sub), 'ps-sub', 'p')}${rv(6, `<div class="sl-cta"><span class="sl-cta-btn">${esc(s.action)}</span><span class="sl-cta-where">${esc(s.where)}</span></div>`)}`;
+    }
+  }
+  return '';
+}
+
+/* A number that counts up to itself, in its own decimals, when its slide arrives. */
+function countUp(stage, i, lead) {
+  stage.querySelectorAll(`[data-n="${i}"] [data-count]`).forEach((el) => {
+    const end = +el.dataset.count;
+    const d = places(end);
+    if (reduced()) { el.textContent = fmt(end, d); return; }
+    const t0 = performance.now() + lead, dur = 1100;
+    el.textContent = fmt(0, d);
+    const f = (now) => {
+      const t = Math.max(0, Math.min(1, (now - t0) / dur));
+      el.textContent = fmt(end * easeOutCubic(t), d);
+      if (t < 1) requestAnimationFrame(f);
+    };
+    requestAnimationFrame(f);
+  });
+}
+
+/* ═════════════════ MOTION KIT ═════════════════ */
+
+/* The logo flight: Knowledge/extension/popup.js buildKeyframes, line for line,
+   with the wind-up dip scaled to the stage (7px in a 400px panel, 20 here).
+   A wind-up so it reads as a push-off, a genuine arc, and a spin that ends
+   ahead of the travel so the mark arrives upright. */
+const WINDUP = 0.14, SPIN_DONE = 0.85, WINDUP_DIP_PX = 20, SAMPLES = 40, FLIGHT_MS = 720;
+function flightFrames({ dx, dy, scale }) {
+  const cx = dx * 0.22, cy = dy * 1.18;
+  const frames = [];
+  for (let i = 0; i < SAMPLES; i += 1) {
+    const t = i / SAMPLES;
+    let x = 0, y = 0, s = 1, r = 0;
+    if (t < WINDUP) {
+      const w = easeInOutCubic(t / WINDUP);
+      y = WINDUP_DIP_PX * w; s = 1 - 0.07 * w; r = -10 * w;
+    } else {
+      const u = (t - WINDUP) / (1 - WINDUP);
+      const p = easeInOutCubic(u);
+      x = 2 * (1 - p) * p * cx + p * p * dx;
+      y = Math.pow(1 - p, 2) * WINDUP_DIP_PX + 2 * (1 - p) * p * cy + p * p * dy;
+      s = 0.93 + (scale - 0.93) * p;
+      r = -10 + 370 * easeOutCubic(Math.min(1, u / SPIN_DONE));
+    }
+    frames.push({ transform: `translate(${x}px, ${y}px) scale(${s}) rotate(${r}deg)`, offset: t });
+  }
+  frames.push({ transform: `translate(${dx}px, ${dy}px) scale(${scale}) rotate(360deg)`, offset: 1 });
+  return frames;
+}
+
+/* The thinking mark: Knowledge's sampleMark and thinkFrame (via the extension).
+   The mark becomes about ninety dots coloured from its own gradient, which come
+   apart into an orbit and gather back. One short cycle per page turn. */
+const THINK_N = 90, T_SCATTER = 420, T_ORBIT = 280, T_GATHER = 520;
+const T_THINK = T_SCATTER + T_ORBIT + T_GATHER;
+const THINK_POINTS = (() => {
+  const path = document.querySelector('#aimy-mark path');
+  const g = document.getElementById('aimy-rg');
+  if (!path || !g || typeof Path2D === 'undefined') return [];
+  const hex = (h) => { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+  const stops = [...g.querySelectorAll('stop')].map((s) => ({ o: +s.getAttribute('offset'), c: hex(s.getAttribute('stop-color')) }));
+  const colour = (o) => {
+    if (o <= stops[0].o) return stops[0].c;
+    for (let i = 1; i < stops.length; i += 1) {
+      if (o <= stops[i].o) { const a = stops[i - 1], b = stops[i], t = (o - a.o) / (b.o - a.o || 1); return a.c.map((ch, k) => Math.round(ch + (b.c[k] - ch) * t)); }
+    }
+    return stops[stops.length - 1].c;
+  };
+  const VW = 151.43, VH = 147.66, CX = 75.72, CY = 73.83, R = 70.54;
+  const ctx = document.createElement('canvas').getContext('2d');
+  const shape = new Path2D(path.getAttribute('d'));
+  const step = Math.sqrt((VW * VH) / (THINK_N * 2.2));
+  const pts = [];
+  for (let y = step / 2; y < VH; y += step) {
+    for (let x = step / 2; x < VW; x += step) {
+      const jx = x + (((x * 7 + y * 13) % 10) / 10 - 0.5) * step * 0.8;
+      const jy = y + (((x * 11 + y * 5) % 10) / 10 - 0.5) * step * 0.8;
+      if (!ctx.isPointInPath(shape, jx, jy)) continue;
+      pts.push({ x: jx / VW - 0.5, y: jy / VH - 0.5, c: `rgb(${colour(Math.hypot(jx - CX, jy - CY) / R).join(',')})` });
+    }
+  }
+  pts.forEach((p, i) => {
+    const a = Math.atan2(p.y, p.x) + (i % 5) * 0.21, r = 0.34 + ((i * 37) % 11) / 55;
+    p.ox = Math.cos(a) * r; p.oy = Math.sin(a) * r;
+    p.sp = 0.6 + ((i * 17) % 7) / 10; p.sz = 0.7 + ((i * 23) % 5) / 8;
+  });
+  return pts;
+})();
+
+function thinkFrame(canvas, ms, markPx) {
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const W = Math.round(canvas.clientWidth * dpr) || 138, H = Math.round(canvas.clientHeight * dpr) || 136;
+  if (canvas.width !== W) { canvas.width = W; canvas.height = H; }
+  ctx.clearRect(0, 0, W, H);
+  const M = markPx * dpr * (W / dpr / canvas.clientWidth || 1);
+  let mix = 0;
+  if (ms < T_SCATTER) mix = easeInOutCubic(ms / T_SCATTER);
+  else if (ms < T_SCATTER + T_ORBIT) mix = 1;
+  else mix = 1 - easeInOutCubic(Math.min(1, (ms - T_SCATTER - T_ORBIT) / T_GATHER));
+  const spin = (ms / 2600) * Math.PI * 2;
+  for (const p of THINK_POINTS) {
+    const a = spin * p.sp;
+    const ox = p.ox * Math.cos(a) - p.oy * Math.sin(a), oy = p.ox * Math.sin(a) + p.oy * Math.cos(a);
+    ctx.globalAlpha = 0.45 + (1 - mix) * 0.55;
+    ctx.fillStyle = p.c;
+    ctx.beginPath();
+    ctx.arc((p.x + (ox - p.x) * mix) * M + W / 2, (p.y + (oy - p.y) * mix) * M + H / 2, Math.max(0.6, p.sz * (M / 26) * (1 - mix * 0.25)), 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+}
+
+/* Where the mark is: on the cover, in the header, or on the close. It flies
+   between them; a key pressed mid-flight snaps it to where it was going. */
+function brandKit(stage) {
+  const root = stage.querySelector('.sl');
+  const fly = root.querySelector('.mk-fly');
+  const anchor = root.querySelector('.brand-anchor');
+  const word = root.querySelector('.brand-word');
+  const canvas = root.querySelector('.brand-think');
+  const spots = { cover: root.querySelector('[data-spot="cover"]'), close: root.querySelector('[data-spot="close"]'), head: anchor };
+  let at = null, run = null, goingTo = null, thinkRAF = 0;
+  const box = (el) => {
+    const s = stage.getBoundingClientRect(), r = el.getBoundingClientRect(), k = s.width / 1920;
+    return { x: (r.left - s.left) / k, y: (r.top - s.top) / k, w: r.width / k, h: r.height / k };
+  };
+  const rest = (where) => {
+    at = where;
+    if (where === 'head') { fly.style.visibility = 'hidden'; anchor.classList.add('is-on'); word.classList.add('is-on'); return; }
+    const b = box(spots[where]);
+    Object.assign(fly.style, { left: `${b.x}px`, top: `${b.y}px`, width: `${b.w}px`, height: `${b.h}px`, visibility: 'visible' });
+    anchor.classList.remove('is-on', 'is-thinking');
+    word.classList.remove('is-on');
+  };
+  const land = () => {
+    anchor.classList.remove('is-landing');
+    void anchor.offsetWidth;
+    anchor.classList.add('is-landing');
+  };
+  return {
+    to(where, animate) {
+      if (run) { run.onfinish = null; run.cancel(); run = null; rest(goingTo); }
+      if (where === at) return;
+      if (!animate || at === null || reduced()) { rest(where); return; }
+      const a = box(spots[at]), b = box(spots[where]);
+      cancelAnimationFrame(thinkRAF);
+      Object.assign(fly.style, { left: `${a.x}px`, top: `${a.y}px`, width: `${a.w}px`, height: `${a.h}px`, visibility: 'visible' });
+      anchor.classList.remove('is-on', 'is-thinking');
+      word.classList.remove('is-on');
+      goingTo = where;
+      run = fly.animate(flightFrames({ dx: b.x + b.w / 2 - (a.x + a.w / 2), dy: b.y + b.h / 2 - (a.y + a.h / 2), scale: b.w / a.w }), { duration: FLIGHT_MS, easing: 'linear', fill: 'forwards' });
+      run.onfinish = () => { const r = run; run = null; rest(where); r.cancel(); if (where === 'head') land(); };
+    },
+    think() {
+      if (at !== 'head' || run || reduced() || !THINK_POINTS.length) return;
+      cancelAnimationFrame(thinkRAF);
+      const t0 = performance.now();
+      anchor.classList.add('is-thinking');
+      const frame = (now) => {
+        const ms = now - t0;
+        thinkFrame(canvas, Math.min(ms, T_THINK), 44);
+        if (ms < T_THINK) thinkRAF = requestAnimationFrame(frame);
+        else anchor.classList.remove('is-thinking');
+      };
+      thinkRAF = requestAnimationFrame(frame);
+    },
+    /* Fonts landing late move the cover's layout; put a resting mark back on its spot. */
+    refit() { if (!run && at && at !== 'head') rest(at); },
+  };
+}
+
+/* The extension's dust table: [x%, y%, size px, peak opacity, rise vh, sideways vw, seconds],
+   scaled to the stage (sizes x2.4, rise and drift in stage pixels). */
+const DUST = [
+  [4, 82, 2.0, 0.30, -62, 1.4, 31], [11, 96, 1.4, 0.20, -74, -0.9, 38], [17, 71, 2.6, 0.34, -55, 2.1, 25], [23, 88, 1.2, 0.16, -68, -1.6, 41],
+  [29, 63, 1.8, 0.26, -49, 0.7, 28], [34, 92, 2.2, 0.31, -71, -2.3, 34], [40, 77, 1.3, 0.18, -58, 1.9, 43], [45, 99, 2.8, 0.36, -80, -1.1, 22],
+  [51, 68, 1.6, 0.23, -52, 2.6, 37], [56, 85, 2.1, 0.29, -66, -0.6, 26], [62, 94, 1.1, 0.15, -76, 1.2, 40], [67, 73, 2.4, 0.33, -54, -2.8, 29],
+  [73, 90, 1.7, 0.24, -70, 0.4, 35], [78, 66, 2.0, 0.28, -47, 1.7, 23], [84, 97, 1.5, 0.21, -79, -1.4, 42], [89, 79, 2.5, 0.35, -60, 2.2, 27],
+  [94, 87, 1.3, 0.17, -67, -0.8, 39], [98, 70, 1.9, 0.27, -51, 1.0, 32], [8, 61, 1.6, 0.22, -45, -1.9, 36], [20, 99, 2.3, 0.32, -83, 0.9, 24],
+  [37, 58, 1.2, 0.14, -42, 2.4, 44], [48, 81, 1.9, 0.25, -63, -1.3, 30], [59, 60, 2.7, 0.34, -44, 1.5, 21], [70, 98, 1.4, 0.19, -81, -2.0, 45],
+  [81, 64, 1.8, 0.26, -48, 0.6, 33], [92, 93, 2.2, 0.30, -73, -1.7, 28], [14, 75, 1.1, 0.13, -57, 2.8, 46], [65, 84, 1.5, 0.20, -64, -0.5, 20],
+];
+const field = (blooms) => `<div class="mk-field">${blooms ? '<div class="mk-bloom is-a"></div><div class="mk-bloom is-b"></div>' : ''}${DUST.map((m, i) =>
+  `<span class="mk-mote" style="--x:${m[0]}%;--y:${m[1]}%;--s:${(m[2] * 2.4).toFixed(1)}px;--o:${m[3]};--t:${Math.round(m[4] * 10.8)}px;--dx:${Math.round(m[5] * 19.2)}px;--d:${m[6]}s;--i:${i}"></span>`).join('')}</div>`;
+
+const brandHead = (meta = '') => `<header class="sl-head">
+  <span class="brand" role="img" aria-label="AiMY">
+    <span class="brand-anchor"><svg class="brand-icon" viewBox="0 0 151.43 147.66" aria-hidden="true"><use href="#aimy-mark"/></svg><canvas class="brand-think" aria-hidden="true"></canvas></span>
+    <svg class="brand-word" viewBox="0 0 253.66 68.54" aria-hidden="true"><use href="#aimy-word"/></svg>
+  </span>${meta ? `<span class="sl-head-meta">${meta}</span>` : ''}</header>`;
+const flyer = () => `<div class="mk-fly" aria-hidden="true"><svg viewBox="0 0 151.43 147.66"><use href="#aimy-mark"/></svg></div>`;
+const spot = (name) => `<span class="mk-spot" data-spot="${name}">${rv(0, '', 'mk-halo', 'span')}</span>`;
+const spotHtml = (n) => spot(n);
+const partOf = (i) => SLIDES[i].s;
+const slidesIn = (p) => SLIDES.map((s, k) => (s.s === p ? k : -1)).filter((k) => k >= 0);
+
+/* ═════════════════ A. CHAPTERS ═════════════════ */
+const PART_H = 132;
+const chapters = {
+  brand: true,
+  build: () => `<div class="sl va" data-edge>
+    ${field(true)}
+    <aside class="va-rail">
+      <ol class="va-parts">
+        <li class="va-light" aria-hidden="true"></li>
+        ${PARTS.map((p, j) => `<li class="va-part" data-part="${j}"><span class="va-part-n">${pad(j + 1)}</span><span class="va-part-name">${esc(p)}</span>
+          <span class="va-segs">${slidesIn(j).map((k) => `<span class="va-seg" data-seg="${k}"></span>`).join('')}</span></li>`).join('')}
+      </ol>
+      <div class="va-foot"><b>Support leads meeting</b>3 December 2026</div>
+    </aside>
+    ${brandHead()}
+    ${SLIDES.map((s, k) => `<section class="ps${EDGE(k) ? ' is-edge' : ''}" data-n="${k}">${slideHtml(s, { spot: true })}</section>`).join('')}
+    ${flyer()}
+  </div>`,
+  go(stage, i) {
+    const root = stage.querySelector('.va');
+    if (EDGE(i)) root.setAttribute('data-edge', ''); else root.removeAttribute('data-edge');
+    const p = partOf(i);
+    if (p !== undefined) root.querySelector('.va-light').style.transform = `translateY(${p * PART_H}px)`;
+    root.querySelectorAll('.va-part').forEach((el) => {
+      const j = +el.dataset.part;
+      el.dataset.state = p === undefined ? (i === LAST ? 'done' : 'ahead') : j === p ? 'now' : j < p ? 'done' : 'ahead';
+    });
+    root.querySelectorAll('.va-seg').forEach((el) => {
+      const k = +el.dataset.seg;
+      el.dataset.state = k === i ? 'now' : k < i ? 'done' : 'ahead';
+    });
+  },
+};
+
+/* ═════════════════ B. STAGE ═════════════════ */
+const orbPose = (i) => {
+  const s = SLIDES[i];
+  if (s.kind === 'cover' || s.kind === 'close') return { x: 960, y: 1060, s: 1.35 };
+  if (s.kind === 'part' || s.kind === 'agenda') return { x: 1480, y: 520, s: 1.05 };
+  return { x: 1800, y: 140, s: 0.2 };
+};
+const orbT = (p) => `translate(${p.x - 300}px, ${p.y - 300}px) scale(${p.s})`;
+const stageDeck = {
+  brand: true,
+  build: () => `<div class="sl vb" data-edge>
+    ${field(true)}
+    <div class="vb-orb"><canvas></canvas></div>
+    ${brandHead()}
+    ${SLIDES.map((s, k) => {
+      const centre = ['cover', 'close', 'statement', 'quote'].includes(s.kind);
+      const cls = `${centre ? ' is-centre' : ''}${s.kind === 'part' || s.kind === 'agenda' ? ' is-part' : ''}${s.kind === 'cover' ? ' is-cover' : ''}${s.kind === 'close' ? ' is-close' : ''}`;
+      return `<section class="ps${cls}" data-n="${k}">${slideHtml(s, { spot: true })}</section>`;
+    }).join('')}
+    <div class="vb-prog">${PARTS.map((p, j) => `<div class="vb-group" data-group="${j}" style="flex:${slidesIn(j).length}"><span class="vb-group-name">${pad(j + 1)} ${esc(p)}</span><div class="vb-track"><div class="vb-fill"></div></div></div>`).join('')}</div>
+    ${flyer()}
+  </div>`,
+  init(stage) {
+    const orb = window.makeSilk?.(stage.querySelector('.vb-orb canvas'));
+    orb?.phase('listening');
+    orb?.start();
+    return { orb };
+  },
+  go(stage, i, ctx) {
+    const root = stage.querySelector('.vb');
+    if (SLIDES[i].kind === 'cover' || i === LAST) root.setAttribute('data-edge', ''); else root.removeAttribute('data-edge');
+    root.querySelector('.vb-orb').style.transform = orbT(orbPose(i));
+    ctx?.orb?.phase(SLIDES[i].kind === 'part' ? 'speaking' : 'listening');
+    const p = partOf(i);
+    root.querySelectorAll('.vb-group').forEach((g) => {
+      const j = +g.dataset.group;
+      const ks = slidesIn(j);
+      const done = ks.filter((k) => k <= i).length;
+      g.dataset.state = j === p ? 'now' : 'other';
+      g.querySelector('.vb-fill').style.transform = `scaleX(${done / ks.length})`;
+    });
+  },
+};
+
+/* ═════════════════ C. BOARD ═════════════════ */
+const GAP_X = 2160, GAP_Y = 2800, CARD_W = 1920, CARD_H = 1080, LABEL = 330;
+/* Rows: the cover and agenda, then a row per part; the close ends the last part's row. */
+const placeOf = (() => {
+  const rows = [];
+  SLIDES.forEach((s, k) => {
+    const r = s.s !== undefined ? s.s + 1 : s.kind === 'close' ? PARTS.length : 0;
+    (rows[r] ||= []).push(k);
+  });
+  const at = [];
+  rows.forEach((ks, r) => ks.forEach((k, c) => (at[k] = { x: c * GAP_X, y: r * GAP_Y, r })));
+  return { at, rows };
+})();
+const boardW = Math.max(...placeOf.rows.map((ks) => ks.length)) * GAP_X - (GAP_X - CARD_W);
+const boardH = placeOf.rows.length * GAP_Y - (GAP_Y - CARD_H);
+/* A camera pose: scale s, and the world point at the stage's centre. */
+const fitBox = (x, y, w, h, room = 0.9) => {
+  const s = Math.min((1920 * room) / w, (1080 * room) / h);
+  return { s, cx: x + w / 2, cy: y + h / 2 };
+};
+const camPose = (i) => {
+  const s = SLIDES[i];
+  const a = placeOf.at[i];
+  if (s.kind === 'agenda') return fitBox(-200, -LABEL, boardW + 400, boardH + LABEL, 0.94);
+  if (s.kind === 'part') {
+    const ks = placeOf.rows[a.r];
+    const w = ks.length * GAP_X - (GAP_X - CARD_W);
+    return fitBox(0, a.y - LABEL, w, CARD_H + LABEL, 0.88);
+  }
+  return { s: 0.86, cx: a.x + CARD_W / 2, cy: a.y + CARD_H / 2 };
+};
+const camT = (p) => `translate(${960 - p.cx * p.s}px, ${540 - p.cy * p.s}px) scale(${p.s})`;
+const board = {
+  brand: false,
+  build: () => `<div class="sl vc">
+    <div class="vc-world">
+      <div class="vc-dots" style="left:-1200px;top:-1200px;width:${boardW + 2400}px;height:${boardH + 2400}px"></div>
+      ${placeOf.rows.map((ks, r) => {
+        const s = SLIDES[ks[0]];
+        return s.s !== undefined ? `<div class="vc-row" style="left:0;top:${r * GAP_Y - LABEL + 40}px"><span>${pad(s.s + 1)}</span>${esc(PARTS[s.s])}</div>` : '';
+      }).join('')}
+      ${SLIDES.map((s, k) => { const a = placeOf.at[k]; return `<div class="vc-card" data-n="${k}" style="left:${a.x}px;top:${a.y}px"><section class="ps">${slideHtml(s)}</section></div>`; }).join('')}
+    </div>
+    <div class="vc-veil"></div>
+    ${brandHead()}
+  </div>`,
+  init(stage) {
+    stage.querySelector('.brand-anchor').classList.add('is-on');
+    stage.querySelector('.brand-word').classList.add('is-on');
+    return { pose: null };
+  },
+  go(stage, i, ctx, prev) {
+    const world = stage.querySelector('.vc-world');
+    const to = camPose(i);
+    const from = ctx.pose;
+    ctx.pose = to;
+    world.getAnimations().forEach((a) => a.cancel());
+    world.style.transform = camT(to);
+    if (!from || prev < 0 || reduced()) return;
+    /* A long move pulls back on the way, so you see where you're going. */
+    const dist = Math.hypot(to.cx - from.cx, to.cy - from.cy);
+    const far = dist > GAP_X * 1.2 && Math.abs(to.s - from.s) < 0.3;
+    const frames = far
+      ? [{ transform: camT(from) }, { transform: camT({ s: Math.min(from.s, to.s) * 0.45, cx: (from.cx + to.cx) / 2, cy: (from.cy + to.cy) / 2 }), offset: 0.5 }, { transform: camT(to) }]
+      : [{ transform: camT(from) }, { transform: camT(to) }];
+    world.animate(frames, { duration: far ? 1400 : 1000, easing: 'cubic-bezier(0.65, 0, 0.35, 1)' });
+  },
+};
+
+/* ═════════════════ ENGINE ═════════════════ */
+const ICON = {
+  prev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>',
+  next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
+  full: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="m21 3-7 7"/><path d="m3 21 7-7"/><path d="M9 21H3v-6"/></svg>',
+};
+const DECKS = { chapters, stage: stageDeck, board };
+
+document.querySelectorAll('[data-deck]').forEach((root) => {
+  const def = DECKS[root.dataset.deck];
+  const name = root.closest('.pv-var').querySelector('.pv-var-name').textContent;
+  root.innerHTML = `
+    <div class="dk-frame" tabindex="0" role="region" aria-roledescription="slide deck" aria-label="${esc(name)}"><div class="dk-stage">${def.build()}</div></div>
+    <div class="dk-bar">
+      <button class="pv-icobtn" type="button" data-prev aria-label="Previous slide">${ICON.prev}</button>
+      <span class="pv-count" aria-live="polite"></span>
+      <button class="pv-icobtn" type="button" data-next aria-label="Next slide">${ICON.next}</button>
+      <span class="dk-keys pv-push">Arrows or Space when the deck is selected</span>
+      <button class="pv-btn is-brand" type="button" data-full>${ICON.full}Present</button>
+    </div>`;
+  const frame = root.querySelector('.dk-frame');
+  const stage = root.querySelector('.dk-stage');
+  const count = root.querySelector('.pv-count');
+  const prevBtn = root.querySelector('[data-prev]');
+  const nextBtn = root.querySelector('[data-next]');
+  const ctx = def.init?.(stage) ?? {};
+  let i = 0, started = false;
+
+  const fit = () => {
+    const w = frame.clientWidth, h = frame.clientHeight;
+    const s = Math.min(w / 1920, h / 1080);
+    stage.style.transform = `translate(${(w - 1920 * s) / 2}px, ${(h - 1080 * s) / 2}px) scale(${s})`;
+  };
+  new ResizeObserver(fit).observe(frame);
+  document.addEventListener('fullscreenchange', fit);
+  fit();
+  const brand = def.brand ? brandKit(stage) : null;
+
+  const go = (n) => {
+    const prev = i;
+    i = Math.max(0, Math.min(COUNT - 1, n));
+    if (started && i === prev) return;
+    const flies = def.brand && started && ((prev === 0) !== (i === 0) || (prev === LAST) !== (i === LAST));
+    const lead = flies ? 780 : def === board ? 600 : 250;
+    stage.style.setProperty('--lead', `${lead}ms`);
+    stage.querySelectorAll('[data-n]').forEach((el) => {
+      const k = +el.dataset.n;
+      el.dataset.state = k === i ? 'now' : k < i ? 'done' : 'ahead';
+    });
+    def.go?.(stage, i, ctx, started ? prev : -1);
+    if (brand) {
+      brand.to(i === 0 ? 'cover' : i === LAST ? 'close' : 'head', started);
+      if (started && moment(prev) && moment(i)) brand.think();
+    }
+    countUp(stage, i, lead);
+    count.textContent = `${i + 1} of ${COUNT}`;
+    prevBtn.disabled = i === 0;
+    nextBtn.disabled = i === COUNT - 1;
+    started = true;
+  };
+
+  frame.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(e.key)) go(i + 1);
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(e.key)) go(i - 1);
+    else if (e.key === 'Home') go(0);
+    else if (e.key === 'End') go(COUNT - 1);
+    else return;
+    e.preventDefault();
+  });
+  frame.addEventListener('click', (e) => {
+    const r = frame.getBoundingClientRect();
+    go(e.clientX - r.left < r.width / 3 ? i - 1 : i + 1);
+    frame.focus();
+  });
+  prevBtn.addEventListener('click', () => go(i - 1));
+  nextBtn.addEventListener('click', () => go(i + 1));
+  root.querySelector('[data-full]').addEventListener('click', () => frame.requestFullscreen().then(() => frame.focus()));
+  go(0);
+  document.fonts?.ready.then(() => brand?.refit());
+});
+
+/* ═════════════════ THEME ═════════════════ */
+const themeBtn = document.getElementById('pvTheme');
+const setTheme = (light) => {
+  document.documentElement.dataset.theme = light ? 'light' : 'dark';
+  themeBtn.textContent = light ? 'Dark theme' : 'Light theme';
+};
+themeBtn.addEventListener('click', () => setTheme(document.documentElement.dataset.theme !== 'light'));
+if (new URLSearchParams(location.search).get('theme') === 'light') setTheme(true);
+
+</script>
+</body>
+</html>
