@@ -92,6 +92,7 @@ Presentations:
 
 - For a whole presentation, follow the `aimy-ui-presentations` skill (https://aimy-ui-lib.aimy.flairstech.com/skills/aimy-ui-presentations/SKILL.md).
 - A deck is a story told aloud: `HorizonDeck` (keynotes, launches, all-hands: a headline and a line or two per slide) or `LanesDeck` (reviews, retrospectives, updates: what we learned above, what we did below). Pass a story: a cover, three to seven moments in time order (five reads best), a close. Never lay slides out by hand, and never make a deck of something meant to be read alone.
+- Tell it as a sequence of events: each moment is something that happened to someone, leading to the next (the problem, what we did, what changed, what comes next), past tense for what happened and future for what's next. Titles are events ("Reps lost 40% of their day to data entry"), not topics ("Data entry overhead"). Keep it plain: no "once upon a time", "journey", hype or invented drama.
 - Each moment has a chapter of one to three words. `when` is a real date or period; leave it out rather than invent one. In the lanes, `did` is what was actually done, or "Next: …".
 - A figure is the number as it is (`92.5`, `1240`), its unit in `prefix` or `suffix` ("$", "%", "M", "/5"), and `means`: what it counts and what it is against. A figure replaces the title (horizon) or learned (lanes); don't pass both.
 - No lists on slides: three things that each matter are three moments; the rest is one sentence or the notes. The close has one action; a second ask goes in its sub.
